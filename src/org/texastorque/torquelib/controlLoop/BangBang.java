@@ -1,26 +1,13 @@
 package org.texastorque.torquelib.controlLoop;
 
-public class BangBang {
-    
-    private double setPoint;
-    private double currentValue;
-    private double doneRange;
+public class BangBang extends ControlLoop {
     
     public BangBang()
     {
-        setPoint = 0;
+        super();
     }
     
-    public void setDoneRange(double range)
-    {
-        doneRange = range;
-    }
-    
-    public void setSetpoint(double set)
-    {
-        setPoint = set;
-    }
-    
+    @Override
     public double calculate(double current)
     {
         currentValue = current;
@@ -30,10 +17,5 @@ public class BangBang {
         } else {
             return 0.0;
         }
-    }
-    
-    public boolean isDone()
-    {
-        return Math.abs(currentValue - setPoint) < doneRange;
     }
 }
