@@ -6,22 +6,20 @@ import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.DigitalSource;
 
-public class TorqueCounter
+public class TorqueCounter extends TorqueEncoder
 {
-    private Counter counter;
-    
     private MovingAverageFilter filter;
     
     public TorqueCounter(int port)
     {
-        counter = new Counter(port);
+        encoder = new Counter(port);
         
         filter = new MovingAverageFilter(1);
     }
     
     public TorqueCounter(CounterBase.EncodingType encodingType, DigitalSource upSource, DigitalSource downSource, boolean reverse)
     {
-        counter = new Counter(encodingType, upSource, downSource, reverse);
+        encoder = new Counter(encodingType, upSource, downSource, reverse);
         
         filter = new MovingAverageFilter(1);
         filter.reset();
@@ -33,31 +31,21 @@ public class TorqueCounter
         filter.reset();
     }
     
+    @Override
     public void calc()
     {
-        double rate = 1.0 / counter.getPeriod();
-        filter.setInput(rate);
+        double currentRate = 1.0 / encoder.getPeriod();
+        filter.setInput(currentRate);
         filter.run();
+
+        currentPosition = encoder.get();
+        rate = filter.getAverage();
     }
     
-    public void start()
-    {
-        filter.reset();
-    }
-    
+    @Override
     public void reset()
     {
         filter.reset();
-        counter.reset();
-    }
-    
-    public int get()
-    {
-        return counter.get();
-    }
-    
-    public double getRate()
-    {
-        return filter.getAverage();
+        encoder.reset();
     }
 }
