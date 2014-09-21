@@ -1,9 +1,11 @@
 package org.texastorque.torquelib.component;
 
+import edu.wpi.first.wpilibj.AnalogTrigger;
 import org.texastorque.torquelib.util.MovingAverageFilter;
 
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.CounterBase;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalSource;
 
 public class TorqueCounter extends TorqueEncoder {
@@ -14,14 +16,28 @@ public class TorqueCounter extends TorqueEncoder {
     private MovingAverageFilter filter;
 
     public TorqueCounter(int port) {
-        encoder = new Counter(port);
-
-        filter = new MovingAverageFilter(1);
+        this(new DigitalInput(port));
     }
 
     public TorqueCounter(CounterBase.EncodingType encodingType, DigitalSource upSource, DigitalSource downSource, boolean reverse) {
         encoder = new Counter(encodingType, upSource, downSource, reverse);
 
+        filter = new MovingAverageFilter(1);
+        filter.reset();
+    }
+    
+    public TorqueCounter(AnalogTrigger trigger)
+    {
+        encoder = new Counter(trigger);
+        
+        filter = new MovingAverageFilter(1);
+        filter.reset();
+    }
+    
+    public TorqueCounter(DigitalSource source)
+    {
+        encoder = new Counter(source);
+        
         filter = new MovingAverageFilter(1);
         filter.reset();
     }
