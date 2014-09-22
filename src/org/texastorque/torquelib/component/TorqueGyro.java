@@ -32,6 +32,8 @@ public class TorqueGyro {
 
         m2_analog = new AnalogInput(port2);
         m2_channelAllocated = true;
+        
+        initGyro();
     }
 
     private void initGyro() {
