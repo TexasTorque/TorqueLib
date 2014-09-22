@@ -49,7 +49,7 @@ public class TorquePotentiometer {
 //            prevVoltage = pot.getVoltage();
 //        }
 //        return prevVoltage;
-        
+
         return pot.getVoltage();
     }
 
@@ -60,9 +60,8 @@ public class TorquePotentiometer {
             return value;
         }
     }
-    
-    public double getRawNoRollover()
-    {
+
+    public double getRawNoRollover() {
         return pot.getVoltage();
     }
 

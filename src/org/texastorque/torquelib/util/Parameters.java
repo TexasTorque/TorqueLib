@@ -1,6 +1,5 @@
 package org.texastorque.torquelib.util;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -14,11 +13,11 @@ public class Parameters {
     private static Parameters autonInstance;
     private static Parameters visionInstance;
     private Hashtable map;
-    
+
     private String fileName;
     private String filePath;
     private File parametersFile;
-    
+
     private BufferedReader fileIO = null;
 
     public synchronized static Parameters getTeleopInstance() {
@@ -37,7 +36,7 @@ public class Parameters {
         map = new Hashtable();
         filePath = "file:///ni-rt/startup/";
         fileName = fileNm;
-        
+
         parametersFile = new File(filePath + fileName);
     }
 
@@ -45,7 +44,7 @@ public class Parameters {
         map = new Hashtable();
         filePath = path;
         fileName = fileNm;
-        
+
         parametersFile = new File(filePath + fileName);
     }
 
