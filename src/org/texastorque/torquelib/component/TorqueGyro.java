@@ -115,7 +115,7 @@ public class TorqueGyro {
 
             long value2 = result2.value - (long) (result2.count * m2_offset);
 
-            double scaledValue2 = - 1 * value2
+            double scaledValue2 = -1 * value2
                     * 1e-9
                     * m2_analog.getLSBWeight()
                     * (1 << m2_analog.getAverageBits())
@@ -134,7 +134,7 @@ public class TorqueGyro {
                     * m1_analog.getLSBWeight()
                     / ((1 << m1_analog.getOversampleBits()) * m_voltsPerDegreePerSecond);
             
-            double rate2 = (m1_analog.getAverageValue() - (m1_center + m1_offset))
+            double rate2 = -1 * (m1_analog.getAverageValue() - (m1_center + m1_offset))
                     * 1e-9
                     * m1_analog.getLSBWeight()
                     / ((1 << m1_analog.getOversampleBits()) * m_voltsPerDegreePerSecond);
