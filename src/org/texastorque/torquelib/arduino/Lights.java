@@ -5,6 +5,11 @@ public class Lights {
     private Arduino sensor;
     private LightState prevState;
 
+    /**
+     * Create a new set of Arduino lights.
+     *
+     * @param a The Arduino board.
+     */
     public Lights(Arduino a) {
         sensor = a;
     }
