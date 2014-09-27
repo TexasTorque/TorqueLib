@@ -4,87 +4,120 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.ArrayList;
 
 public class Parameters {
 
-    private static Parameters teleopInstance;
-    private static Parameters autonInstance;
-    private static Parameters visionInstance;
-    private Hashtable map;
+    private final File paramsFile;
+    private final ArrayList<Constant> constants;
 
-    private String fileName;
-    private String filePath;
-    private File parametersFile;
+    /*add any hardcoded constants here*/
+    private final Constant[] overriddenConstant = {};
 
-    private BufferedReader fileIO = null;
-
-    public synchronized static Parameters getTeleopInstance() {
-        return (teleopInstance == null) ? teleopInstance = new Parameters("params.txt") : teleopInstance;
-    }
-
-    public synchronized static Parameters getAutonInstance() {
-        return (autonInstance == null) ? autonInstance = new Parameters("autonParams.txt") : autonInstance;
-    }
-
-    public synchronized static Parameters getVisionInstance() {
-        return (visionInstance == null) ? visionInstance = new Parameters("params.txt", "C:/Users/Texas Torque/Desktop/Params/") : visionInstance;
-    }
-
-    public Parameters(String fileNm) {
-        map = new Hashtable();
-        filePath = "file:///ni-rt/startup/";
-        fileName = fileNm;
-
-        parametersFile = new File(filePath + fileName);
-    }
-
-    public Parameters(String fileNm, String path) {
-        map = new Hashtable();
-        filePath = path;
-        fileName = fileNm;
-
-        parametersFile = new File(filePath + fileName);
-    }
-
-    public void load() {
+    /**
+     * Make a new Parameters loader.
+     *
+     * @param filePath String path of parameters file.
+     */
+    public Parameters(String filePath) {
+        paramsFile = new File(filePath);
         try {
-            clearList();
-            if (parametersFile.exists()) {
-                fileIO = new BufferedReader(new FileReader(parametersFile));
-                String line;
-                int index;
-                while ((line = fileIO.readLine()) != null) {
-                    if (!line.equals("")) {
-                        map.put(line.substring(0, index = line.indexOf(" ")), line.substring(index + 1));
-                    }
-                }
-                System.err.println("Parameters file: " + fileName + " successfully loaded.");
-                fileIO.close();
-            } else {
-                System.err.println("Could not load parameters file: " + fileName);
-            }
+            paramsFile.createNewFile();
         } catch (IOException e) {
-            System.err.println("IOException caught trying to read in parameters file.");
+        }
+
+        constants = new ArrayList<>();
+    }
+
+    /**
+     * Load the parameters file using this syntax:<br><br>
+     *
+     * nameOfParameter valueOfParameter~useFileConstant<br>
+     * shooterMotorLeft 2~false<br><br>
+     *
+     * When useFileConstant is true, the file's constant will override the
+     * hardcoded constant.
+     */
+    public void load() {
+        try (BufferedReader br = new BufferedReader(new FileReader(paramsFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                int pos = line.indexOf(" ");
+                int useFileConstant = line.indexOf("~");
+                if (pos != -1) {
+                    constants.add(makeConstant(line.substring(0, pos), line.substring(pos, useFileConstant), line.substring(useFileConstant)));
+                } else {
+                    System.err.println("Could not read a constant.");
+                }
+            }
+        } catch (Exception e) {
         }
     }
 
-    public synchronized int getAsInt(String name, int dflt) {
-        String value = (String) map.get(name);
-        return (value == null) ? dflt : (int) Double.parseDouble(value);
+    private Constant makeConstant(String key, String line, String useFile) {
+        for (Constant oC : overriddenConstant) {
+            if (oC.getKey().equals(key) && Boolean.parseBoolean(useFile)) {
+                return oC;
+            }
+        }
+
+        if (line.contains(".")) {//decimal
+            if (line.contains("f")) {//float
+                return new Constant(key, Float.parseFloat(line));
+            } else {//not float
+                return new Constant(key, Double.parseDouble(line));
+            }
+        } else if (line.contains("true") || line.contains("false")) {//boolean
+            return new Constant(key, (line.contains("false") ? 0 : 1));
+        } else {//nothing else
+            return new Constant(key, Integer.parseInt(line));
+        }
     }
 
-    public synchronized double getAsDouble(String name, double dflt) {
-        String value = (String) map.get(name);
-        return (value == null) ? dflt : Double.parseDouble(value);
-    }
+    public class Constant {
 
-    public synchronized boolean getAsBoolean(String name, boolean dflt) {
-        String value = (String) map.get(name);
-        return (value == null) ? dflt : Integer.parseInt(value) != 0;
-    }
+        private final String key;
+        private final Number value;
 
-    private void clearList() {
-        map.clear();
+        private final boolean finalValue;
+
+        /**
+         * Make a final Constant. Should only be used in overridden constants
+         * array.
+         *
+         * @param key Name of value.
+         * @param value Value.
+         */
+        public Constant(String key, Number value) {
+            this.key = key;
+            this.value = value;
+
+            finalValue = true;
+        }
+
+        public float getFloat() {
+            return value.floatValue();
+        }
+
+        public boolean getBoolean() {
+            return value.intValue() == 1;
+        }
+
+        public int getInt() {
+            return value.intValue();
+        }
+
+        public double getDouble() {
+            return value.doubleValue();
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        @Override
+        public String toString() {
+            return key + ": " + value;
+        }
     }
 }
