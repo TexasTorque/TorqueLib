@@ -3,8 +3,6 @@ package org.texastorque.torquelib.util;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.PathMatcher;
 
 public class FlashLogger {
 
@@ -15,15 +13,16 @@ public class FlashLogger {
      * progress.
      */
     public FlashLogger() {
-        String filePath = "";
-        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:*.txt");
-        String fileName = "";
-        File file = new File(filePath + fileName);
-        try {
-            file.createNewFile();
-            writer = new FileWriter(file);
-        } catch (IOException e) {
-            System.err.println("IOException in creating flash logger.");
+        for (File dir : File.listRoots()) {
+            for (File f : dir.listFiles()) {
+                if (f.getName().equals("flashlog.txt")) {
+                    try {
+                        writer = new FileWriter(f);
+                    } catch (IOException e) {
+                        System.err.println("IOException in creating flash logger.");
+                    }
+                }
+            }
         }
     }
 
