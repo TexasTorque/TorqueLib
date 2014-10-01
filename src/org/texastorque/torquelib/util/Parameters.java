@@ -8,12 +8,11 @@ import java.util.ArrayList;
 
 public class Parameters {
 
+    public static ArrayList<Constant> constants;
+
     private final File paramsFile;
-    private final ArrayList<Constant> constants;
 
-    /*add any hardcoded constants here*/
-    private final Constant[] overriddenConstant = {};
-
+    /*declare constants here*/
     /**
      * Make a new Parameters loader.
      *
@@ -32,20 +31,22 @@ public class Parameters {
     /**
      * Load the parameters file using this syntax:<br><br>
      *
-     * nameOfParameter valueOfParameter~useFileConstant<br>
-     * shooterMotorLeft 2~false<br><br>
+     * nameOfParameter valueOfParameter<br>
+     * shooterMotorLeft 2<br><br>
      *
-     * When useFileConstant is true, the file's constant will override the
-     * hardcoded constant.
+     * Constants listed in the file override hardcoded constants.
      */
     public void load() {
         try (BufferedReader br = new BufferedReader(new FileReader(paramsFile))) {
             String line;
             while ((line = br.readLine()) != null) {
                 int pos = line.indexOf(" ");
-                int useFileConstant = line.indexOf("~");
                 if (pos != -1) {
-                    constants.add(makeConstant(line.substring(0, pos), line.substring(pos, useFileConstant), line.substring(useFileConstant)));
+                    for (Constant c : constants) {
+                        if (c.getKey().equals(line.substring(0, pos))) {
+                            c = makeConstant(line.substring(0, pos), line.substring(pos));
+                        }
+                    }
                 } else {
                     System.err.println("Could not read a constant.");
                 }
@@ -54,19 +55,9 @@ public class Parameters {
         }
     }
 
-    private Constant makeConstant(String key, String line, String useFile) {
-        for (Constant oC : overriddenConstant) {
-            if (oC.getKey().equals(key) && Boolean.parseBoolean(useFile)) {
-                return oC;
-            }
-        }
-
+    private Constant makeConstant(String key, String line) {
         if (line.contains(".")) {//decimal
-            if (line.contains("f")) {//float
-                return new Constant(key, Float.parseFloat(line));
-            } else {//not float
-                return new Constant(key, Double.parseDouble(line));
-            }
+            return new Constant(key, Double.parseDouble(line));
         } else if (line.contains("true") || line.contains("false")) {//boolean
             return new Constant(key, (line.contains("false") ? 0 : 1));
         } else {//nothing else
@@ -79,11 +70,8 @@ public class Parameters {
         private final String key;
         private final Number value;
 
-        private final boolean finalValue;
-
         /**
-         * Make a final Constant. Should only be used in overridden constants
-         * array.
+         * Make a final Constant.
          *
          * @param key Name of value.
          * @param value Value.
@@ -92,11 +80,11 @@ public class Parameters {
             this.key = key;
             this.value = value;
 
-            finalValue = true;
+            add();//to take care of "leaking this in constructor" warning
         }
 
-        public float getFloat() {
-            return value.floatValue();
+        private void add() {
+            constants.add(this);
         }
 
         public boolean getBoolean() {
