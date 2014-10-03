@@ -14,7 +14,7 @@ public class GenericController extends Joystick {
     public GenericController(int port, boolean isLogitech, double dband) {
         super(port);
         isLogitechController = isLogitech;
-        deadband = Math.max(1, dband);
+        deadband = Math.min(1, Math.abs(dband));
     }
 
     //scales inputs [deadband, 1] to [0, 1]
@@ -31,7 +31,7 @@ public class GenericController extends Joystick {
     }
 
     public void setDeadband(double dband) {
-        deadband = Math.max(1, dband);
+        deadband = Math.min(1, Math.abs(dband));
     }
 
     public synchronized void setType(boolean isLog) {
