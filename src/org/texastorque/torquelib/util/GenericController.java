@@ -19,7 +19,7 @@ public class GenericController extends Joystick {
 
     //scales inputs [deadband, 1] to [0, 1]
     private double scaleInput(double input) {
-        if (Math.abs(input) > 0) {
+        if (Math.abs(input) > deadband) {
             if (input > 0) {
                 return (input - deadband) / (1 - deadband);
             } else {
