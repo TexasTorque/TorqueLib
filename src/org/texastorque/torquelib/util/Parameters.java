@@ -44,7 +44,7 @@ public class Parameters {
                 if (pos != -1) {
                     for (Constant c : constants) {
                         if (c.getKey().equals(line.substring(0, pos))) {
-                            c = makeConstant(line.substring(0, pos), line.substring(pos));
+                            c.setValue(Double.parseDouble(line.substring(pos)));
                         }
                     }
                 } else {
@@ -55,20 +55,10 @@ public class Parameters {
         }
     }
 
-    private Constant makeConstant(String key, String line) {
-        if (line.contains(".")) {//decimal
-            return new Constant(key, Double.parseDouble(line));
-        } else if (line.contains("true") || line.contains("false")) {//boolean
-            return new Constant(key, (line.contains("false") ? 0 : 1));
-        } else {//nothing else
-            return new Constant(key, Integer.parseInt(line));
-        }
-    }
-
-    public class Constant {
+    public static class Constant {
 
         private final String key;
-        private final Number value;
+        private double value;
 
         /**
          * Make a final Constant.
@@ -76,7 +66,7 @@ public class Parameters {
          * @param key Name of value.
          * @param value Value.
          */
-        public Constant(String key, Number value) {
+        public Constant(String key, double value) {
             this.key = key;
             this.value = value;
 
@@ -88,19 +78,20 @@ public class Parameters {
         }
 
         public boolean getBoolean() {
-            return value.intValue() == 1;
-        }
-
-        public int getInt() {
-            return value.intValue();
+            return value == 1;
         }
 
         public double getDouble() {
-            return value.doubleValue();
+            return value;
         }
 
         public String getKey() {
             return key;
+        }
+        
+        protected void setValue(double val)
+        {
+            value = val;
         }
 
         @Override
