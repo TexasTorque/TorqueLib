@@ -27,6 +27,11 @@ public class Parameters {
 
         constants = new ArrayList<>();
     }
+    
+    public Parameters()
+    {
+        this("/home/admin/params.txt");
+    }
 
     /**
      * Load the parameters file using this syntax:<br><br>
@@ -44,14 +49,15 @@ public class Parameters {
                 if (pos != -1) {
                     for (Constant c : constants) {
                         if (c.getKey().equals(line.substring(0, pos))) {
-                            c.setValue(Double.parseDouble(line.substring(pos)));
+                            c.value = Double.parseDouble(line.substring(pos));
                         }
                     }
                 } else {
-                    System.err.println("Could not read a constant.");
+                    System.out.println("Invalid line");
                 }
             }
         } catch (Exception e) {
+            System.out.println("Messed up readin constants");
         }
     }
 
@@ -70,28 +76,21 @@ public class Parameters {
             this.key = key;
             this.value = value;
 
-            add();//to take care of "leaking this in constructor" warning
-        }
-
-        private void add() {
             constants.add(this);
-        }
-
-        public boolean getBoolean() {
-            return value == 1;
-        }
-
-        public double getDouble() {
-            return value;
         }
 
         public String getKey() {
             return key;
         }
         
-        protected void setValue(double val)
+        public Double getDouble()
         {
-            value = val;
+            return value;
+        }
+        
+        public boolean getBoolean()
+        {
+            return value == 1;
         }
 
         @Override
