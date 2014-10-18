@@ -49,6 +49,14 @@ public class GenericController extends Joystick {
         isLogitechController = isLog;
     }
 
+    public synchronized void setAsLogitech() {
+        isLogitechController = true;
+    }
+
+    public synchronized void setAsXBox() {
+        isLogitechController = false;
+    }
+
     public synchronized boolean isLogitech() {
         return isLogitechController;
     }
@@ -57,7 +65,7 @@ public class GenericController extends Joystick {
         if (isLogitechController) {
             return scaleInput(getRawAxis(2));
         } else {
-            return scaleInput(getRawAxis(2));
+            return getRawAxis(2);
         }
     }
 
@@ -65,23 +73,23 @@ public class GenericController extends Joystick {
         if (isLogitechController) {
             return scaleInput(getRawAxis(1));
         } else {
-            return scaleInput(getRawAxis(1));
+            return getRawAxis(1);
         }
     }
 
     public synchronized double getRightYAxis() {
         if (isLogitechController) {
-            return scaleInput(getRawAxis(4));
-        } else {
             return scaleInput(getRawAxis(5));
+        } else {
+            return getRawAxis(5);
         }
     }
 
     public synchronized double getRightXAxis() {
         if (isLogitechController) {
-            return scaleInput(getRawAxis(3));
-        } else {
             return scaleInput(getRawAxis(4));
+        } else {
+            return getRawAxis(4);
         }
     }
 
@@ -141,7 +149,7 @@ public class GenericController extends Joystick {
         }
     }
 
-    public synchronized boolean getRightTrigger() {
+    public synchronized boolean getBottomRightBumper() {
         if (isLogitechController) {
             return getRawButton(8);
         } else {
