@@ -29,6 +29,17 @@ public class GenericController extends Joystick {
             return 0.0;
         }
     }
+    
+    @Override
+    public double getRawAxis(int port)
+    {
+        try {
+            return super.getRawAxis(port);
+        } catch (Exception e)
+        {
+            return 0.0;
+        }
+    }
 
     public void setDeadband(double dband) {
         deadband = Math.min(1, Math.abs(dband));
@@ -106,7 +117,7 @@ public class GenericController extends Joystick {
         }
     }
 
-    public synchronized boolean getTopLeftBumper() {
+    public synchronized boolean getLeftBumper() {
         if (isLogitechController) {
             return getRawButton(5);
         } else {
@@ -114,7 +125,7 @@ public class GenericController extends Joystick {
         }
     }
 
-    public synchronized boolean getTopRightBumper() {
+    public synchronized boolean getRightBumper() {
         if (isLogitechController) {
             return getRawButton(6);
         } else {
@@ -122,7 +133,7 @@ public class GenericController extends Joystick {
         }
     }
 
-    public synchronized boolean getBottomLeftBumper() {
+    public synchronized boolean getLeftTrigger() {
         if (isLogitechController) {
             return getRawButton(7);
         } else {
@@ -130,7 +141,7 @@ public class GenericController extends Joystick {
         }
     }
 
-    public synchronized boolean getBottomRightBumper() {
+    public synchronized boolean getRightTrigger() {
         if (isLogitechController) {
             return getRawButton(8);
         } else {
@@ -154,7 +165,7 @@ public class GenericController extends Joystick {
         }
     }
 
-    public synchronized boolean getLeftActionButton() {
+    public synchronized boolean getXButton() {
         if (isLogitechController) {
             return getRawButton(1);
         } else {
@@ -162,7 +173,7 @@ public class GenericController extends Joystick {
         }
     }
 
-    public synchronized boolean getTopActionButton() {
+    public synchronized boolean getYButton() {
         if (isLogitechController) {
             return getRawButton(4);
         } else {
@@ -170,7 +181,7 @@ public class GenericController extends Joystick {
         }
     }
 
-    public synchronized boolean getRightActionButton() {
+    public synchronized boolean getBButton() {
         if (isLogitechController) {
             return getRawButton(3);
         } else {
@@ -178,7 +189,7 @@ public class GenericController extends Joystick {
         }
     }
 
-    public synchronized boolean getBottomActionButton() {
+    public synchronized boolean getAButton() {
         if (isLogitechController) {
             return getRawButton(2);
         } else {
