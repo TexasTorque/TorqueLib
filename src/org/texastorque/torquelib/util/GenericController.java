@@ -4,17 +4,33 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class GenericController extends Joystick {
 
+    public static final int TYPE_LOGITECH = 1;
+    public static final int TYPE_XBOX = 2;
+
     public static final boolean LOGITECH = true;
     public static final boolean XBOX = false;
 
-    private boolean isLogitechController;
-
+    private int[] acc;
+    private int controllerType;
     private double deadband;
 
-    public GenericController(int port, boolean isLogitech, double dband) {
+    public GenericController(int port, int type, double dband) {
         super(port);
-        isLogitechController = isLogitech;
+        controllerType = type;
         deadband = Math.min(1, Math.abs(dband));
+
+        switch (type) {
+            case TYPE_LOGITECH:
+                acc = new int[]{2, 1, 4, 3, 5, 5, 11, 12, 5, 6, 7, 8, 9, 10, 1, 4, 3, 2};
+                break;
+            case TYPE_XBOX:
+                acc = new int[]{2, 1, 5, 4, 6, 6, 9, 10, 5, 6, 3, 3, 7, 8, 3, 4, 2, 1};
+                break;
+            default:
+                //default to logitech
+                acc = new int[]{2, 1, 5, 4, 6, 6, 9, 10, 5, 6, 3, 3, 7, 8, 3, 4, 2, 1};
+                controllerType = TYPE_XBOX;
+        }
     }
 
     //scales inputs [deadband, 1] to [0, 1]
@@ -29,14 +45,12 @@ public class GenericController extends Joystick {
             return 0.0;
         }
     }
-    
+
     @Override
-    public double getRawAxis(int port)
-    {
+    public double getRawAxis(int port) {
         try {
             return super.getRawAxis(port);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             return 0.0;
         }
     }
@@ -45,163 +59,103 @@ public class GenericController extends Joystick {
         deadband = Math.min(1, Math.abs(dband));
     }
 
-    public synchronized void setType(boolean isLog) {
-        isLogitechController = isLog;
+    public synchronized void setType(int type) {
+        controllerType = type;
+        switch (type) {
+            case TYPE_LOGITECH:
+                acc = new int[]{2, 1, 4, 3, 5, 5, 11, 12, 5, 6, 7, 8, 9, 10, 1, 4, 3, 2};
+                break;
+            case TYPE_XBOX:
+                acc = new int[]{2, 1, 5, 4, 6, 6, 9, 10, 5, 6, 3, 3, 7, 8, 3, 4, 2, 1};
+                break;
+            default:
+                //default to logitech
+                acc = new int[]{2, 1, 5, 4, 6, 6, 9, 10, 5, 6, 3, 3, 7, 8, 3, 4, 2, 1};
+                controllerType = TYPE_XBOX;
+        }
     }
 
-    public synchronized void setAsLogitech() {
-        isLogitechController = true;
-    }
-
-    public synchronized void setAsXBox() {
-        isLogitechController = false;
-    }
-
-    public synchronized boolean isLogitech() {
-        return isLogitechController;
+    public synchronized int getType() {
+        return controllerType;
     }
 
     public synchronized double getLeftYAxis() {
-        if (isLogitechController) {
-            return scaleInput(getRawAxis(2));
-        } else {
-            return getRawAxis(2);
-        }
+        return scaleInput(getRawAxis(acc[0]));
     }
 
     public synchronized double getLeftXAxis() {
-        if (isLogitechController) {
-            return scaleInput(getRawAxis(1));
-        } else {
-            return getRawAxis(1);
-        }
+        return scaleInput(getRawAxis(acc[1]));
     }
 
     public synchronized double getRightYAxis() {
-        if (isLogitechController) {
-            return scaleInput(getRawAxis(5));
-        } else {
-            return getRawAxis(5);
-        }
+        return scaleInput(getRawAxis(acc[2]));
     }
 
     public synchronized double getRightXAxis() {
-        if (isLogitechController) {
-            return scaleInput(getRawAxis(4));
-        } else {
-            return getRawAxis(4);
-        }
+        return scaleInput(getRawAxis(acc[3]));
     }
 
     public synchronized boolean getLeftDPAD() {
-        if (isLogitechController) {
-            return (getRawAxis(5) > 0.0);
-        } else {
-            return (getRawAxis(6) > 0.0);
-        }
+        return (getRawAxis(acc[4]) > 0.0);
     }
 
     public synchronized boolean getRightDPAD() {
-        if (isLogitechController) {
-            return (getRawAxis(5) < 0.0);
-        } else {
-            return (getRawAxis(6) < 0.0);
-        }
+        return (getRawAxis(acc[5]) < 0.0);
     }
 
     public synchronized boolean getLeftStickClick() {
-        if (isLogitechController) {
-            return getRawButton(11);
-        } else {
-            return getRawButton(9);
-        }
+        return getRawButton(acc[6]);
     }
 
     public synchronized boolean getRightStickClick() {
-        if (isLogitechController) {
-            return getRawButton(12);
-        } else {
-            return getRawButton(10);
-        }
-    }
-
-    public synchronized boolean getLeftBumper() {
-        if (isLogitechController) {
-            return getRawButton(5);
-        } else {
-            return getRawButton(5);
-        }
+        return getRawButton(acc[7]);
     }
 
     public synchronized boolean getRightBumper() {
-        if (isLogitechController) {
-            return getRawButton(6);
-        } else {
-            return getRawButton(6);
-        }
+        return getRawButton(acc[9]);
     }
 
-    public synchronized boolean getLeftTrigger() {
-        if (isLogitechController) {
+    public synchronized boolean getLeftTrigger() {//10
+        if (controllerType == TYPE_LOGITECH) {
             return getRawButton(7);
-        } else {
+        } else if (controllerType == TYPE_XBOX) {
             return (getRawAxis(3) > 0.2);
+        } else {
+            return false;
         }
     }
 
-    public synchronized boolean getBottomRightBumper() {
-        if (isLogitechController) {
+    public synchronized boolean getRightTrigger() {//11
+        if (controllerType == TYPE_LOGITECH) {
             return getRawButton(8);
-        } else {
+        } else if (controllerType == TYPE_XBOX) {
             return (getRawAxis(3) < -0.2);
+        } else {
+            return false;
         }
     }
 
     public synchronized boolean getLeftCenterButton() {
-        if (isLogitechController) {
-            return getRawButton(9);
-        } else {
-            return getRawButton(7);
-        }
+        return getRawButton(acc[12]);
     }
 
     public synchronized boolean getRightCenterButton() {
-        if (isLogitechController) {
-            return getRawButton(10);
-        } else {
-            return getRawButton(8);
-        }
+        return getRawButton(acc[13]);
     }
 
     public synchronized boolean getXButton() {
-        if (isLogitechController) {
-            return getRawButton(1);
-        } else {
-            return getRawButton(3);
-        }
+        return getRawButton(acc[14]);
     }
 
     public synchronized boolean getYButton() {
-        if (isLogitechController) {
-            return getRawButton(4);
-        } else {
-            return getRawButton(4);
-        }
+        return getRawButton(acc[15]);
     }
 
     public synchronized boolean getBButton() {
-        if (isLogitechController) {
-            return getRawButton(3);
-        } else {
-            return getRawButton(2);
-        }
+        return getRawButton(acc[16]);
     }
 
     public synchronized boolean getAButton() {
-        if (isLogitechController) {
-            return getRawButton(2);
-        } else {
-            return getRawButton(1);
-        }
+        return getRawButton(acc[17]);
     }
 }
