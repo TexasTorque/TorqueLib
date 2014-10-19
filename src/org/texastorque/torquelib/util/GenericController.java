@@ -157,7 +157,7 @@ public class GenericController extends Joystick {
 
     public synchronized boolean getBButton() {
         return getRawButton(acc[16]);
-        s    }
+    }
 
     public synchronized boolean getAButton() {
         return getRawButton(acc[17]);
