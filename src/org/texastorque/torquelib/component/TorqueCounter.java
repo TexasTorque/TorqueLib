@@ -1,25 +1,34 @@
 package org.texastorque.torquelib.component;
 
+import edu.wpi.first.wpilibj.AnalogTrigger;
 import org.texastorque.torquelib.util.MovingAverageFilter;
-
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.CounterBase;
-import edu.wpi.first.wpilibj.DigitalSource;
+import edu.wpi.first.wpilibj.DigitalInput;
 
-public class TorqueCounter {
+public class TorqueCounter extends TorqueEncoder {
 
-    private Counter counter;
+    public static final CounterBase.EncodingType k1X = CounterBase.EncodingType.k1X;
+    public static final CounterBase.EncodingType k2X = CounterBase.EncodingType.k2X;
 
     private MovingAverageFilter filter;
 
     public TorqueCounter(int port) {
-        counter = new Counter(port);
+        encoder = new Counter(new DigitalInput(port));
 
         filter = new MovingAverageFilter(1);
+        filter.reset();
     }
 
-    public TorqueCounter(CounterBase.EncodingType encodingType, DigitalSource upSource, DigitalSource downSource, boolean reverse) {
-        counter = new Counter(encodingType, upSource, downSource, reverse);
+    public TorqueCounter(int countPort, int directionPort, boolean reverse, CounterBase.EncodingType encodingype) {
+        encoder = new Counter(encodingype, new DigitalInput(countPort), new DigitalInput(directionPort), reverse);
+
+        filter = new MovingAverageFilter(1);
+        filter.reset();
+    }
+
+    public TorqueCounter(AnalogTrigger trigger) {
+        encoder = new Counter(trigger);
 
         filter = new MovingAverageFilter(1);
         filter.reset();
@@ -31,25 +40,16 @@ public class TorqueCounter {
     }
 
     public void calc() {
-        double rate = 1.0 / counter.getPeriod();
-        filter.setInput(rate);
+        double currentRate = 1.0 / encoder.getPeriod();
+        filter.setInput(currentRate);
         filter.run();
-    }
 
-    public void start() {
-        filter.reset();
+        currentPosition = encoder.get();
+        rate = filter.getAverage();
     }
 
     public void reset() {
         filter.reset();
-        counter.reset();
-    }
-
-    public int get() {
-        return counter.get();
-    }
-
-    public double getRate() {
-        return filter.getAverage();
+        encoder.reset();
     }
 }
