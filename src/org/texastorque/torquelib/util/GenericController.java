@@ -111,10 +111,6 @@ public class GenericController extends Joystick {
         return getRawButton(acc[7]);
     }
 
-    public synchronized boolean getLeftBumper() {
-        return getRawButton(acc[8]);
-    }
-
     public synchronized boolean getRightBumper() {
         return getRawButton(acc[9]);
     }
