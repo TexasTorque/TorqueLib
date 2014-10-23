@@ -1,13 +1,12 @@
 package org.texastorque.torquelib.controlLoop;
 
-public class TorquePID {
+public class TorquePID extends ControlLoop {
 
     private double kFF;
     private double kP;
     private double kI;
     private double kD;
     private double epsilon;
-    private double doneRange;
     private double setpoint;
     private double previousValue;
     private double errorSum;
@@ -32,8 +31,7 @@ public class TorquePID {
         errorSum = 0.0;
         firstCycle = true;
         maxOutput = 1.0;
-        minCycleCount = 10;
-        cycleCount = 0;
+        minDoneCycles = 10;
     }
 
     public void setPIDGains(double p, double i, double d) {
