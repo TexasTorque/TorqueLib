@@ -1,38 +1,17 @@
 package org.texastorque.torquelib.component;
 
-import edu.wpi.first.wpilibj.Jaguar;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.SpeedController;
 
 public class Motor {
 
-    private Jaguar jaguar;
-    private Victor victor;
-    private Talon talon;
+    private SpeedController controller;
     private boolean reverse;
-    private boolean vic888;
 
     private double previousSpeed;
 
-    public Motor(Jaguar jag, boolean rev) {
-        jaguar = jag;
-        victor = null;
-        talon = null;
+    public Motor(SpeedController sc, boolean rev) {
+        controller = sc;
         reverse = rev;
-    }
-
-    public Motor(Victor vic, boolean rev, boolean v888) {
-        jaguar = null;
-        talon = null;
-        victor = vic;
-        reverse = rev;
-        vic888 = v888;
-    }
-
-    public Motor(Talon tal, boolean rev) {
-        jaguar = null;
-        victor = null;
-        talon = tal;
     }
 
     public void Set(double speed) {
@@ -40,20 +19,7 @@ public class Motor {
             if (reverse) {
                 speed *= -1;
             }
-
-            speed = LimitSpeed((float) speed, (float) 1.0);
-
-            if (jaguar == null && talon == null) {
-                if (vic888) {
-                    victor.set(speed);
-                } else {
-                    victor.set(LinearizeVictor(speed));
-                }
-            } else if (jaguar == null && victor == null) {
-                talon.set(speed);
-            } else {
-                jaguar.set(speed);
-            }
+            controller.set(speed);
 
             previousSpeed = speed;
         }
@@ -107,5 +73,4 @@ public class Motor {
         }
         return (float) answer;
     }
-
 }
