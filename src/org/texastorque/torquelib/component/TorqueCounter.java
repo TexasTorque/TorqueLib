@@ -36,8 +36,4 @@ public class TorqueCounter extends TorqueEncoder {
         previousPosition = currentPosition;
         previousRate = secantRate;
     }
-
-    public void reset() {
-        encoder.reset();
-    }
 }
