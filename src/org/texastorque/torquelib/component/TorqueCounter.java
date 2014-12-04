@@ -5,6 +5,7 @@ import org.texastorque.torquelib.util.MovingAverageFilter;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 
 public class TorqueCounter extends TorqueEncoder {
 
@@ -40,12 +41,19 @@ public class TorqueCounter extends TorqueEncoder {
     }
 
     public void calc() {
-        double currentRate = 1.0 / encoder.getPeriod();
-        filter.setInput(currentRate);
+        double currentTime = Timer.getFPGATimestamp();
+        currentPosition = encoder.get();
+        
+        secantRate = (currentPosition - previousPosition) / (currentTime - previousTime);
+        instantRate = 1.0 / encoder.getPeriod();
+        acceleration = (secantRate - previousRate) / (currentTime - previousTime);
+        
+        filter.setInput(secantRate);
         filter.run();
 
-        currentPosition = encoder.get();
-        rate = filter.getAverage();
+        previousTime = currentTime;
+        previousPosition = currentPosition;
+        previousRate = secantRate;
     }
 
     public void reset() {

@@ -12,7 +12,8 @@ public abstract class TorqueEncoder {
     protected int currentPosition;
     protected int previousPosition;
 
-    protected double rate;
+    protected double instantRate;
+    protected double secantRate;
     protected double acceleration;
 
     public abstract void calc();
@@ -25,8 +26,12 @@ public abstract class TorqueEncoder {
         return currentPosition;
     }
 
-    public double getRate() {
-        return rate;
+    public double getInstantRate() {
+        return instantRate;
+    }
+    
+    public double getSecantRate() {
+        return secantRate;
     }
 
     public double getAcceleration() {

@@ -26,11 +26,12 @@ public class TorqueQuadrature extends TorqueEncoder
         double currentTime = Timer.getFPGATimestamp();
         currentPosition = encoder.get();
         
-        rate = (currentPosition - previousPosition) / (currentTime - previousTime);
-        acceleration = (rate - previousRate) / (currentTime - previousTime);
+        secantRate = (currentPosition - previousPosition) / (currentTime - previousTime);
+        instantRate = 1.0 / encoder.getPeriod();
+        acceleration = (secantRate - previousRate) / (currentTime - previousTime);
         
         previousTime = currentTime;
         previousPosition = currentPosition;
-        previousRate = rate;
+        previousRate = secantRate;
     }
 }
