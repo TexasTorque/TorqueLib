@@ -1,8 +1,11 @@
 package org.texastorque.torquelib.controlLoop;
 
+import java.util.function.DoubleUnaryOperator;
+
 public class TorquePID extends ControlLoop {
 
     private double kFF;
+    private DoubleUnaryOperator feedForwardFunction;
     private double kP;
     private double kI;
     private double kD;
@@ -14,7 +17,7 @@ public class TorquePID extends ControlLoop {
     private double maxOutput;
     private int minCycleCount;
     private int cycleCount;
-
+    
     public TorquePID() {
         this(0.0, 0.0, 0.0);
     }
@@ -25,6 +28,7 @@ public class TorquePID extends ControlLoop {
         kD = d;
         epsilon = 0.0;
         kFF = 0.0;
+        feedForwardFunction = (x) -> x;
         doneRange = 0.0;
         setpoint = 0.0;
         previousValue = 0.0;
@@ -40,7 +44,14 @@ public class TorquePID extends ControlLoop {
         kD = d;
     }
 
-    public void setFeedForward(double ff) {
+    public void setFeedForward(DoubleUnaryOperator operator, double ff) {
+        feedForwardFunction = operator;
+        kFF = ff;
+    }
+    
+    public void setFeedForward(double ff)
+    {
+        feedForwardFunction = (x) -> x;
         kFF = ff;
     }
 
@@ -95,7 +106,7 @@ public class TorquePID extends ControlLoop {
         }
 
         //----- FF Calculation -----
-        ffVal = setpoint * kFF;
+        ffVal = feedForwardFunction.applyAsDouble(setPoint) * kFF;
 
         //----- P Calculation -----
         double error = setpoint - currentValue;
