@@ -13,12 +13,12 @@ public final class FlashLogger {
 
     private BufferedWriter writer;
 
-    private final String filePath = "/media/sda1/logging/";
+    private String filePath;
     private String fileName;
 
     private boolean enabled;
     private boolean firstWrite;
-    
+
     private ArrayList<Loggable> loggedSystems;
 
     /**
@@ -26,17 +26,22 @@ public final class FlashLogger {
      *
      */
     public FlashLogger() {
+        this("/media/sda1/logging/");
+    }
+
+    public FlashLogger(String path) {
+        filePath = path;
         loggedSystems = new ArrayList<>();
         reset();
     }
 
     /**
      * Make a new file and reset the logging system.
-     * 
+     *
      */
     public void reset() {
         Date currentDate = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yy-HH-mm", Locale.US);
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yy_HH-mm", Locale.US);
         String time = format.format(currentDate);
         fileName = "LOG " + time + ".csv";
 
@@ -55,29 +60,26 @@ public final class FlashLogger {
 
     /**
      * Log data from the systems registered for logging.
-     * 
+     *
      */
     public void log() {
         if (enabled) {
             try {
-                if (firstWrite)
-                {
+                if (firstWrite) {
                     String names = "";
-                    for (Loggable l : loggedSystems)
-                    {
+                    for (Loggable l : loggedSystems) {
                         names += l.getLogNames();
                     }
                     writer.write(names + "\n");
                     firstWrite = false;
                 } else {
                     String vals = "";
-                    for (Loggable l : loggedSystems)
-                    {
+                    for (Loggable l : loggedSystems) {
                         vals += l.getLogValues();
                     }
                     writer.write(vals + "\n");
                 }
-                
+
             } catch (IOException e) {
                 System.err.println("IOException in writing to file.");
             }
@@ -92,29 +94,32 @@ public final class FlashLogger {
 
     /**
      * Close the file after a logging session is completed.
-     * 
+     *
      */
     public void close() {
         enabled = false;
-        try {
-            writer.close();
-        } catch (IOException e) {
-            System.err.println("IOException in closing filewriter.");
+        if (writer != null) {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                System.err.println("IOException in closing filewriter.");
+            }
         }
     }
-    
+
     /**
      * Register a new system for logging.
-     * 
+     *
      * @param log The new system to be logged.
      */
-    public void addLoggable(Loggable log)
-    {
-        loggedSystems.add(log);
+    public void addLoggable(Loggable log) {
+        if (!loggedSystems.contains(log)) {
+            loggedSystems.add(log);
+        }
     }
-    
+
     public void enable() {
-        enabled = true;
+        enabled = writer != null;
     }
 
     public void disable() {
