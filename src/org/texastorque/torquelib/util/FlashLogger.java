@@ -1,5 +1,6 @@
 package org.texastorque.torquelib.util;
 
+import edu.wpi.first.wpilibj.Timer;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -20,6 +21,8 @@ public final class FlashLogger {
     private boolean firstWrite;
 
     private ArrayList<Loggable> loggedSystems;
+    
+    private double startTime;
 
     /**
      * Create a new flash drive logger.
@@ -66,14 +69,15 @@ public final class FlashLogger {
         if (enabled) {
             try {
                 if (firstWrite) {
-                    String names = "";
+                    startTime = Timer.getFPGATimestamp();
+                    String names = "Time, ";
                     for (Loggable l : loggedSystems) {
                         names += l.getLogNames();
                     }
                     writer.write(names + "\n");
                     firstWrite = false;
                 } else {
-                    String vals = "";
+                    String vals = (Timer.getFPGATimestamp() - startTime) + ", ";
                     for (Loggable l : loggedSystems) {
                         vals += l.getLogValues();
                     }
