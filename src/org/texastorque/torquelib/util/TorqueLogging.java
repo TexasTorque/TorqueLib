@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public final class FlashLogger {
+public final class TorqueLogging {
 
     private BufferedWriter writer;
 
@@ -28,11 +28,11 @@ public final class FlashLogger {
      * Create a new flash drive logger.
      *
      */
-    public FlashLogger() {
+    public TorqueLogging() {
         this("/media/sda1/logging/");
     }
 
-    public FlashLogger(String path) {
+    public TorqueLogging(String path) {
         filePath = path;
         loggedSystems = new ArrayList<>();
         reset();
