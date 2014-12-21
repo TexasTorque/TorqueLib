@@ -11,7 +11,7 @@ public class FlashLogger {
 
     private FileWriter writer;
 
-    private final String filePath = "/media/sda1/logging/";
+    private final String filePath = "C:\\users\\Gijs\\Desktop\\";
     private String fileName;
 
     private boolean enabled;
@@ -27,15 +27,16 @@ public class FlashLogger {
 
     public void reset() {
         Date currentDate = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM--dd::HH--mm", Locale.US);
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yy-HH-mm", Locale.US);
         String time = format.format(currentDate);
-        fileName = "log" + time;
+        fileName = "LOG " + time + ".txt";
 
-        File file = new File(filePath + fileName);
         try {
+            File file = new File(filePath + fileName);
             file.createNewFile();
-            writer = new FileWriter(file, true);
-        } catch (IOException e) {
+            writer = new FileWriter(file);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             System.err.println("IOException in creating flash logger.");
         }
 
@@ -53,7 +54,7 @@ public class FlashLogger {
     public void log(String msg) {
         if (enabled) {
             try {
-                writer.write(msg);
+                writer.write(msg + "\n");
             } catch (IOException e) {
                 System.err.println("IOException in writing to flash logger.");
             }
@@ -70,8 +71,7 @@ public class FlashLogger {
         enabled = false;
         try {
             writer.close();
-        } catch (IOException e) {
-            System.err.println("IOException in closing flash logger.");
+        } catch (Exception e) {
         }
     }
 }
