@@ -1,7 +1,6 @@
 package org.texastorque.torquelib.component;
 
 import edu.wpi.first.wpilibj.AnalogTrigger;
-import org.texastorque.torquelib.util.MovingAverageFilter;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.DigitalInput;
