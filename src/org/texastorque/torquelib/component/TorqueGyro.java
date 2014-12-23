@@ -6,26 +6,37 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class TorqueGyro {
 
+    //Analog Input Parameters
     static final int kOversampleBits = 10;
     static final int kAverageBits = 0;
     static final double kSamplesPerSecond = 50.0;
     static final double kCalibrationSampleTime = 5.0;
+
+    //Volts to rate of change conversion
+    double m_voltsPerDegreePerSecond;
     static final double kDefaultVoltsPerDegreePerSecond = 0.007;
 
-    double m_voltsPerDegreePerSecond;
-
+    //Gyro 1
     double m1_offset;
     int m1_center;
     boolean m1_channelAllocated = false;
     private AnalogInput m1_analog;
     AccumulatorResult result1;
 
+    //Gyro 2
     double m2_offset;
     int m2_center;
     boolean m2_channelAllocated = false;
     private AnalogInput m2_analog;
     AccumulatorResult result2;
 
+    /**
+     * 
+     * Create a new double gyro.
+     * 
+     * @param port1 Port for the first gyroscope.
+     * @param port2 Port for the second, upside down gyroscope.
+     */
     public TorqueGyro(int port1, int port2) {
         m1_analog = new AnalogInput(port1);
         m1_channelAllocated = true;
@@ -36,9 +47,14 @@ public class TorqueGyro {
         initGyro();
     }
 
+    /**
+     * 
+     * Initialize the gyroscope.
+     */
     private void initGyro() {
         m_voltsPerDegreePerSecond = kDefaultVoltsPerDegreePerSecond;
 
+        //Gyro 1
         result1 = new AccumulatorResult();
 
         m1_analog.setAverageBits(kAverageBits);
@@ -46,13 +62,27 @@ public class TorqueGyro {
         double sampleRate = kSamplesPerSecond
                 * (1 << (kAverageBits + kOversampleBits));
         AnalogInput.setGlobalSampleRate(sampleRate);
-        Timer.delay(1.0);
+        
+        //Gyro 2
+        result2 = new AccumulatorResult();
 
+        m2_analog.setAverageBits(kAverageBits);
+        m2_analog.setOversampleBits(kOversampleBits);
+        sampleRate = kSamplesPerSecond
+                * (1 << (kAverageBits + kOversampleBits));
+        AnalogInput.setGlobalSampleRate(sampleRate);
+
+        Timer.delay(1.0);
+        
+        //Calibrate
         m1_analog.initAccumulator();
         m1_analog.resetAccumulator();
+        m2_analog.initAccumulator();
+        m2_analog.resetAccumulator();
 
         Timer.delay(kCalibrationSampleTime);
 
+        //Gyro 1
         m1_analog.getAccumulatorOutput(result1);
 
         m1_center = (int) ((double) result1.value / (double) result1.count + .5);
@@ -63,9 +93,24 @@ public class TorqueGyro {
         m1_analog.setAccumulatorCenter(m1_center);
         m1_analog.resetAccumulator();
 
-        setDeadband(0.005);
+        //Gyro 2
+        m2_analog.getAccumulatorOutput(result1);
+
+        m2_center = (int) ((double) result1.value / (double) result1.count + .5);
+
+        m2_offset = ((double) result1.value / (double) result1.count)
+                - m1_center;
+
+        m2_analog.setAccumulatorCenter(m1_center);
+        m2_analog.resetAccumulator();
+        
+        setDeadband(0.1);
     }
 
+    /**
+     * 
+     * Free resources taken up by the Gyros
+     */
     public void free() {
         if (m1_analog != null && m1_channelAllocated) {
             m1_analog.free();
@@ -78,6 +123,10 @@ public class TorqueGyro {
         m2_analog = null;
     }
 
+    /**
+     * 
+     * Reset the accumulators to set the current angle as 0.0.
+     */
     public void reset() {
         if (m1_analog != null) {
             m1_analog.resetAccumulator();
@@ -87,18 +136,40 @@ public class TorqueGyro {
         }
     }
 
-    public void setDeadband(double volts) {
-        int deadband = (int) (volts * 1e9 / m1_analog.getLSBWeight() * (1 << m1_analog.getOversampleBits()));
-        m1_analog.setAccumulatorDeadband(deadband);
+    /**
+     * 
+     * Set the deadband of the gyros. Any rate of change smaller than the deadband
+     * will be treated as sitting still. A large deadband will reduce drift but
+     * decrease accuracy. The default value is 0.1 degrees per second.
+     * 
+     * @param degreesPerSecond The deadband to be set in degrees/second.
+     */
+    public void setDeadband(double degreesPerSecond) {
+        double volts = degreesPerSecond * m_voltsPerDegreePerSecond;
+        
+        int deadband1 = (int) (volts * 1e9 / m1_analog.getLSBWeight() * (1 << m1_analog.getOversampleBits()));
+        m1_analog.setAccumulatorDeadband(deadband1);
 
-        deadband = (int) (volts * 1e9 / m2_analog.getLSBWeight() * (1 << m2_analog.getOversampleBits()));
-        m2_analog.setAccumulatorDeadband(deadband);
+        int deadband2 = (int) (volts * 1e9 / m2_analog.getLSBWeight() * (1 << m2_analog.getOversampleBits()));
+        m2_analog.setAccumulatorDeadband(deadband2);
     }
 
+    /**
+     * 
+     * Set the volts to angular rate of change scale factor of the gyros.
+     * 
+     * @param voltsPerDegreePerSecond The Sensitivity scalar.
+     */
     public void setSensitivity(double voltsPerDegreePerSecond) {
         m_voltsPerDegreePerSecond = voltsPerDegreePerSecond;
     }
 
+    /**
+     * 
+     * Get the angle of the gyro.
+     * 
+     * @return The current angular postion of the robot in degrees.
+     */
     public double getAngle() {
         if (m1_analog == null || m2_analog == null) {
             return 0.0;
@@ -121,10 +192,16 @@ public class TorqueGyro {
                     * (1 << m2_analog.getAverageBits())
                     / (AnalogInput.getGlobalSampleRate() * m_voltsPerDegreePerSecond);
 
-            return (scaledValue1 + scaledValue2) / 2;
+            return (scaledValue1 + scaledValue2);
         }
     }
     
+    /**
+     * 
+     * Get the angular rate of change of the gyro.
+     * 
+     * @return The angular rate of change of the robot in degrees/second.
+     */
     public double getRate() {
         if (m1_analog == null || m2_analog == null) {
             return 0.0;
@@ -134,12 +211,12 @@ public class TorqueGyro {
                     * m1_analog.getLSBWeight()
                     / ((1 << m1_analog.getOversampleBits()) * m_voltsPerDegreePerSecond);
             
-            double rate2 = -1 * (m1_analog.getAverageValue() - (m1_center + m1_offset))
+            double rate2 = -1 * (m2_analog.getAverageValue() - (m2_center + m2_offset))
                     * 1e-9
-                    * m1_analog.getLSBWeight()
-                    / ((1 << m1_analog.getOversampleBits()) * m_voltsPerDegreePerSecond);
+                    * m2_analog.getLSBWeight()
+                    / ((1 << m2_analog.getOversampleBits()) * m_voltsPerDegreePerSecond);
             
-            return (rate1 + rate2) / 2;
+            return (rate1 + rate2);
         }
     }
 }
