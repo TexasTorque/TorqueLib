@@ -6,23 +6,23 @@ public class TorquePotentiometer {
 
     private AnalogInput pot;
 
-    private double maxVoltage;
-    private double minVoltage;
+    private double maxValue;
+    private double minValue;
 
     public TorquePotentiometer(int port) {
         pot = new AnalogInput(port);
     }
 
     public void setRange(double max, double min) {
-        maxVoltage = max;
-        minVoltage = min;
+        maxValue = max;
+        minValue = min;
     }
 
     public double get() {
-        return 1 - limitValue((getRaw() - minVoltage) / (maxVoltage - minVoltage));
+        return 1 - limit((getRaw() - minValue) / (maxValue - minValue));
     }
 
-    private double limitValue(double value) {
+    private double limit(double value) {
         if (value > 1.0) {
             return 1.0;
         } else {
@@ -31,7 +31,10 @@ public class TorquePotentiometer {
     }
 
     public double getRaw() {
+        return pot.getValue();
+    }
+    
+    public double getRawVoltage() {
         return pot.getVoltage();
     }
-
 }
