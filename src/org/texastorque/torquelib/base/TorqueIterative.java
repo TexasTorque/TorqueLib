@@ -1,4 +1,4 @@
-package org.texastorque.torquelib.util;
+package org.texastorque.torquelib.base;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
