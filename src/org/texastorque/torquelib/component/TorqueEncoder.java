@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 
-public class TorqueQuadrature extends Encoder {
+public class TorqueEncoder extends Encoder {
 
     private double averageRate;
     private double acceleration;
@@ -12,11 +12,11 @@ public class TorqueQuadrature extends Encoder {
     private double previousPosition;
     private double previousRate;
 
-    public TorqueQuadrature(int aChannel, int bChannel, int indexChannel, boolean reverseDirection) {
+    public TorqueEncoder(int aChannel, int bChannel, int indexChannel, boolean reverseDirection) {
         super(aChannel, bChannel, indexChannel, reverseDirection);
     }
 
-    public TorqueQuadrature(int aChannel, int bChannel, boolean reverseDireciton, CounterBase.EncodingType encodingType) {
+    public TorqueEncoder(int aChannel, int bChannel, boolean reverseDireciton, CounterBase.EncodingType encodingType) {
         super(aChannel, bChannel, reverseDireciton, encodingType);
     }
     
