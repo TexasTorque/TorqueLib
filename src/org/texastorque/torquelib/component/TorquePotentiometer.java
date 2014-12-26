@@ -8,26 +8,30 @@ public class TorquePotentiometer {
 
     private double maxValue;
     private double minValue;
+    
+    private double maxPosition;
+    private double minPosition;
 
     public TorquePotentiometer(int port) {
         pot = new AnalogInput(port);
     }
 
-    public void setRange(double max, double min) {
+    public void setInputRange(double max, double min) {
         maxValue = max;
         minValue = min;
     }
-
-    public double get() {
-        return 1 - limit((getRaw() - minValue) / (maxValue - minValue));
+    
+    public void setPositionRange(double max, double min) {
+        maxPosition = max;
+        minPosition = min;
     }
 
-    private double limit(double value) {
-        if (value > 1.0) {
-            return 1.0;
-        } else {
-            return value;
-        }
+    public double get() {
+        return (getRaw() - minValue) / (maxValue - minValue);
+    }
+    
+    public double getPosition() {
+        return get() * (maxPosition - minPosition) + minPosition;
     }
 
     public double getRaw() {
