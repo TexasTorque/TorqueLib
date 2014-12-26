@@ -24,13 +24,4 @@ public class Motor {
             previousSpeed = speed;
         }
     }
-
-    static float LimitSpeed(float speed, float limit) {
-        if (Math.abs(speed) <= limit) {
-            return speed;
-        } else if (speed < 0) {
-            return -limit;
-        }
-        return limit;
-    }
 }
