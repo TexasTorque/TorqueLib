@@ -22,12 +22,13 @@ public class TorqueQuadrature extends Encoder {
     
     public void calc() {
         double currentTime = Timer.getFPGATimestamp();
+        double currentPosition = super.get();
 
-        averageRate = (super.get() - previousPosition) / (currentTime - previousTime);
+        averageRate = (currentPosition - previousPosition) / (currentTime - previousTime);
         acceleration = (averageRate - previousRate) / (currentTime - previousTime);
 
         previousTime = currentTime;
-        previousPosition = super.get();
+        previousPosition = currentPosition;
         previousRate = averageRate;
     }
 
