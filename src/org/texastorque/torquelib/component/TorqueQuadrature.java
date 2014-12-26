@@ -4,34 +4,38 @@ import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 
-public class TorqueQuadrature extends TorqueEncoder
-{
-    public static final CounterBase.EncodingType k1X = CounterBase.EncodingType.k1X;
-    public static final CounterBase.EncodingType k2X = CounterBase.EncodingType.k2X;
-    public static final CounterBase.EncodingType k4X = CounterBase.EncodingType.k4X;
-    
-    public TorqueQuadrature(int aChannel, int bChannel, boolean reverseDirection)
-    {
-        encoder = new Encoder(aChannel, bChannel, reverseDirection);
+public class TorqueQuadrature extends Encoder {
+
+    private double averageRate;
+    private double acceleration;
+    private double previousTime;
+    private double previousPosition;
+    private double previousRate;
+
+    public TorqueQuadrature(int aChannel, int bChannel, int indexChannel, boolean reverseDirection) {
+        super(aChannel, bChannel, indexChannel, reverseDirection);
+    }
+
+    public TorqueQuadrature(int aChannel, int bChannel, boolean reverseDireciton, CounterBase.EncodingType encodingType) {
+        super(aChannel, bChannel, reverseDireciton, encodingType);
     }
     
-    public TorqueQuadrature(int aChannel, int bChannel, boolean reverseDireciton, CounterBase.EncodingType encodingType)
-    {
-        encoder = new Encoder(aChannel, bChannel, reverseDireciton, encodingType);
-    }
-    
-    @Override
-    public void calc()
-    {
+    public void calc() {
         double currentTime = Timer.getFPGATimestamp();
-        currentPosition = encoder.get();
-        
-        secantRate = (currentPosition - previousPosition) / (currentTime - previousTime);
-        instantRate = 1.0 / encoder.getPeriod();
-        acceleration = (secantRate - previousRate) / (currentTime - previousTime);
-        
+
+        averageRate = (super.get() - previousPosition) / (currentTime - previousTime);
+        acceleration = (averageRate - previousRate) / (currentTime - previousTime);
+
         previousTime = currentTime;
-        previousPosition = currentPosition;
-        previousRate = secantRate;
+        previousPosition = super.get();
+        previousRate = averageRate;
+    }
+
+    public double getAverageRate() {
+        return averageRate;
+    }
+
+    public double getAcceleration() {
+        return acceleration;
     }
 }
