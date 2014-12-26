@@ -1,0 +1,289 @@
+package org.texastorque.torquelib.util;
+
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
+import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tInstances;
+import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
+import edu.wpi.first.wpilibj.communication.UsageReporting;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+
+/**
+ * @Author TexasTorque
+ *
+ * A modified version of the WPILIBJ IterativeRobot template that uses two
+ * threads.
+ *
+ * CPU usage on the roboRio may be higher than when using the regular
+ * IterativeRobot base class, but should not be a problem.
+ */
+public abstract class TorqueIterative extends RobotBase {
+
+    private boolean m_disabledInitialized;
+    private boolean m_autonomousInitialized;
+    private boolean m_teleopInitialized;
+    private boolean m_testInitialized;
+
+    public TorqueIterative() {
+        m_disabledInitialized = false;
+        m_autonomousInitialized = false;
+        m_teleopInitialized = false;
+        m_testInitialized = false;
+    }
+
+    protected void prestart() {
+        // Don't immediately say that the robot's ready to be enabled.
+        // See below.
+    }
+
+    public void startCompetition() {
+        UsageReporting.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Iterative);
+
+        robotInit();
+        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramStarting();
+
+        LiveWindow.setEnabled(false);
+
+        Thread periodicThread = new Thread(new Periodic());
+        periodicThread.start();
+
+        Thread continousThread = new Thread(new Continuous());
+        continousThread.start();
+
+        while (true) {
+            try {
+                Thread.sleep(100000);
+            } catch (InterruptedException ex) {
+            }
+        }
+    }
+
+    /**
+     * This class provides the default IterativeRobot functionality.
+     *
+     * It is synchronized to inputs coming from the driver station, and runs at
+     * about 50 hz.
+     */
+    private class Periodic implements Runnable {
+
+        @Override
+        public void run() {
+            while (true) {
+                if (isDisabled()) {
+                    if (!m_disabledInitialized) {
+                        LiveWindow.setEnabled(false);
+                        disabledInit();
+
+                        m_disabledInitialized = true;
+                        m_autonomousInitialized = false;
+                        m_teleopInitialized = false;
+                        m_testInitialized = false;
+                    }
+                    if (nextPeriodReady()) {
+                        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramDisabled();
+                        disabledPeriodic();
+                    }
+                } else if (isTest()) {
+                    if (!m_testInitialized) {
+                        LiveWindow.setEnabled(true);
+                        testInit();
+
+                        m_testInitialized = true;
+                        m_autonomousInitialized = false;
+                        m_teleopInitialized = false;
+                        m_disabledInitialized = false;
+                    }
+                    if (nextPeriodReady()) {
+                        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramTest();
+                        testPeriodic();
+                    }
+                } else if (isAutonomous()) {
+                    if (!m_autonomousInitialized) {
+                        LiveWindow.setEnabled(false);
+                        autonomousInit();
+
+                        m_autonomousInitialized = true;
+                        m_testInitialized = false;
+                        m_teleopInitialized = false;
+                        m_disabledInitialized = false;
+                    }
+                    if (nextPeriodReady()) {
+                        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramAutonomous();
+                        autonomousPeriodic();
+                    }
+                } else {
+                    if (!m_teleopInitialized) {
+                        LiveWindow.setEnabled(false);
+                        teleopInit();
+
+                        m_teleopInitialized = true;
+                        m_testInitialized = false;
+                        m_autonomousInitialized = false;
+                        m_disabledInitialized = false;
+                    }
+                    if (nextPeriodReady()) {
+                        FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationObserveUserProgramTeleop();
+                        teleopPeriodic();
+                    }
+                }
+                m_ds.waitForData();
+            }
+        }
+    }
+
+    /**
+     * This class provides an extra execution thread to take advantage of the
+     * two cores of the roboRIO.
+     *
+     * It runs at a higher frequency than the Periodic thread and is not synced
+     * to the driver station.
+     */
+    private class Continuous implements Runnable {
+
+        public void run() {
+            while (true) {
+                if (isAutonomous() && m_autonomousInitialized) {
+                    autonomousContinuous();
+                    alwaysContinuous();
+                } else if (isOperatorControl() && m_teleopInitialized) {
+                    teleopContinuous();
+                    alwaysContinuous();
+                } else if (isDisabled() && m_disabledInitialized) {
+                    disabledContinuous();
+                    alwaysContinuous();
+                }
+                
+                try {
+                    Thread.sleep(2);
+                } catch (InterruptedException e) {
+                }
+            }
+        }
+    }
+
+    private boolean nextPeriodReady() {
+        return m_ds.isNewControlData();
+    }
+
+    /* ----------- Overridable continuous code -----------------*/
+    private boolean tpcFirstRun = true;
+
+    public void teleopContinuous() {
+        if (tpcFirstRun) {
+            System.out.println("Default TorqueIterative.teleopContinuous() method... Overload me!");
+            tpcFirstRun = false;
+        }
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException ex) {
+        }
+    }
+
+    private boolean apcFirstRun = true;
+
+    public void autonomousContinuous() {
+        if (apcFirstRun) {
+            System.out.println("Default TorqueIterative.autonomousContinuous() method... Overload me!");
+            apcFirstRun = false;
+        }
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException ex) {
+        }
+    }
+
+    private boolean dcFirstRun = true;
+
+    public void disabledContinuous() {
+        if (dcFirstRun) {
+            System.out.println("Default TorqueIterative.disabledContinuous() method... Overload me!");
+            dcFirstRun = false;
+        }
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException ex) {
+        }
+    }
+
+    private boolean ecFirstRun = true;
+
+    public void alwaysContinuous() {
+        if (ecFirstRun) {
+            System.out.println("Default TorqueIterative.alwaysContinuous() method... Overload me!");
+            ecFirstRun = false;
+        }
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException ex) {
+        }
+    }
+
+    /* ----------- Overridable initialization code -----------------*/
+    public void robotInit() {
+        System.out.println("Default TorqueIterative.robotInit() method... Overload me!");
+    }
+
+    public void disabledInit() {
+        System.out.println("Default TorqueIterative.disabledInit() method... Overload me!");
+    }
+
+    public void autonomousInit() {
+        System.out.println("Default TorqueIterative.autonomousInit() method... Overload me!");
+    }
+
+    public void teleopInit() {
+        System.out.println("Default TorqueIterative.teleopInit() method... Overload me!");
+    }
+
+    public void testInit() {
+        System.out.println("Default TorqueIterative.testInit() method... Overload me!");
+    }
+
+    /* ----------- Overridable periodic code -----------------*/
+    private boolean dpFirstRun = true;
+
+    public void disabledPeriodic() {
+        if (dpFirstRun) {
+            System.out.println("Default TorqueIterative.disabledPeriodic() method... Overload me!");
+            dpFirstRun = false;
+        }
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException ex) {
+        }
+    }
+
+    private boolean apFirstRun = true;
+
+    public void autonomousPeriodic() {
+        if (apFirstRun) {
+            System.out.println("Default TorqueIterative.autonomousPeriodic() method... Overload me!");
+            apFirstRun = false;
+        }
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException ex) {
+        }
+    }
+
+    private boolean tpFirstRun = true;
+
+    public void teleopPeriodic() {
+        if (tpFirstRun) {
+            System.out.println("Default TorqueIterative.teleopPeriodic() method... Overload me!");
+            tpFirstRun = false;
+        }
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException ex) {
+        }
+    }
+
+    private boolean tmpFirstRun = true;
+
+    public void testPeriodic() {
+        if (tmpFirstRun) {
+            System.out.println("Default TorqueIterative.testPeriodic() method... Overload me!");
+            tmpFirstRun = false;
+        }
+    }
+}
