@@ -4,48 +4,36 @@ import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 
-public class TorqueEncoder {
+public class TorqueEncoder extends Encoder {
 
-    private Encoder encoder;
-
-    private double previousTime;
-    private double prevoiusPosition;
-    private double previousRate;
-    private int currentPosition;
-
-    private double rate;
+    private double averageRate;
     private double acceleration;
+    private double previousTime;
+    private double previousPosition;
+    private double previousRate;
 
-    public TorqueEncoder(int aChannel, int bChannel, boolean reverseDirection) {
-        encoder = new Encoder(aChannel, bChannel, reverseDirection);
+    public TorqueEncoder(int aChannel, int bChannel, int indexChannel, boolean reverseDirection) {
+        super(aChannel, bChannel, indexChannel, reverseDirection);
     }
 
     public TorqueEncoder(int aChannel, int bChannel, boolean reverseDireciton, CounterBase.EncodingType encodingType) {
-        encoder = new Encoder(aChannel, bChannel, reverseDireciton, encodingType);
+        super(aChannel, bChannel, reverseDireciton, encodingType);
     }
-
-    public void reset() {
-        encoder.reset();
-    }
-
+    
     public void calc() {
         double currentTime = Timer.getFPGATimestamp();
-        currentPosition = encoder.get();
+        double currentPosition = super.get();
 
-        rate = (currentPosition - prevoiusPosition) / (currentTime - previousTime);
-        acceleration = (rate - previousRate) / (currentTime - previousTime);
+        averageRate = (currentPosition - previousPosition) / (currentTime - previousTime);
+        acceleration = (averageRate - previousRate) / (currentTime - previousTime);
 
         previousTime = currentTime;
-        prevoiusPosition = currentPosition;
-        previousRate = rate;
+        previousPosition = currentPosition;
+        previousRate = averageRate;
     }
 
-    public int get() {
-        return currentPosition;
-    }
-
-    public double getRate() {
-        return rate;
+    public double getAverageRate() {
+        return averageRate;
     }
 
     public double getAcceleration() {

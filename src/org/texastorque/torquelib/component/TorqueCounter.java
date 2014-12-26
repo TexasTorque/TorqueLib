@@ -1,55 +1,53 @@
 package org.texastorque.torquelib.component;
 
-import org.texastorque.torquelib.util.MovingAverageFilter;
-
+import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.CounterBase;
-import edu.wpi.first.wpilibj.DigitalSource;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 
-public class TorqueCounter {
+public class TorqueCounter extends Counter {
 
-    private Counter counter;
-
-    private MovingAverageFilter filter;
+    private double averageRate;
+    private double acceleration;
+    private double previousTime;
+    private double previousPosition;
+    private double previousRate;
 
     public TorqueCounter(int port) {
-        counter = new Counter(port);
-
-        filter = new MovingAverageFilter(1);
+        super(kPwmChannels);
     }
 
-    public TorqueCounter(CounterBase.EncodingType encodingType, DigitalSource upSource, DigitalSource downSource, boolean reverse) {
-        counter = new Counter(encodingType, upSource, downSource, reverse);
-
-        filter = new MovingAverageFilter(1);
-        filter.reset();
+    public TorqueCounter(DigitalInput source) {
+        super(source);
     }
 
-    public void setFilterSize(int size) {
-        filter = new MovingAverageFilter(size);
-        filter.reset();
+    public TorqueCounter(int upPort, int downPort, boolean reverse, CounterBase.EncodingType encodingype) {
+        super(encodingype, new DigitalInput(upPort), new DigitalInput(downPort), reverse);
+
+    }
+
+    public TorqueCounter(AnalogTrigger trigger) {
+        super(trigger);
     }
 
     public void calc() {
-        double rate = 1.0 / counter.getPeriod();
-        filter.setInput(rate);
-        filter.run();
+        double currentTime = Timer.getFPGATimestamp();
+        double currentPosition = super.get();
+
+        averageRate = (currentPosition - previousPosition) / (currentTime - previousTime);
+        acceleration = (averageRate - previousRate) / (currentTime - previousTime);
+
+        previousTime = currentTime;
+        previousPosition = currentPosition;
+        previousRate = averageRate;
     }
 
-    public void start() {
-        filter.reset();
+    public double getAverageRate() {
+        return averageRate;
     }
 
-    public void reset() {
-        filter.reset();
-        counter.reset();
-    }
-
-    public int get() {
-        return counter.get();
-    }
-
-    public double getRate() {
-        return filter.getAverage();
+    public double getAcceleration() {
+        return acceleration;
     }
 }

@@ -5,8 +5,8 @@ build/
 #netbeans specific
 core
 nbproject/*
-!nbproject/project.properties
-!nbproject/project.xml
+nbproject/project.properties
+nbproject/project.xml
 nbbuild/
 nbdist/
 nbactions.xml
