@@ -11,10 +11,14 @@ public class Lights {
     /**
      * Create a new set of Arduino lights.
      *
-     * @param address The Arduino's device address.
+     * @param address The Arduino's device address. Pass the same address you used
+     * in the arduino code.
      */
     public Lights(int address) {
-        i2c = new I2C(Port.kOnboard, address);
+        //Bithsift the address because robot uses 8 bit i2c addresses while the arduino
+        //uses 7 bit addresses.
+        i2c = new I2C(Port.kOnboard, address<<1);
+        state = LightState.WHITE;
     }
 
     /**
@@ -44,14 +48,15 @@ public class Lights {
      */
     public enum LightState {
 
+        WHITE((byte) 0),
         /**
          * Normal state on red alliance.
          */
-        NORMAL_RED((byte) 0),
+        NORMAL_RED((byte) 1),
         /**
          * Normal state on blue alliance.
          */
-        NORMAL_BLUE((byte) 1);
+        NORMAL_BLUE((byte) 2);
 
         private byte data;
 
