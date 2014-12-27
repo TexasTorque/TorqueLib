@@ -3,7 +3,7 @@ package org.texastorque.torquelib.arduino;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 
-public class Lights {
+public class I2CArduinoLights {
 
     private I2C i2c;
     private LightState state;
@@ -14,7 +14,7 @@ public class Lights {
      * @param address The Arduino's device address. Pass the same address you used
      * in the arduino code.
      */
-    public Lights(int address) {
+    public I2CArduinoLights(int address) {
         //Bithsift the address because robot uses 8 bit i2c addresses while the arduino
         //uses 7 bit addresses.
         i2c = new I2C(Port.kOnboard, address<<1);
