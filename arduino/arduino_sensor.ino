@@ -17,7 +17,7 @@ void loop() {
   delay(10);
 }
 
-void receiveEvent(int value ) {
+void receiveEvent(int value) {
   
 }
 

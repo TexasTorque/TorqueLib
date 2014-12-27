@@ -1,31 +1,47 @@
 package org.texastorque.torquelib.arduino;
 
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
+
 public class Lights {
 
-    private Arduino sensor;
-    private LightState prevState;
+    private I2C i2c;
+    private LightState state;
 
     /**
      * Create a new set of Arduino lights.
      *
-     * @param a The Arduino board.
+     * @param address The Arduino's device address.
      */
-    public Lights(Arduino a) {
-        sensor = a;
+    public Lights(int address) {
+        i2c = new I2C(Port.kOnboard, address);
     }
 
     /**
      * Set light state.
      *
-     * @param state New state.
+     * @param newState New state.
      */
-    public void set(LightState state) {
-        if (state != prevState) {
-            sensor.send(new byte[]{state.getData()});
-            prevState = state;
+    public void set(LightState newState) {
+        if (newState != state) {
+            byte[] ary = new byte[]{newState.getData()};
+            i2c.transaction(ary, ary.length, null, 0);
+            state = newState;
         }
     }
 
+    /**
+     * Get the current state of the Arduino lights.
+     *
+     * @return The current LightState.
+     */
+    public LightState getState() {
+        return state;
+    }
+
+    /**
+     * The state that the lights indicate.
+     */
     public enum LightState {
 
         /**
