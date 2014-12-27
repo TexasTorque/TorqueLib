@@ -25,8 +25,8 @@ def main():
 
             print("Robot output:\n\n")
             while 1:
-                lines, addr = rioSocket.recvfrom(BUFFER_SIZE)
-                print(lines[:len(lines)-1])
+                lines, address = rioSocket.recvfrom(BUFFER_SIZE)
+                print(lines[lines)
             
         except:
             print("Could not create socket")
