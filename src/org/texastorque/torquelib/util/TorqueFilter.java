@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * user-defined maximum size so that the list overrides itself after a certain
  * number of values added.
  */
-public class DynamicAverage {
+public class TorqueFilter {
 
     private ArrayList<Double> values;
     private int position;
@@ -19,7 +19,7 @@ public class DynamicAverage {
      *
      * @param maxSize_ The initial maximum size of the list.
      */
-    public DynamicAverage(int maxSize_) {
+    public TorqueFilter(int maxSize_) {
         values = new ArrayList<>();
         if (maxSize_ < 2) {
             maxSize = 10;
