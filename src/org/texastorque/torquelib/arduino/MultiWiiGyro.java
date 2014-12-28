@@ -22,6 +22,7 @@ public class MultiWiiGyro {
         MultiWii.setChipSelectActiveLow();
         MultiWii.setSampleDataOnRising();
         
+        desiredByte = 1;
         receiveData = new byte[1];
     }
     
@@ -31,16 +32,15 @@ public class MultiWiiGyro {
     
     public void run() {
         byte[] temp = new byte[1];
-        temp[0] = desiredByte;
-        MultiWii.transaction(temp, receiveData, 1);
         
-        if (desiredByte == 1) {
-            newAngle = receiveData[0];
-            desiredByte = 0;
-        } else {
-            newAngle += (receiveData[0] << 8);
-            angle = newAngle;
-            desiredByte = 1;
-        }
+        temp[0] = 0;
+        MultiWii.transaction(temp, receiveData, 1);
+        byte low = receiveData[0];
+        
+        temp[0] = 1;
+        MultiWii.transaction(temp, receiveData, 1);
+        byte high = receiveData[0];
+        
+        angle = (high << 8) + low;
     }
 }

@@ -88,7 +88,7 @@ void setup() {
   Serial.println(F("Initializing DMP..."));
   devStatus = mpu.dmpInitialize();
 
-  
+
 
   // make sure it worked (returns 0 if so)
   if (devStatus == 0) {
@@ -161,14 +161,22 @@ void loop() {
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-    Serial.print("y\t");
-    Serial.println(ypr[0] * 180/M_PI);
+    //Serial.print("y\t");
+    //Serial.println(ypr[0] * 180/M_PI);
   }
 }
 
 ISR (SPI_STC_vect)
 {
-  SPDR = ypr[0] * 180/M_PI;
+  int toSend = ypr[0] * 180/M_PI;
+  Serial.println(toSend);
+  if (SPDR == 1)
+  {
+    SPDR = (byte)(toSend);
+  } else {
+    SPDR = (byte)(toSend >> 8);
+  }
 }
+
 
 
