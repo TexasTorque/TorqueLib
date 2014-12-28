@@ -31,7 +31,7 @@ public class DynamicAverage {
     /**
      * Reset the list.
      */
-    public void reset() {
+    public synchronized void reset() {
         values = new ArrayList<>();
         position = 0;
         average = 0.0;
@@ -42,7 +42,7 @@ public class DynamicAverage {
      *
      * @param value The next value.
      */
-    public void add(Double value) {
+    public synchronized void add(Double value) {
         if (position >= maxSize) {
             position = 0;
         }
@@ -54,7 +54,7 @@ public class DynamicAverage {
      *
      * @return The average.
      */
-    public double getAverage() {
+    public synchronized double getAverage() {
         for (Double n : values) {
             average += n;
         }
@@ -67,7 +67,7 @@ public class DynamicAverage {
      *
      * @param maxSize_ The maximum size.
      */
-    public void setMaxSize(int maxSize_) {
+    public synchronized void setMaxSize(int maxSize_) {
         maxSize = maxSize_;
     }
 
@@ -76,7 +76,7 @@ public class DynamicAverage {
      *
      * @return The maximum size.
      */
-    public int getMaxSize() {
+    public synchronized int getMaxSize() {
         return maxSize;
     }
 }
