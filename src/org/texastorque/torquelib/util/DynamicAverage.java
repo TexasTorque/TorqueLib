@@ -43,10 +43,11 @@ public class DynamicAverage {
      * @param value The next value.
      */
     public synchronized void add(Double value) {
-        if (position >= maxSize) {
+        if (position > maxSize) {
             position = 0;
         }
         values.add(position, value);
+        position++;
     }
 
     /**
