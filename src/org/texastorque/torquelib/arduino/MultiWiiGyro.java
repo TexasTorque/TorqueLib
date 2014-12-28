@@ -36,9 +36,11 @@ public class MultiWiiGyro {
         
         if (desiredByte == 1) {
             newAngle = receiveData[0];
+            desiredByte = 0;
         } else {
             newAngle += (receiveData[0] << 8);
             angle = newAngle;
+            desiredByte = 1;
         }
     }
 }
