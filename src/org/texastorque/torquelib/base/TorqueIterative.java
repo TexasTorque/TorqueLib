@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tInst
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @Author TexasTorque
@@ -22,6 +24,10 @@ public abstract class TorqueIterative extends RobotBase {
     private boolean m_autonomousInitialized;
     private boolean m_teleopInitialized;
     private boolean m_testInitialized;
+    
+    Thread periodicThread;
+    Timer continousTimer;
+    double continuousPeriod = 1.0 / 250.0;
 
     public TorqueIterative() {
         m_disabledInitialized = false;
@@ -43,11 +49,11 @@ public abstract class TorqueIterative extends RobotBase {
 
         LiveWindow.setEnabled(false);
 
-        Thread periodicThread = new Thread(new Periodic());
+        periodicThread = new Thread(new Periodic());
         periodicThread.start();
 
-        Thread continousThread = new Thread(new Continuous());
-        continousThread.start();
+        continousTimer = new Timer();
+        continousTimer.scheduleAtFixedRate(new Continuous(), 0, (long) (1000 * continuousPeriod));
 
         while (true) {
             try {
@@ -137,8 +143,9 @@ public abstract class TorqueIterative extends RobotBase {
      * It runs at a higher frequency than the Periodic thread and is not synced
      * to the driver station.
      */
-    private class Continuous implements Runnable {
+    private class Continuous extends TimerTask {
 
+        @Override
         public void run() {
             while (true) {
                 if (isAutonomous() && m_autonomousInitialized) {
@@ -150,11 +157,6 @@ public abstract class TorqueIterative extends RobotBase {
                 } else if (isDisabled() && m_disabledInitialized) {
                     disabledContinuous();
                     alwaysContinuous();
-                }
-                
-                try {
-                    Thread.sleep(2);
-                } catch (InterruptedException e) {
                 }
             }
         }
