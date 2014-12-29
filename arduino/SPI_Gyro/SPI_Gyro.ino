@@ -169,8 +169,11 @@ void loop() {
 ISR (SPI_STC_vect)
 {
   int toSend = ypr[0] * 180/M_PI;
+  if (toSend < 0) {
+    toSend += 360; 
+  }
   Serial.println(toSend);
-  if (SPDR == 1)
+  if (SPDR == 0)
   {
     SPDR = (byte)(toSend);
   } else {

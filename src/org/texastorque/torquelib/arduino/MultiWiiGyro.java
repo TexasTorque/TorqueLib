@@ -1,6 +1,7 @@
 package org.texastorque.torquelib.arduino;
 
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class MultiWiiGyro {
 
@@ -33,17 +34,15 @@ public class MultiWiiGyro {
     public void run() {
         byte[] temp = new byte[1];
         
-        temp[0] = 0;
+        temp[0] = (byte) 1;
         MultiWii.transaction(temp, receiveData, 1);
         int low = receiveData[0];
+        SmartDashboard.putNumber("low", low);
         
-	if (low>>7 == -1) {
-		low += 256;
-	}
-		
-        temp[0] = 1;
+        temp[0] = (byte) 0;
         MultiWii.transaction(temp, receiveData, 1);
         int high = receiveData[0];
+        SmartDashboard.putNumber("high", high);
         
         angle = (high << 8) + low;
     }
