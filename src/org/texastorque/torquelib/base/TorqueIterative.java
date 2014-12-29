@@ -10,7 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * @Author TexasTorque
+ * @Author Texas Torque
  *
  * A modified version of the WPILIBJ IterativeRobot template that uses two
  * threads.
@@ -24,10 +24,10 @@ public abstract class TorqueIterative extends RobotBase {
     private boolean m_autonomousInitialized;
     private boolean m_teleopInitialized;
     private boolean m_testInitialized;
-    
+
     Thread periodicThread;
     Timer continousTimer;
-    double continuousPeriod = 1.0 / 250.0;
+    double continuousPeriod = 1.0 / 100.0;
 
     public TorqueIterative() {
         m_disabledInitialized = false;
@@ -41,6 +41,7 @@ public abstract class TorqueIterative extends RobotBase {
         // See below.
     }
 
+    @Override
     public void startCompetition() {
         UsageReporting.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Iterative);
 
@@ -49,15 +50,18 @@ public abstract class TorqueIterative extends RobotBase {
 
         LiveWindow.setEnabled(false);
 
+        //Start a new Thread to run the regular Periodic code on.
         periodicThread = new Thread(new Periodic());
         periodicThread.start();
 
+        //Shcedule the second thread to run at the period specified above.
         continousTimer = new Timer();
         continousTimer.scheduleAtFixedRate(new Continuous(), 0, (long) (1000 * continuousPeriod));
 
+        //Keep the original Thread quiet.
         while (true) {
             try {
-                Thread.sleep(100000);
+                Thread.sleep(5 * 60 * 1000);
             } catch (InterruptedException ex) {
             }
         }
@@ -74,6 +78,7 @@ public abstract class TorqueIterative extends RobotBase {
         @Override
         public void run() {
             while (true) {
+
                 if (isDisabled()) {
                     if (!m_disabledInitialized) {
                         LiveWindow.setEnabled(false);
@@ -140,25 +145,23 @@ public abstract class TorqueIterative extends RobotBase {
      * This class provides an extra execution thread to take advantage of the
      * two cores of the roboRIO.
      *
-     * It runs at a higher frequency than the Periodic thread and is not synced
-     * to the driver station.
+     * It is scheduled to run at 100hz.
      */
     private class Continuous extends TimerTask {
 
         @Override
         public void run() {
-            while (true) {
-                if (isAutonomous() && m_autonomousInitialized) {
-                    autonomousContinuous();
-                    alwaysContinuous();
-                } else if (isOperatorControl() && m_teleopInitialized) {
-                    teleopContinuous();
-                    alwaysContinuous();
-                } else if (isDisabled() && m_disabledInitialized) {
-                    disabledContinuous();
-                    alwaysContinuous();
-                }
+            if (isAutonomous() && m_autonomousInitialized) {
+                autonomousContinuous();
+                alwaysContinuous();
+            } else if (isOperatorControl() && m_teleopInitialized) {
+                teleopContinuous();
+                alwaysContinuous();
+            } else if (isDisabled() && m_disabledInitialized) {
+                disabledContinuous();
+                alwaysContinuous();
             }
+
         }
     }
 
