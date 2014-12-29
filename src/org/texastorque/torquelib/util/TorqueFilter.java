@@ -1,4 +1,4 @@
-package org.texastorque.torquelib.util;
+package com.company;
 
 import java.util.ArrayList;
 
@@ -42,11 +42,15 @@ public class TorqueFilter {
      *
      * @param value The next value.
      */
-    public synchronized void add(Double value) {
-        if (position > maxSize) {
+    public synchronized void add(double value) {
+        if (position >= maxSize) {
             position = 0;
         }
-        values.add(position, value);
+        if (values.size() < maxSize) {
+            values.add(new Double(value));
+        } else {
+            values.set(position, new Double(value));
+        }
         position++;
     }
 
@@ -56,8 +60,9 @@ public class TorqueFilter {
      * @return The average.
      */
     public synchronized double getAverage() {
+        average = 0.0;
         for (Double n : values) {
-            average += n;
+            average += n.doubleValue();
         }
         average /= values.size();
         return average;
@@ -70,6 +75,7 @@ public class TorqueFilter {
      */
     public synchronized void setMaxSize(int maxSize_) {
         maxSize = maxSize_;
+        reset();
     }
 
     /**
