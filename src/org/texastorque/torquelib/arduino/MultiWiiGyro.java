@@ -35,11 +35,15 @@ public class MultiWiiGyro {
         
         temp[0] = 0;
         MultiWii.transaction(temp, receiveData, 1);
-        byte low = receiveData[0];
+        int low = receiveData[0];
         
+	if (low>>7 == -1) {
+		low += 256;
+	}
+		
         temp[0] = 1;
         MultiWii.transaction(temp, receiveData, 1);
-        byte high = receiveData[0];
+        int high = receiveData[0];
         
         angle = (high << 8) + low;
     }
