@@ -1,5 +1,10 @@
 package org.texastorque.torquelib.arduino;
 
+/**
+ * Create a new Arduino-based lights component.
+ *
+ * @author TexasTorque
+ */
 public class Lights {
 
     private Arduino sensor;
@@ -26,6 +31,9 @@ public class Lights {
         }
     }
 
+    /**
+     * The possible states that the lights could be in.
+     */
     public enum LightState {
 
         /**

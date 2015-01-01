@@ -1,5 +1,10 @@
 package org.texastorque.torquelib.arduino;
 
+/**
+ * Create a new Arduino-based sensor component.
+ *
+ * @author TexasTorque
+ */
 public class Sensor {
 
     private Arduino arduino;

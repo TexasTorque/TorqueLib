@@ -3,6 +3,11 @@ package org.texastorque.torquelib.arduino;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 
+/**
+ * Create a new Arduino component.
+ *
+ * @author TeaxsTorque
+ */
 public class Arduino {
 
     private final I2C i2c;
