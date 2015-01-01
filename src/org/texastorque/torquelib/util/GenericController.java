@@ -2,6 +2,11 @@ package org.texastorque.torquelib.util;
 
 import edu.wpi.first.wpilibj.Joystick;
 
+/**
+ * A class that reads input from either a Logitech or Xbox controller.
+ *
+ * @author TexasTorque
+ */
 public final class GenericController extends Joystick {
 
     public static final int TYPE_LOGITECH = 1;
@@ -11,6 +16,13 @@ public final class GenericController extends Joystick {
     private int controllerType;
     private double deadband;
 
+    /**
+     * Create a new controller.
+     *
+     * @param port Which USB port the controller is in (use constant).
+     * @param type Type of controller.
+     * @param dband The size of the deadband.
+     */
     public GenericController(int port, int type, double dband) {
         super(port);
         controllerType = type;
@@ -45,6 +57,12 @@ public final class GenericController extends Joystick {
         deadband = Math.min(1, Math.abs(dband));
     }
 
+    /**
+     * Change controller type. Will default to Xbox if an incorrect type is
+     * given.
+     *
+     * @param type New controller type.
+     */
     public synchronized void setType(int type) {
         controllerType = type;
         switch (type) {
@@ -55,7 +73,7 @@ public final class GenericController extends Joystick {
                 controllerMap = new int[]{2, 1, 5, 4, 6, 6, 9, 10, 5, 6, 2, 3, 7, 8, 3, 4, 2, 1};
                 break;
             default:
-                //default to logitech
+                //default to xbox
                 controllerMap = new int[]{2, 1, 5, 4, 6, 6, 9, 10, 5, 6, 3, 3, 7, 8, 3, 4, 2, 1};
                 controllerType = TYPE_XBOX;
         }
@@ -100,7 +118,7 @@ public final class GenericController extends Joystick {
     public synchronized boolean getLeftBumper() {
         return getRawButton(controllerMap[8]);
     }
-    
+
     public synchronized boolean getRightBumper() {
         return getRawButton(controllerMap[9]);
     }
@@ -148,11 +166,11 @@ public final class GenericController extends Joystick {
     public synchronized boolean getAButton() {
         return getRawButton(controllerMap[17]);
     }
-    
+
     public synchronized void setLeftRumble(boolean on) {
         setRumble(Joystick.RumbleType.kLeftRumble, on ? 1 : 0);
     }
-    
+
     public synchronized void setrightRumble(boolean on) {
         setRumble(Joystick.RumbleType.kRightRumble, on ? 1 : 0);
     }

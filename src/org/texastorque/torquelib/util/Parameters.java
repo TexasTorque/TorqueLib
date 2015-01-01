@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 public class Parameters {
 
+    /**
+     * Constants loaded from params file.
+     */
     public static ArrayList<Constant> constants;
 
     private final File paramsFile;
@@ -27,9 +30,11 @@ public class Parameters {
 
         constants = new ArrayList<>();
     }
-    
-    public Parameters()
-    {
+
+    /**
+     * Make a new Parameters loader using "/home/admin/params.txt".
+     */
+    public Parameters() {
         this("/home/admin/params.txt");
     }
 
@@ -82,14 +87,12 @@ public class Parameters {
         public String getKey() {
             return key;
         }
-        
-        public Double getDouble()
-        {
+
+        public Double getDouble() {
             return value;
         }
-        
-        public boolean getBoolean()
-        {
+
+        public boolean getBoolean() {
             return value == 1;
         }
 

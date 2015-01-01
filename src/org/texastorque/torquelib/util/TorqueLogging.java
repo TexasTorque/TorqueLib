@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Class for logging to a flash drive.
+ *
+ * @author TexasTorque
+ */
 public final class TorqueLogging {
 
     private BufferedWriter writer;
@@ -21,17 +26,21 @@ public final class TorqueLogging {
     private boolean firstWrite;
 
     private ArrayList<Loggable> loggedSystems;
-    
+
     private double startTime;
 
     /**
-     * Create a new flash drive logger.
-     *
+     * Create a new flash drive logger at "/media/sda1/logging/".
      */
     public TorqueLogging() {
         this("/media/sda1/logging/");
     }
 
+    /**
+     * Create a new flash drive logger.
+     *
+     * @param path The path for the directory in which the log will be created.
+     */
     public TorqueLogging(String path) {
         filePath = path;
         loggedSystems = new ArrayList<>();
@@ -40,7 +49,6 @@ public final class TorqueLogging {
 
     /**
      * Make a new file and reset the logging system.
-     *
      */
     public void reset() {
         Date currentDate = new Date();
@@ -63,7 +71,6 @@ public final class TorqueLogging {
 
     /**
      * Log data from the systems registered for logging.
-     *
      */
     public void log() {
         if (enabled) {
@@ -98,7 +105,6 @@ public final class TorqueLogging {
 
     /**
      * Close the file after a logging session is completed.
-     *
      */
     public void close() {
         enabled = false;
