@@ -2,6 +2,11 @@ package org.texastorque.torquelib.controlLoop;
 
 import java.util.function.DoubleUnaryOperator;
 
+/**
+ * A PID implementation.
+ *
+ * @author TexasTorque
+ */
 public class TorquePID extends ControlLoop {
 
     private double kFF;
@@ -17,11 +22,21 @@ public class TorquePID extends ControlLoop {
     private double maxOutput;
     private int minCycleCount;
     private int cycleCount;
-    
+
+    /**
+     * Create a new PID with all constants 0.0.
+     */
     public TorquePID() {
         this(0.0, 0.0, 0.0);
     }
 
+    /**
+     * Create a new PID.
+     *
+     * @param p The proportionality constant.
+     * @param i The integral constant.
+     * @param d The derivative constant.
+     */
     public TorquePID(double p, double i, double d) {
         kP = p;
         kI = i;
@@ -38,19 +53,38 @@ public class TorquePID extends ControlLoop {
         minDoneCycles = 10;
     }
 
+    /**
+     * Change the PID constants.
+     *
+     * @param p The proportionality constant.
+     * @param i The integral constant.
+     * @param d The derivative constant.
+     */
     public void setPIDGains(double p, double i, double d) {
         kP = p;
         kI = i;
         kD = d;
     }
 
+    /**
+     * Set the feedforward constant.
+     *
+     * @param operator The object used to calculate the feedforward variable.
+     * @param ff The feedforward constant.
+     * @see java.util.function.DoubleUnaryOperator
+     */
     public void setFeedForward(DoubleUnaryOperator operator, double ff) {
         feedForwardFunction = operator;
         kFF = ff;
     }
-    
-    public void setFeedForward(double ff)
-    {
+
+    /**
+     * Set the feedforward constant using the function y=x as the
+     * DoubleUnaryOperator.
+     *
+     * @param ff The feedforward constant.
+     */
+    public void setFeedForward(double ff) {
         feedForwardFunction = (x) -> x;
         kFF = ff;
     }
@@ -59,14 +93,21 @@ public class TorquePID extends ControlLoop {
         epsilon = e;
     }
 
+    @Override
     public void setDoneRange(double range) {
         doneRange = range;
     }
 
+    @Override
     public void setSetpoint(double sp) {
         setpoint = sp;
     }
 
+    /**
+     * Set the limit of the output.
+     *
+     * @param max The maximum value that the value can be.
+     */
     public void setMaxOutput(double max) {
         if (max < 0.0) {
             maxOutput = 0.0;
@@ -94,6 +135,7 @@ public class TorquePID extends ControlLoop {
         return previousValue;
     }
 
+    @Override
     public double calculate(double currentValue) {
         double ffVal = 0.0;
         double pVal = 0.0;
@@ -146,6 +188,7 @@ public class TorquePID extends ControlLoop {
         return output;
     }
 
+    @Override
     public boolean isDone() {
         double currError = Math.abs(setpoint - previousValue);
 
