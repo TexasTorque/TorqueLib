@@ -4,6 +4,11 @@ import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 
+/**
+ * Class for a FRC encoder.
+ *
+ * @author Matthew
+ */
 public class TorqueEncoder extends Encoder {
 
     private double averageRate;
@@ -12,14 +17,33 @@ public class TorqueEncoder extends Encoder {
     private double previousPosition;
     private double previousRate;
 
+    /**
+     * Create a new encoder.
+     *
+     * @param aChannel Channel a port.
+     * @param bChannel Channel b port.
+     * @param indexChannel The index channel digital input channel.
+     * @param reverseDirection Whether or not the encoder is reversed.
+     */
     public TorqueEncoder(int aChannel, int bChannel, int indexChannel, boolean reverseDirection) {
         super(aChannel, bChannel, indexChannel, reverseDirection);
     }
 
+    /**
+     * Create a new encoder.
+     *
+     * @param aChannel Channel a port.
+     * @param bChannel Channel b port.
+     * @param reverseDireciton Whether or not the encoder is revered.
+     * @param encodingType What type of encoding the encoder is using.
+     */
     public TorqueEncoder(int aChannel, int bChannel, boolean reverseDireciton, CounterBase.EncodingType encodingType) {
         super(aChannel, bChannel, reverseDireciton, encodingType);
     }
-    
+
+    /**
+     * Calculate the values for the encoder.
+     */
     public void calc() {
         double currentTime = Timer.getFPGATimestamp();
         double currentPosition = super.get();
@@ -32,10 +56,20 @@ public class TorqueEncoder extends Encoder {
         previousRate = averageRate;
     }
 
+    /**
+     * Get the average rate at which encoder position changes over time.
+     *
+     * @return The rate.
+     */
     public double getAverageRate() {
         return averageRate;
     }
 
+    /**
+     * Get the average rate at which rate changes over time.
+     *
+     * @return The rate.
+     */
     public double getAcceleration() {
         return acceleration;
     }

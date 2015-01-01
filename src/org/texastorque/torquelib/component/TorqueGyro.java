@@ -4,6 +4,11 @@ import edu.wpi.first.wpilibj.AccumulatorResult;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Timer;
 
+/**
+ * Create a new gyro.
+ *
+ * @author TexasTorque
+ */
 public class TorqueGyro {
 
     //Analog Input Parameters
@@ -31,9 +36,8 @@ public class TorqueGyro {
     AccumulatorResult result2;
 
     /**
-     * 
      * Create a new double gyro.
-     * 
+     *
      * @param port1 Port for the first gyroscope.
      * @param port2 Port for the second, upside down gyroscope.
      */
@@ -43,12 +47,11 @@ public class TorqueGyro {
 
         m2_analog = new AnalogInput(port2);
         m2_channelAllocated = true;
-        
+
         initGyro();
     }
 
     /**
-     * 
      * Initialize the gyroscope.
      */
     private void initGyro() {
@@ -62,7 +65,7 @@ public class TorqueGyro {
         double sampleRate = kSamplesPerSecond
                 * (1 << (kAverageBits + kOversampleBits));
         AnalogInput.setGlobalSampleRate(sampleRate);
-        
+
         //Gyro 2
         result2 = new AccumulatorResult();
 
@@ -73,7 +76,7 @@ public class TorqueGyro {
         AnalogInput.setGlobalSampleRate(sampleRate);
 
         Timer.delay(1.0);
-        
+
         //Calibrate
         m1_analog.initAccumulator();
         m1_analog.resetAccumulator();
@@ -103,12 +106,11 @@ public class TorqueGyro {
 
         m2_analog.setAccumulatorCenter(m1_center);
         m2_analog.resetAccumulator();
-        
+
         setDeadband(0.1);
     }
 
     /**
-     * 
      * Free resources taken up by the Gyros
      */
     public void free() {
@@ -124,7 +126,6 @@ public class TorqueGyro {
     }
 
     /**
-     * 
      * Reset the accumulators to set the current angle as 0.0.
      */
     public void reset() {
@@ -137,16 +138,15 @@ public class TorqueGyro {
     }
 
     /**
-     * 
-     * Set the deadband of the gyros. Any rate of change smaller than the deadband
-     * will be treated as sitting still. A large deadband will reduce drift but
-     * decrease accuracy. The default value is 0.1 degrees per second.
-     * 
+     * Set the deadband of the gyros. Any rate of change smaller than the
+     * deadband will be treated as sitting still. A large deadband will reduce
+     * drift but decrease accuracy. The default value is 0.1 degrees per second.
+     *
      * @param degreesPerSecond The deadband to be set in degrees/second.
      */
     public void setDeadband(double degreesPerSecond) {
         double volts = degreesPerSecond * m_voltsPerDegreePerSecond;
-        
+
         int deadband1 = (int) (volts * 1e9 / m1_analog.getLSBWeight() * (1 << m1_analog.getOversampleBits()));
         m1_analog.setAccumulatorDeadband(deadband1);
 
@@ -155,9 +155,8 @@ public class TorqueGyro {
     }
 
     /**
-     * 
      * Set the volts to angular rate of change scale factor of the gyros.
-     * 
+     *
      * @param voltsPerDegreePerSecond The Sensitivity scalar.
      */
     public void setSensitivity(double voltsPerDegreePerSecond) {
@@ -165,9 +164,8 @@ public class TorqueGyro {
     }
 
     /**
-     * 
      * Get the angle of the gyro.
-     * 
+     *
      * @return The current angular postion of the robot in degrees.
      */
     public double getAngle() {
@@ -195,11 +193,10 @@ public class TorqueGyro {
             return (scaledValue1 + scaledValue2);
         }
     }
-    
+
     /**
-     * 
      * Get the angular rate of change of the gyro.
-     * 
+     *
      * @return The angular rate of change of the robot in degrees/second.
      */
     public double getRate() {
@@ -210,12 +207,12 @@ public class TorqueGyro {
                     * 1e-9
                     * m1_analog.getLSBWeight()
                     / ((1 << m1_analog.getOversampleBits()) * m_voltsPerDegreePerSecond);
-            
+
             double rate2 = -1 * (m2_analog.getAverageValue() - (m2_center + m2_offset))
                     * 1e-9
                     * m2_analog.getLSBWeight()
                     / ((1 << m2_analog.getOversampleBits()) * m_voltsPerDegreePerSecond);
-            
+
             return (rate1 + rate2);
         }
     }
