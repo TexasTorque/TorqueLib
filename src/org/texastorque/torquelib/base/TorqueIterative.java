@@ -10,13 +10,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * @Author Texas Torque
  *
  * A modified version of the WPILIBJ IterativeRobot template that uses two
  * threads.
  *
  * CPU usage on the roboRio may be higher than when using the regular
  * IterativeRobot base class, but should not be a problem.
+ *
+ * @author TexasTorque
  */
 public abstract class TorqueIterative extends RobotBase {
 
@@ -29,6 +30,9 @@ public abstract class TorqueIterative extends RobotBase {
     Timer continousTimer;
     double continuousPeriod = 1.0 / 100.0;
 
+    /**
+     * Create a new iterative robot.
+     */
     public TorqueIterative() {
         m_disabledInitialized = false;
         m_autonomousInitialized = false;
@@ -36,6 +40,9 @@ public abstract class TorqueIterative extends RobotBase {
         m_testInitialized = false;
     }
 
+    /**
+     * Unused.
+     */
     protected void prestart() {
         // Don't immediately say that the robot's ready to be enabled.
         // See below.
