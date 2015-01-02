@@ -49,7 +49,7 @@ public class TorquePotentiometer {
     }
 
     /**
-     * Get the percentage of the maximum turn.
+     * Get the fraction of the maximum turn.
      *
      * @return A value from 0 to 1.
      */
@@ -58,8 +58,9 @@ public class TorquePotentiometer {
     }
 
     /**
-     * Get the position of the potentiometer in relation to the minimum
-     * position.
+     * Get the position of the potentiometer in relation to the minimum and
+     * maximum position. If you define min and max position in real units this
+     * will be in real units.
      *
      * @return The position.
      */
@@ -68,7 +69,8 @@ public class TorquePotentiometer {
     }
 
     /**
-     * Get the rate value of the potentiometer.
+     * Get the rate value of the potentiometer as a digital value between 0 and
+     * 4096.
      *
      * @return The value.
      */
@@ -77,7 +79,7 @@ public class TorquePotentiometer {
     }
 
     /**
-     * Get the voltage of the potentiometer.
+     * Get the voltage of the potentiometer between 0v and 5v.
      *
      * @return The voltage.
      */
