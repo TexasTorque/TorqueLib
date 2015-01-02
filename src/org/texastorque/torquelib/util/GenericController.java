@@ -19,7 +19,8 @@ public final class GenericController extends Joystick {
     /**
      * Create a new controller.
      *
-     * @param port Which Driver Station port the controller is in (use constant).
+     * @param port Which Driver Station port the controller is in (use
+     * constant).
      * @param type Type of controller.
      * @param dband The size of the deadband.
      */
@@ -31,7 +32,13 @@ public final class GenericController extends Joystick {
         setType(controllerType);
     }
 
-    //scales inputs [deadband, 1] to [0, 1]
+    /**
+     * Scale the input value 0 to 1 so that inputs less than the deadband are
+     * possible. We need this for terrible controller with huge deadzones.
+     *
+     * @param input The raw joystick value.
+     * @return The scaled joystick value.
+     */
     private double scaleInput(double input) {
         if (Math.abs(input) > deadband) {
             if (input > 0) {
@@ -44,6 +51,11 @@ public final class GenericController extends Joystick {
         }
     }
 
+    /**
+     * Set the deadband of the controller.
+     *
+     * @param dband The new deadband to use.
+     */
     public void setDeadband(double dband) {
         deadband = Math.min(1, Math.abs(dband));
     }

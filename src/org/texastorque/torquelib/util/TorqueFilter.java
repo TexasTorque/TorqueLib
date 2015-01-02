@@ -1,4 +1,4 @@
-package com.company;
+package org.texastorque.torquelib.util;
 
 import java.util.ArrayList;
 
