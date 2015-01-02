@@ -44,15 +44,6 @@ public final class GenericController extends Joystick {
         }
     }
 
-    @Override
-    public double getRawAxis(int port) {
-        try {
-            return super.getRawAxis(port);
-        } catch (Exception e) {
-            return 0.0;
-        }
-    }
-
     public void setDeadband(double dband) {
         deadband = Math.min(1, Math.abs(dband));
     }
