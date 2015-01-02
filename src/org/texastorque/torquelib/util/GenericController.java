@@ -19,7 +19,7 @@ public final class GenericController extends Joystick {
     /**
      * Create a new controller.
      *
-     * @param port Which USB port the controller is in (use constant).
+     * @param port Which Driver Station port the controller is in (use constant).
      * @param type Type of controller.
      * @param dband The size of the deadband.
      */

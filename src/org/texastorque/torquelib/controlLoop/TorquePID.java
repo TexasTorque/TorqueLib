@@ -86,6 +86,11 @@ public class TorquePID extends ControlLoop {
         kFF = ff;
     }
 
+    /**
+     * Set the epsilon value.
+     * 
+     * @param e The new epsilon value.
+     */
     public void setEpsilon(double e) {
         epsilon = e;
     }
@@ -105,6 +110,9 @@ public class TorquePID extends ControlLoop {
         }
     }
 
+    /**
+     * Reset the PID controller.
+     */
     public void reset() {
         errorSum = 0.0;
         firstCycle = true;
@@ -114,6 +122,12 @@ public class TorquePID extends ControlLoop {
         return previousValue;
     }
 
+    /**
+     * Calculate output based off of the current sensor value.
+     * 
+     * @param currentValue the current sensor feedback.
+     * @return Motor ouput to the system.
+     */
     @Override
     public double calculate(double currentValue) {
         double ffVal = 0.0;
