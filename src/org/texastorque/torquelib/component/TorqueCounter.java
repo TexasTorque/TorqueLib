@@ -75,8 +75,8 @@ public class TorqueCounter extends Counter {
     }
 
     /**
-     * Get the average rate at which counter position changes over time.
-     * This rate is calculated in the dx/dt method rather than 1 / period method.
+     * Get the average rate at which counter position changes over time. This
+     * rate is calculated in the dx/dt method rather than 1 / period method.
      *
      * @return The rate.
      */

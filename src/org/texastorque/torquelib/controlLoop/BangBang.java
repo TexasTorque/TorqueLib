@@ -17,7 +17,7 @@ public class BangBang extends ControlLoop {
 
     /**
      * Calculate output based off of the current sensor value.
-     * 
+     *
      * @param current the current sensor feedback.
      * @return Motor ouput to the system.
      */

@@ -50,8 +50,9 @@ public abstract class TorqueIterative extends RobotBase {
     }
 
     /**
-     * 
-     * Overrides method from RobotBase. This is called by main and runs the user robot code.
+     *
+     * Overrides method from RobotBase. This is called by main and runs the user
+     * robot code.
      */
     @Override
     public void startCompetition() {

@@ -88,7 +88,7 @@ public class TorquePID extends ControlLoop {
 
     /**
      * Set the epsilon value.
-     * 
+     *
      * @param e The new epsilon value.
      */
     public void setEpsilon(double e) {
@@ -124,7 +124,7 @@ public class TorquePID extends ControlLoop {
 
     /**
      * Calculate output based off of the current sensor value.
-     * 
+     *
      * @param currentValue the current sensor feedback.
      * @return Motor ouput to the system.
      */
