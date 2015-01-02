@@ -11,16 +11,16 @@ public class TorqueToggle {
     }
 
     public void calc(boolean current) {
+        //Checks for an edge in boolean state. We only want to perform an action once when we go from False to True
         if (current != lastCheck) {
-            if (!current) {
-                lastCheck = false;
-            }//if button release
-            else {
-                lastCheck = true;
+            //If the value is true now, it is the first time it is true. Flip the toggle.
+            if (current)
                 toggle = !toggle;
-            }//if button press
-        }//if event 
-    }//update the toggle
+            }
+            //Keep track of the previous value. Does not need to be updated if lastCheck is already equal to current.
+            lastCheck = current;
+        } 
+    }
 
     public void set(boolean override) {
         toggle = override;
