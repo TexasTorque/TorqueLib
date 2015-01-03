@@ -15,9 +15,7 @@ public class I2CArduinoLights {
      * in the arduino code.
      */
     public I2CArduinoLights(int address) {
-        //Bithsift the address because robot uses 8 bit i2c addresses while the arduino
-        //uses 7 bit addresses.
-        i2c = new I2C(Port.kOnboard, address<<1);
+        i2c = new I2C(Port.kOnboard, address);
         state = LightState.WHITE;
     }
 
