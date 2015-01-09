@@ -1,4 +1,4 @@
-package org.texastorque.controlloop;
+package org.texastorque.torquelib.controlLoop;
 
 /**
  * Created by Gijs on 12/31/2014.
@@ -38,12 +38,16 @@ public class TorqueTMP {
         return currentAcceleration;
     }
 
-    public void generateTrapezoid(double distance, double realSpeed) {
+    public void generateTrapezoid(double targetPosition, double realPosition, double realSpeed) {
 
-        if (distance == 0) {
+        double positionError = targetPosition - realPosition;
+        
+        System.out.println(positionError);
+        
+        if (Math.abs(positionError) < 0.1) {
             return;
-        } else if (distance < 0.0) {
-            generateTrapezoid(-distance, -realSpeed);
+        } else if (positionError < 0.0) {
+            generateTrapezoid(-targetPosition, -realPosition, -realSpeed);
             acceleration *= -1;
             deceleration *= -1;
             topSpeed *= -1;
@@ -70,11 +74,9 @@ public class TorqueTMP {
         // x * 2 * acceleration = 2Vmax^2 - Vnow^2
         // 2Vmax^2 = 2 * x * acceleration + Vnow^2
         // Vmax = sqrt( (2 * x * acceleration + Vnow^2) / 2 )
-        double maximumPossibleSpeed = Math.sqrt((2 * maxAllowedAcceleration * distance + realSpeed * realSpeed) / 2);
+        double maximumPossibleSpeed = Math.sqrt((2 * maxAllowedAcceleration * positionError + realSpeed * realSpeed) / 2);
         //Limit the max speed if it is higher than we want the system to ever move.
         topSpeed = Math.min(maximumPossibleSpeed, maxAllowedVelocity);
-
-        System.out.println(topSpeed);
 
         //Calculate the time we will spend accelerating.
         acceleration = maxAllowedAcceleration;
@@ -93,13 +95,25 @@ public class TorqueTMP {
         double decelerationDistance = -1 * (topSpeed * topSpeed) / (2 * deceleration);
 
         //Cruising distance is the distance we do not spend accelerating or decelerating.
-        double cruiseDistance = distance - accelerationDistance - decelerationDistance;
+        double cruiseDistance = positionError - accelerationDistance - decelerationDistance;
         //Cruise time is cruising distance divided by the speed at which we cruise.
         cruiseTime = cruiseDistance / topSpeed;
 
+        //Our target velocity right now is our current velocity because thats what
+        //the profile was based on.
         currentVelocity = realSpeed;
+
+        //Our target position right now is our current position because thats what
+        //the profile was based on.
+        currentPosition = realPosition;
     }
 
+    /**
+     * Calculate what our position, velocity, and acceleration should be in the future.
+     * 
+     * 
+     * @param dt 
+     */
     public void calculateNextSituation(double dt) {
         if (dt < accelerationTime) {
             accelerate(dt);
@@ -118,18 +132,33 @@ public class TorqueTMP {
         }
     }
 
+    /**
+     * Accelerate at maximum acceleration for the specified amount of time.
+     * 
+     * @param dt The time to accelerate for.
+     */
     private void accelerate(double dt) {
         currentAcceleration = acceleration;
         currentPosition += currentVelocity * dt + 0.5 * currentAcceleration * dt * dt;
         currentVelocity += acceleration * dt;
     }
 
+    /**
+     * Cruise for the specified amount of time.
+     * 
+     * @param dt The time to cruise for.
+     */
     private void cruise(double dt) {
         currentAcceleration = 0.0;
         currentPosition += topSpeed * dt;
         currentVelocity = topSpeed;
     }
 
+    /**
+     * Decelerate at -1 * maximum acceleration for the specified amount of time.
+     * 
+     * @param dt The time to decelerate for.
+     */
     private void decelerate(double dt) {
         currentAcceleration = deceleration;
         currentPosition += currentVelocity * dt + 0.5 * deceleration * dt * dt;
