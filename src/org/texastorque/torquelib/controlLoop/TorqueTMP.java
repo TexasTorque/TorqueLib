@@ -86,7 +86,7 @@ public class TorqueTMP {
         //Vf^2 = V^2 + 2 * a * dX
         //Vf^2 - v^2 = 2 * a * dX
         //dX = (Vf^2 - V^2) / (2 * a)
-        double accelerationDistance = (topSpeed * topSpeed - realSpeed * realSpeed) / (2 * acceleration);
+        double accelerationDistance = Math.max(((topSpeed * topSpeed - realSpeed * realSpeed) / (2 * acceleration)), 0.0);
 
         deceleration = -1 * acceleration;
         decelerationTime = (0 - topSpeed) / deceleration;
@@ -94,7 +94,7 @@ public class TorqueTMP {
         //Vf^2 = 0 because we want to stop
         //-v^2 = 2 * a * dX
         //dX = (-V^2) / (2 * a)
-        double decelerationDistance = Math.max((-1 * (topSpeed * topSpeed) / (2 * deceleration)), 0.0);
+        double decelerationDistance = -1 * (topSpeed * topSpeed) / (2 * deceleration);
 
         //Cruising distance is the distance we do not spend accelerating or decelerating.
         double cruiseDistance = positionError - accelerationDistance - decelerationDistance;
