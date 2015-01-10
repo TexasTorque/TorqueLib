@@ -120,10 +120,10 @@ public class TorqueTMP {
     public void calculateNextSituation(double dt) {
         if (dt < accelerationTime) {
             accelerate(dt);
-        } else if (dt < accelerationTime + cruiseTime) {
+        } else if (dt < (accelerationTime + cruiseTime)) {
             accelerate(accelerationTime);
             cruise(dt - accelerationTime);
-        } else if (dt < accelerationTime + cruiseTime + decelerationTime) {
+        } else if (dt < (accelerationTime + cruiseTime + decelerationTime)) {
             accelerate(accelerationTime);
             cruise(cruiseTime);
             decelerate(dt - accelerationTime - cruiseTime);
