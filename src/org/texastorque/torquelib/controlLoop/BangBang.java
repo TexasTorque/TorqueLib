@@ -21,7 +21,6 @@ public class BangBang extends ControlLoop {
      * @param current the current sensor feedback.
      * @return Motor ouput to the system.
      */
-    @Override
     public double calculate(double current) {
         currentValue = current;
         if (currentValue < setPoint) {

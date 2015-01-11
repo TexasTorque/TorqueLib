@@ -128,7 +128,6 @@ public class TorquePID extends ControlLoop {
      * @param currentValue the current sensor feedback.
      * @return Motor ouput to the system.
      */
-    @Override
     public double calculate(double currentValue) {
         double ffVal = 0.0;
         double pVal = 0.0;
