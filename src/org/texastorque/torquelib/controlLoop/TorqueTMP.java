@@ -39,12 +39,10 @@ public class TorqueTMP {
     public double getCurrentAcceleration() {
         return currentAcceleration;
     }
-
+    
     public void generateTrapezoid(double targetPosition, double realPosition, double realSpeed) {
 
         double positionError = targetPosition - realPosition;
-
-        System.out.println(positionError);
 
         if (Math.abs(positionError) < 0.1) {
             return;
@@ -52,8 +50,6 @@ public class TorqueTMP {
             generateTrapezoid(-targetPosition, -realPosition, -realSpeed);
             acceleration *= -1;
             deceleration *= -1;
-            topSpeed *= -1;
-            currentVelocity *= -1;
             return;
         }
 
@@ -101,10 +97,6 @@ public class TorqueTMP {
         //Cruise time is cruising distance divided by the speed at which we cruise.
         cruiseTime = cruiseDistance / topSpeed;
 
-        //Our target velocity right now is our current velocity because thats what
-        //the profile was based on.
-        currentVelocity = realSpeed;
-
         //Our target position right now is our current position because thats what
         //the profile was based on.
         currentPosition = realPosition;
@@ -113,7 +105,6 @@ public class TorqueTMP {
     /**
      * Calculate what our position, velocity, and acceleration should be in the
      * future.
-     *
      *
      * @param dt
      */
@@ -143,7 +134,7 @@ public class TorqueTMP {
     private void accelerate(double dt) {
         currentAcceleration = acceleration;
         currentPosition += currentVelocity * dt + 0.5 * currentAcceleration * dt * dt;
-        currentVelocity += acceleration * dt;
+        currentVelocity += currentAcceleration * dt;
     }
 
     /**
@@ -153,8 +144,8 @@ public class TorqueTMP {
      */
     private void cruise(double dt) {
         currentAcceleration = 0.0;
-        currentPosition += topSpeed * dt;
-        currentVelocity = topSpeed;
+        currentPosition += currentVelocity * dt + 0.5 * currentAcceleration * dt * dt;
+        currentVelocity += currentAcceleration * dt;
     }
 
     /**
@@ -165,7 +156,7 @@ public class TorqueTMP {
     private void decelerate(double dt) {
         currentAcceleration = deceleration;
         currentPosition += currentVelocity * dt + 0.5 * deceleration * dt * dt;
-        currentVelocity += deceleration * dt;
+        currentVelocity += currentAcceleration * dt;
     }
 
     public String toString() {
