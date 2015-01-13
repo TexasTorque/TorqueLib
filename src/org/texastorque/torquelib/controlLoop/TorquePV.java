@@ -6,8 +6,6 @@ public class TorquePV extends ControlLoop {
     private double kV;
     private double kFFV;
     private double kFFA;
-    
-    private double integral;
  
     public TorquePV() {
         super();
@@ -49,6 +47,5 @@ public class TorquePV extends ControlLoop {
     }
     
     public void reset() {
-        integral = 0.0;
     }
 }
