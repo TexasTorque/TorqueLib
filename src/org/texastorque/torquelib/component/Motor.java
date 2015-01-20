@@ -1,31 +1,34 @@
-package org.texastorque.torquelib.component;
+package org.texastorque.intellij;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
 
 /**
- * Class for all WPILib motors with built in reversing.
- *
- * @author TexasTorque
+ * Generic Motor class that also provides linearization for IFI/Vex Pro 88x motor controllers.
  */
 public class Motor {
-
     private SpeedController controller;
     private boolean reverse;
+
+    private LinearizationType linearizer;
 
     private double previousSpeed;
 
     /**
      * Create a new motor.
      *
-     * @param sc The SpeedController object.
-     * @param rev Whether or not the motor is reversed.
-     *
-     * SpeedController is an interface implemented by Victor, Talon, Jaguar.
+     * @param sc      The SpeedController object.
+     * @param rev     Whether or not the motor is reversed.
+     * @param linType The linearization method to be used.
+     *                <p/>
+     *                SpeedController is an interface implemented by Victor, Talon, Jaguar.
      * @see edu.wpi.first.wpilibj.SpeedController
      */
-    public Motor(SpeedController sc, boolean rev) {
+    public Motor(SpeedController sc, boolean rev, LinearizationType linType) {
         controller = sc;
         reverse = rev;
+
+        linearizer = linType;
     }
 
     /**
@@ -34,16 +37,83 @@ public class Motor {
      * @param speed The speed to be set to the output.
      */
     public void set(double speed) {
-        //Dont update if it did not change.
+
+        if (speed > 1) {
+            speed = 1;
+        } else if (speed < -1) {
+            speed = -1;
+        }
+
+        speed = linearizer.linearize(speed);
+
         if (speed != previousSpeed) {
 
-            //Reverse if required.
             if (reverse) {
                 speed *= -1;
             }
             controller.set(speed);
 
             previousSpeed = speed;
+        }
+    }
+
+	/**
+	* Specifies the logistic fits used for linearization. This data was obtained experimentally using some old controllers
+	* I had laying around. The results are not perfect but it's a lot closer to linear than the normal behaviour.
+	*
+	*/
+    public enum LinearizationType {
+
+        k888(1.000720771, 6.395094471, -24.892191226, 12.465463138, 1.25, true),
+        k884(1.130283678, -10.497754480, 24.996120969, -12.608256373, 5.5, true),
+        none(0, 0, 0, 0, 0, false);
+
+        double m_A;
+        double m_B;
+        double m_C;
+        double m_D;
+
+        double m_deadband;
+
+        boolean doLinearize;
+
+        private LinearizationType(double A, double B, double C, double D, double deadband, boolean linearize) {
+            m_A = A;
+            m_B = B;
+            m_C = C;
+            m_D = D;
+
+            doLinearize = linearize;
+
+            m_deadband = deadband;
+        }
+
+        public double linearize(double in) {
+
+            if (in > 0.0) {
+                in = (1 - m_deadband) * in + m_deadband;
+            } else if (in < 0.0) {
+                in = (1 - m_deadband) * in - m_deadband;
+            }
+
+            if (doLinearize) {
+                double out = m_C / (12.8 * in - m_D);
+                out = out - 1;
+                out = out / m_A;
+                out = Math.log(out);
+                out = out / m_B;
+				
+				if (out > 1.0) {
+					return 1.0;
+				} else if (out < -1.0) {
+					return -1.0;
+				} else {
+					return out;
+				}
+                //return Math.log((( (m_C) / (12 * in) - m_D) - 1) / m_A) / m_B;
+            } else {
+                return in;
+            }
         }
     }
 }
