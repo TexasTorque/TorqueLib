@@ -1,7 +1,5 @@
 package org.texastorque.torquelib.controlLoop;
 
-import java.util.function.DoubleUnaryOperator;
-
 /**
  * A PID implementation.
  *
@@ -9,8 +7,6 @@ import java.util.function.DoubleUnaryOperator;
  */
 public class TorquePID extends ControlLoop {
 
-    private double kFF;
-    private DoubleUnaryOperator feedForwardFunction;
     private double kP;
     private double kI;
     private double kD;
@@ -40,8 +36,6 @@ public class TorquePID extends ControlLoop {
         kI = i;
         kD = d;
         epsilon = 0.0;
-        kFF = 0.0;
-        feedForwardFunction = (x) -> x;
         doneRange = 0.0;
         previousValue = 0.0;
         errorSum = 0.0;
@@ -61,29 +55,6 @@ public class TorquePID extends ControlLoop {
         kP = p;
         kI = i;
         kD = d;
-    }
-
-    /**
-     * Set the feedforward constant.
-     *
-     * @param operator The object used to calculate the feedforward variable.
-     * @param ff The feedforward constant.
-     * @see java.util.function.DoubleUnaryOperator
-     */
-    public void setFeedForward(DoubleUnaryOperator operator, double ff) {
-        feedForwardFunction = operator;
-        kFF = ff;
-    }
-
-    /**
-     * Set the feedforward constant using the function y=x as the
-     * DoubleUnaryOperator.
-     *
-     * @param ff The feedforward constant.
-     */
-    public void setFeedForward(double ff) {
-        feedForwardFunction = (x) -> x;
-        kFF = ff;
     }
 
     /**
@@ -130,7 +101,6 @@ public class TorquePID extends ControlLoop {
      */
     @Override
     public double calculate(double currentValue) {
-        double ffVal = 0.0;
         double pVal = 0.0;
         double iVal = 0.0;
         double dVal = 0.0;
@@ -139,9 +109,6 @@ public class TorquePID extends ControlLoop {
             previousValue = currentValue;
             firstCycle = false;
         }
-
-        //----- FF Calculation -----
-        ffVal = feedForwardFunction.applyAsDouble(setPoint) * kFF;
 
         //----- P Calculation -----
         double error = setPoint - currentValue;
@@ -166,7 +133,7 @@ public class TorquePID extends ControlLoop {
         dVal = kD * deriv;
 
         //---- Combine Calculations -----
-        double output = ffVal + pVal + iVal - dVal;
+        double output = pVal + iVal - dVal;
 
         //---- Limit Output -----
         if (output > maxOutput) {
