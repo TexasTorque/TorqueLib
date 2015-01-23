@@ -1,12 +1,14 @@
-package org.texastorque.intellij;
+package org.texastorque.torquelib.component;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
 
 /**
- * Generic Motor class that also provides linearization for IFI/Vex Pro 88x motor controllers.
+ * Generic Motor class that also provides linearization for IFI/Vex Pro 88x
+ * motor controllers. Talons, Jaguars, and Victor SP's are basically perfect and
+ * do not need linearization.
  */
-public class Motor {
+public class TorqueMotor {
+
     private SpeedController controller;
     private boolean reverse;
 
@@ -17,14 +19,14 @@ public class Motor {
     /**
      * Create a new motor.
      *
-     * @param sc      The SpeedController object.
-     * @param rev     Whether or not the motor is reversed.
+     * @param sc The SpeedController object.
+     * @param rev Whether or not the motor is reversed.
      * @param linType The linearization method to be used.
-     *                <p/>
-     *                SpeedController is an interface implemented by Victor, Talon, Jaguar.
+     * <p/>
+     * SpeedController is an interface implemented by Victor, Talon, Jaguar.
      * @see edu.wpi.first.wpilibj.SpeedController
      */
-    public Motor(SpeedController sc, boolean rev, LinearizationType linType) {
+    public TorqueMotor(SpeedController sc, boolean rev, LinearizationType linType) {
         controller = sc;
         reverse = rev;
 
@@ -57,16 +59,18 @@ public class Motor {
         }
     }
 
-	/**
-	* Specifies the logistic fits used for linearization. This data was obtained experimentally using some old controllers
-	* I had laying around. The results are not perfect but it's a lot closer to linear than the normal behaviour.
-	*
-	*/
+    /**
+     * Specifies the logistic fits used for linearization. This data was
+     * obtained experimentally using some old controllers I had laying around.
+     * The results are not perfect but it's a lot closer to linear than the
+     * normal behaviour.
+     *
+     */
     public enum LinearizationType {
 
         k888(1.000720771, 6.395094471, -24.892191226, 12.465463138, 1.25, true),
         k884(1.130283678, -10.497754480, 24.996120969, -12.608256373, 5.5, true),
-        none(0, 0, 0, 0, 0, false);
+        kNone(0, 0, 0, 0, 0, false);
 
         double m_A;
         double m_B;
@@ -90,27 +94,25 @@ public class Motor {
 
         public double linearize(double in) {
 
-            if (in > 0.0) {
+            if (Math.abs(in) < 0.01) {
+                //Dont bother for really small inputs.
+                return 0.0;
+            } else if (in > 0.0) {
                 in = (1 - m_deadband) * in + m_deadband;
             } else if (in < 0.0) {
                 in = (1 - m_deadband) * in - m_deadband;
             }
 
             if (doLinearize) {
+                //Uses the inverse of the logistic fit we did on raw data to find
+                //the signal value needed to ouput the desired voltage.
                 double out = m_C / (12.8 * in - m_D);
                 out = out - 1;
                 out = out / m_A;
                 out = Math.log(out);
                 out = out / m_B;
-				
-				if (out > 1.0) {
-					return 1.0;
-				} else if (out < -1.0) {
-					return -1.0;
-				} else {
-					return out;
-				}
-                //return Math.log((( (m_C) / (12 * in) - m_D) - 1) / m_A) / m_B;
+
+                return out;
             } else {
                 return in;
             }
