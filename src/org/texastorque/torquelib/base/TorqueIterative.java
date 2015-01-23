@@ -71,10 +71,10 @@ public abstract class TorqueIterative extends RobotBase {
         continousTimer = new Timer();
         continousTimer.scheduleAtFixedRate(new Continuous(), 0, (long) (1000 * continuousPeriod));
 
-        //Keep the original Thread quiet.
+        //Prevent return from startcompetition
         while (true) {
             try {
-                Thread.sleep(5 * 60 * 1000);
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
             }
         }
