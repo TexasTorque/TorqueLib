@@ -94,16 +94,16 @@ public class TorqueMotor {
 
         public double linearize(double in) {
 
-            if (Math.abs(in) < 0.01) {
-                //Dont bother for really small inputs.
-                return 0.0;
-            } else if (in > 0.0) {
-                in = (1 - m_deadband) * in + m_deadband;
-            } else if (in < 0.0) {
-                in = (1 - m_deadband) * in - m_deadband;
-            }
-
             if (doLinearize) {
+                if (Math.abs(in) < 0.01) {
+                    //Dont bother for really small inputs.
+                    return 0.0;
+                } else if (in > 0.0) {
+                    in = (1 - m_deadband) * in + m_deadband;
+                } else if (in < 0.0) {
+                    in = (1 - m_deadband) * in - m_deadband;
+                }
+
                 //Uses the inverse of the logistic fit we did on raw data to find
                 //the signal value needed to ouput the desired voltage.
                 double out = m_C / (12.8 * in - m_D);
@@ -111,7 +111,7 @@ public class TorqueMotor {
                 out = out / m_A;
                 out = Math.log(out);
                 out = out / m_B;
-
+                
                 return out;
             } else {
                 return in;
