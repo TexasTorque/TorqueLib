@@ -66,12 +66,4 @@ public abstract class ControlLoop {
 
         return doneCyclesCount > minDoneCycles;
     }
-
-    /**
-     * Calculate the current output for the system that is being controlled.
-     *
-     * @param current The current parameter.
-     * @return What the output should be.
-     */
-    public abstract double calculate(double current);
 }
