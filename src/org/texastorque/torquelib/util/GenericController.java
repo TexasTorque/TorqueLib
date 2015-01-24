@@ -70,10 +70,10 @@ public final class GenericController extends Joystick {
         controllerType = type;
         switch (type) {
             case TYPE_LOGITECH:
-                controllerMap = new int[]{2, 1, 4, 3, 5, 5, 11, 12, 5, 6, 7, 8, 9, 10, 1, 4, 3, 2};
+                controllerMap = new int[]{1, 0, 3, 2, 5, 5, 11, 12, 5, 6, 7, 8, 9, 10, 1, 4, 3, 2};
                 break;
             case TYPE_XBOX:
-                controllerMap = new int[]{2, 1, 5, 4, 6, 6, 9, 10, 5, 6, 2, 3, 7, 8, 3, 4, 2, 1};
+                controllerMap = new int[]{1, 0, 5, 4, 6, 6, 9, 10, 5, 6, 2, 3, 7, 8, 3, 4, 2, 1};
                 break;
             default:
                 //default to xbox
@@ -100,14 +100,6 @@ public final class GenericController extends Joystick {
 
     public synchronized double getRightXAxis() {
         return scaleInput(getRawAxis(controllerMap[3]));
-    }
-
-    public synchronized boolean getLeftDPAD() {
-        return (getRawAxis(controllerMap[4]) > 0.0);
-    }
-
-    public synchronized boolean getRightDPAD() {
-        return (getRawAxis(controllerMap[5]) < 0.0);
     }
 
     public synchronized boolean getLeftStickClick() {
