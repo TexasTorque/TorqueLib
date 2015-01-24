@@ -1,4 +1,4 @@
-package org.texastorque.torquelib.controlLoop;
+package org.TexasTorque.Torquelib.controlloop;
 
 /**
  * Created by Gijs on 12/31/2014.
@@ -6,7 +6,6 @@ package org.texastorque.torquelib.controlLoop;
 public class TorqueTMP {
 
     //Current value
-
     private double currentPosition;
     private double currentVelocity;
     private double currentAcceleration;
@@ -39,17 +38,19 @@ public class TorqueTMP {
     public double getCurrentAcceleration() {
         return currentAcceleration;
     }
-    
+
     public void generateTrapezoid(double targetPosition, double realPosition, double realSpeed) {
-
+        
         double positionError = targetPosition - realPosition;
-
+        
         if (Math.abs(positionError) < 0.1) {
             return;
         } else if (positionError < 0.0) {
             generateTrapezoid(-targetPosition, -realPosition, -realSpeed);
             acceleration *= -1;
             deceleration *= -1;
+            currentPosition *= -1;
+            currentVelocity *= -1;
             return;
         }
 
@@ -79,6 +80,7 @@ public class TorqueTMP {
         //Calculate the time we will spend accelerating.
         acceleration = maxAllowedAcceleration;
         accelerationTime = Math.max(((topSpeed - realSpeed) / acceleration), 0.0);
+
         //Vf^2 = V^2 + 2 * a * dX
         //Vf^2 - v^2 = 2 * a * dX
         //dX = (Vf^2 - V^2) / (2 * a)
@@ -95,11 +97,14 @@ public class TorqueTMP {
         //Cruising distance is the distance we do not spend accelerating or decelerating.
         double cruiseDistance = positionError - accelerationDistance - decelerationDistance;
         //Cruise time is cruising distance divided by the speed at which we cruise.
-        cruiseTime = cruiseDistance / topSpeed;
-
-        //Our target position right now is our current position because thats what
-        //the profile was based on.
+        if (topSpeed != 0) {
+            cruiseTime = cruiseDistance / topSpeed;
+        } else {
+            cruiseTime = 0.0;
+        }
+        
         currentPosition = realPosition;
+        currentVelocity = realSpeed;
     }
 
     /**
@@ -108,20 +113,34 @@ public class TorqueTMP {
      *
      * @param dt
      */
-    public void calculateNextSituation(double dt) {
-        if (dt < accelerationTime) {
-            accelerate(dt);
-        } else if (dt < (accelerationTime + cruiseTime)) {
+    public void calculateNextSituation() {
+        
+        if (accelerationTime > 0.1) {
+            accelerate(0.01);
+            accelerationTime -= 0.01;
+        } else if ((accelerationTime + cruiseTime) > 0.01) {
             accelerate(accelerationTime);
-            cruise(dt - accelerationTime);
-        } else if (dt < (accelerationTime + cruiseTime + decelerationTime)) {
+            cruise(0.01 - accelerationTime);
+            
+            cruiseTime -= (0.01 - accelerationTime);
+            accelerationTime = 0.0;
+        } else if ((accelerationTime + cruiseTime + decelerationTime) > 0.01) {
             accelerate(accelerationTime);
             cruise(cruiseTime);
-            decelerate(dt - accelerationTime - cruiseTime);
+            decelerate(0.01 - accelerationTime - cruiseTime);
+            
+            decelerationTime -= (0.01 - accelerationTime - cruiseTime);
+            accelerationTime = 0.0;
+            cruiseTime = 0.0;
+            currentAcceleration = 0.0;
         } else {
             accelerate(accelerationTime);
             cruise(cruiseTime);
             decelerate(decelerationTime);
+            
+            accelerationTime = 0.0;
+            cruiseTime = 0.0;
+            decelerationTime = 0.0;
             currentAcceleration = 0.0;
         }
     }
@@ -133,8 +152,14 @@ public class TorqueTMP {
      */
     private void accelerate(double dt) {
         currentAcceleration = acceleration;
-        currentPosition += currentVelocity * dt + 0.5 * currentAcceleration * dt * dt;
-        currentVelocity += currentAcceleration * dt;
+        currentPosition += (currentVelocity * dt + 0.5 * currentAcceleration * dt * dt);
+        currentVelocity += (currentAcceleration * dt);
+
+        if (currentVelocity > topSpeed) {
+            currentVelocity = topSpeed;
+        } else if (currentVelocity < -topSpeed) {
+            currentVelocity = -topSpeed;
+        }
     }
 
     /**
@@ -144,8 +169,7 @@ public class TorqueTMP {
      */
     private void cruise(double dt) {
         currentAcceleration = 0.0;
-        currentPosition += currentVelocity * dt + 0.5 * currentAcceleration * dt * dt;
-        currentVelocity += currentAcceleration * dt;
+        currentPosition += currentVelocity * dt;
     }
 
     /**
@@ -155,8 +179,14 @@ public class TorqueTMP {
      */
     private void decelerate(double dt) {
         currentAcceleration = deceleration;
-        currentPosition += currentVelocity * dt + 0.5 * deceleration * dt * dt;
-        currentVelocity += currentAcceleration * dt;
+        currentPosition += (currentVelocity * dt + 0.5 * deceleration * dt * dt);
+        currentVelocity += (currentAcceleration * dt);
+
+        if (currentVelocity > topSpeed) {
+            currentVelocity = topSpeed;
+        } else if (currentVelocity < -topSpeed) {
+            currentVelocity = -topSpeed;
+        }
     }
 
     public String toString() {
