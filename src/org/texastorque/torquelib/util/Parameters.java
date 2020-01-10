@@ -6,99 +6,96 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class Parameters {
 
-    /**
-     * Constants loaded from params file.
-     */
-    public static ArrayList<Constant> constants;
+	/**
+	 * Constants loaded from params file.
+	 */
+	public static ArrayList<Constant> constants = new ArrayList<>();
 
-    private final File paramsFile;
+	private static File paramsFile;
 
-    /*declare constants here*/
-    /**
-     * Make a new Parameters loader.
-     *
-     * @param filePath String path of parameters file.
-     */
-    public Parameters(String filePath) {
-        paramsFile = new File(filePath);
-        try {
-            paramsFile.createNewFile();
-        } catch (IOException e) {
-        }
+	public static void makeFile() {
+		paramsFile = new File("/home/admin/params.txt");
+		try {
+			paramsFile.createNewFile();
+		} catch (IOException e) {
+			SmartDashboard.putString("e", e.getMessage());
+		}
+	}
 
-        constants = new ArrayList<>();
-    }
+	/**
+	 * Load the parameters file using this syntax:<br>
+	 * <br>
+	 *
+	 * nameOfParameter valueOfParameter<br>
+	 * shooterMotorLeft 2<br>
+	 * <br>
+	 *
+	 * Constants listed in the file override hardcoded constants.
+	 */
+	public static void load() {
+		makeFile();
+		try (BufferedReader br = new BufferedReader(new FileReader(paramsFile))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				int pos = line.indexOf(" ");
+				if (pos != -1) {
+					for (Constant c : constants) {
+						if (c.getKey().equals(line.substring(0, pos))) {
+							c.value = Double.parseDouble(line.substring(pos));
+						}
+					}
+				} else {
+					System.out.println("Invalid line");
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Messed up reading constants");
+		}
+	}
 
-    /**
-     * Make a new Parameters loader using "/home/admin/params.txt".
-     */
-    public Parameters() {
-        this("/home/admin/params.txt");
-    }
+	public static class Constant {
 
-    /**
-     * Load the parameters file using this syntax:<br><br>
-     *
-     * nameOfParameter valueOfParameter<br>
-     * shooterMotorLeft 2<br><br>
-     *
-     * Constants listed in the file override hardcoded constants.
-     */
-    public void load() {
-        try (BufferedReader br = new BufferedReader(new FileReader(paramsFile))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                int pos = line.indexOf(" ");
-                if (pos != -1) {
-                    for (Constant c : constants) {
-                        if (c.getKey().equals(line.substring(0, pos))) {
-                            c.value = Double.parseDouble(line.substring(pos));
-                        }
-                    }
-                } else {
-                    System.out.println("Invalid line");
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Messed up readin constants");
-        }
-    }
+		private final String key;
+		private volatile double value;
 
-    public static class Constant {
+		/**
+		 * Make a final Constant.
+		 *
+		 * @param key
+		 *            Name of value.
+		 * @param value
+		 *            Value.
+		 */
+		public Constant(String key, double value) {
+			this.key = key;
+			this.value = value;
 
-        private final String key;
-        private double value;
+			constants.add(this);
+		}
 
-        /**
-         * Make a final Constant.
-         *
-         * @param key Name of value.
-         * @param value Value.
-         */
-        public Constant(String key, double value) {
-            this.key = key;
-            this.value = value;
+		public String getKey() {
+			return key;
+		}
 
-            constants.add(this);
-        }
+		public Double getDouble() {
+			return value;
+		}
 
-        public String getKey() {
-            return key;
-        }
+		public boolean getBoolean() {
+			return value == 1;
+		}
 
-        public Double getDouble() {
-            return value;
-        }
+		public void override(double _value) {
+			value = _value;
+		}
 
-        public boolean getBoolean() {
-            return value == 1;
-        }
-
-        @Override
-        public String toString() {
-            return key + ": " + value;
-        }
-    }
+		@Override
+		public String toString() {
+			return key + ": " + value;
+		}
+	}
 }

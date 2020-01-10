@@ -1,69 +1,50 @@
 package org.texastorque.torquelib.controlLoop;
 
-/**
- * Superclass for all controllers.
- *
- * @author TexasTorque
- */
+import edu.wpi.first.wpilibj.DriverStation;
+
 public abstract class ControlLoop {
 
-    protected double setPoint;
-    protected double currentValue;
+	protected double setPoint;
+	protected double currentValue;
 
-    protected double doneRange;
-    protected int minDoneCycles;
-    protected int doneCyclesCount;
+	protected double doneRange;
+	protected int minDoneCycles;
+	protected int doneCyclesCount;
 
-    /**
-     * Create a new control loop.
-     */
-    public ControlLoop() {
-        setPoint = 0;
-        doneRange = 0;
-    }
+	protected DriverStation ds;
+	protected double tunedVoltage;
 
-    /**
-     * Set the setpoint.
-     *
-     * @param set The new setpoint.
-     */
-    public void setSetpoint(double set) {
-        setPoint = set;
-    }
+	public ControlLoop() {
+		setPoint = 0;
+		doneRange = 0;
+		ds = DriverStation.getInstance();
+	}
 
-    /**
-     * Set the range between which the controller treats as the setpoint.
-     *
-     * @param range The new range.
-     */
-    public void setDoneRange(double range) {
-        doneRange = range;
-    }
+	public void setSetpoint(double set) {
+		setPoint = set;
+	}
 
-    /**
-     * Minimum number of times the controller hits the setpoint range.
-     *
-     * @param cycles Number of times.
-     */
-    public void setDoneCycles(int cycles) {
-        minDoneCycles = cycles;
-    }
+	public void setDoneRange(double range) {
+		doneRange = range;
+	}
 
-    /**
-     * Get whether or not the controller has reached the setpoint and satisfied
-     * the range requirement.
-     *
-     * @return True means that it has completed enough done cycles.
-     */
-    public boolean isDone() {
-        double currError = Math.abs(setPoint - currentValue);
+	public void setDoneCycles(int cycles) {
+		minDoneCycles = cycles;
+	}
 
-        if (currError <= this.doneRange) {
-            doneCyclesCount++;
-        } else {
-            doneCyclesCount = 0;
-        }
+	public void setTunedVoltage(double volts) {
+		tunedVoltage = volts;
+	}
 
-        return doneCyclesCount > minDoneCycles;
-    }
+	public boolean isDone() {
+		double currError = Math.abs(setPoint - currentValue);
+
+		if (currError <= this.doneRange) {
+			doneCyclesCount++;
+		} else {
+			doneCyclesCount = 0;
+		}
+
+		return doneCyclesCount > minDoneCycles;
+	}
 }
