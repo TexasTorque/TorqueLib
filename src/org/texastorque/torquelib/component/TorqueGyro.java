@@ -113,12 +113,12 @@ public class TorqueGyro {
 	 */
 	public void free() {
 		if (m1_analog != null && m1_channelAllocated) {
-			m1_analog.free();
+			m1_analog.close();
 		}
 		m1_analog = null;
 
 		if (m2_analog != null && m2_channelAllocated) {
-			m2_analog.free();
+			m2_analog.close();
 		}
 		m2_analog = null;
 	}
