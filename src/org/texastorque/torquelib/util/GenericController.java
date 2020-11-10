@@ -141,6 +141,16 @@ public final class GenericController extends Joystick {
 		}
 	}
 
+	public synchronized double getLeftZAxis(){
+		if (controllerType == TYPE_LOGITECH) {
+			return getRawAxis(controllerMap[10]);
+		} else if (controllerType == TYPE_XBOX) {
+			return (getRawAxis(controllerMap[10]));
+		} else {
+			return 0;
+		}
+	}
+
 	public synchronized boolean getRightTrigger() {
 		if (controllerType == TYPE_LOGITECH) {
 			return getRawButton(controllerMap[11]);
@@ -148,6 +158,16 @@ public final class GenericController extends Joystick {
 			return (getRawAxis(controllerMap[11]) > 0.2);
 		} else {
 			return false;
+		}
+	}
+
+	public synchronized double getRightZAxis(){
+		if (controllerType == TYPE_LOGITECH) {
+			return getRawAxis(controllerMap[11]);
+		} else if (controllerType == TYPE_XBOX) {
+			return (getRawAxis(controllerMap[11]));
+		} else {
+			return 0;
 		}
 	}
 

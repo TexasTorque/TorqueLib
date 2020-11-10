@@ -15,4 +15,8 @@ public class LowPassFilter {
         this.lastValue = value * alpha + lastValue * (1 - alpha);
         return this.lastValue;
     }
+
+    public void clear(){
+        this.lastValue = 0;
+    }
 }
