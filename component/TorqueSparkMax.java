@@ -2,8 +2,6 @@ package org.texastorque.torquelib.component;
 
 import java.util.ArrayList;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANAnalog;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -15,6 +13,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import org.texastorque.torquelib.component.TorqueMotor;
 import org.texastorque.util.KPID;
 
+/**
+ * TorqueMotor using SparkMax for CAN motor management.
+ */
 public class TorqueSparkMax extends TorqueMotor {
 
     private CANSparkMax sparkMax;

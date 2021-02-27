@@ -27,12 +27,12 @@ public class Parameters {
 	}
 
 	/**
-	 * Load the parameters file using this syntax:<br>
-	 * <br>
+	 * Load the parameters file using this syntax:
+	 * 
 	 *
 	 * nameOfParameter valueOfParameter<br>
-	 * shooterMotorLeft 2<br>
-	 * <br>
+	 * shooterMotorLeft 2
+	 * 
 	 *
 	 * Constants listed in the file override hardcoded constants.
 	 */

@@ -4,6 +4,13 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+/**
+* This class provides an interface for receiving communication from the RPLidar A1
+* as described [here](https://github.com/TexasTorque/TorqueLidarA1).
+*
+* @author Jack
+* @apiNote This code was originally created during the 2021 season! 
+*/    
 public class TorqueLidarA1Receiver {
     private NetworkTableInstance NT_instance;
     private NetworkTable NT_table;
@@ -13,11 +20,6 @@ public class TorqueLidarA1Receiver {
     private NetworkTableEntry middle;
     private NetworkTableEntry right;
 
-    /**
-    * This class provides an interface for receiving communication from the RPLidar A1
-    * as described [here](https://github.com/TexasTorque/TorqueLidarA1).
-    * @apiNote This code was originally created during the 2021 season! 
-    */    
     public TorqueLidarA1Receiver() {
         NT_instance = NetworkTableInstance.getDefault();
         NT_table = NT_instance.getTable("lidar");
@@ -44,6 +46,7 @@ public class TorqueLidarA1Receiver {
 
     /**
     * Toggles a scan by setting run to its opposite
+    *
     * @return Boolean of the new run
     */
     public boolean toggleScan() {
@@ -54,6 +57,7 @@ public class TorqueLidarA1Receiver {
 
     /**
     * Returns if it found something under "left"
+    *
     * @apiNote If the request fails the default value returned is false!
     * @return Boolean
     */
@@ -63,6 +67,7 @@ public class TorqueLidarA1Receiver {
 
     /**
     * Returns if it found something under "middle"
+    *
     * @apiNote If the request fails the default value returned is false!
     * @return Boolean
     */
@@ -72,6 +77,7 @@ public class TorqueLidarA1Receiver {
 
     /**
     * Returns if it found something under "right"
+    *
     * @apiNote If the request fails the default value returned is false!
     * @return Boolean
     */
@@ -81,6 +87,7 @@ public class TorqueLidarA1Receiver {
 
     /**
     * Returns a length-3 boolean array of found indicies
+    *
     * @return Boolean[]{left, middle, right}
     */
     public boolean[] foundArray() {

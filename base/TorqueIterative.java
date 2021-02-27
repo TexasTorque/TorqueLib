@@ -4,7 +4,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
@@ -12,14 +11,13 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
+ * A modified version of the WPILIBJ IterativeRobot template that uses
+ * two threads.
+ *
+ * CPU usage on the roboRio may be higher than when using the regular
+ * IterativeRobot base class, but should not be a problem.
+ *
  * @author TexasTorque
- *
- *         A modified version of the WPILIBJ IterativeRobot template that uses
- *         two threads.
- *
- *         CPU usage on the roboRio may be higher than when using the regular
- *         IterativeRobot base class, but should not be a problem.
- *
  */
 public abstract class TorqueIterative extends RobotBase {
 
@@ -52,7 +50,6 @@ public abstract class TorqueIterative extends RobotBase {
 	}
 
 	/**
-	 *
 	 * Overrides method from RobotBase. This is called by main and runs the user
 	 * robot code.
 	 */
