@@ -115,7 +115,7 @@ public class TorqueBallSeer {
         if(detectionAreas == null) throw new Error("Trying to find without saved detection areas! (TorqueBallSeer)");
         reset();
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         } catch(InterruptedException e) {
             System.out.println("Interrupted Exception in TorqueBallSeer!");
         }
@@ -141,5 +141,16 @@ public class TorqueBallSeer {
             }
         }
         return best;
+    }
+
+    /**
+     * 
+     * @return if it is center
+     */
+    public boolean isCenter() {
+        double center = getFrame_width()/2;
+        double[] target_location = getTarget_location();
+        // 30 px range for center
+        return target_location[0] > center-30 && target_location[1] < center+30;
     }
 }
