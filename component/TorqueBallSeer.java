@@ -19,6 +19,48 @@ public class TorqueBallSeer {
     private NetworkTableEntry reset;
     private NetworkTableEntry target_location;
 
+    private DetectionArea[] detectionAreas;
+
+    public class DetectionArea {
+        private int id;
+        private double x;
+        private double y;
+        private double width;
+        private double height;
+
+        public DetectionArea(int id, double x_pos, double y_pos, double w, double h) {
+            x = x_pos;
+            y = y_pos;
+            width = w;
+            height = h;
+            this.id = id;
+        }
+        
+        public double getX() {
+            return x;
+        }
+
+        public double getY() {
+            return y;
+        }
+        
+        public double getWidth() {
+            return width;
+        }
+
+        public double getHeight() {
+            return height;
+        }
+
+        public int getID() {
+            return id;
+        }
+    }
+
+
+    /**
+     * Generate a new TorqueBallSeer without set detection areas
+     */
     public TorqueBallSeer() {
         NT_instance = NetworkTableInstance.getDefault();
         NT_table = NT_instance.getTable("BallSeer");
@@ -27,6 +69,14 @@ public class TorqueBallSeer {
         frame_height = NT_table.getEntry("frame_height");
         reset = NT_table.getEntry("reset");
         target_location = NT_table.getEntry("target_location");
+    }
+
+    /**
+     * Sets detection areas
+     * @param areas
+     */
+    public void setDetectionAreas(DetectionArea[] areas) {
+        detectionAreas = areas;
     }
 
     /**
@@ -55,5 +105,41 @@ public class TorqueBallSeer {
      */
     public void reset() {
         reset.setBoolean(true);
+    }
+
+    /**
+     * Find the mostest closest DetectionArea :)
+     * @return the most prominent detection area OR null if nothing matches --- make sure you check!
+     */
+    public DetectionArea find() {
+        if(detectionAreas == null) throw new Error("Trying to find without saved detection areas! (TorqueBallSeer)");
+        reset();
+        try {
+            Thread.sleep(1000);
+        } catch(InterruptedException e) {
+            System.out.println("Interrupted Exception in TorqueBallSeer!");
+        }
+        double[] found = getTarget_location();
+        // O(n) find closest detection based on center
+        DetectionArea best = null;
+        double best_offset = Double.MIN_NORMAL;
+        for (int i = 0; i < detectionAreas.length; i++) {
+            DetectionArea current = detectionAreas[i];
+            // Check if inside square
+            // System.out.println(i+": "+found[0]+", "+found[1]);
+            // System.out.println("X: "+current.getX()+", Y:"+current.getY()+", W:"+current.getWidth()+", H:"+current.getHeight());
+            if(found[0] > current.getX()-current.getWidth() && found[0] < current.getX()+current.getWidth()
+                && found[1] > current.getY()-current.getHeight() && found[1] < current.getY()+current.getHeight()) {
+                // calculate center offset
+                // System.out.println("offset time");
+                double offset = Math.sqrt(Math.pow(current.getX()-found[0],2)
+                                        +Math.pow(current.getY()-found[1],2));
+                if(offset > best_offset) {
+                    best_offset = offset;
+                    best = current;
+                }
+            }
+        }
+        return best;
     }
 }
