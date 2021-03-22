@@ -147,10 +147,11 @@ public class TorqueBallSeer {
      * 
      * @return if it is center
      */
-    public boolean isCenter() {
+    public boolean isCenter(double[] target_location) {
         double center = getFrame_width()/2;
-        double[] target_location = getTarget_location();
-        // 30 px range for center
-        return target_location[0] > center-30 && target_location[1] < center+30;
+        // 60 px range for center
+        boolean ret = target_location[0] > center-60 && target_location[0] < center+60;
+        //System.out.println(ret);
+        return ret;
     }
 }
