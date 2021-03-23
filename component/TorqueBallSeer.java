@@ -120,6 +120,7 @@ public class TorqueBallSeer {
             System.out.println("Interrupted Exception in TorqueBallSeer!");
         }
         double[] found = getTarget_location();
+        if(found.length < 2) return null;
         // O(n) find closest detection based on center
         DetectionArea best = null;
         double best_offset = Double.MIN_NORMAL;
@@ -150,7 +151,7 @@ public class TorqueBallSeer {
     public boolean isCenter(double[] target_location) {
         double center = getFrame_width()/2;
         // 60 px range for center
-        boolean ret = target_location[0] > center-60 && target_location[0] < center+60;
+        boolean ret = target_location[0] > center-10 && target_location[0] < center+10;
         //System.out.println(ret);
         return ret;
     }
