@@ -20,6 +20,7 @@ public class TorqueBallSeer {
     private NetworkTableEntry target_location;
 
     private DetectionArea[] detectionAreas;
+    private int savedArea;
 
     public class DetectionArea {
         private int id;
@@ -100,6 +101,20 @@ public class TorqueBallSeer {
      */
     public double getFrame_width() {
         return frame_width.getDouble(0.0);
+    }
+
+    /**
+     * @return the saved area int
+     */
+    public int getSavedArea() {
+        return savedArea;
+    }
+
+    /**
+     * Set the saved area
+     */
+    public void setSavedArea(int area) {
+        savedArea = area;
     }
 
     /**
