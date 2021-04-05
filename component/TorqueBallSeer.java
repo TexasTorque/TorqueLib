@@ -130,12 +130,14 @@ public class TorqueBallSeer {
      */
     public DetectionArea find() {
         if(detectionAreas == null) throw new Error("Trying to find without saved detection areas! (TorqueBallSeer)");
+        /*
         reset();
         try {
             Thread.sleep(250);
         } catch(InterruptedException e) {
             System.out.println("Interrupted Exception in TorqueBallSeer!");
         }
+        */
         double[] found = getTarget_location();
         if(found.length < 2) return null;
         // O(n) find closest detection based on center
