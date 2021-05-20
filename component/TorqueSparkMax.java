@@ -62,8 +62,25 @@ public class TorqueSparkMax extends TorqueMotor {
         } // try catch
     } // set method for use with PID, position or velocity
     
-    public void setVoltageCompensation() {
-        sparkMax.enableVoltageCompensation(8);
+    /**
+     * UNSAFE
+     */
+    public void enableVoltageCompensation() {
+        sparkMax.enableVoltageCompensation(2);
+        for(CANSparkMax follower : sparkMaxFollowers) {
+            follower.enableVoltageCompensation(2);
+        }
+    }
+
+    /**
+     * UNSAFE
+     */
+    public void disableVoltageCompensation() {
+        sparkMax.disableVoltageCompensation();
+        for(CANSparkMax follower : sparkMaxFollowers) {
+            follower.disableVoltageCompensation();
+        }
+
     }
     // ===================== PID stuff ========================
     private CANPIDController pid;
