@@ -3,6 +3,7 @@ package org.texastorque.torquelib.component;
 import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.texastorque.util.KPID;
@@ -17,6 +18,8 @@ public class TorqueTalon extends TorqueMotor {
     // ===================== constructor stuff =================
     public TorqueTalon(int port){
         talon = new TalonSRX(port);
+        talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
+        
         this.port = port;
     } // torque talon 
 
@@ -29,6 +32,11 @@ public class TorqueTalon extends TorqueMotor {
         talonFollowers.add(new TalonSRX(port));
         
     } // add follower 
+
+    public double getRPM() {
+        
+        return (talon.getSelectedSensorVelocity() * 600) / 4096;
+    }
 
     // ====================== set methods ==========================
     @Override 
@@ -71,7 +79,9 @@ public class TorqueTalon extends TorqueMotor {
     @Override
     public double getVelocity() {
         try{
-            return talon.getSelectedSensorVelocity();
+            double velicty = talon.getSelectedSensorVelocity();
+            System.out.printf("Current velocity: %f%n", velicty);
+            return velicty;
         } catch (Exception e){
             System.out.println(e);
             System.out.println("There is no encoder present, you need to put one in");
