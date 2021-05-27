@@ -19,7 +19,6 @@ public class TorqueTalon extends TorqueMotor {
     public TorqueTalon(int port){
         talon = new TalonSRX(port);
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
-        
         this.port = port;
     } // torque talon 
 
@@ -34,8 +33,7 @@ public class TorqueTalon extends TorqueMotor {
     } // add follower 
 
     public double getRPM() {
-        
-        return (talon.getSelectedSensorVelocity() * 600) / 4096;
+        return Math.abs((talon.getSelectedSensorVelocity() * 600.0) / 4096.0);
     }
 
     // ====================== set methods ==========================
