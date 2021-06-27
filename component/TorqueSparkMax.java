@@ -32,42 +32,42 @@ public class TorqueSparkMax extends TorqueMotor {
         sparkMax = new CANSparkMax(port, MotorType.kBrushless);
         sparkMaxEncoder = sparkMax.getEncoder();
         analogEncoder = sparkMax.getAnalog(AnalogMode.kAbsolute);
-    } // constructor 
+    } // constructor
 
     @Override
     public void addFollower(int port) {
         sparkMaxFollowers.add(new CANSparkMax(port, MotorType.kBrushless));
         System.out.println("Added spark max follower");
-    } // add follower 
+    } // add follower
 
     // ===================== set methods ==========================
 
     @Override
-    public void set(double output){
+    public void set(double output) {
         sparkMax.set(output);
-        for(CANSparkMax canSparkMax : sparkMaxFollowers){
+        for (CANSparkMax canSparkMax : sparkMaxFollowers) {
             canSparkMax.follow(sparkMax);
         } // takes care of followers
     } // raw set method (-1 to 1)
 
-    public void set(double output, ControlType ctrlType){
-        try{
+    public void set(double output, ControlType ctrlType) {
+        try {
             pid.setReference(output, ctrlType);
-            for(CANSparkMax follower : sparkMaxFollowers){
+            for (CANSparkMax follower : sparkMaxFollowers) {
                 follower.follow(sparkMax, invert);
             } // takes care of followers
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             System.out.println("You need to configure the PID");
         } // try catch
     } // set method for use with PID, position or velocity
-    
+
     /**
      * UNSAFE
      */
     public void enableVoltageCompensation() {
         sparkMax.enableVoltageCompensation(2);
-        for(CANSparkMax follower : sparkMaxFollowers) {
+        for (CANSparkMax follower : sparkMaxFollowers) {
             follower.enableVoltageCompensation(2);
         }
     }
@@ -77,14 +77,22 @@ public class TorqueSparkMax extends TorqueMotor {
      */
     public void disableVoltageCompensation() {
         sparkMax.disableVoltageCompensation();
-        for(CANSparkMax follower : sparkMaxFollowers) {
+        for (CANSparkMax follower : sparkMaxFollowers) {
             follower.disableVoltageCompensation();
         }
 
     }
+
+    /**
+     * Directly set voltage output. Be careful!
+     */
+    public void setVoltage(double volts) {
+        sparkMax.setVoltage(volts);
+    }
+
     // ===================== PID stuff ========================
     private CANPIDController pid;
-    
+
     @Override
     public void configurePID(KPID kPID) {
         pid = sparkMax.getPIDController();
@@ -93,7 +101,7 @@ public class TorqueSparkMax extends TorqueMotor {
         pid.setD(kPID.d());
         pid.setFF(kPID.f());
         pid.setOutputRange(kPID.min(), kPID.max());
-    } // configure PID 
+    } // configure PID
 
     @Override
     public void updatePID(KPID kPID) {
@@ -102,51 +110,50 @@ public class TorqueSparkMax extends TorqueMotor {
         pid.setD(kPID.d());
         pid.setFF(kPID.f());
         pid.setOutputRange(kPID.min(), kPID.max());
-    } // update PID 
+    } // update PID
 
     @Override
     public double getVelocity() {
-        return sparkMaxEncoder.getVelocity()* sparkMaxEncoder.getVelocityConversionFactor();
-    } // returns velocity of motor 
+        return sparkMaxEncoder.getVelocity() * sparkMaxEncoder.getVelocityConversionFactor();
+    } // returns velocity of motor
 
-    public void tareEncoder(){
+    public void tareEncoder() {
         encoderZero = sparkMaxEncoder.getPosition();
     }
 
-    public double getZero(){
+    public double getZero() {
         return encoderZero;
     }
 
-    public double getAnalogValue(){
+    public double getAnalogValue() {
         // return (sparkMax.getAnalog(AnalogMode.kRelative).getPosition());
-        return analogEncoder.getPosition()*analogEncoder.getPositionConversionFactor();
-        
+        return analogEncoder.getPosition() * analogEncoder.getPositionConversionFactor();
+
     }
 
     @Override
     public double getPosition() {
         return ((sparkMaxEncoder.getPosition() - encoderZero));
-    } // returns position of motor 
+    } // returns position of motor
 
-    public double getPositionConverted(){
+    public double getPositionConverted() {
         return ((sparkMaxEncoder.getPosition() - encoderZero) * sparkMaxEncoder.getPositionConversionFactor());
-    } // returns motor position but converted by some factor 
-    
-    public double getCurrent(){
+    } // returns motor position but converted by some factor
+
+    public double getCurrent() {
         return sparkMax.getOutputCurrent();
     }
 
-    public void setAlternateEncoder(){
+    public void setAlternateEncoder() {
         alternateEncoder = sparkMax.getAlternateEncoder();
     }
 
-    public double getAlternateVelocity(){
+    public double getAlternateVelocity() {
         return alternateEncoder.getVelocity();
     }
 
-    public double getAlternatePosition(){
+    public double getAlternatePosition() {
         return alternateEncoder.getPosition();
     }
 
-    
 }
