@@ -11,8 +11,8 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
- * A modified version of the WPILIBJ IterativeRobot template that uses
- * two threads.
+ * A modified version of the WPILIBJ IterativeRobot template that uses two
+ * threads.
  *
  * CPU usage on the roboRio may be higher than when using the regular
  * IterativeRobot base class, but should not be a problem.
@@ -25,7 +25,7 @@ public abstract class TorqueIterative extends RobotBase {
 	private volatile boolean m_autoInitialized;
 	private volatile boolean m_teleopInitialized;
 	private volatile boolean m_testInitialized;
-	
+
 	Thread periodicThread;
 	Timer continousTimer;
 	// period is 1 / frequency
@@ -120,7 +120,7 @@ public abstract class TorqueIterative extends RobotBase {
 					}
 				} else if (isAutonomous()) {
 					if (DriverStation.getInstance().isEnabled() && !m_autoInitialized) {
-						
+
 						LiveWindow.setEnabled(false);
 						autoInit();
 
@@ -154,8 +154,8 @@ public abstract class TorqueIterative extends RobotBase {
 	}
 
 	/**
-	 * This class provides an extra execution thread to take advantage of the
-	 * two cores of the roboRIO.
+	 * This class provides an extra execution thread to take advantage of the two
+	 * cores of the roboRIO.
 	 *
 	 * It is scheduled to run at 100hz.
 	 */
@@ -171,6 +171,9 @@ public abstract class TorqueIterative extends RobotBase {
 				alwaysContinuous();
 			} else if (isDisabled() && m_disabledInitialized) {
 				disabledContinuous();
+				alwaysContinuous();
+			} else if (isTest() && m_testInitialized) {
+				testContinuous();
 				alwaysContinuous();
 			}
 
@@ -214,6 +217,19 @@ public abstract class TorqueIterative extends RobotBase {
 		if (dcFirstRun) {
 			System.out.println("Default TorqueIterative.disabledContinuous() method... Overload me!");
 			dcFirstRun = false;
+		}
+		try {
+			Thread.sleep(1);
+		} catch (InterruptedException ex) {
+		}
+	}
+
+	private boolean tcFirstRun = true;
+
+	public void testContinuous() {
+		if (tcFirstRun) {
+			System.out.println("Default TorqueIterative.testContinuous() method... Overload me!");
+			tcFirstRun = false;
 		}
 		try {
 			Thread.sleep(1);
