@@ -4,20 +4,20 @@ import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.texastorque.util.KPID;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TorqueTalon extends TorqueMotor {
-    private TalonSRX talon;
-    private ArrayList<TalonSRX> talonFollowers = new ArrayList<TalonSRX>();
+    private WPI_TalonSRX talon;
+    private ArrayList<WPI_TalonSRX> talonFollowers = new ArrayList<>();
     private boolean invert = false;
 
     // ===================== constructor stuff =================
     public TorqueTalon(int port) {
-        talon = new TalonSRX(port);
+        talon = new WPI_TalonSRX(port);
         talon.configFactoryDefault();
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
         this.port = port;
@@ -25,12 +25,11 @@ public class TorqueTalon extends TorqueMotor {
 
     @Override
     public void addFollower(int port) {
-        talonFollowers.add(new TalonSRX(port));
+        talonFollowers.add(new WPI_TalonSRX(port));
     } // add follower
 
     public void addFollower(int port, boolean invert) {
-        talonFollowers.add(new TalonSRX(port));
-
+        talonFollowers.add(new WPI_TalonSRX(port));
     } // add follower
 
     public void setInverted(boolean set) {
@@ -50,7 +49,7 @@ public class TorqueTalon extends TorqueMotor {
     @Override
     public void set(double output) {
         talon.set(ControlMode.PercentOutput, output);
-        for (TalonSRX talonSRX : talonFollowers) {
+        for (WPI_TalonSRX talonSRX : talonFollowers) {
             talonSRX.set(ControlMode.Follower, port);
             talonSRX.setInverted(invert);
             SmartDashboard.putNumber("FollowerVelocity", output);
@@ -59,7 +58,7 @@ public class TorqueTalon extends TorqueMotor {
 
     public void set(double output, ControlMode modeTalon) {
         talon.set(modeTalon, output);
-        for (TalonSRX talonSRX : talonFollowers) {
+        for (WPI_TalonSRX talonSRX : talonFollowers) {
             talonSRX.set(ControlMode.Follower, port);
         } // takes care of followers
     } // set with ControlMode for talon
@@ -87,9 +86,7 @@ public class TorqueTalon extends TorqueMotor {
     @Override
     public double getVelocity() {
         try {
-            double velicty = talon.getSelectedSensorVelocity();
-            System.out.printf("Current velocity: %f%n", velicty);
-            return velicty;
+            return talon.getSelectedSensorVelocity();
         } catch (Exception e) {
             System.out.println(e);
             System.out.println("There is no encoder present, you need to put one in");
