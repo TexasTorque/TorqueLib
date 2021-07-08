@@ -2,6 +2,7 @@ package org.texastorque.torquelib.component;
 
 import java.util.ArrayList;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -18,8 +19,9 @@ public class TorqueTalon extends TorqueMotor {
     // ===================== constructor stuff =================
     public TorqueTalon(int port) {
         talon = new WPI_TalonSRX(port);
-        talon.configFactoryDefault();
-        talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
+        // talon.configFactoryDefault();
+        // talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+        // 0, 0);
         this.port = port;
     } // torque talon
 
