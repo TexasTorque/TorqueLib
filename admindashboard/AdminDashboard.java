@@ -25,12 +25,31 @@ public class AdminDashboard {
     }
 
     public double getDoubleValue(AdminDashboardIdentifiersI identifier) {
-        if (!entries.containsKey(identifier)) {
-            System.out.println("WARNING: '" + identifier + "' not found in admin dashboard!");
+        if (!checkExists(identifier))
             return 0;
-        }
 
         return entries.get(identifier).getDouble(0);
+    }
+
+    public void setDoubleValue(AdminDashboardIdentifiersI identifier, double value) {
+        if (!checkExists(identifier))
+            return;
+
+        entries.get(identifier).setDouble(value);
+    }
+
+    /**
+     * Check whether a given identifier exists
+     * 
+     * @param identifier The identifier to check
+     * @return Whether it exists or not
+     */
+    private boolean checkExists(AdminDashboardIdentifiersI identifier) {
+        if (!entries.containsKey(identifier)) {
+            System.out.println("WARNING: '" + identifier + "' not found in admin dashboard!");
+            return false;
+        }
+        return true;
     }
 
     public static synchronized AdminDashboard getInstance() {
