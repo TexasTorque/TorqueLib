@@ -12,6 +12,11 @@ public class TorqueVictor extends VictorSPX {
         super(port);
     }
 
+    public TorqueVictor(int port, boolean inverted) {
+        super(port);
+        setInverted(inverted);
+    }
+
     public void set(double val) {
         set(ControlMode.PercentOutput, val);
         followers.forEach(v -> v.set(ControlMode.PercentOutput, val));
