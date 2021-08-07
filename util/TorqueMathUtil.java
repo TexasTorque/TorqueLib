@@ -5,31 +5,16 @@ import edu.wpi.first.wpilibj.Timer;
 public class TorqueMathUtil {
 
 	/**
-	 * DONT USE, V UNOPTIMIZED
-	 * @deprecated
-	 */
-	@Deprecated
-	public static double constrain(double value, double absMax) {
-		if (value > absMax) {
-			return absMax;
-		} else if (value < -absMax) {
-			return -absMax;
-		} else {
-			return value;
-		}
-	}
-
-	/**
 	 * Return contrained value n between a and -a
 	 * 
 	 * @param n Value to be constrained
 	 * @param a Value to constrain by
 	 * @return The constrained value of n
 	 */
-	public static double absConstrain(double n, double a) {
+	public static double constrain(double n, double a) {
         return Math.max(Math.min(n, a), -a);
 	}
-	
+
 	/**
 	 * Return contrained value n between a and b
 	 * 
@@ -38,6 +23,36 @@ public class TorqueMathUtil {
 	 * @param b Value to constrain the value under, the maximum value
 	 * @return The constrained value of n
 	 */
+	public static double constrain(double n, double a, double b) {
+		return Math.max(Math.min(n, b), a);
+	}
+
+
+	/**
+	 * Return contrained value n between a and -a
+	 * 
+	 * @deprecated
+	 * 
+	 * @param n Value to be constrained
+	 * @param a Value to constrain by
+	 * @return The constrained value of n
+	 */
+	@Deprecated
+	public static double absConstrain(double n, double a) {
+        return Math.max(Math.min(n, a), -a);
+	}
+	
+	/**
+	 * Return contrained value n between a and b
+	 * 
+	 * @deprecated 
+	 * 
+	 * @param n Value to be constrained
+	 * @param a Value to constrain the value over, the minimum value
+	 * @param b Value to constrain the value under, the maximum value
+	 * @return The constrained value of n
+	 */
+	@Deprecated
 	public static double biConstrain(double n, double a, double b) {
         return Math.max(Math.min(n, b), a);
     }

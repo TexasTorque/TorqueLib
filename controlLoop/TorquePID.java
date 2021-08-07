@@ -218,7 +218,7 @@ public class TorquePID extends ControlLoop {
 		}
 		
 		if (initialLimited && Timer.getFPGATimestamp() - lastLimitedTime < initialLimitedTime) {
-			output = TorqueMathUtil.absConstrain(output, initialLimitedOutput);
+			output = TorqueMathUtil.constrain(output, initialLimitedOutput);
 		}
 
 		// ----- Save Time -----
