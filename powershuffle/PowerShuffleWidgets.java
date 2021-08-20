@@ -2,7 +2,7 @@ package org.texastorque.torquelib.powershuffle;
 
 public enum PowerShuffleWidgets {
     // These names should match up with TYPE_NAME
-    PIDManager("PIDManager");
+    PIDManager("PIDManager"), SwerveModule("SwerveModule");
 
     private final String identifier;
 
