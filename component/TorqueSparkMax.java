@@ -145,7 +145,12 @@ public class TorqueSparkMax extends TorqueMotor {
     }
 
     public void setAlternateEncoder() {
-        alternateEncoder = sparkMax.getAlternateEncoder();
+        // No params deprecated, default to 0
+        alternateEncoder = sparkMax.getAlternateEncoder(0);
+    }
+    
+    public void setAlternateEncoder(int n) {
+        alternateEncoder = sparkMax.getAlternateEncoder(n);
     }
 
     public double getAlternateVelocity() {
