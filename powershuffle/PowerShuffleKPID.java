@@ -5,17 +5,21 @@ import org.texastorque.util.KPID;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 
-public class PowerShuffleKPID extends KPID implements Sendable {
+public class PowerShuffleKPID extends KPID {
+    
     private String name;
-    private ComplexWidget widget;
+    private SimpleWidget widget;
+    //private ComplexWidget widget;
 
     public PowerShuffleKPID(String name) {
         super();
         this.name = name;
         widget = Shuffleboard.getTab("KPID").add(name, this).withWidget(PowerShuffleWidgets.PIDManager.getIdentifier());
-    }
+    } 
 
     public PowerShuffleKPID(String name, double pGains, double iGains, double dGains, double fGains, double minOutput,
             double maxOutput) {
@@ -32,7 +36,6 @@ public class PowerShuffleKPID extends KPID implements Sendable {
         this.name = name;
     }
 
-    @Override
     public void initSendable(SendableBuilder builder) {
         builder.addStringProperty("name", this::getName, this::setName);
         builder.addDoubleProperty("p", this::p, this::setP);
