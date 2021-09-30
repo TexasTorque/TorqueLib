@@ -117,6 +117,16 @@ public class TorqueSparkMax extends TorqueMotor {
         return sparkMaxEncoder.getVelocity() * sparkMaxEncoder.getVelocityConversionFactor();
     } // returns velocity of motor
 
+    /**
+     * Get the velocity of the motor in meters
+     * 
+     * @param radius The radisu (in meters) of the drive wheel
+     * @return The velocity of the motor
+     */
+    public double getVelocityMeters(double radius) {
+        return (2 * Math.PI * radius * getVelocity() / 60.0) / 4.0;
+    }
+
     public void tareEncoder() {
         encoderZero = sparkMaxEncoder.getPosition();
     }
@@ -148,7 +158,7 @@ public class TorqueSparkMax extends TorqueMotor {
         // No params deprecated, default to 0
         alternateEncoder = sparkMax.getAlternateEncoder(0);
     }
-    
+
     public void setAlternateEncoder(int n) {
         alternateEncoder = sparkMax.getAlternateEncoder(n);
     }
