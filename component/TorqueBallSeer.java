@@ -8,7 +8,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * This class provides an interface for receiving communication from the ballseer.py vison code.
  * 
  * @author Jack
- * @apiNote This code was originally created during the 2021 season
+ * This code was originally created during the 2021 season
  */
 public class TorqueBallSeer {
     private NetworkTableInstance NT_instance;
