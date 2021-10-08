@@ -11,6 +11,11 @@ import org.texastorque.util.KPID;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+
+// I plan on doing a rewrite of (at least) this motor controller
+// Honestly might as well clean up TorqueLib and Utils... 
+// - Justus
+
 public class TorqueTalon extends TorqueMotor {
     private WPI_TalonSRX talon;
     private ArrayList<WPI_TalonSRX> talonFollowers = new ArrayList<>();
@@ -31,7 +36,10 @@ public class TorqueTalon extends TorqueMotor {
     } // add follower
 
     public void addFollower(int port, boolean invert) {
-        talonFollowers.add(new WPI_TalonSRX(port));
+        WPI_TalonSRX t = new WPI_TalonSRX(port);
+        t.setInverted(invert);
+        talonFollowers.add(t);
+            
     } // add follower
 
     public void setInverted(boolean set) {
@@ -53,7 +61,7 @@ public class TorqueTalon extends TorqueMotor {
         talon.set(ControlMode.PercentOutput, output);
         for (WPI_TalonSRX talonSRX : talonFollowers) {
             talonSRX.set(ControlMode.Follower, port);
-            talonSRX.setInverted(invert);
+            //talonSRX.setInverted(invert);
             SmartDashboard.putNumber("FollowerVelocity", output);
         } // takes care of followers
     } // generic set method
