@@ -9,7 +9,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 * as described [here](https://github.com/TexasTorque/TorqueLidarA1).
 *
 * @author Jack
-* @apiNote This code was originally created during the 2021 season! 
+* @apiNote was originally created during the 2021 season! 
 */    
 public class TorqueLidarA1Receiver {
     private NetworkTableInstance NT_instance;
@@ -58,7 +58,7 @@ public class TorqueLidarA1Receiver {
     /**
     * Returns if it found something under "left"
     *
-    * @apiNote If the request fails the default value returned is false!
+    * If the request fails the default value returned is false!
     * @return Boolean
     */
     public boolean foundLeft() {
@@ -77,7 +77,7 @@ public class TorqueLidarA1Receiver {
 
     /**
     * Returns if it found something under "right"
-    *
+    * 
     * @apiNote If the request fails the default value returned is false!
     * @return Boolean
     */

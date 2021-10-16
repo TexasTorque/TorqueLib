@@ -62,8 +62,7 @@ public class TorqueSMP {
 	/**
 	 * Get the velocity of the profile at a specific time.
 	 *
-	 * @param time
-	 *            Change in time
+	 * @param dt Change in time
 	 * @return Velocity
 	 */
 	public double getVelocity(double dt) {
