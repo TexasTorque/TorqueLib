@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import org.texastorque.util.KPID;
@@ -51,9 +51,9 @@ public class TorqueFalcon {
                                         + "   Falcon 500 encoder is built in,\n"
                                         + "   so check that your Falcon 500 works.";
 
-    private TalonFX falcon;
+    private WPI_TalonFX falcon;
     private TalonFXConfiguration config;
-    private ArrayList<TalonFX> followers = new ArrayList<>();
+    private ArrayList<WPI_TalonFX> followers = new ArrayList<>();
     private boolean invert = false;
     private int port;
 
@@ -70,7 +70,7 @@ public class TorqueFalcon {
      * @param port The CAN ID port for the main motor.
      */
     public TorqueFalcon(int port) {
-        falcon = new TalonFX(port);
+        falcon = new WPI_TalonFX(port);
         // configFactoryDefault is the old API
         //falcon.configFactoryDefault();
 
@@ -88,7 +88,7 @@ public class TorqueFalcon {
      * @param neutralMode The neutral mode setting for the main motor.
      */
     public TorqueFalcon(int port, NeutralMode neutralMode) {
-        falcon = new TalonFX(port); 
+        falcon = new WPI_TalonFX(port); 
 
         config = new TalonFXConfiguration();
         config.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
@@ -109,7 +109,7 @@ public class TorqueFalcon {
      * @param port The CAN ID port for the follower motor.
      */
     public void addFollower(int port) {
-        TalonFX follower = new TalonFX(port);
+        WPI_TalonFX follower = new WPI_TalonFX(port);
         follower.setNeutralMode(neutralMode);
         followers.add(follower);
     }
@@ -120,7 +120,7 @@ public class TorqueFalcon {
      * @param port The CAN ID port for the follower motor.
      */
     public void addFollower(int port, boolean inverted) {
-        TalonFX follower = new TalonFX(port);
+        WPI_TalonFX follower = new WPI_TalonFX(port);
         follower.setInverted(inverted);
         follower.setNeutralMode(neutralMode);
         followers.add(follower);
@@ -147,7 +147,7 @@ public class TorqueFalcon {
      */
     public void setInvertedAll(boolean invert) {
         falcon.setInverted(invert);
-        for (TalonFX follower : followers) {
+        for (WPI_TalonFX follower : followers) {
             follower.setInverted(invert);
         }
     }
@@ -163,7 +163,7 @@ public class TorqueFalcon {
      */
     private void updateNeutralMode() {
         falcon.setNeutralMode(neutralMode);
-        for (TalonFX follower : followers) {
+        for (WPI_TalonFX follower : followers) {
             follower.setNeutralMode(neutralMode);
         }
     }
@@ -211,10 +211,9 @@ public class TorqueFalcon {
      */
     public void set(double output) {
         falcon.set(ControlMode.PercentOutput, output);
-        for (TalonFX follower : followers) {
-            follower.set(ControlMode.Follower, port);
+        for (WPI_TalonFX follower : followers) {
             follower.setInverted(invert);
-            SmartDashboard.putNumber("FollowerVelocity", output);
+            follower.set(ControlMode.Follower, port);
         }
     }
 
@@ -227,7 +226,7 @@ public class TorqueFalcon {
      */
     public void set(double output, ControlMode mode) {
         falcon.set(mode, output);
-        for (TalonFX follower : followers) {
+        for (WPI_TalonFX follower : followers) {
             follower.set(ControlMode.Follower, port);
             follower.setInverted(invert);
             SmartDashboard.putNumber("FollowerVelocity", output);
