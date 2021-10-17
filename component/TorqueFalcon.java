@@ -71,13 +71,11 @@ public class TorqueFalcon {
      */
     public TorqueFalcon(int port) {
         falcon = new WPI_TalonFX(port);
-        // configFactoryDefault is the old API
-        //falcon.configFactoryDefault();
 
-        // New API to use integrated encoder
         config = new TalonFXConfiguration();
         config.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
         falcon.configAllSettings(config);
+
         falcon.setNeutralMode(neutralMode);
     }
 
@@ -132,24 +130,24 @@ public class TorqueFalcon {
      ******************** */
     
     /**
-     * Sets the invert of the main motor.
+     * Set main motor and followers to the same inversion.
      * 
      * @param invert True sets inverted, false sets not inverted.
      */
     public void setInverted(boolean invert) {
         falcon.setInverted(invert);
-    }
-
-    /**
-     * Set main motor and folloowers to the same inversion.
-     * 
-     * @param invert True sets inverted, false sets not inverted.
-     */
-    public void setInvertedAll(boolean invert) {
-        falcon.setInverted(invert);
         for (WPI_TalonFX follower : followers) {
             follower.setInverted(invert);
         }
+    }
+
+    /**
+     * Sets the invert of the main motor.
+     * 
+     * @param invert True sets inverted, false sets not inverted.
+     */
+    public void setMainInverted(boolean invert) {
+        falcon.setInverted(invert);
     }
 
 
