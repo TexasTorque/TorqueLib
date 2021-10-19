@@ -229,8 +229,7 @@ public class TorqueFalcon {
             follower.setInverted(invert);
             SmartDashboard.putNumber("FollowerVelocity", output);
         }
-    }
-
+    }    
 
     /* **********************
      * Handles PID settings *
@@ -404,23 +403,6 @@ public class TorqueFalcon {
     public double getAbsoluteVelocityRPM() {
         try {
             return Math.abs(falcon.getSelectedSensorVelocity() / kUnitsPerRev * 600.);
-        } catch (Exception e) {
-            System.out.println(e);
-            System.out.println(encoderMissing);
-            return 0;
-        }
-    }
-
-    /**
-     * Get the current motor velocity in meters per second based on a specified wheel radius.
-     *
-     * @param radius The radius of the wheel in meters.
-     * @return The current motor velocity in meters per second based on the specified wheel radius.
-     */
-    public double getVelocityMetersPerSecond(double radius) {
-        try {
-            return (2 * Math.PI * radius * falcon.getSelectedSensorVelocity() 
-                    / kUnitsPerRev * 10.) / 4.0;
         } catch (Exception e) {
             System.out.println(e);
             System.out.println(encoderMissing);
