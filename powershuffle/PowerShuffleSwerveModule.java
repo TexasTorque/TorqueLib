@@ -15,6 +15,10 @@ public class PowerShuffleSwerveModule implements Sendable {
         setValues(1, 1, .3, 1);
     }
 
+    public PowerShuffleSwerveModule(double requestedTurn, double turn, double requestedSpeed, double speed) {
+        setValues(requestedTurn, turn, requestedSpeed, speed);
+    }
+
     public void setValues(double requestedTurn, double turn, double requestedSpeed, double speed) {
         this.requestedTurn = requestedTurn;
         this.turn = turn;
@@ -56,7 +60,7 @@ public class PowerShuffleSwerveModule implements Sendable {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        System.out.println("Init sendable");
+        builder.setSmartDashboardType(PowerShuffleWidgets.SwerveModule.name());
         builder.addDoubleProperty("requestedTurn", this::getRequestedTurn, this::setRequestedTurn);
         builder.addDoubleProperty("turn", this::getTurn, this::setTurn);
         builder.addDoubleProperty("requestedSpeed", this::getRequestedSpeed, this::setRequestedSpeed);
