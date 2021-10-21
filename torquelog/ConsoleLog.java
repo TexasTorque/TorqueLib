@@ -1,5 +1,7 @@
 package org.texastorque.torquelib.torquelog;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * This class provides interfaces for semantically outputing messages to
  * console.
@@ -7,7 +9,7 @@ package org.texastorque.torquelib.torquelog;
 public class ConsoleLog {
 
     public enum ConsoleLogType {
-        DEBUG("?"), INFO(";)"), OK(":>)"), WARNING("0-0️"), ERROR("XXX");
+        DEBUG("?"), INFO("[] "), OK(":)"), WARNING("0-0️"), ERROR("XXX");
 
         private String flag;
 
@@ -33,7 +35,17 @@ public class ConsoleLog {
      * @param message The message to print
      */
     public static void printMessage(ConsoleLogType type, String message) {
-        System.out.println(String.format("%s%s %s", type.getFlag(), identifier, message));
+        switch (type) {
+            case WARNING:
+                DriverStation.reportWarning(identifier + " " + message, false);
+                break;
+            case ERROR:
+                DriverStation.reportError(identifier + " " + message, false);
+                break;
+            default:
+                System.out.println(String.format("%s %s %s", type.getFlag(), identifier, message));
+                break;
+        }
     }
 
     public static void setIdentifier(String identifier) {
