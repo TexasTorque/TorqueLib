@@ -13,17 +13,6 @@ import org.texastorque.util.KPID;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/*
- * __      _____  ___ _  __  ___ _  _  
- * \ \    / / _ \| _ \ |/ / |_ _| \| | 
- *  \ \/\/ / (_) |   / ' <   | || .` | 
- *  _\_/\_/ \___/|_|_\_|\_\_|___|_|\_| 
- * | _ \ _ \/ _ \ / __| _ \ __/ __/ __|
- * |  _/   / (_) | (_ |   / _|\__ \__ \
- * |_| |_|_\\___/ \___|_|_\___|___/___/
- *                                  
- */
-
 /** 
  * A class for controlling a Falcon 500.
  * The Falcon 500 uses a TalonFX Motor controller.
@@ -38,7 +27,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * http://www.ctr-electronics.com/downloads/pdf/Falcon%20500%20User%20Guide.pdf
  * 
  * 
- * @author TexasTorque
+ * @author Justus
+ * @apiNote Created durring 2021 off-season
  */
 public class TorqueFalcon { 
 
@@ -203,16 +193,13 @@ public class TorqueFalcon {
     
     /**
      * Sets the percent power output of the main motor and all followers.
+     * Percent output is the default.
      * 
      * @param output Percent output from -1 (100% backwards) 
      * to 1 (100% forwards). Example: 50% = .5.
      */
     public void set(double output) {
-        falcon.set(ControlMode.PercentOutput, output);
-        for (WPI_TalonFX follower : followers) {
-            follower.setInverted(invert);
-            follower.set(ControlMode.Follower, port);
-        }
+        set(output, ControlMode.PercentOutput);
     }
 
     /**

@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
+ * Am going to deprecate this to make a new TorqueGyro with the AHRS or wtv.
+ * 
  * Create a new gyro.
  *
  * @author TexasTorque
