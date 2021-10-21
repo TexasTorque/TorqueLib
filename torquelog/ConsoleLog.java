@@ -48,6 +48,20 @@ public class ConsoleLog {
         }
     }
 
+    /**
+     * printMessage a but with Python style print
+     * 
+     * @param type  The type of message to print
+     * @param args  The stuff to print, can be whatever
+     */
+    public static void printMessage(ConsoleLogType type, Object... args) {
+        System.out.printf("%s%s ", type.getFlag(), identifier);
+        for (Object arg : args) {
+            try { System.out.print(arg); } 
+            catch (Exception e) { }
+        }
+    }
+
     public static void setIdentifier(String identifier) {
         ConsoleLog.identifier = "[" + identifier + "]";
     }
