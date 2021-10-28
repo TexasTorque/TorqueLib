@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class ConsoleLog {
 
     public enum ConsoleLogType {
-        DEBUG("?"), INFO("[] "), OK(":)"), WARNING("0-0️"), ERROR("XXX");
+        DEBUG("?"), INFO("[] "), OK(":)"), WARNING("0-0"), ERROR("XXX");
 
         private String flag;
 
@@ -51,14 +51,16 @@ public class ConsoleLog {
     /**
      * printMessage a but with Python style print
      * 
-     * @param type  The type of message to print
-     * @param args  The stuff to print, can be whatever
+     * @param type The type of message to print
+     * @param args The stuff to print, can be whatever
      */
     public static void printMessage(ConsoleLogType type, Object... args) {
         System.out.printf("%s%s ", type.getFlag(), identifier);
         for (Object arg : args) {
-            try { System.out.print(arg); } 
-            catch (Exception e) { }
+            try {
+                System.out.print(arg);
+            } catch (Exception e) {
+            }
         }
     }
 
