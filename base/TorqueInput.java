@@ -22,6 +22,6 @@ public abstract class TorqueInput {
 
     public final void run() { 
         if (!blocked) update();
-        block();
+        unblock();
     }
 }
