@@ -120,7 +120,7 @@ public class TorqueSparkMax extends TorqueMotor {
     /**
      * Get the velocity of the motor in meters
      * 
-     * @param radius The radisu (in meters) of the drive wheel
+     * @param radius The radius (in meters) of the drive wheel
      * @return The velocity of the motor
      */
     public double getVelocityMeters(double radius) {
@@ -149,6 +149,10 @@ public class TorqueSparkMax extends TorqueMotor {
     public double getPositionConverted() {
         return ((sparkMaxEncoder.getPosition() - encoderZero) * sparkMaxEncoder.getPositionConversionFactor());
     } // returns motor position but converted by some factor
+
+    public double getDegrees() {
+        return getPosition() / sparkMaxEncoder.getCountsPerRevolution() * 360.0 ;
+    }
 
     public double getCurrent() {
         return sparkMax.getOutputCurrent();
