@@ -112,6 +112,10 @@ public class TorqueSparkMax extends TorqueMotor {
         pid.setOutputRange(kPID.min(), kPID.max());
     } // update PID
 
+    public void setPosFactor(double factor) {
+        sparkMaxEncoder.setPositionConversionFactor(factor);
+    }
+
     @Override
     public double getVelocity() {
         return sparkMaxEncoder.getVelocity() * sparkMaxEncoder.getVelocityConversionFactor();
@@ -151,7 +155,7 @@ public class TorqueSparkMax extends TorqueMotor {
     } // returns motor position but converted by some factor
 
     public double getDegrees() {
-        return getPosition() / sparkMaxEncoder.getCountsPerRevolution() * 360.0 ;
+        return getPosition() / sparkMaxEncoder.getCountsPerRevolution() * 360.0;
     }
 
     public double getCurrent() {
