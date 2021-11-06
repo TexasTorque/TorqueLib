@@ -13,14 +13,12 @@ import org.texastorque.util.KPID;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/** 
- * A class for controlling a Falcon 500.
- * The Falcon 500 uses a TalonFX Motor controller.
- * I'm not extending TorqueMotor for a reason - it is over
- * abstraction that adds nothing. The Falcon 500 and TalonFX
- * actually also add a wealth of features that TorqueMotor
- * is not equipped to handle without heavy modification for
- * standardization.
+/**
+ * A class for controlling a Falcon 500. The Falcon 500 uses a TalonFX Motor
+ * controller. I'm not extending TorqueMotor for a reason - it is over
+ * abstraction that adds nothing. The Falcon 500 and TalonFX actually also add a
+ * wealth of features that TorqueMotor is not equipped to handle without heavy
+ * modification for standardization.
  * 
  * Resources:
  * https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20Talon%20FX%20(Falcon%20500)/IntegratedSensor/src/main/java/frc/robot/Robot.java
@@ -30,16 +28,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author Justus
  * @apiNote Created durring 2021 off-season
  */
-public class TorqueFalcon { 
+public class TorqueFalcon {
 
-    // TODO: Add TalonFXInvertType direction setting mode. 
+    // TODO: Add TalonFXInvertType direction setting mode.
     // TODO: Discuss invert rules for followers and main motor.
 
     private final double kUnitsPerRev = 2048.;
     private final String encoderMissing = "[Falcon500] Encoder interface error!\n"
-                                        + " - Encoder could be missing, but the\n"
-                                        + "   Falcon 500 encoder is built in,\n"
-                                        + "   so check that your Falcon 500 works.";
+            + " - Encoder could be missing, but the\n" + "   Falcon 500 encoder is built in,\n"
+            + "   so check that your Falcon 500 works.";
 
     private WPI_TalonFX falcon;
     private TalonFXConfiguration config;
@@ -49,10 +46,9 @@ public class TorqueFalcon {
 
     private NeutralMode neutralMode = NeutralMode.EEPROMSetting;
 
-
-    /* *****************************
-     * Constructors for main motor *
-     ***************************** */ 
+    /*
+     * ***************************** Constructors for main motor *
+     */
 
     /**
      * Constructor for the main motor.
@@ -72,11 +68,11 @@ public class TorqueFalcon {
     /**
      * Constructor for the main motor with neutral mode.
      * 
-     * @param port The CAN ID port for the main motor.
+     * @param port        The CAN ID port for the main motor.
      * @param neutralMode The neutral mode setting for the main motor.
      */
     public TorqueFalcon(int port, NeutralMode neutralMode) {
-        falcon = new WPI_TalonFX(port); 
+        falcon = new WPI_TalonFX(port);
 
         config = new TalonFXConfiguration();
         config.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
@@ -86,10 +82,9 @@ public class TorqueFalcon {
         falcon.setNeutralMode(neutralMode);
     }
 
-
-    /* *******************************
-     * Handles addition of followers *
-     ******************************* */ 
+    /*
+     * ******************************* Handles addition of followers *
+     */
 
     /**
      * Adds a follower to the main motor.
@@ -114,11 +109,10 @@ public class TorqueFalcon {
         followers.add(follower);
     }
 
+    /*
+     * ******************** Handles inversions *
+     */
 
-    /* ********************
-     * Handles inversions *
-     ******************** */
-    
     /**
      * Set main motor and followers to the same inversion.
      * 
@@ -140,14 +134,13 @@ public class TorqueFalcon {
         falcon.setInverted(invert);
     }
 
-
-    /* ************************************
-     * Handles neutral mode in brake etc. *
-     ************************************ */
+    /*
+     * ************************************ Handles neutral mode in brake etc. *
+     */
 
     /**
-     * Updates the neutral mode for main motor and followers
-     * to the current one stored in the class.
+     * Updates the neutral mode for main motor and followers to the current one
+     * stored in the class.
      */
     private void updateNeutralMode() {
         falcon.setNeutralMode(neutralMode);
@@ -157,8 +150,8 @@ public class TorqueFalcon {
     }
 
     /**
-     * Set the neutral mode for the class and apply changes
-     * to main motor and all followers.
+     * Set the neutral mode for the class and apply changes to main motor and all
+     * followers.
      * 
      * @param mode The neutral mode to set to.
      */
@@ -168,9 +161,8 @@ public class TorqueFalcon {
     }
 
     /**
-     * Reset the neutral mode for class to default (read from
-     * motor controller memory) (EEPROMSetting) and apply changes
-     * to main motor and all followers.
+     * Reset the neutral mode for class to default (read from motor controller
+     * memory) (EEPROMSetting) and apply changes to main motor and all followers.
      */
     public void resetNeutralMode() {
         neutralMode = NeutralMode.EEPROMSetting;
@@ -183,31 +175,30 @@ public class TorqueFalcon {
      * @return The current neutral mode
      */
     public NeutralMode getNeutralMode() {
-        return neutralMode;  
+        return neutralMode;
     }
 
+    /*
+     * ****************************** Handles setting motor output *
+     */
 
-    /* ******************************
-     * Handles setting motor output *
-     ****************************** */
-    
     /**
-     * Sets the percent power output of the main motor and all followers.
-     * Percent output is the default.
+     * Sets the percent power output of the main motor and all followers. Percent
+     * output is the default.
      * 
-     * @param output Percent output from -1 (100% backwards) 
-     * to 1 (100% forwards). Example: 50% = .5.
+     * @param output Percent output from -1 (100% backwards) to 1 (100% forwards).
+     *               Example: 50% = .5.
      */
     public void set(double output) {
         set(output, ControlMode.PercentOutput);
     }
 
     /**
-     * Sets the output of the main motor and all followers with a
-     * specified control mode.
+     * Sets the output of the main motor and all followers with a specified control
+     * mode.
      * 
      * @param output The value that the motor will be set to.
-     * @param mode The control mode to be used when setting motor output.
+     * @param mode   The control mode to be used when setting motor output.
      */
     public void set(double output, ControlMode mode) {
         falcon.set(mode, output);
@@ -216,11 +207,11 @@ public class TorqueFalcon {
             follower.setInverted(invert);
             SmartDashboard.putNumber("FollowerVelocity", output);
         }
-    }    
+    }
 
-    /* **********************
-     * Handles PID settings *
-     ********************** */
+    /*
+     * ********************** Handles PID settings *
+     */
 
     /**
      * Sets the main motor PID from a Torque KPID object.
@@ -228,30 +219,25 @@ public class TorqueFalcon {
      * @param kPID The Torque KPID object to set the main motor PID from.
      */
     public void configurePID(KPID kPID) {
+        configurePIDHandler(falcon, kPID);
+        for (WPI_TalonFX follower : followers) {
+            configurePIDHandler(follower, kPID);
+        }
+    }
+
+    private void configurePIDHandler(WPI_TalonFX falcon, KPID kPID) {
         falcon.config_kP(0, kPID.p());
         falcon.config_kI(0, kPID.i());
         falcon.config_kD(0, kPID.d());
         falcon.config_kF(0, kPID.f());
         falcon.configPeakOutputForward(kPID.max());
         falcon.configPeakOutputReverse(kPID.min());
+
     }
 
-      /**
-     * Update the main motor PID from a Torque KPID object.
-     * 
-     * @param kPID The Torque KPID object to set the main motor PID from.
+    /*
+     * ***************** Feedback system *
      */
-    public void updatePID(KPID kPID) {
-        falcon.config_kP(0, kPID.p());
-        falcon.config_kI(0, kPID.i());
-        falcon.config_kD(0, kPID.d());
-        falcon.config_kF(0, kPID.f());
-    }
-
-
-    /* *****************
-     * Feedback system *
-     ***************** */
 
     /**
      * Get current motor output percent.
@@ -323,9 +309,11 @@ public class TorqueFalcon {
     }
 
     /**
-     * Get absolute value of the current motor velocity in 100 ticks per millisecond.
+     * Get absolute value of the current motor velocity in 100 ticks per
+     * millisecond.
      * 
-     * @return Absolute value of the current motor velocity in 100 ticks per millisecond.
+     * @return Absolute value of the current motor velocity in 100 ticks per
+     *         millisecond.
      */
     public double getAbsoluteVelocity() {
         try {
@@ -385,7 +373,8 @@ public class TorqueFalcon {
     /**
      * Get absolute value of the current motor velocity in rotations per minuite.
      * 
-     * @return Absolute value of the current motor velocity in rotations per minuite.
+     * @return Absolute value of the current motor velocity in rotations per
+     *         minuite.
      */
     public double getAbsoluteVelocityRPM() {
         try {
@@ -400,29 +389,16 @@ public class TorqueFalcon {
 
 /*
  * Cool ASCII big text for Texas Torque
-
-  _____                _____                      
- |_   _|____ ____ _ __|_   _|__ _ _ __ _ _  _ ___ 
-   | |/ -_) \ / _` (_-< | |/ _ \ '_/ _` | || / -_)
-   |_|\___/_\_\__,_/__/ |_|\___/_| \__, |\_,_\___|
-                                      |_|         
-  ______               ______                      
- /_  __/____ _____ ___/_  __/__  _______ ___ _____ 
-  / / / -_) \ / _ `(_-</ / / _ \/ __/ _ `/ // / -_)
- /_/  \__/_\_\\_,_/___/_/  \___/_/  \_, /\_,_/\__/ 
-                                    /_/           
-  _______              _______                         
- |__   __|            |__   __|                        
-    | | _____  ____ _ ___| | ___  _ __ __ _ _   _  ___ 
-    | |/ _ \ \/ / _` / __| |/ _ \| '__/ _` | | | |/ _ \
-    | |  __/>  < (_| \__ \ | (_) | | | (_| | |_| |  __/
-    |_|\___/_/\_\__,_|___/_|\___/|_|  \__, |\__,_|\___|
-                                         | |           
-                                         |_|                           
-   ______                    ______                          
-  /_  __/__  _  ______ _____/_  __/___  _________ ___  _____ 
-   / / / _ \| |/_/ __ `/ ___// / / __ \/ ___/ __ `/ / / / _ \
-  / / /  __/>  </ /_/ (__  )/ / / /_/ / /  / /_/ / /_/ /  __/
- /_/  \___/_/|_|\__,_/____//_/  \____/_/   \__, /\__,_/\___/ 
-                                            /_/             
-*/
+ * 
+ * _____ _____ |_ _|____ ____ _ __|_ _|__ _ _ __ _ _ _ ___ | |/ -_) \ / _` (_-<
+ * | |/ _ \ '_/ _` | || / -_) |_|\___/_\_\__,_/__/ |_|\___/_| \__, |\_,_\___|
+ * |_| ______ ______ /_ __/____ _____ ___/_ __/__ _______ ___ _____ / / / -_) \
+ * / _ `(_-</ / / _ \/ __/ _ `/ // / -_) /_/ \__/_\_\\_,_/___/_/ \___/_/ \_,
+ * /\_,_/\__/ /_/ _______ _______ |__ __| |__ __| | | _____ ____ _ ___| | ___ _
+ * __ __ _ _ _ ___ | |/ _ \ \/ / _` / __| |/ _ \| '__/ _` | | | |/ _ \ | | __/>
+ * < (_| \__ \ | (_) | | | (_| | |_| | __/ |_|\___/_/\_\__,_|___/_|\___/|_| \__,
+ * |\__,_|\___| | | |_| ______ ______ /_ __/__ _ ______ _____/_ __/___ _________
+ * ___ _____ / / / _ \| |/_/ __ `/ ___// / / __ \/ ___/ __ `/ / / / _ \ / / /
+ * __/> </ /_/ (__ )/ / / /_/ / / / /_/ / /_/ / __/ /_/ \___/_/|_|\__,_/____//_/
+ * \____/_/ \__, /\__,_/\___/ /_/
+ */
