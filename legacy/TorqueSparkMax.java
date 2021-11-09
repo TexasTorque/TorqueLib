@@ -1,4 +1,4 @@
-package org.texastorque.torquelib.component;
+package org.texastorque.torquelib.legacy;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,6 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANAnalog.AnalogMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import org.texastorque.torquelib.component.TorqueMotor;
 import org.texastorque.torquelib.util.KPID;
 
 /**

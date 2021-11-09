@@ -1,4 +1,4 @@
-package org.texastorque.torquelib.component;
+package org.texastorque.torquelib.legacy;
 
 import java.util.ArrayList;
 

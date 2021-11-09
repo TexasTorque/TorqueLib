@@ -1,4 +1,4 @@
-package org.texastorque.torquelib.component;
+package org.texastorque.torquelib.motors;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import org.texastorque.torquelib.motors.base.*;
 import org.texastorque.torquelib.util.KPID;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,12 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /** 
  * A class for controlling a Falcon 500.
  * The Falcon 500 uses a TalonFX Motor controller.
- * I'm not extending TorqueMotor for a reason - it is over
- * abstraction that adds nothing. The Falcon 500 and TalonFX
- * actually also add a wealth of features that TorqueMotor
- * is not equipped to handle without heavy modification for
- * standardization.
- * 
+
  * Resources:
  * https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20Talon%20FX%20(Falcon%20500)/IntegratedSensor/src/main/java/frc/robot/Robot.java
  * http://www.ctr-electronics.com/downloads/pdf/Falcon%20500%20User%20Guide.pdf
@@ -30,22 +26,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author Justus
  * @apiNote Created durring 2021 off-season
  */
-public class TorqueFalcon { 
+public class TorqueFalcon extends TorqueMotor implements TorqueEncoderMotor, TorquePIDMotor { 
 
+    // TODO: Add tare encoder functionality
+    // TODO: Add standard encoder private method
     // TODO: Add TalonFXInvertType direction setting mode. 
     // TODO: Discuss invert rules for followers and main motor.
 
     private final double kUnitsPerRev = 2048.;
-    private final String encoderMissing = "[Falcon500] Encoder interface error!\n"
-                                        + " - Encoder could be missing, but the\n"
-                                        + "   Falcon 500 encoder is built in,\n"
-                                        + "   so check that your Falcon 500 works.";
+    private final String encoderMissing;
 
     private WPI_TalonFX falcon;
     private TalonFXConfiguration config;
     private ArrayList<WPI_TalonFX> followers = new ArrayList<>();
-    private boolean invert = false;
-    private int port;
 
     private NeutralMode neutralMode = NeutralMode.EEPROMSetting;
 
@@ -67,6 +60,11 @@ public class TorqueFalcon {
         falcon.configAllSettings(config);
 
         falcon.setNeutralMode(neutralMode);
+
+        encoderMissing = "[Falcon500](" + port + ") Encoder interface error!\n"
+                       + " - Encoder could be missing, but the\n"
+                       + "   Falcon 500 encoder is built in,\n"
+                       + "   so check that your Falcon 500 works.";
     }
 
     /**
@@ -84,6 +82,11 @@ public class TorqueFalcon {
 
         this.neutralMode = neutralMode;
         falcon.setNeutralMode(neutralMode);
+
+        encoderMissing = "[Falcon500](" + port + ") Encoder interface error!\n"
+                       + " - Encoder could be missing, but the\n"
+                       + "   Falcon 500 encoder is built in,\n"
+                       + "   so check that your Falcon 500 works.";
     }
 
 
@@ -323,21 +326,6 @@ public class TorqueFalcon {
     }
 
     /**
-     * Get absolute value of the current motor velocity in 100 ticks per millisecond.
-     * 
-     * @return Absolute value of the current motor velocity in 100 ticks per millisecond.
-     */
-    public double getAbsoluteVelocity() {
-        try {
-            return Math.abs(falcon.getSelectedSensorVelocity());
-        } catch (Exception e) {
-            System.out.println(e);
-            System.out.println(encoderMissing);
-        }
-        return 0;
-    }
-
-    /**
      * Get current motor velocity in rotations per second.
      * 
      * @return Current motor velocity in rotations per second.
@@ -345,21 +333,6 @@ public class TorqueFalcon {
     public double getVelocityRPS() {
         try {
             return falcon.getSelectedSensorVelocity() / kUnitsPerRev * 10.;
-        } catch (Exception e) {
-            System.out.println(e);
-            System.out.println(encoderMissing);
-        }
-        return 0;
-    }
-
-    /**
-     * Get absolute value of the current motor velocity in rotations per second.
-     * 
-     * @return Absolute value of the current motor velocity in rotations per second.
-     */
-    public double getAbsoluteVelocityRPS() {
-        try {
-            return Math.abs(falcon.getSelectedSensorVelocity() / kUnitsPerRev * 10.);
         } catch (Exception e) {
             System.out.println(e);
             System.out.println(encoderMissing);
@@ -382,20 +355,7 @@ public class TorqueFalcon {
         }
     }
 
-    /**
-     * Get absolute value of the current motor velocity in rotations per minuite.
-     * 
-     * @return Absolute value of the current motor velocity in rotations per minuite.
-     */
-    public double getAbsoluteVelocityRPM() {
-        try {
-            return Math.abs(falcon.getSelectedSensorVelocity() / kUnitsPerRev * 600.);
-        } catch (Exception e) {
-            System.out.println(e);
-            System.out.println(encoderMissing);
-            return 0;
-        }
-    }
+
 }
 
 /*
