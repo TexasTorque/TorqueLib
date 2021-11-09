@@ -11,7 +11,7 @@ import com.revrobotics.CANAnalog.AnalogMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.texastorque.torquelib.component.TorqueMotor;
-import org.texastorque.util.KPID;
+import org.texastorque.torquelib.util.KPID;
 
 /**
  * TorqueMotor using SparkMax for CAN motor management.

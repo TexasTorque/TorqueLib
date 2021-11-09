@@ -5,6 +5,28 @@ import edu.wpi.first.wpilibj.Timer;
 public class TorqueMathUtil {
 
 	/**
+	 * Calculates the area of a trapezoid
+	 * 
+	 * @param base1
+	 * @param base2
+	 * @param height
+	 * @return Area
+	 */
+	public static double calcAreaTrapezoid(double base1, double base2, double height) {
+		return 0.5 * (base1 + base2) * height;
+	}
+
+	/**
+	 * A signum, but 0 is positive.
+	 * 
+	 * @param val The value to signum.
+	 * @return Positive if 0 or higher, negative otherwise.
+	 */
+	public static int nonZeroSignum(double val) {
+		return (val >= 0) ? 1 : -1;
+	}
+	
+	/**
 	 * Return contrained value n between a and -a
 	 * 
 	 * @param n Value to be constrained

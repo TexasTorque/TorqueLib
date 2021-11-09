@@ -10,3 +10,5 @@ package org.texastorque.torquelib.util;
 public enum RunType {
     NORMAL, SIMULATOR, OFFBOARD
 }
+
+// Bruh why????

@@ -7,7 +7,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import org.texastorque.util.KPID;
+import org.texastorque.torquelib.util.KPID;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

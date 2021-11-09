@@ -1,6 +1,6 @@
 package org.texastorque.torquelib.util;
 
-public class Torque2DVector{
+public class Torque2DVector {
 
     private double magnitude;
     private double angle;

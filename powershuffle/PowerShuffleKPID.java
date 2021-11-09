@@ -1,6 +1,6 @@
 package org.texastorque.torquelib.powershuffle;
 
-import org.texastorque.util.KPID;
+import org.texastorque.torquelib.util.KPID;
 
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;

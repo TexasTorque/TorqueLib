@@ -2,15 +2,13 @@ package org.texastorque.torquelib.controlLoop;
 
 import java.util.Arrays;
 
-import org.texastorque.util.ArrayUtils;
-import org.texastorque.util.Integrator;
-import org.texastorque.util.KPID;
-import org.texastorque.util.MathUtils;
-import org.texastorque.util.TorqueTimer;
-import org.texastorque.util.interfaces.Stopwatch;
+import org.texastorque.torquelib.util.TorqueArrayUtils;
+import org.texastorque.torquelib.util.TorqueIntegrator;
+import org.texastorque.torquelib.util.KPID;
+import org.texastorque.torquelib.util.TorqueMathUtil;
+import org.texastorque.torquelib.util.TorqueTimer;
 
 import edu.wpi.first.wpilibj.Sendable;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 public class ScheduledPID implements Sendable {
@@ -32,8 +30,8 @@ public class ScheduledPID implements Sendable {
 
 	private boolean firstCycle;
 
-	private final Integrator integrator;
-	private Stopwatch timer;
+	private final TorqueIntegrator integrator;
+	private TorqueTimer timer;
 	private SafetyCheck safetyCheck;
 
 	private ScheduledPID(double setpoint, double minOutput, double maxOutput, int count) {
@@ -49,7 +47,7 @@ public class ScheduledPID implements Sendable {
 		this.minOutput = minOutput;
 		this.maxOutput = maxOutput;
 
-		this.integrator = new Integrator();
+		this.integrator = new TorqueIntegrator();
 		this.timer = new TorqueTimer();
 	}
 
@@ -68,7 +66,7 @@ public class ScheduledPID implements Sendable {
 		this.minOutput = kPID.min();
 		this.maxOutput = kPID.max();
 
-		this.integrator = new Integrator();
+		this.integrator = new TorqueIntegrator();
 		this.timer = new TorqueTimer();
 	}
 
@@ -219,7 +217,7 @@ public class ScheduledPID implements Sendable {
 
 		finishUpdate(error);
 
-		return MathUtils.clamp(output, minOutput, maxOutput);
+		return TorqueMathUtil.constrain(output, minOutput, maxOutput);
 	}
 
 	public void reset() {
@@ -271,10 +269,10 @@ public class ScheduledPID implements Sendable {
 		}
 
 		public Builder setRegions(double... regions) {
-			ArrayUtils.bufferAndFill(regions, pid.gainDivisions);
+			TorqueArrayUtils.bufferAndFill(regions, pid.gainDivisions);
 
 			// Divisions should always be specified in ascending order.
-			if (!ArrayUtils.isSorted(regions, true)) {
+			if (!TorqueArrayUtils.isSorted(regions, true)) {
 				Arrays.sort(pid.gainDivisions);
 				System.out.println("Gain schedule was not ordered correctly.");
 			}
@@ -283,26 +281,26 @@ public class ScheduledPID implements Sendable {
 		}
 
 		public Builder setPGains(double... pGains) {
-			ArrayUtils.bufferAndFill(pGains, pid.pGains);
+			TorqueArrayUtils.bufferAndFill(pGains, pid.pGains);
 			return this;
 		}
 
 		public Builder setIGains(double... iGains) {
-			ArrayUtils.bufferAndFill(iGains, pid.iGains);
+			TorqueArrayUtils.bufferAndFill(iGains, pid.iGains);
 			return this;
 		}
 
 		public Builder setDGains(double... dGains) {
-			ArrayUtils.bufferAndFill(dGains, pid.dGains);
+			TorqueArrayUtils.bufferAndFill(dGains, pid.dGains);
 			return this;
 		}
 
 		public Builder setFGains(double... fGains) {
-			ArrayUtils.bufferAndFill(fGains, pid.fGains);
+			TorqueArrayUtils.bufferAndFill(fGains, pid.fGains);
 			return this;
 		}
 
-		public Builder overrideFPGATimer(Stopwatch timer) {
+		public Builder overrideFPGATimer(TorqueTimer timer) {
 			this.pid.timer = timer;
 			return this;
 		}
