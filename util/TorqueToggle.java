@@ -34,4 +34,5 @@ public class TorqueToggle {
 	public boolean get() {
 		return toggle;
 	}
+
 }
