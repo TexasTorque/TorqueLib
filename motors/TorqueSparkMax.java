@@ -21,7 +21,7 @@ import org.texastorque.torquelib.util.KPID;
  * @author Jack
  * @apiNote Original version created for 2020 season.
  * @author Justus
- * @apiNote Remade for 2022 season with TorqueLib refactoring.
+ * @apiNote Remade for 2022 or 2023 season with TorqueLib refactoring.
  */
 public class TorqueSparkMax extends TorqueMotor implements TorqueEncoderMotor, TorquePIDMotor {
 
@@ -92,5 +92,62 @@ public class TorqueSparkMax extends TorqueMotor implements TorqueEncoderMotor, T
         pid.setFF(kPID.f());
         pid.setOutputRange(kPID.min(), kPID.max());
     }
+
+    @Override
+    public double getPosition() {
+        return ((sparkMaxEncoder.getPosition() - encoderZero));
+    }
+
+    @Override
+    public double getPositionDegrees() {
+        return getPosition() / sparkMaxEncoder.getCountsPerRevolution() * 360.0;
+    }
+
+    @Override
+    public double getPositionRotations() {
+        return getPosition() / sparkMaxEncoder.getCountsPerRevolution();
+    }
+
+    public void setAlternateEncoder() {
+        // No params deprecated, default to 0
+        alternateEncoder = sparkMax.getAlternateEncoder(0);
+    }
+
+    public void setAlternateEncoder(int n) {
+        alternateEncoder = sparkMax.getAlternateEncoder(n);
+    }
+
+    public double getAlternateVelocity() {
+        return alternateEncoder.getVelocity();
+    }
+
+    public double getAlternatePosition() {
+        return alternateEncoder.getPosition();
+    }
     
+
+    @Override
+    public double getVelocity() {
+        return sparkMaxEncoder.getVelocity() * sparkMaxEncoder.getVelocityConversionFactor();
+    } // returns velocity of motor
+
+    @Override
+    public double getVelocityRPS() {
+        return getVelocity() / sparkMaxEncoder.getCountsPerRevolution();
+    }
+
+    @Override
+    public double getVelocityRPM() {
+        return getVelocity() / sparkMaxEncoder.getCountsPerRevolution() / 60; 
+    }
+
+    /**
+     * Get the velocity of the motor in meters
+     * 
+     * @param radius The radius (in meters) of the drive wheel
+     * @return The velocity of the motor
+     */
+    public double getVelocityMeters(double radius) {
+        return (2 * Math.PI * radius * getVelocity() / 60.0) / 4.0;
+    }
 }
