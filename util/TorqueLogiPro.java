@@ -4,10 +4,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class TorqueLogiPro extends Joystick {
-    private final int port;
+    protected final int port;
     private double deadband;
     private static final double DEADBAND_DEF = .01;
-    public JoystickButton[] buttons;
 
     public TorqueLogiPro(int port) {
         super(port);
