@@ -11,9 +11,12 @@ public abstract class TorqueSubsystem {
     public void initAuto() {}
     public void updateAuto() {}
 
-    public void output() {}
+    public abstract void output();
 
+    public void updateFeedback() {}
+    @Deprecated
     public void updateFeedbackTeleop() {}
+    @Deprecated
     public void updateFeedbackAuto() {}
     public void updateSmartDashboard() {}
 
