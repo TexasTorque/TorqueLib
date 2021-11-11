@@ -8,6 +8,9 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
 import org.texastorque.util.KPID;
 
@@ -37,10 +40,13 @@ public class TorqueFalcon {
     private final String encoderMissing = "[Falcon500] Encoder interface error!\n"
             + " - Encoder could be missing, but the\n" + "   Falcon 500 encoder is built in,\n"
             + "   so check that your Falcon 500 works.";
+    private static final int timeoutMs = 30;
+    private final int slotId = 0;
 
     private WPI_TalonFX falcon;
     private TalonFXConfiguration config;
     private ArrayList<WPI_TalonFX> followers = new ArrayList<>();
+    private ArrayList<WPI_TalonFX> all = new ArrayList<>();
     private boolean invert = false;
     private int port;
 
@@ -56,13 +62,16 @@ public class TorqueFalcon {
      * @param port The CAN ID port for the main motor.
      */
     public TorqueFalcon(int port) {
+        this.port = port;
         falcon = new WPI_TalonFX(port);
 
         config = new TalonFXConfiguration();
         config.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
         falcon.configAllSettings(config);
-
+        falcon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 30, 0, 0), timeoutMs);
+        falcon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 0, 0), timeoutMs);
         falcon.setNeutralMode(neutralMode);
+        all.add(falcon);
     }
 
     /**
@@ -72,6 +81,7 @@ public class TorqueFalcon {
      * @param neutralMode The neutral mode setting for the main motor.
      */
     public TorqueFalcon(int port, NeutralMode neutralMode) {
+        this.port = port;
         falcon = new WPI_TalonFX(port);
 
         config = new TalonFXConfiguration();
@@ -95,6 +105,7 @@ public class TorqueFalcon {
         WPI_TalonFX follower = new WPI_TalonFX(port);
         follower.setNeutralMode(neutralMode);
         followers.add(follower);
+        all.add(follower);
     }
 
     /**
@@ -107,6 +118,7 @@ public class TorqueFalcon {
         follower.setInverted(inverted);
         follower.setNeutralMode(neutralMode);
         followers.add(follower);
+        all.add(follower);
     }
 
     /*
@@ -121,7 +133,7 @@ public class TorqueFalcon {
     public void setInverted(boolean invert) {
         falcon.setInverted(invert);
         for (WPI_TalonFX follower : followers) {
-            follower.setInverted(invert);
+            follower.setInverted(TalonFXInvertType.FollowMaster);
         }
     }
 
@@ -204,7 +216,6 @@ public class TorqueFalcon {
         falcon.set(mode, output);
         for (WPI_TalonFX follower : followers) {
             follower.set(ControlMode.Follower, port);
-            follower.setInverted(invert);
             SmartDashboard.putNumber("FollowerVelocity", output);
         }
     }
@@ -384,6 +395,41 @@ public class TorqueFalcon {
             System.out.println(encoderMissing);
             return 0;
         }
+    }
+
+    /**
+     * Config motion magic
+     * 
+     * @param pid            pid
+     * @param cruiseVelocity cruising velocity :)
+     * @param acceleration   accel
+     */
+    public void configureMotionMagic(KPID pid, double cruiseVelocity, double acceleration) {
+        all.forEach(f -> {
+            f.selectProfileSlot(slotId, 0);
+            f.config_kF(slotId, pid.f(), timeoutMs);
+            f.config_kP(slotId, pid.p(), timeoutMs);
+            f.config_kI(slotId, pid.i(), timeoutMs);
+            f.config_kD(slotId, pid.d(), timeoutMs);
+            f.configMotionCruiseVelocity(cruiseVelocity, timeoutMs);
+            f.configMotionAcceleration(acceleration, timeoutMs);
+        });
+    }
+
+    /**
+     * Smoothing (S)
+     * 
+     * @param smoothing 0-8
+     */
+    public void configureSCurve(int smoothing) {
+        all.forEach(f -> f.configMotionSCurveStrength(smoothing));
+    }
+
+    /**
+     * @return Raw Talon object
+     */
+    public WPI_TalonFX getFalcon() {
+        return falcon;
     }
 }
 

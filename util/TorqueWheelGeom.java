@@ -31,10 +31,10 @@ public class TorqueWheelGeom {
     }
 
     public double metersToRotations(double meters) {
-        return 4. * (30. * meters) / (Math.PI * diameter / 2.);
+        return 2048. * (meters) / (getCircumference());
     }
 
     public double rotationsToMeters(double rotations) {
-        return 2. * Math.PI * diameter / 2. * rotations / 4. / 60.;
+        return (rotations * getCircumference()) / (2048. * .1);
     }
 }
