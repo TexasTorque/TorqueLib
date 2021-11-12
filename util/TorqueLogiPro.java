@@ -49,6 +49,14 @@ public class TorqueLogiPro extends Joystick {
         }
     }
 
+    public boolean atPovState(PovState state) {
+        return getPovState() == state;
+    }
+
+    public boolean atPovState(int angle) {
+        return getPOV() == angle;
+    }
+
     public double getRoll() { 
         return deadbanded(getX());
     }
