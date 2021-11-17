@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class TorqueLogiPro extends Joystick {
     protected final int port;
     private double deadband;
-    private static final double DEADBAND_DEF = .01;
+    private static final double DEADBAND_DEF = .001;
 
     public TorqueLogiPro(int port) {
         super(port);
