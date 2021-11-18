@@ -6,8 +6,12 @@ public abstract class TorqueSequence {
     private ArrayList<TorqueBlock> commands = new ArrayList<TorqueBlock>();
     private boolean ended = false;
     private int blockIndex = 0;
+    private String name = "unnamed";
 
-    public TorqueSequence() { init(); }
+    public TorqueSequence(String name) {
+        this.name = name;
+        init();
+    }
 
     protected abstract void init();
 
@@ -19,12 +23,23 @@ public abstract class TorqueSequence {
         if (blockIndex < commands.size()) {
             boolean blockEnded = true;
             for (TorqueCommand command : commands.get(blockIndex)) {
-                if (!command.run()) blockEnded = false;
+                if (!command.run())
+                    blockEnded = false;
             }
-            if (blockEnded) blockIndex++;
-        } else if (!ended) ended = true;
+            if (blockEnded)
+                blockIndex++;
+        } else if (!ended)
+            ended = true;
     }
 
-    public boolean hasEnded() { return ended;  }
+    public boolean hasEnded() {
+        return ended;
+    }
+
+    public void reset() {
+    };
+
+    public String getName() {
+        return name;
+    }
 }
-    
