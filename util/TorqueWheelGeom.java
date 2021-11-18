@@ -5,9 +5,11 @@ package org.texastorque.torquelib.util;
  */
 public class TorqueWheelGeom {
     private double diameter;
+    private double gearRatio;
 
-    public TorqueWheelGeom(double diameter) {
+    public TorqueWheelGeom(double diameter, double gearRatio) {
         this.diameter = diameter;
+        this.gearRatio = gearRatio;
     }
 
     public double getDiameter() {
@@ -31,10 +33,10 @@ public class TorqueWheelGeom {
     }
 
     public double metersToRotations(double meters) {
-        return 2048. * (meters) / (getCircumference());
+        return 2048. * meters * getCircumference() * gearRatio;
     }
 
     public double rotationsToMeters(double rotations) {
-        return (rotations * getCircumference()) / (2048. * .1);
+        return rotations / (2048. * getCircumference() * gearRatio);
     }
 }
