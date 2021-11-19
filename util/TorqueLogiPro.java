@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * @author TexasTorque 2021
+ * 
+ * https://imgur.com/gallery/YPm3x5Z
  */
 public class TorqueLogiPro extends Joystick {
     protected final int port;
