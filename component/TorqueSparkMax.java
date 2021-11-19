@@ -10,7 +10,6 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANAnalog.AnalogMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import org.texastorque.torquelib.component.TorqueMotor;
 import org.texastorque.util.KPID;
 
 /**
@@ -21,38 +20,42 @@ public class TorqueSparkMax extends TorqueMotor {
     private CANSparkMax sparkMax;
     private CANEncoder sparkMaxEncoder;
     private CANEncoder alternateEncoder;
+    private CANPIDController pidController;
     private CANAnalog analogEncoder;
     private ArrayList<CANSparkMax> sparkMaxFollowers = new ArrayList<>();
 
     private double encoderZero = 0;
 
-    // ===================== constructor stuff =====================
     public TorqueSparkMax(int port) {
         this.port = port;
         sparkMax = new CANSparkMax(port, MotorType.kBrushless);
         sparkMaxEncoder = sparkMax.getEncoder();
         analogEncoder = sparkMax.getAnalog(AnalogMode.kAbsolute);
-    } // constructor
+        pidController = sparkMax.getPIDController();
+    }
 
     @Override
     public void addFollower(int port) {
         sparkMaxFollowers.add(new CANSparkMax(port, MotorType.kBrushless));
         System.out.println("Added spark max follower");
-    } // add follower
+    }
 
-    // ===================== set methods ==========================
+    public void restoreFactoryDefaults() {
+        sparkMax.restoreFactoryDefaults();
+    }
 
+    // ===================== Set Methods ========================
     @Override
     public void set(double output) {
         sparkMax.set(output);
         for (CANSparkMax canSparkMax : sparkMaxFollowers) {
             canSparkMax.follow(sparkMax);
         } // takes care of followers
-    } // raw set method (-1 to 1)
+    }
 
     public void set(double output, ControlType ctrlType) {
         try {
-            pid.setReference(output, ctrlType);
+            pidController.setReference(output, ctrlType);
             for (CANSparkMax follower : sparkMaxFollowers) {
                 follower.follow(sparkMax, invert);
             } // takes care of followers
@@ -91,26 +94,49 @@ public class TorqueSparkMax extends TorqueMotor {
     }
 
     // ===================== PID stuff ========================
-    private CANPIDController pid;
 
     @Override
     public void configurePID(KPID kPID) {
-        pid = sparkMax.getPIDController();
-        pid.setP(kPID.p());
-        pid.setI(kPID.i());
-        pid.setD(kPID.d());
-        pid.setFF(kPID.f());
-        pid.setOutputRange(kPID.min(), kPID.max());
+        pidController.setP(kPID.p());
+        pidController.setI(kPID.i());
+        pidController.setD(kPID.d());
+        pidController.setFF(kPID.f());
+        pidController.setOutputRange(kPID.min(), kPID.max());
     } // configure PID
 
     @Override
     public void updatePID(KPID kPID) {
-        pid.setP(kPID.p());
-        pid.setI(kPID.i());
-        pid.setD(kPID.d());
-        pid.setFF(kPID.f());
-        pid.setOutputRange(kPID.min(), kPID.max());
+        pidController.setP(kPID.p());
+        pidController.setI(kPID.i());
+        pidController.setD(kPID.d());
+        pidController.setFF(kPID.f());
+        pidController.setOutputRange(kPID.min(), kPID.max());
     } // update PID
+
+    /**
+     * Configure needed variables for smart motion.
+     * 
+     * - setSmartMotionMaxVelocity() will limit the velocity in RPM of the pid
+     * controller in Smart Motion mode - setSmartMotionMinOutputVelocity() will put
+     * a lower bound in RPM of the pid controller in Smart Motion mode -
+     * setSmartMotionMaxAccel() will limit the acceleration in RPM^2 of the pid
+     * controller in Smart Motion mode - setSmartMotionAllowedClosedLoopError() will
+     * set the max allowed error for the pid controller in Smart Motion mode
+     * 
+     * @param maxVelocity     the max velocity
+     * @param minVelocity     the min velocity
+     * @param maxAcceleration the maxAcceleration
+     * @param allowedError    the allowed amount of error
+     * @param id              the id for the pid (usually 0)
+     * 
+     */
+    public void configureSmartMotion(double maxVelocity, double minVelocity, double maxAcceleration,
+            double allowedError, int id) {
+        pidController.setSmartMotionMaxVelocity(maxVelocity, id);
+        pidController.setSmartMotionMinOutputVelocity(minVelocity, id);
+        pidController.setSmartMotionMaxAccel(maxAcceleration, id);
+        pidController.setSmartMotionAllowedClosedLoopError(allowedError, id);
+    }
 
     public void setPosFactor(double factor) {
         sparkMaxEncoder.setPositionConversionFactor(factor);

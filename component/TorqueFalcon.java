@@ -275,6 +275,20 @@ public class TorqueFalcon {
     }
 
     /**
+     * Set position to value
+     * 
+     * @param sensorPos Value
+     */
+    public void setPosition(double sensorPos) {
+        try {
+            falcon.setSelectedSensorPosition(sensorPos);
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println(encoderMissing);
+        }
+    }
+
+    /**
      * Get current motor position in degrees.
      * 
      * @return Current motor position in degrees.

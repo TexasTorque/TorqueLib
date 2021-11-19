@@ -17,7 +17,7 @@ public class TorqueAutoManager {
 
     private final String autoSelectorKey = "AutoList";
 
-    private TorqueAutoManager(TorqueSequence... sequences) {
+    public TorqueAutoManager(TorqueSequence... sequences) {
         autoSequences = new HashMap<String, TorqueSequence>();
 
         for (TorqueSequence sequence : sequences) {
