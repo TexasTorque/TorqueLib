@@ -53,7 +53,7 @@ public class TorqueFalcon {
     private NeutralMode neutralMode = NeutralMode.EEPROMSetting;
 
     /*
-     * ***************************** Constructors for main motor *
+     * Constructors for main motor *
      */
 
     /**
@@ -93,7 +93,7 @@ public class TorqueFalcon {
     }
 
     /*
-     * ******************************* Handles addition of followers *
+     * Handles addition of followers *
      */
 
     /**
@@ -122,7 +122,7 @@ public class TorqueFalcon {
     }
 
     /*
-     * ******************** Handles inversions *
+     * Handles inversions *
      */
 
     /**
@@ -147,7 +147,7 @@ public class TorqueFalcon {
     }
 
     /*
-     * ************************************ Handles neutral mode in brake etc. *
+     * Handles neutral mode in brake etc. *
      */
 
     /**
@@ -191,7 +191,7 @@ public class TorqueFalcon {
     }
 
     /*
-     * ****************************** Handles setting motor output *
+     * Handles setting motor output *
      */
 
     /**
@@ -221,7 +221,7 @@ public class TorqueFalcon {
     }
 
     /*
-     * ********************** Handles PID settings *
+     * Handles PID settings *
      */
 
     /**
@@ -247,7 +247,7 @@ public class TorqueFalcon {
     }
 
     /*
-     * ***************** Feedback system *
+     * Feedback system *
      */
 
     /**
@@ -446,19 +446,3 @@ public class TorqueFalcon {
         return falcon;
     }
 }
-
-/*
- * Cool ASCII big text for Texas Torque
- * 
- * _____ _____ |_ _|____ ____ _ __|_ _|__ _ _ __ _ _ _ ___ | |/ -_) \ / _` (_-<
- * | |/ _ \ '_/ _` | || / -_) |_|\___/_\_\__,_/__/ |_|\___/_| \__, |\_,_\___|
- * |_| ______ ______ /_ __/____ _____ ___/_ __/__ _______ ___ _____ / / / -_) \
- * / _ `(_-</ / / _ \/ __/ _ `/ // / -_) /_/ \__/_\_\\_,_/___/_/ \___/_/ \_,
- * /\_,_/\__/ /_/ _______ _______ |__ __| |__ __| | | _____ ____ _ ___| | ___ _
- * __ __ _ _ _ ___ | |/ _ \ \/ / _` / __| |/ _ \| '__/ _` | | | |/ _ \ | | __/>
- * < (_| \__ \ | (_) | | | (_| | |_| | __/ |_|\___/_/\_\__,_|___/_|\___/|_| \__,
- * |\__,_|\___| | | |_| ______ ______ /_ __/__ _ ______ _____/_ __/___ _________
- * ___ _____ / / / _ \| |/_/ __ `/ ___// / / __ \/ ___/ __ `/ / / / _ \ / / /
- * __/> </ /_/ (__ )/ / / /_/ / / / /_/ / /_/ / __/ /_/ \___/_/|_|\__,_/____//_/
- * \____/_/ \__, /\__,_/\___/ /_/
- */
