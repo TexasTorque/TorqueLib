@@ -52,4 +52,12 @@ public class TorqueWCDTeleopDriver {
     public void setTurnCoef(double turn) {
         this.turn = turn;
     }
+
+    public void setLeft(double left) {
+        this.left = left;
+    }
+
+    public void setRight(double right) {
+        this.right = right;
+    }
 }
