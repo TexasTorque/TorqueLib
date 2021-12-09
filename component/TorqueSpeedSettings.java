@@ -22,18 +22,45 @@ public class TorqueSpeedSettings {
 
     private double speed;
 
-    public TorqueSpeedSettings(double minimum, double maximum) {
+    /**
+     * Creates a new TorqueSpeedSettings object with default increment of 0.1.
+     * 
+     * @param speed The initial speed setting.
+     * @param minimum The maximum speed setting.
+     * @param maximum The minimum speed setting.
+     */
+    public TorqueSpeedSettings(double speed, double minimum, double maximum) {
+        this.speed = speed;
         this.minimum = minimum;
         this.maximum = maximum;
         this.increment = .1;
     }
 
-    public TorqueSpeedSettings(double minimum, double maximum, double increment) {
+    /**
+     * Creates a new TorqueSpeedSettings object.
+     * 
+     * @param speed The initial speed setting.
+     * @param minimum The maximum speed setting.
+     * @param maximum The minimum speed setting.
+     * @param increment The increment of the speed settings.
+     */
+    public TorqueSpeedSettings(double speed, double minimum, double maximum, double increment) {
+        this.speed = speed;
         this.minimum = minimum;
         this.maximum = maximum;
         this.increment = increment;
     }
 
+    /**
+     * Updates (and optionally returns) the speed setting based on the controller input.
+     * 
+     * @param up The button mapped to incrementing speed.
+     * @param down The button mapped to decrementing speed.
+     * @param min The button mapped to setting speed to minimum.
+     * @param max The button mapped to setting speed to maximum.
+     * 
+     * @return The current speed setting.
+     */
     public double update(boolean up, boolean down, boolean min, boolean max) {
         if (clickUp.calc(up))
             speed = (double) TorqueMathUtil.constrain(speed + increment, minimum, maximum); 
@@ -48,6 +75,11 @@ public class TorqueSpeedSettings {
         return speed;
     }
 
+    /**
+     * Returns the current speed setting.
+     * 
+     * @return Current speed setting.
+     */
     public double getSpeed() {
         return speed;
     }
