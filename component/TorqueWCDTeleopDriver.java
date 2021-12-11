@@ -1,5 +1,7 @@
 package org.texastorque.torquelib.component;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * Improvments to the algorithm used to drive a West Coast Drivetrain
  * durring teleop. Encapsulated in a class.
@@ -7,11 +9,11 @@ package org.texastorque.torquelib.component;
  * @author Justus
  */
 public class TorqueWCDTeleopDriver {
-    private double forward = 1;
-    private double turn = 1;
+    private double forward = 3;
+    private double turn = .2;
 
     private final double power = 4;
-    private double coef = .2;
+    private double coef = 1;
 
     double left = 0;
     double right = 0;
@@ -32,9 +34,9 @@ public class TorqueWCDTeleopDriver {
         this.coef = coef;
     }
 
-    public void update(double y, double x) {
-        left = -coef * (-forward * y - turn * Math.pow(x, power) * Math.signum(x));
-        right = coef * ( forward * y - turn * Math.pow(x, power) * Math.signum(x));
+    public void update(double x, double y) {
+        left = -coef * (-turn * y - forward * Math.pow(x, power) * Math.signum(x));
+        right = coef * ( turn * y - forward * Math.pow(x, power) * Math.signum(x));
     }
 
     public double getLeft() {
