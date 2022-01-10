@@ -2,9 +2,9 @@ package org.texastorque.torquelib.powershuffle;
 
 import org.texastorque.torquelib.util.TorqueLogiPro;
 
-import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableBuilder;
 
 public class PowerShuffleLogiPro extends TorqueLogiPro implements Sendable {
 

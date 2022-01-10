@@ -119,7 +119,7 @@ public abstract class TorqueIterative extends RobotBase {
 						testPeriodic();
 					}
 				} else if (isAutonomous()) {
-					if (DriverStation.getInstance().isEnabled() && !m_autoInitialized) {
+					if (DriverStation.isEnabled() && !m_autoInitialized) {
 
 						LiveWindow.setEnabled(false);
 						autoInit();

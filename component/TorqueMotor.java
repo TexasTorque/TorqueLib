@@ -11,8 +11,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import org.texastorque.util.KPID;
 
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
+import edu.wpi.first.math.controller.PIDController;
 
 import java.util.ArrayList;
 
