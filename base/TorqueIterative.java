@@ -148,7 +148,7 @@ public abstract class TorqueIterative extends RobotBase {
 						teleopPeriodic();
 					}
 				}
-				m_ds.waitForData();
+				DriverStation.waitForData();
 			}
 		}
 	}
@@ -181,7 +181,7 @@ public abstract class TorqueIterative extends RobotBase {
 	}
 
 	private boolean nextPeriodReady() {
-		return m_ds.isNewControlData();
+		return DriverStation.isNewControlData();
 	}
 
 	/* ----------- Overridable continuous code ----------------- */
