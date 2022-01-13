@@ -2,12 +2,13 @@ package org.texastorque.torquelib.component;
 
 import java.util.ArrayList;
 
-import com.revrobotics.CANAnalog;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
-import com.revrobotics.CANAnalog.AnalogMode;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
+import com.revrobotics.SparkMaxAnalogSensor;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.texastorque.util.KPID;
@@ -18,10 +19,10 @@ import org.texastorque.util.KPID;
 public class TorqueSparkMax extends TorqueMotor {
 
     private CANSparkMax sparkMax;
-    private CANEncoder sparkMaxEncoder;
-    private CANEncoder alternateEncoder;
-    private CANPIDController pidController;
-    private CANAnalog analogEncoder;
+    private RelativeEncoder sparkMaxEncoder;
+    private SparkMaxAlternateEncoder alternateEncoder;
+    private SparkMaxPIDController pidController;
+    private SparkMaxAnalogSensor analogEncoder;
     private ArrayList<CANSparkMax> sparkMaxFollowers = new ArrayList<>();
 
     private double encoderZero = 0;
@@ -30,7 +31,7 @@ public class TorqueSparkMax extends TorqueMotor {
         this.port = port;
         sparkMax = new CANSparkMax(port, MotorType.kBrushless);
         sparkMaxEncoder = sparkMax.getEncoder();
-        analogEncoder = sparkMax.getAnalog(AnalogMode.kAbsolute);
+        analogEncoder = sparkMax.getAnalog(SparkMaxAnalogSensor.Mode.kAbsolute);
         pidController = sparkMax.getPIDController();
     }
 
@@ -188,14 +189,14 @@ public class TorqueSparkMax extends TorqueMotor {
         return sparkMax.getOutputCurrent();
     }
 
-    public void setAlternateEncoder() {
-        // No params deprecated, default to 0
-        alternateEncoder = sparkMax.getAlternateEncoder(0);
-    }
+    // public void setAlternateEncoder() {
+    // // No params deprecated, default to 0
+    // alternateEncoder = sparkMax.getAlternateEncoder(0);
+    // }
 
-    public void setAlternateEncoder(int n) {
-        alternateEncoder = sparkMax.getAlternateEncoder(n);
-    }
+    // public void setAlternateEncoder(int n) {
+    // alternateEncoder = sparkMax.getAlternateEncoder(n);
+    // }
 
     public double getAlternateVelocity() {
         return alternateEncoder.getVelocity();
