@@ -182,7 +182,7 @@ public class TorqueSparkMax extends TorqueMotor {
     } // returns motor position but converted by some factor
 
     public double getDegrees() {
-        return getPosition() / sparkMaxEncoder.getCountsPerRevolution() * 360.0;
+        return getPosition() / sparkMaxEncoder.getCountsPerRevolution() * 360.0 / 4.0 * 360.0;
     }
 
     public double getCurrent() {
