@@ -51,7 +51,7 @@ public class TorqueSlewLimiter {
         double dt = t - lastTime;
         double dx = val - lastVal;
 
-        lastVal += TorqueMathUtil.constrain(dx, -limitDesc * dt, limitAsc * dt);
+        lastVal += TorqueMathUtil.constrain(dx, Math.signum(dx) * limitDesc * dt, Math.signum(dx) * limitAsc * dt);
 
         lastTime = t;
 
