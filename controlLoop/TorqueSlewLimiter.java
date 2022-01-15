@@ -1,5 +1,8 @@
 package org.texastorque.torquelib.controlLoop;
 
+import org.texastorque.torquelib.util.TorqueMathUtil;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -48,11 +51,7 @@ public class TorqueSlewLimiter {
         double dt = t - lastTime;
         double dx = val - lastVal;
 
-        if (Math.abs(val) - Math.abs(lastVal) >= 0) {
-            lastVal += Math.max(Math.min(dx, limitAsc * dt), -limitAsc * dt);
-        } else {
-            lastVal += Math.max(Math.min(dx, limitDesc * dt), -limitDesc * dt);
-        }
+        lastVal += TorqueMathUtil.constrain(dx, -limitDesc * dt, limitAsc * dt);
 
         lastTime = t;
 

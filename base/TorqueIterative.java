@@ -166,7 +166,7 @@ public abstract class TorqueIterative extends RobotBase {
 			if (isAutonomous() && m_autoInitialized) {
 				autoContinuous();
 				alwaysContinuous();
-			} else if (isOperatorControl() && m_teleopInitialized) {
+			} else if (isTeleop() && m_teleopInitialized) {
 				teleopContinuous();
 				alwaysContinuous();
 			} else if (isDisabled() && m_disabledInitialized) {
