@@ -3,6 +3,7 @@ package org.texastorque.torquelib.component;
 import java.util.ArrayList;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
@@ -204,6 +205,19 @@ public class TorqueSparkMax extends TorqueMotor {
 
     public double getAlternatePosition() {
         return alternateEncoder.getPosition();
+    }
+
+    /**
+     * Set a supply limit for the sparkmax
+     * 
+     * @param limit max amps
+     */
+
+    public void setSupplyLimit(int limit) {
+        REVLibError e = sparkMax.setSmartCurrentLimit(limit);
+        if (e != REVLibError.kOk) {
+            System.out.println("Error setting SparkMax supply limit: " + e.name());
+        }
     }
 
 }

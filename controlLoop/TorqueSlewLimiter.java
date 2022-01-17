@@ -4,6 +4,7 @@ import org.texastorque.torquelib.util.TorqueMathUtil;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class implements a slew rate limiter. In a nutshell, this limits the
@@ -51,7 +52,13 @@ public class TorqueSlewLimiter {
         double dt = t - lastTime;
         double dx = val - lastVal;
 
-        lastVal += TorqueMathUtil.constrain(dx, Math.signum(dx) * limitDesc * dt, Math.signum(dx) * limitAsc * dt);
+        // ascending
+        if (Math.abs(val) > Math.abs(lastVal)) {
+            lastVal += Math.signum(dx) * Math.min(limitAsc * dt, Math.abs(dx));
+        } else { // descending
+            lastVal += Math.signum(dx) * Math.min(limitDesc * dt, Math.abs(dx));
+
+        }
 
         lastTime = t;
 
