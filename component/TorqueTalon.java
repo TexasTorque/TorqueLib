@@ -136,4 +136,8 @@ public class TorqueTalon extends TorqueMotor {
             System.out.println("Error configuring supply limit: " + e.name());
         }
     }
+
+    public double getOutputCurrent() {
+        return talon.getStatorCurrent();
+    }
 } // Torque Talon

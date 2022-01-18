@@ -220,4 +220,8 @@ public class TorqueSparkMax extends TorqueMotor {
         }
     }
 
+    public double getOutputCurrent() {
+        return sparkMax.getOutputCurrent();
+    }
+
 }
