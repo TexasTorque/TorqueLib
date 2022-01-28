@@ -2,6 +2,13 @@ package org.texastorque.torquelib.auto;
 
 import java.util.ArrayList;
 
+/**
+ * Texas Torque autonomous sequence base class.
+ * 
+ * Part of the Texas Torque Autonomous Framework.
+ * 
+ * @author Texas Torque
+ */
 public abstract class TorqueSequence {
     private ArrayList<TorqueBlock> commands = new ArrayList<TorqueBlock>();
     private boolean ended = false;
@@ -36,8 +43,15 @@ public abstract class TorqueSequence {
         return ended;
     }
 
-    public void reset() {
-    };
+    public final void reset() {
+        ended = false;
+        blockIndex = 0;
+        for (TorqueBlock block : commands) {
+            for (TorqueCommand command : block) {
+                command.reset();
+            }
+        }
+    }
 
     public String getName() {
         return name;

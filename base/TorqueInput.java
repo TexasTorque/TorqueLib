@@ -18,7 +18,7 @@ public abstract class TorqueInput {
 
     protected void reset() {};
 
-    protected void smartDashboard() {};
+    public void smartDashboard() {};
 
     public final void run() { 
         if (!blocked) update();

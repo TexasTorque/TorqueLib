@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 /**
  * Basically a typedef to wrap ArrayList<TorqueCommand> with Block
+ * 
+ * Part of the Texas Torque Autonomous Framework.
+ * 
+ * @author Justus
  */
 public class TorqueBlock extends ArrayList<TorqueCommand> {
     public TorqueBlock() { super(); }
