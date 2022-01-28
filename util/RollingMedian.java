@@ -8,12 +8,12 @@ import java.util.List;
 /**
  * Rolling Median
  * 
- * Could technically be done in O(n) time using an ordered 
- * hashmap, but this is O(n log n) because of the sorting.
- * 
- * Update, it doesnt appear to be a speed issue. If it is
- * on the robot, I will try the O(n) solution.
- * 
+ * Update on efficiency: I think this is O(n log n) 
+ * as it utalizes a sort. I belive there are ways to
+ * do it faster, but I don't know how to implement
+ * them with the window. I think I have an idea of
+ * how to do it with pairs so I am going to try that.
+ *  
  * @author Justus
  */
 class RollingMedian<T> {
