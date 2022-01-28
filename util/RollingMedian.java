@@ -1,88 +1,96 @@
 package org.texastorque.torquelib.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.Queue;
 
 /**
  * Rolling Median
  * 
- * Update on efficiency: I think this is O(n log n) 
- * as it utalizes a sort. I belive there are ways to
- * do it faster, but I don't know how to implement
- * them with the window. I think I have an idea of
- * how to do it with pairs so I am going to try that.
- *  
- * @author Justus
+ * o(n)
  */
-class RollingMedian<T> {
+public class RollingMedian {
     private final int window;
-    private final List<T> list;
-    private final Comparator<T> comparator;
+    private final LinkedList<Double> a;
+    private final Queue<Double> exp;
 
     /**
-     * An ready to use compare class for integers.
+     * Constructs a new rolling median class, specifying the window size.
      * 
+     * @param window The window size for each section (twice is the amount
+     *               stored).
      */
-    public static class IntegerCompare implements Comparator<Integer> {
-        @Override
-        public int compare(Integer a, Integer b) {
-            return a < b ? -1 : a > b ? 1 : 0;
-        }
-    }
-
-      /**
-     * An ready to use compare class for doubles.
-     * 
-     */
-    public static class DoubleCompare implements Comparator<Double> {
-        @Override
-        public int compare(Double a, Double b) {
-            return a < b ? -1 : a > b ? 1 : 0;
-        }
-    }    
-
-    /**
-     * Constructs a new rolling median class, specifying the window size,
-     * and the comparator to use. 
-     * 
-     * @param window The window size.
-     * @param comparator The comparator to use.
-     */
-    public RollingMedian(int window, Comparator<T> comparator) {
+    public RollingMedian(int window) {
         this.window = window;
-        this.comparator = comparator;
-        this.list = new ArrayList<>(window);
+        a = new LinkedList<Double>();
+        exp = new LinkedList<Double>();
     }
 
     /**
-     * Adds and performs calculation 
+     * Adds and performs calculation
      * 
      * @param value The value to add.
      * @return The median value.
      */
-    public T calculate(T value) {
-        if (list.size() == window) 
-            list.remove(0);
-       
-        list.add(value);
+    public double calculate(double value) {
+        // Add to removal queue
+        exp.add(value);
 
-        ArrayList<T> copy = new ArrayList<>(list);
-        Collections.sort(copy, comparator);
+        boolean removing = false;
+        double removeValue = 0;
+        if (a.size() >= window) {
+            removeValue = exp.poll();
+            removing = true;
+        }
 
-        if (list.size() % 2 == 0)
-            return list.get(list.size() / 2 - 1);
-        else
-            return list.get(list.size() / 2);
+        // insert new value into list
+        // O(<=m)
+        ListIterator<Double> itr = a.listIterator();
+        int size = a.size();
+        if (!removing)
+            size++;
+        boolean inserted = false;
+        double median = 0;
+        int i = 0;
+        if (!itr.hasNext())
+            median = value;
+        while (itr.hasNext()) {
+            double next = itr.next();
+
+            if (size % 2 == 1 && size / 2 == i)
+                median = next;
+            else if (size % 2 == 0 && size / 2 == i || size / 2 - 1 == i)
+                median += next / 2;
+
+            if (removing && next == removeValue) {
+                itr.remove();
+                removing = false;
+                continue;
+            } else if (next > value) {
+                itr.previous();
+                itr.add(value);
+            }
+
+            i++;
+        }
+        if (!inserted) {
+            itr.add(value);
+            if (a.size() == 2)
+                median += value / 2;
+        }
+
+        return median;
     }
 
-    /**
-     * Gets the list of values.
-     * 
-     * @return The list of values.
-     */
-    public List<T> getList() {
-        return list;
+    public static void main(String[] args) {
+        RollingMedian rm = new RollingMedian(4);
+        System.out.println(rm.calculate(7));
+        System.out.println(rm.calculate(8));
+        System.out.println(rm.calculate(9));
+        System.out.println(rm.calculate(15));
+        System.out.println(rm.calculate(17));
+        System.out.println(rm.calculate(19));
+        System.out.println(rm.calculate(21));
+        System.out.println(rm.calculate(23));
     }
 }
