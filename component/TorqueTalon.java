@@ -63,7 +63,7 @@ public class TorqueTalon extends TorqueMotor {
         for (WPI_TalonSRX talonSRX : talonFollowers) {
             talonSRX.set(ControlMode.Follower, port);
             // talonSRX.setInverted(invert);
-            SmartDashboard.putNumber("FollowerVelocity", output);
+            //SmartDashboard.putNumber("FollowerVelocity", output);
         } // takes care of followers
     } // generic set method
 
