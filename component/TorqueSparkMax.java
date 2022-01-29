@@ -26,9 +26,15 @@ public class TorqueSparkMax extends TorqueMotor {
     private SparkMaxAnalogSensor analogEncoder;
     private ArrayList<CANSparkMax> sparkMaxFollowers = new ArrayList<>();
 
+    private double lastVelocity;
+    private long lastVelocityTime;
+
     private double encoderZero = 0;
 
     public TorqueSparkMax(int port) {
+        this.lastVelocity = 0;
+        this.lastVelocityTime = System.currentTimeMillis();
+
         this.port = port;
         sparkMax = new CANSparkMax(port, MotorType.kBrushless);
         sparkMaxEncoder = sparkMax.getEncoder();
@@ -157,6 +163,18 @@ public class TorqueSparkMax extends TorqueMotor {
      */
     public double getVelocityMeters(double radius) {
         return (2 * Math.PI * radius * getVelocity() / 60.0) / 4.0;
+    }
+
+    public double getAcceleration() {
+        double currentVelocity = getVelocity();
+        long currentTime = System.currentTimeMillis();
+
+        double acceleration = (currentVelocity - lastVelocity) / (currentTime - lastVelocityTime);
+
+        lastVelocity = currentVelocity;
+        lastVelocityTime = currentTime;
+
+        return acceleration;
     }
 
     public void tareEncoder() {
