@@ -9,14 +9,14 @@ public class LowPassFilter {
 
     public LowPassFilter(double alpha) {
         this.alpha = Math.max(MIN_ALPHA, Math.min(alpha, 1));
-    } 
+    }
 
     public double filter(double value) {
         this.lastValue = value * alpha + lastValue * (1 - alpha);
         return this.lastValue;
     }
 
-    public void clear(){
+    public void clear() {
         this.lastValue = 0;
     }
 }

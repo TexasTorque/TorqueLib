@@ -4,13 +4,10 @@ import java.util.ArrayList;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.texastorque.util.KPID;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 
 // I plan on doing a rewrite of (at least) this motor controller
 // Honestly might as well clean up TorqueLib and Utils... 
@@ -39,7 +36,7 @@ public class TorqueTalon extends TorqueMotor {
         WPI_TalonSRX t = new WPI_TalonSRX(port);
         t.setInverted(invert);
         talonFollowers.add(t);
-            
+
     } // add follower
 
     public void setInverted(boolean set) {
@@ -61,8 +58,8 @@ public class TorqueTalon extends TorqueMotor {
         talon.set(ControlMode.PercentOutput, output);
         for (WPI_TalonSRX talonSRX : talonFollowers) {
             talonSRX.set(ControlMode.Follower, port);
-            //talonSRX.setInverted(invert);
-            SmartDashboard.putNumber("FollowerVelocity", output);
+            // talonSRX.setInverted(invert);
+            // SmartDashboard.putNumber("FollowerVelocity", output);
         } // takes care of followers
     } // generic set method
 
@@ -123,4 +120,20 @@ public class TorqueTalon extends TorqueMotor {
         invert = !invert;
     } // invert follower - flips the direction of the follower from what it was
       // previously, default direction is same as leader
+
+    /**
+     * Set max amps supply
+     * 
+     * @param limit max amps
+     */
+    public void configureSupplyLimit(SupplyCurrentLimitConfiguration limit) {
+        ErrorCode e = talon.configSupplyCurrentLimit(limit);
+        if (e != ErrorCode.OK) {
+            System.out.println("Error configuring supply limit: " + e.name());
+        }
+    }
+
+    public double getOutputCurrent() {
+        return talon.getStatorCurrent();
+    }
 } // Torque Talon

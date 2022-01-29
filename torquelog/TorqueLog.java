@@ -14,12 +14,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class TorqueLog {
 
 	private static String fileName;
-	
-	private static ArrayList<LogData> logKeys = new ArrayList<LogData>(){{
-		add(new LogData("Left_Encoder_Speed", Priority.HIGH));
-	}};	
-	
-	//Delimiter used in CSV file
+
+	private static ArrayList<LogData> logKeys = new ArrayList<LogData>() {
+		{
+			add(new LogData("Left_Encoder_Speed", Priority.HIGH));
+		}
+	};
+
+	// Delimiter used in CSV file
 	private static final String CD = ",";
 	private static final String NLS = "\n";
 	// CSV file header
@@ -68,20 +70,21 @@ public class TorqueLog {
 	private static String getLogValue(String key) {
 		NetworkTableType getType = SmartDashboard.getEntry(key).getType();
 		switch (getType) {
-		case kBoolean:
-			return String.valueOf(SmartDashboard.getBoolean(key, false));
-		case kDouble:
-			return String.valueOf(SmartDashboard.getNumber(key, -1));
-		case kString:
-			return SmartDashboard.getString(key, "NA");
-		default:
-			System.out.println(getType);
-			return "";
+			case kBoolean:
+				return String.valueOf(SmartDashboard.getBoolean(key, false));
+			case kDouble:
+				return String.valueOf(SmartDashboard.getNumber(key, -1));
+			case kString:
+				return SmartDashboard.getString(key, "NA");
+			default:
+				System.out.println(getType);
+				return "";
 		}
 	}
 
 	public static void startLog() {
-//		fileName = FileUtils.createTimestampedFilepath("/home/lvuser/TorqueLog", "TorqueLog", "csv");
+		// fileName = FileUtils.createTimestampedFilepath("/home/lvuser/TorqueLog",
+		// "TorqueLog", "csv");
 
 		try (FileWriter fW = new FileWriter(fileName, true)) {
 			fW.append(FH);

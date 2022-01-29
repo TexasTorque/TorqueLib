@@ -32,9 +32,10 @@ public class BangBang extends ControlLoop {
 	 * seconds, then full output will be returned until controller is reset.
 	 * 
 	 * @param time
-	 *            The time the controller should wait until full output is sent.
+	 *                 The time the controller should wait until full output is
+	 *                 sent.
 	 * @param firstOut
-	 *            The output sent until the time interval has ended.
+	 *                 The output sent until the time interval has ended.
 	 */
 	public BangBang(double time, double firstOut) {
 		this(time, firstOut, 0.0);
@@ -45,13 +46,14 @@ public class BangBang extends ControlLoop {
 	 * time interval.
 	 * 
 	 * @param time
-	 *            The time the controller should wait until full output is sent.
+	 *                 The time the controller should wait until full output is
+	 *                 sent.
 	 * @param firstOut
-	 *            The output sent until the time interval has ended.
+	 *                 The output sent until the time interval has ended.
 	 * @param over
-	 *            How far past the setpoint BangBang will overshoot. This is
-	 *            usually half the amplitude of the oscillation, or how far the
-	 *            value drops before BangBang kicks in again.
+	 *                 How far past the setpoint BangBang will overshoot. This is
+	 *                 usually half the amplitude of the oscillation, or how far the
+	 *                 value drops before BangBang kicks in again.
 	 */
 	public BangBang(double time, double firstOut, double over) {
 		limited = true;
@@ -71,7 +73,7 @@ public class BangBang extends ControlLoop {
 	 * Calculate output based off of the current sensor value.
 	 *
 	 * @param current
-	 *            the current sensor feedback.
+	 *                the current sensor feedback.
 	 * @return Motor ouput to the system.
 	 */
 	public double calculate(double current) {

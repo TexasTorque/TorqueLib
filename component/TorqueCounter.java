@@ -24,7 +24,7 @@ public class TorqueCounter extends Counter {
 	 * Create a new counter.
 	 *
 	 * @param port
-	 *            Which port the counter is on.
+	 *             Which port the counter is on.
 	 */
 	public TorqueCounter(int port) {
 		super(SensorUtil.kPwmChannels);
@@ -34,7 +34,7 @@ public class TorqueCounter extends Counter {
 	 * Create a new counter with a specific digital input source.
 	 *
 	 * @param source
-	 *            The digital input source.
+	 *               The digital input source.
 	 */
 	public TorqueCounter(DigitalInput source) {
 		super(source);
@@ -44,13 +44,13 @@ public class TorqueCounter extends Counter {
 	 * Create a new counter with specific parameters.
 	 *
 	 * @param upPort
-	 *            Port connected to the up counter.
+	 *                    Port connected to the up counter.
 	 * @param downPort
-	 *            Port connected to the down counter.
+	 *                    Port connected to the down counter.
 	 * @param reverse
-	 *            Whether or not the counter is reversed.
+	 *                    Whether or not the counter is reversed.
 	 * @param encodingype
-	 *            What type encoding the counter is using.
+	 *                    What type encoding the counter is using.
 	 */
 	public TorqueCounter(int upPort, int downPort, boolean reverse, CounterBase.EncodingType encodingype) {
 		super(encodingype, new DigitalInput(upPort), new DigitalInput(downPort), reverse);
@@ -61,7 +61,7 @@ public class TorqueCounter extends Counter {
 	 * Create a new counter with an analog trigger.
 	 *
 	 * @param trigger
-	 *            The analog trigger.
+	 *                The analog trigger.
 	 */
 	public TorqueCounter(AnalogTrigger trigger) {
 		super(trigger);

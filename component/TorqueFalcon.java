@@ -216,7 +216,7 @@ public class TorqueFalcon {
         falcon.set(mode, output);
         for (WPI_TalonFX follower : followers) {
             follower.set(ControlMode.Follower, port);
-            SmartDashboard.putNumber("FollowerVelocity", output);
+            // SmartDashboard.putNumber("FollowerVelocity", output);
         }
     }
 

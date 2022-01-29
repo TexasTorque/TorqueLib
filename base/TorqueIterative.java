@@ -3,11 +3,11 @@ package org.texastorque.torquelib.base;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
@@ -166,7 +166,7 @@ public abstract class TorqueIterative extends RobotBase {
 			if (isAutonomous() && m_autoInitialized) {
 				autoContinuous();
 				alwaysContinuous();
-			} else if (isOperatorControl() && m_teleopInitialized) {
+			} else if (isTeleop() && m_teleopInitialized) {
 				teleopContinuous();
 				alwaysContinuous();
 			} else if (isDisabled() && m_disabledInitialized) {

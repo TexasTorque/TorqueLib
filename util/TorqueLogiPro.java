@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 /**
  * @author TexasTorque 2021
  * 
- * https://imgur.com/gallery/YPm3x5Z
+ *         https://imgur.com/gallery/YPm3x5Z
  */
 public class TorqueLogiPro extends Joystick {
     protected final int port;
@@ -36,18 +36,28 @@ public class TorqueLogiPro extends Joystick {
         return getRawButton(index);
     }
 
-    public PovState getPovState() { 
+    public PovState getPovState() {
         switch (getPOV()) {
-            case -1: return PovState.CENTER;
-            case 0: return PovState.NORTH;
-            case 45: return PovState.NORTH_EAST;
-            case 90: return PovState.EAST;
-            case 135: return PovState.SOUTH_EAST;
-            case 180: return PovState.SOUTH;
-            case 225: return PovState.SOUTH_WEST;
-            case 270: return PovState.WEST;
-            case 315: return PovState.NORTH_WEST;
-            default: return PovState.CENTER;
+            case -1:
+                return PovState.CENTER;
+            case 0:
+                return PovState.NORTH;
+            case 45:
+                return PovState.NORTH_EAST;
+            case 90:
+                return PovState.EAST;
+            case 135:
+                return PovState.SOUTH_EAST;
+            case 180:
+                return PovState.SOUTH;
+            case 225:
+                return PovState.SOUTH_WEST;
+            case 270:
+                return PovState.WEST;
+            case 315:
+                return PovState.NORTH_WEST;
+            default:
+                return PovState.CENTER;
         }
     }
 
@@ -59,15 +69,15 @@ public class TorqueLogiPro extends Joystick {
         return getPOV() == angle;
     }
 
-    public double getRoll() { 
+    public double getRoll() {
         return deadbanded(getX());
     }
 
-    public double getPitch() { 
+    public double getPitch() {
         return deadbanded(-getY());
     }
 
-    public double getYaw() { 
+    public double getYaw() {
         return deadbanded(getZ());
     }
 
@@ -78,8 +88,8 @@ public class TorqueLogiPro extends Joystick {
 
     public static enum PovState {
         CENTER("CENTER"),
-        NORTH("NORTH"), NORTH_EAST("NORTH EAST"), EAST("EAST"), SOUTH_EAST("SOUTH EAST"), 
-        SOUTH("SOUTH"), SOUTH_WEST("SOUTH WEST"), WEST("WEST"), NORTH_WEST("SOUTH WEST"); 
+        NORTH("NORTH"), NORTH_EAST("NORTH EAST"), EAST("EAST"), SOUTH_EAST("SOUTH EAST"),
+        SOUTH("SOUTH"), SOUTH_WEST("SOUTH WEST"), WEST("WEST"), NORTH_WEST("SOUTH WEST");
 
         private String value;
 
@@ -87,8 +97,8 @@ public class TorqueLogiPro extends Joystick {
             this.value = value;
         }
 
-        public String asString() { 
-            return value; 
+        public String asString() {
+            return value;
         }
     }
 }

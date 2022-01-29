@@ -10,7 +10,6 @@ import org.texastorque.util.TorqueTimer;
 import org.texastorque.util.interfaces.Stopwatch;
 
 import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.util.sendable.SendableBuilder;
 
 public class ScheduledPID implements Sendable {

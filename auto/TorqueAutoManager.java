@@ -7,8 +7,15 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class TorqueAutoManager {
-    private static volatile TorqueAutoManager instance;;
+/**
+ * AutoManager base class. Handles backend methods
+ * and containers.
+ * 
+ * Part of the Texas Torque Autonomous Framework.
+ * 
+ * @author Jack, Justus
+ */
+public abstract class TorqueAutoManager {
     private HashMap<String, TorqueSequence> autoSequences;
     private SendableChooser<String> autoSelector = new SendableChooser<String>();
 
@@ -17,17 +24,18 @@ public class TorqueAutoManager {
 
     private final String autoSelectorKey = "AutoList";
 
-    public TorqueAutoManager(TorqueSequence... sequences) {
+    public TorqueAutoManager() {
         autoSequences = new HashMap<String, TorqueSequence>();
 
-        for (TorqueSequence sequence : sequences) {
-            addSequence(sequence.getName(), sequence);
-        }
+        addSequence("Empty", new TorqueEmpty("Empty")); // default
 
+        init();
         displayChoices();
     }
 
-    private void addSequence(String name, TorqueSequence seq) {
+    protected abstract void init(); // this is where we add sequences
+
+    protected void addSequence(String name, TorqueSequence seq) {
         autoSequences.put(name, seq);
 
         if (autoSequences.size() == 0) {
@@ -84,17 +92,5 @@ public class TorqueAutoManager {
      */
     public boolean getSequenceEnded() {
         return sequenceEnded;
-    }
-
-    /**
-     * Get the AutoManager instance
-     * 
-     * @return AutoManager
-     */
-    public static synchronized TorqueAutoManager getInstance() {
-        if (instance == null) {
-            instance = new TorqueAutoManager();
-        }
-        return instance;
     }
 }

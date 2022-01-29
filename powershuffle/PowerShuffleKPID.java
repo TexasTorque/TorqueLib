@@ -10,16 +10,16 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
 
 public class PowerShuffleKPID extends KPID {
-    
+
     private String name;
     private SimpleWidget widget;
-    //private ComplexWidget widget;
+    // private ComplexWidget widget;
 
     public PowerShuffleKPID(String name) {
         super();
         this.name = name;
         widget = Shuffleboard.getTab("KPID").add(name, this).withWidget(PowerShuffleWidgets.PIDManager.getIdentifier());
-    } 
+    }
 
     public PowerShuffleKPID(String name, double pGains, double iGains, double dGains, double fGains, double minOutput,
             double maxOutput) {
