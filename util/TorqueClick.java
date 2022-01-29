@@ -6,10 +6,10 @@ package org.texastorque.torquelib.util;
  * @author Jack
  */
 public class TorqueClick {
-	private boolean lastValue;
+    private boolean lastValue;
 
-	public TorqueClick() {
-		lastValue = false;
+    public TorqueClick() {
+        lastValue = false;
     }
 
     public boolean calc(boolean current) {

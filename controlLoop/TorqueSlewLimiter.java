@@ -1,10 +1,6 @@
 package org.texastorque.torquelib.controlLoop;
 
-import org.texastorque.torquelib.util.TorqueMathUtil;
-
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class implements a slew rate limiter. In a nutshell, this limits the

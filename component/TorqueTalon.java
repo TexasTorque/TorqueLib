@@ -4,14 +4,10 @@ import java.util.ArrayList;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.texastorque.util.KPID;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 // I plan on doing a rewrite of (at least) this motor controller
 // Honestly might as well clean up TorqueLib and Utils... 
@@ -63,7 +59,7 @@ public class TorqueTalon extends TorqueMotor {
         for (WPI_TalonSRX talonSRX : talonFollowers) {
             talonSRX.set(ControlMode.Follower, port);
             // talonSRX.setInverted(invert);
-            //SmartDashboard.putNumber("FollowerVelocity", output);
+            // SmartDashboard.putNumber("FollowerVelocity", output);
         } // takes care of followers
     } // generic set method
 

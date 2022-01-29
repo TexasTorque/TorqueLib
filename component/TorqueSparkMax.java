@@ -3,14 +3,13 @@ package org.texastorque.torquelib.component;
 import java.util.ArrayList;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxRelativeEncoder;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.texastorque.util.KPID;
 
@@ -154,6 +153,10 @@ public class TorqueSparkMax extends TorqueMotor {
     public double getVelocity() {
         return sparkMaxEncoder.getVelocity() * sparkMaxEncoder.getVelocityConversionFactor();
     } // returns velocity of motor
+
+    public double getVelocityDegrees() {
+        return sparkMaxEncoder.getVelocity() / sparkMaxEncoder.getCountsPerRevolution() * 360.0 / 4.0 * 360.0;
+    }
 
     /**
      * Get the velocity of the motor in meters

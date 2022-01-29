@@ -1,14 +1,11 @@
 package org.texastorque.torquelib.auto;
 
-import org.texastorque.inputs.Input;
 import org.texastorque.torquelib.base.TorqueInput;
-import org.texastorque.torquelib.base.TorqueInputManager;
-import org.texastorque.torquelib.util.GenericController;
 
 /**
  * TexasTorque Assist Sequence Manager
  * 
- * Brings command based paradigm to the timed based 
+ * Brings command based paradigm to the timed based
  * project by wrapping autonomous sequences for use
  * in the input class.
  * 

@@ -66,9 +66,9 @@ public class Parameters {
 		 * Make a final Constant.
 		 *
 		 * @param key
-		 *            Name of value.
+		 *              Name of value.
 		 * @param value
-		 *            Value.
+		 *              Value.
 		 */
 		public Constant(String key, double value) {
 			this.key = key;

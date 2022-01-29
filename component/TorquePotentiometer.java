@@ -21,7 +21,7 @@ public class TorquePotentiometer {
 	 * Create a new potentiometer.
 	 *
 	 * @param port
-	 *            Port of the potentiometer.
+	 *             Port of the potentiometer.
 	 */
 	public TorquePotentiometer(int port) {
 		pot = new AnalogInput(port);

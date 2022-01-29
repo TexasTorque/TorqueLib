@@ -3,7 +3,6 @@ package org.texastorque.torquelib.powershuffle;
 import org.texastorque.torquelib.util.TorqueLogiPro;
 
 import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.util.sendable.SendableBuilder;
 
 public class PowerShuffleLogiPro extends TorqueLogiPro implements Sendable {
@@ -29,7 +28,7 @@ public class PowerShuffleLogiPro extends TorqueLogiPro implements Sendable {
     }
 
     public void pass(double d) {
-        d += 0; // do nothing with it 
+        d += 0; // do nothing with it
     }
 
     @Override

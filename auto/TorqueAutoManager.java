@@ -27,7 +27,7 @@ public abstract class TorqueAutoManager {
     public TorqueAutoManager() {
         autoSequences = new HashMap<String, TorqueSequence>();
 
-        addSequence("Empty" , new TorqueEmpty("Empty")); // default
+        addSequence("Empty", new TorqueEmpty("Empty")); // default
 
         init();
         displayChoices();
