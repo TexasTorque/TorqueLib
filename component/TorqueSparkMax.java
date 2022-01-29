@@ -148,6 +148,10 @@ public class TorqueSparkMax extends TorqueMotor {
         return sparkMaxEncoder.getVelocity() * sparkMaxEncoder.getVelocityConversionFactor();
     } // returns velocity of motor
 
+    public double getVelocityDegrees() {
+        return sparkMaxEncoder.getVelocity() / sparkMaxEncoder.getCountsPerRevolution() * 360.0 / 4.0 * 360.0;
+    }
+
     /**
      * Get the velocity of the motor in meters
      * 
