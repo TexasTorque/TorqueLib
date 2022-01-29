@@ -10,7 +10,9 @@ import java.util.ArrayList;
  * @author Justus
  */
 public class TorqueBlock extends ArrayList<TorqueCommand> {
-    public TorqueBlock() { super(); }
+    public TorqueBlock() {
+        super();
+    }
 
     public TorqueBlock(TorqueCommand... commands) {
         for (TorqueCommand command : commands) {

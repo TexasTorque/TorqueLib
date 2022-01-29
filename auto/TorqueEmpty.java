@@ -13,10 +13,10 @@ public class TorqueEmpty extends TorqueSequence {
     public TorqueEmpty(String name) {
         super(name);
     }
-    
+
     @Override
     protected void init() {
-         
+
     }
-    
+
 }

@@ -12,7 +12,7 @@ public class TorqueMathUtil {
 	 * @return The constrained value of n
 	 */
 	public static double constrain(double n, double a) {
-        return Math.max(Math.min(n, a), -a);
+		return Math.max(Math.min(n, a), -a);
 	}
 
 	/**
@@ -27,7 +27,6 @@ public class TorqueMathUtil {
 		return Math.max(Math.min(n, b), a);
 	}
 
-
 	/**
 	 * Return contrained value n between a and -a
 	 * 
@@ -39,13 +38,13 @@ public class TorqueMathUtil {
 	 */
 	@Deprecated
 	public static double absConstrain(double n, double a) {
-        return Math.max(Math.min(n, a), -a);
+		return Math.max(Math.min(n, a), -a);
 	}
-	
+
 	/**
 	 * Return contrained value n between a and b
 	 * 
-	 * @deprecated 
+	 * @deprecated
 	 * 
 	 * @param n Value to be constrained
 	 * @param a Value to constrain the value over, the minimum value
@@ -54,8 +53,8 @@ public class TorqueMathUtil {
 	 */
 	@Deprecated
 	public static double biConstrain(double n, double a, double b) {
-        return Math.max(Math.min(n, b), a);
-    }
+		return Math.max(Math.min(n, b), a);
+	}
 
 	public static double arrayClosest(double[] values, double value) {
 		double closest = 0.0;
@@ -78,13 +77,13 @@ public class TorqueMathUtil {
 			return value + add;
 		}
 	}
-	
+
 	public static void delay(double delay) {
 		double startTime = Timer.getFPGATimestamp();
-		while(startTime + delay >= Timer.getFPGATimestamp()) {
-			if(Timer.getFPGATimestamp() - startTime > 10) {
+		while (startTime + delay >= Timer.getFPGATimestamp()) {
+			if (Timer.getFPGATimestamp() - startTime > 10) {
 				break;
 			}
 		}
-	} //returns true once delayed
+	} // returns true once delayed
 }

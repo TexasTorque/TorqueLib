@@ -41,9 +41,9 @@ public class TorqueGyro {
 	 * Create a new double gyro.
 	 *
 	 * @param port1
-	 *            Port for the first gyroscope.
+	 *              Port for the first gyroscope.
 	 * @param port2
-	 *            Port for the second, upside down gyroscope.
+	 *              Port for the second, upside down gyroscope.
 	 */
 	public TorqueGyro(int port1, int port2) {
 		m1_analog = new AnalogInput(port1);
@@ -143,7 +143,7 @@ public class TorqueGyro {
 	 * drift but decrease accuracy. The default value is 0.1 degrees per second.
 	 *
 	 * @param degreesPerSecond
-	 *            The deadband to be set in degrees/second.
+	 *                         The deadband to be set in degrees/second.
 	 */
 	public void setDeadband(double degreesPerSecond) {
 		double volts = degreesPerSecond * m_voltsPerDegreePerSecond;
@@ -159,7 +159,7 @@ public class TorqueGyro {
 	 * Set the volts to angular rate of change scale factor of the gyros.
 	 *
 	 * @param voltsPerDegreePerSecond
-	 *            The Sensitivity scalar.
+	 *                                The Sensitivity scalar.
 	 */
 	public void setSensitivity(double voltsPerDegreePerSecond) {
 		m_voltsPerDegreePerSecond = voltsPerDegreePerSecond;

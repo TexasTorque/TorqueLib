@@ -21,13 +21,13 @@ public class TorqueEncoder extends Encoder {
 	 * Create a new encoder.
 	 *
 	 * @param aChannel
-	 *            Channel a port.
+	 *                         Channel a port.
 	 * @param bChannel
-	 *            Channel b port.
+	 *                         Channel b port.
 	 * @param indexChannel
-	 *            The index channel digital input channel.
+	 *                         The index channel digital input channel.
 	 * @param reverseDirection
-	 *            Whether or not the encoder is reversed.
+	 *                         Whether or not the encoder is reversed.
 	 */
 	public TorqueEncoder(int aChannel, int bChannel, int indexChannel, boolean reverseDirection) {
 		super(aChannel, bChannel, indexChannel, reverseDirection);
@@ -37,13 +37,13 @@ public class TorqueEncoder extends Encoder {
 	 * Create a new encoder.
 	 *
 	 * @param aChannel
-	 *            Channel a port.
+	 *                         Channel a port.
 	 * @param bChannel
-	 *            Channel b port.
+	 *                         Channel b port.
 	 * @param reverseDirection
-	 *            Whether or not the encoder is revered.
+	 *                         Whether or not the encoder is revered.
 	 * @param encodingType
-	 *            What type of encoding the encoder is using.
+	 *                         What type of encoding the encoder is using.
 	 */
 	public TorqueEncoder(int aChannel, int bChannel, boolean reverseDirection, CounterBase.EncodingType encodingType) {
 		super(aChannel, bChannel, reverseDirection, encodingType);

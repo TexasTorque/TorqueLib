@@ -47,11 +47,11 @@ public class TorquePID extends ControlLoop {
 	 * Create a new PID.
 	 *
 	 * @param p
-	 *            The proportionality constant.
+	 *          The proportionality constant.
 	 * @param i
-	 *            The integral constant.
+	 *          The integral constant.
 	 * @param d
-	 *            The derivative constant.
+	 *          The derivative constant.
 	 */
 	public TorquePID(double p, double i, double d) {
 		super();
@@ -70,15 +70,15 @@ public class TorquePID extends ControlLoop {
 	 * Create a new PID.
 	 *
 	 * @param p
-	 *            The proportionality constant.
+	 *                      The proportionality constant.
 	 * @param i
-	 *            The integral constant.
+	 *                      The integral constant.
 	 * @param d
-	 *            The derivative constant.
+	 *                      The derivative constant.
 	 * @param limitedTime
-	 *            How long PID should output the limitedOutput.
+	 *                      How long PID should output the limitedOutput.
 	 * @param limitedOutput
-	 *            The output PID will send for a limited time;
+	 *                      The output PID will send for a limited time;
 	 */
 	public TorquePID(double p, double i, double d, double limitedTime, double limitedOutput) {
 		super();
@@ -99,11 +99,11 @@ public class TorquePID extends ControlLoop {
 	 * Change the PID constants.
 	 *
 	 * @param p
-	 *            The proportionality constant.
+	 *          The proportionality constant.
 	 * @param i
-	 *            The integral constant.
+	 *          The integral constant.
 	 * @param d
-	 *            The derivative constant.
+	 *          The derivative constant.
 	 */
 	public void setPIDGains(double p, double i, double d) {
 		kP = p;
@@ -133,7 +133,7 @@ public class TorquePID extends ControlLoop {
 	 * Set the epsilon value.
 	 *
 	 * @param e
-	 *            The new epsilon value.
+	 *          The new epsilon value.
 	 */
 	public void setEpsilon(double e) {
 		epsilon = e;
@@ -166,7 +166,7 @@ public class TorquePID extends ControlLoop {
 	 * Calculate output based off of the current sensor value.
 	 *
 	 * @param currentValue
-	 *            the current sensor feedback.
+	 *                     the current sensor feedback.
 	 * @return Motor output to the system.
 	 */
 	public double calculate(double currentValue) {
@@ -201,10 +201,10 @@ public class TorquePID extends ControlLoop {
 		output += kI * errorSum;
 
 		// ----- D Calculation -----
-		output += kD * (2*error - prevError) * dt;
-//		output *= voltageAdjustment;
-//		System.out.println(voltageAdjustment);
-//		 ----- Limit Output ------
+		output += kD * (2 * error - prevError) * dt;
+		// output *= voltageAdjustment;
+		// System.out.println(voltageAdjustment);
+		// ----- Limit Output ------
 		if (speedController) {
 			output += prevOutput;
 		}
@@ -216,14 +216,14 @@ public class TorquePID extends ControlLoop {
 		if (speedController && output < 0) {
 			output = 0;
 		}
-		
+
 		if (initialLimited && Timer.getFPGATimestamp() - lastLimitedTime < initialLimitedTime) {
 			output = TorqueMathUtil.constrain(output, initialLimitedOutput);
 		}
 
 		// ----- Save Time -----
 		lastTime = Timer.getFPGATimestamp();
-		
+
 		return output;
 	}
 

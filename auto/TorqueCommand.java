@@ -12,7 +12,8 @@ public abstract class TorqueCommand {
     private boolean ended = false, started = false;
 
     public boolean run() {
-        if (ended) return ended;
+        if (ended)
+            return ended;
         if (!started) {
             init();
             started = true;
