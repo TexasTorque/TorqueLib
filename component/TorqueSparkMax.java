@@ -98,6 +98,13 @@ public class TorqueSparkMax extends TorqueMotor {
      */
     public void setVoltage(double volts) {
         sparkMax.setVoltage(volts);
+        for (CANSparkMax follower : sparkMaxFollowers) {
+            follower.follow(sparkMax, invert);
+        }
+    }
+
+    public double getVoltage() {
+        return sparkMax.getBusVoltage();
     }
 
     // ===================== PID stuff ========================

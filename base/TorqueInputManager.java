@@ -6,6 +6,4 @@ public abstract class TorqueInputManager {
 
     public void smartDashboard() {
     }
-
-    public abstract void requestRumble(double forTime);
 }
