@@ -17,7 +17,6 @@ public abstract class TorqueSequence {
 
     public TorqueSequence(String name) {
         this.name = name;
-        init();
     }
 
     protected abstract void init();
