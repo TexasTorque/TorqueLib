@@ -191,6 +191,15 @@ public class TorqueSparkMax extends TorqueMotor {
         encoderZero = sparkMaxEncoder.getPosition();
     }
 
+    /**
+     * Set the current position of the Sparkmax
+     * 
+     * @param currentPos Current pos
+     */
+    public void setPosition(double currentPos) {
+        encoderZero = currentPos + sparkMaxEncoder.getPosition();
+    }
+
     public double getZero() {
         return encoderZero;
     }
