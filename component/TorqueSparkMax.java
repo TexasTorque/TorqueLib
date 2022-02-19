@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
@@ -72,6 +73,18 @@ public class TorqueSparkMax extends TorqueMotor {
         } // try catch
     } // set method for use with PID, position or velocity
 
+    public void setWithFF(double reference, ControlType crtlType, int pidSlot, double FF) {
+        try {
+            pidController.setReference(reference, crtlType, pidSlot, FF);
+            for (CANSparkMax follower : sparkMaxFollowers) {
+                follower.follow(sparkMax, invert);
+            } // takes care of followers
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println("You need to configure the PID");
+        } // try catch
+    }
+
     /**
      * UNSAFE
      */
@@ -126,6 +139,10 @@ public class TorqueSparkMax extends TorqueMotor {
         pidController.setFF(kPID.f());
         pidController.setOutputRange(kPID.min(), kPID.max());
     } // update PID
+
+    public void configureIZone(double iZoneError) {
+        pidController.setIZone(iZoneError);
+    }
 
     /**
      * Configure needed variables for smart motion.
