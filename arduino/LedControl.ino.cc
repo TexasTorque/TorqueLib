@@ -2,11 +2,12 @@
 // 
 // Authors: Omar, Justus, Jacob, Jack
 //
-// This file is part of TexasTorque2022, and is subject to the 
+// This file is part of TorqueLib, and is subject to the 
 // same license.
 //
 // Controls LED lights based off RoboRio DIO signals. Works with
-// ./src/main/java/org/texastorque/modules/ArduinoInterface.java (2022 Competition Code)
+// ./src/main/java/org/texastorque/modules/ArduinoInterface.java 
+// in TexasTorque2022 master.
 
 #include <Adafruit_NeoPixel.h>
 
