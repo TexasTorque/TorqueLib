@@ -6,7 +6,7 @@
 // same license.
 //
 // Controls LED lights based off RoboRio DIO signals. Works with
-// ./src/main/java/org/texastorque/modules/ArduinoInterface.java 
+// ./src/main/java/org/texastorque/subsystems/lights.java 
 // in TexasTorque2022 master.
 
 #include <Adafruit_NeoPixel.h>
@@ -49,45 +49,42 @@ void loop() {
   bool pin3 = digitalRead(PIN_3);
 
   // Nothing
-  if (pin1 == LOW && pin2 == LOW && pin3 == LOW)
+  if (pin1 == LOW && pin2 == LOW && pin3 == LOW) {
     rgb(0, 0, 0);
-  // Red
-  else if (pin1 == LOW && pin2 == LOW && pin3 == HIGH) {
+  // Red Teleop
+  } else if (pin1 == LOW && pin2 == LOW && pin3 == HIGH) {
     rgb(255, 0, 0);
     isRedAlliance = true;
-  }
-  // Blue
-  else if (pin1 == LOW && pin2 == HIGH && pin3 == LOW) {
+  // Blue Teleop
+  } else if (pin1 == LOW && pin2 == HIGH && pin3 == LOW) {
     rgb(0, 0, 255);
     isRedAlliance = false;
-  }
-  // Will be awesome, green rn
-  else if (pin1 == HIGH && pin2 == LOW && pin3 == HIGH)
-    //rgb(0, 255, 0);
+  // Target Lock, solid green
+  } else if (pin1 == LOW && pin2 == HIGH && pin3 == HIGH) {
+    rgb(0, 255, 0);
+  // Endgame
+  } else if (pin1 == HIGH && pin2 == LOW && pin3 == LOW) {
     rainbow(15);
-  // Target lock initial condition
-  else if (pin1 == LOW && pin2 == HIGH && pin3 == HIGH) {
-    if (isRedAlliance)
-      rgb(255, 0, 0);
-    else
-      rgb(0, 0, 255);    
+  // Shooting, flashing green
+  } else if (pin1 == HIGH && pin2 == LOW && pin3 == HIGH) {
+    rgb(0, 255, 0);
     delay(50);
     rgb(0, 0, 0);
+  // Red auto, flashing
+  } else if (pin1 == HIGH && pin2 == HIGH && pin3 == LOW) {
+    rgb(255, 0, 0);   
     delay(50);
+    rgb(0, 0, 0);
+    // Blue auto, flashing
+  } else if  (pin1 == HIGH && pin2 == HIGH && pin3 == HIGH) {
+    rgb(0, 0, 255);
+    delay(50);
+    rgb(0, 0, 0);
   }
+
   // White is failure condition
   else
     rgb(255, 255, 255);
-}
-
-// strip.Color(red, green, blue) as shown in the loop() function above),
-// and a delay time (in milliseconds) between pixels.
-void colorWipe(uint32_t color, int wait) {
-  for (int i=0; i<strip.numPixels(); i++) { // For each pixel in strip...
-    strip.setPixelColor(i, color);         //  Set pixel's color (in RAM)
-    strip.show();                          //  Update strip to match
-    delay(wait);                           //  Pause for a moment
-  }
 }
 
 void rainbow(int wait) {
@@ -106,26 +103,5 @@ void rainbow(int wait) {
     // strip.rainbow(firstPixelHue, 1, 255, 255, true);
     strip.show(); // Update strip with new contents
     delay(wait);  // Pause for a moment
-  }
-}
-
-void theaterChaseRainbow(int wait) {
-  int firstPixelHue = 0;     // First pixel starts at red (hue 0)
-  for (int a=0; a<30; a++) {  // Repeat 30 times...
-    for (int b=0; b<3; b++) { //  'b' counts from 0 to 2...
-      strip.clear();         //   Set all pixels in RAM to 0 (off)
-      // 'c' counts up from 'b' to end of strip in increments of 3...
-      for (int c=b; c<strip.numPixels(); c += 3) {
-        // hue of pixel 'c' is offset by an amount to make one full
-        // revolution of the color wheel (range 65536) along the length
-        // of the strip (strip.numPixels() steps):
-        int      hue   = firstPixelHue + c * 65536L / strip.numPixels();
-        uint32_t color = strip.gamma32(strip.ColorHSV(hue)); // hue -> RGB
-        strip.setPixelColor(c, color); // Set pixel 'c' to value 'color'
-      }
-      strip.show();                // Update strip with new contents
-      delay(wait);                 // Pause for a moment
-      firstPixelHue += 65536 / 90; // One cycle of color wheel over 90 frames
-    }
   }
 }
