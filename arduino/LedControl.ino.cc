@@ -6,126 +6,131 @@
 // same license.
 //
 // Controls LED lights based off RoboRio DIO signals. Works with
-// ./src/main/java/org/texastorque/modules/ArduinoInterface.java 
+// ./src/main/java/org/texastorque/subsystems/lights.java 
 // in TexasTorque2022 master.
 
 #include <Adafruit_NeoPixel.h>
 
-const int LED_PIN = 7;
-const int LED_COUNT = 120;
+#define LED_PIN 7
+#define LED_COUNT 120
 
-const int PIN_1 = 3;
-const int PIN_2 = 4;
-const int PIN_3 = 5;
+// DIO inputs from the RoboRio (pins numbers are on the Arduino)
+// Also it may be represented as A,B,C in code, same thing.
+#define ROBORIO_1 3
+#define ROBORIO_2 4
+#define ROBORIO_3 5
 
+bool pin1Read;
+bool pin2Read;
+bool pin3Read;
+
+// instanstiate the strip (ONE strip on LED_PIN)
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
-//   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
-//   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
-//   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
-//   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
-//   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
 
-bool isRedAlliance;
+// pulled from fms on the robot
+bool isRedAlliance = false;
+bool flashThisLoop = true;
+// used to manage le rainbow
+bool rainbowStarted = false;
+uint16_t firstPixelHue = 0;
+
 
 void setup() {
-  pinMode(PIN_1, INPUT);
-  pinMode(PIN_2, INPUT);
-  pinMode(PIN_3, INPUT);
-  Serial.begin(9600);
-  strip.begin();
-  strip.show();            // Turn OFF all pixels ASAP
-  strip.setBrightness(200); // Set BRIGHTNESS to about 1/5 (max = 255)
-  isRedAlliance = true;
-}
-
-void rgb(int r, int g, int b) {
-  strip.fill(strip.Color(r, g, b));
-  strip.show();
+  pinMode(ROBORIO_1, INPUT);
+  pinMode(ROBORIO_2, INPUT);
+  pinMode(ROBORIO_3, INPUT);
+  Serial.begin(9600);     // uncomment this if you need to print stuff
+  strip.begin();            // just some initialization
+  strip.show();             // show whatever's ready to show, which is nothing at this time
+  strip.setBrightness(200); // Set BRIGHTNESS to about 4/5 (max = 255) too high and u get weirdness
 }
 
 void loop() {
-  bool pin1 = digitalRead(PIN_1);
-  bool pin2 = digitalRead(PIN_2);
-  bool pin3 = digitalRead(PIN_3);
-
-  // Nothing
-  if (pin1 == LOW && pin2 == LOW && pin3 == LOW)
-    rgb(0, 0, 0);
-  // Red
-  else if (pin1 == LOW && pin2 == LOW && pin3 == HIGH) {
-    rgb(255, 0, 0);
+  pin1Read = digitalRead(ROBORIO_1);
+  pin2Read = digitalRead(ROBORIO_2);
+  pin3Read = digitalRead(ROBORIO_3);
+  Serial.print(pin1Read);
+  Serial.print(pin2Read);
+  Serial.println(pin3Read);
+  
+  // NO_LIGHTS
+  if (pin1Read == LOW && pin2Read == LOW && pin3Read == LOW)
+    rgb(0, 0, 0, &strip);
+  // RED_TELEOP
+  else if (pin1Read == LOW && pin2Read == LOW && pin3Read == HIGH) {
+    rgb(255, 0, 0, &strip);
     isRedAlliance = true;
   }
-  // Blue
-  else if (pin1 == LOW && pin2 == HIGH && pin3 == LOW) {
-    rgb(0, 0, 255);
+  // BLUE_TELEOP
+  else if (pin1Read == LOW && pin2Read == HIGH && pin3Read == LOW) {
+    rgb(0, 0, 255,  &strip);
     isRedAlliance = false;
   }
-  // Will be awesome, green rn
-  else if (pin1 == HIGH && pin2 == LOW && pin3 == HIGH)
-    //rgb(0, 255, 0);
-    rainbow(15);
-  // Target lock initial condition
-  else if (pin1 == LOW && pin2 == HIGH && pin3 == HIGH) {
-    if (isRedAlliance)
-      rgb(255, 0, 0);
-    else
-      rgb(0, 0, 255);    
-    delay(50);
-    rgb(0, 0, 0);
-    delay(50);
+  // TARGET_LOCK
+  else if (pin1Read == LOW && pin2Read == HIGH && pin3Read== HIGH) {
+    rgb(0, 255, 0, &strip);
+  }
+  // ENDGAME
+  else if (pin1Read == HIGH && pin2Read == LOW && pin3Read == LOW) {
+    if (firstPixelHue > 65535) firstPixelHue = 0; // don't exceed the 16 bit unsigned integer limit!
+    firstPixelHue += 256;
+    strip.rainbow(firstPixelHue);
+  }
+  // SHOOTING
+  else if (pin1Read == HIGH && pin2Read == LOW && pin3Read == HIGH) {
+    if (flashThisLoop) {
+      rgb(0, 255, 0,  &strip);
+      delay(150);
+    } else {
+      rgb(0,0,0,&strip);
+      delay(150);
+    }
+    flashThisLoop = !flashThisLoop;
+  }
+  // RED_AUTO
+  else if (pin1Read == HIGH && pin2Read == HIGH && pin3Read == LOW) {
+    if (flashThisLoop) {
+      rgb(0, 0, 255,  &strip);
+      delay(150);
+    } else {
+      rgb(0,0,0,&strip);
+      delay(150);
+    }
+    flashThisLoop = !flashThisLoop;
+    isRedAlliance = false;
+  }
+  // BLUE_AUTO
+  else if (pin1Read == HIGH && pin2Read == HIGH && pin3Read == HIGH) {
+    if (flashThisLoop) {
+      rgb(0, 0, 255,  &strip);
+      delay(150);
+    } else {
+      rgb(0,0,0,&strip);
+      delay(150);
+    }
+    flashThisLoop = !flashThisLoop;
+    isRedAlliance = false;
   }
   // White is failure condition
   else
-    rgb(255, 255, 255);
+    rgb(255, 255, 255, &strip);
+  // we get the global strip object here so no need to dereference (*) them
+  // btw this shows changes made to the strips
+  strip.show();
 }
 
-// strip.Color(red, green, blue) as shown in the loop() function above),
-// and a delay time (in milliseconds) between pixels.
-void colorWipe(uint32_t color, int wait) {
-  for (int i=0; i<strip.numPixels(); i++) { // For each pixel in strip...
-    strip.setPixelColor(i, color);         //  Set pixel's color (in RAM)
-    strip.show();                          //  Update strip to match
-    delay(wait);                           //  Pause for a moment
-  }
-}
 
-void rainbow(int wait) {
-  // Hue of first pixel runs 5 complete loops through the color wheel.
-  // Color wheel has a range of 65536 but it's OK if we roll over, so
-  // just count from 0 to 5*65536. Adding 256 to firstPixelHue each time
-  // means we'll make 5*65536/256 = 1280 passes through this loop:
+void rainbow(int wait, Adafruit_NeoPixel* strip) {
   for (long firstPixelHue = 0; firstPixelHue < 5*65536; firstPixelHue += 256) {
-    // strip.rainbow() can take a single argument (first pixel hue) or
-    // optionally a few extras: number of rainbow repetitions (default 1),
-    // saturation and value (brightness) (both 0-255, similar to the
-    // ColorHSV() function, default 255), and a true/false flag for whether
-    // to apply gamma correction to provide 'truer' colors (default true).
-    strip.rainbow(firstPixelHue);
-    // Above line is equivalent to:
-    // strip.rainbow(firstPixelHue, 1, 255, 255, true);
-    strip.show(); // Update strip with new contents
+    (*strip).rainbow(firstPixelHue); 
+    (*strip).show(); // Update strip with new contents
     delay(wait);  // Pause for a moment
   }
 }
 
-void theaterChaseRainbow(int wait) {
-  int firstPixelHue = 0;     // First pixel starts at red (hue 0)
-  for (int a=0; a<30; a++) {  // Repeat 30 times...
-    for (int b=0; b<3; b++) { //  'b' counts from 0 to 2...
-      strip.clear();         //   Set all pixels in RAM to 0 (off)
-      // 'c' counts up from 'b' to end of strip in increments of 3...
-      for (int c=b; c<strip.numPixels(); c += 3) {
-        // hue of pixel 'c' is offset by an amount to make one full
-        // revolution of the color wheel (range 65536) along the length
-        // of the strip (strip.numPixels() steps):
-        int      hue   = firstPixelHue + c * 65536L / strip.numPixels();
-        uint32_t color = strip.gamma32(strip.ColorHSV(hue)); // hue -> RGB
-        strip.setPixelColor(c, color); // Set pixel 'c' to value 'color'
-      }
-      strip.show();                // Update strip with new contents
-      delay(wait);                 // Pause for a moment
-      firstPixelHue += 65536 / 90; // One cycle of color wheel over 90 frames
-    }
-  }
+// sets the strip (does not show)
+void rgb(int r, int g, int b, Adafruit_NeoPixel* strip) {
+  (*strip).fill((*strip).Color(r, g, b));
 }
+
+
