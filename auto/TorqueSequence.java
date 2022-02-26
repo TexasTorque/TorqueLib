@@ -15,6 +15,9 @@ public abstract class TorqueSequence {
     private int blockIndex = 0;
     private String name = "unnamed";
 
+    public TorqueSequence() {
+    }
+
     public TorqueSequence(String name) {
         this.name = name;
     }
