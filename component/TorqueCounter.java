@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SensorUtil;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Class for a FRC counter.

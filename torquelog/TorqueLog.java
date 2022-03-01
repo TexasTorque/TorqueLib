@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.texastorque.torquelib.torquelog.LogData.Priority;
-import org.texastorque.util.FileUtils;
 
 import edu.wpi.first.networktables.NetworkTableType;
 import edu.wpi.first.wpilibj.Timer;

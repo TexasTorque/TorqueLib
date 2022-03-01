@@ -2,12 +2,9 @@ package org.texastorque.torquelib.powershuffle;
 
 import org.texastorque.util.KPID;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.util.sendable.SendableRegistry;
 
 public class PowerShuffleKPID extends KPID {
 
