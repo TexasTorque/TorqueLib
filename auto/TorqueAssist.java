@@ -14,20 +14,42 @@ import org.texastorque.torquelib.base.TorqueInput;
  * @author Justus, Jack
  */
 public class TorqueAssist {
-    TorqueSequence sequence;
-    TorqueInput[] inputs;
+    public static enum AssistMode {
+        RESET_SEQ,
+        RESET_BLOCK
+    }
+
+    private AssistMode mode;
+    private TorqueSequence sequence;
+    private TorqueInput[] inputs;
     boolean done;
 
     public TorqueAssist(TorqueSequence sequence) {
         this.sequence = sequence;
-        done = false;
+        this.done = false;
+        this.mode = AssistMode.RESET_SEQ;
+    }
+
+    public TorqueAssist(TorqueSequence sequence, AssistMode mode) {
+        this.sequence = sequence;
+        this.done = false;
+        this.mode = mode;
     }
 
     public TorqueAssist(TorqueSequence sequence, TorqueInput... inputs) {
         this.sequence = sequence;
-        done = false;
+        this.done = false;
         this.inputs = inputs;
+        this.mode = AssistMode.RESET_SEQ;
     }
+
+    public TorqueAssist(TorqueSequence sequence, AssistMode mode, TorqueInput... inputs) {
+        this.sequence = sequence;
+        this.done = false;
+        this.inputs = inputs;
+        this.mode = mode;
+    }
+
 
     public void requires(TorqueInput... inputs) {
         this.inputs = inputs;
@@ -41,7 +63,10 @@ public class TorqueAssist {
             done = sequence.hasEnded();
         } else {
             done = false;
-            sequence.reset();
+            if (mode == AssistMode.RESET_SEQ)
+                sequence.reset();
+            else if (mode == AssistMode.RESET_BLOCK)
+                sequence.resetBlock();
         }
     }
 

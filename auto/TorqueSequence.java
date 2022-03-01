@@ -55,6 +55,12 @@ public abstract class TorqueSequence {
         }
     }
 
+    public final void resetBlock() {
+        ended = false;    
+        for (TorqueCommand command : commands.get(blockIndex))
+            command.reset();
+    }
+
     public String getName() {
         return name;
     }
