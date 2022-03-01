@@ -27,6 +27,7 @@ public abstract class TorqueCommand {
     }
 
     public void reset() {
+        end();
         ended = false;
         started = false;
     }
