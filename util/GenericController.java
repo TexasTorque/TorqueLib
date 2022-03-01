@@ -245,8 +245,16 @@ public final class GenericController extends Joystick {
 		return getPOV() == 90;
 	}
 
+	public synchronized boolean getDPADDownRight() {
+		return getPOV() == 135;
+	}
+
 	public synchronized boolean getDPADDown() {
 		return getPOV() == 180;
+	}
+
+	public synchronized boolean getDPADDownLeft() {
+		return getPOV() == 225;
 	}
 
 	public synchronized boolean getDPADLeft() {
