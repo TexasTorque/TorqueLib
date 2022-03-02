@@ -119,6 +119,10 @@ public class TorqueSparkMax extends TorqueMotor {
         return sparkMax.getBusVoltage();
     }
 
+    public void invertPolarity(boolean invert) {
+        sparkMax.setInverted(invert);
+    }
+
     // ===================== PID stuff ========================
 
     @Override
