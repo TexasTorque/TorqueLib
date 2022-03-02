@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
@@ -72,9 +73,9 @@ public class TorqueSparkMax extends TorqueMotor {
         } // try catch
     } // set method for use with PID, position or velocity
 
-    public void setWithFF(double reference, ControlType crtlType, int pidSlot, double FF) {
+    public void setWithFF(double reference, ControlType crtlType, int pidSlot, double FF, ArbFFUnits units) {
         try {
-            pidController.setReference(reference, crtlType, pidSlot, FF);
+            pidController.setReference(reference, crtlType, pidSlot, FF, units);
             for (CANSparkMax follower : sparkMaxFollowers) {
                 follower.follow(sparkMax, invert);
             } // takes care of followers
