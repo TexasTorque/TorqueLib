@@ -57,7 +57,7 @@ public class TorqueSparkMax extends TorqueMotor {
     public void set(double output) {
         sparkMax.set(output);
         for (CANSparkMax canSparkMax : sparkMaxFollowers) {
-            canSparkMax.follow(sparkMax);
+            canSparkMax.follow(sparkMax, invert);
         } // takes care of followers
     }
 

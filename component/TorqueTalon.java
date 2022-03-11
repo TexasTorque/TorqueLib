@@ -133,6 +133,15 @@ public class TorqueTalon extends TorqueMotor {
         }
     }
 
+    /**
+     * Set the voltage of the talon
+     * 
+     * @param outputVolts Volts to output [-12,12]
+     */
+    public void setVoltage(double outputVolts) {
+        talon.setVoltage(outputVolts);
+    }
+
     public double getOutputCurrent() {
         return talon.getStatorCurrent();
     }

@@ -61,6 +61,7 @@ public class TorqueLinearServo extends Servo {
         else if (currentPosition < setPosition - speed * dt)
             currentPosition += speed * dt;
         else
+
             currentPosition = setPosition;
     }
 

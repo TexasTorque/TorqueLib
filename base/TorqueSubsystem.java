@@ -17,6 +17,12 @@ public abstract class TorqueSubsystem {
     public void updateAuto() {
     }
 
+    public void initDisabled() {
+    }
+
+    public void updateDisabled() {
+    }
+
     public abstract void output();
 
     public void updateFeedback() {
@@ -33,6 +39,4 @@ public abstract class TorqueSubsystem {
     public void updateSmartDashboard() {
     }
 
-    public void disable() {
-    }
 }
