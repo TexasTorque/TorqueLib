@@ -175,6 +175,9 @@ public abstract class TorqueIterative extends RobotBase {
 			} else if (isTest() && m_testInitialized) {
 				testContinuous();
 				alwaysContinuous();
+			} else if (isDisabled() && m_disabledInitialized) {
+				disabledContinuous();
+				alwaysContinuous();
 			}
 
 		}
