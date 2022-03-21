@@ -272,4 +272,31 @@ public class TorqueSparkMax extends TorqueMotor {
         return sparkMax.getOutputCurrent();
     }
 
+    // The below methods cannot be removed as we must maintain legacy code.
+
+    /**
+     * Get the velocity of the motor in meters
+     * 
+     * @param radius The radius (in meters) of the drive wheel
+     * @return The velocity of the motor
+     * 
+     * @deprecated
+     */
+    public double getVelocityMeters(double radius) {
+        return (2 * Math.PI * radius * getVelocity() / 60.0) / 4.0;
+    }
+
+    /**
+     * Convert m/s to e_r/m
+     * 
+     * @param radius          Radius of drive
+     * @param metersPerSecond Velocity in m/s
+     * @return Velocity in e_r/m
+     * 
+     * @deprecated
+     */
+    public double velocityMetersToEncoder(double radius, double metersPerSecond) {
+        return metersPerSecond / 2 / Math.PI / radius * 60 * 4;
+    }
+
 }
