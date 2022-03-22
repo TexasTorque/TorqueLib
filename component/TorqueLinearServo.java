@@ -29,7 +29,7 @@ public class TorqueLinearServo extends Servo {
      * 
      * @param port   The PWM port.
      * @param length Max length (mm).
-     * @param speed  Max speed (?).
+     * @param speed  Speed (mm/s).
      */
     public TorqueLinearServo(int port, int length, int speed) {
         super(port);
@@ -61,7 +61,6 @@ public class TorqueLinearServo extends Servo {
         else if (currentPosition < setPosition - speed * dt)
             currentPosition += speed * dt;
         else
-
             currentPosition = setPosition;
     }
 
@@ -72,6 +71,16 @@ public class TorqueLinearServo extends Servo {
      */
     public double getPosition() {
         return currentPosition;
+    }
+
+    /**
+     * Update position estimation and get current position of the servo.
+     * 
+     * @return Servo Position (mm)
+     */
+    public double getUpdatedPosition() {
+        updateCurrentPosition();
+        return getPosition();
     }
 
     /**
