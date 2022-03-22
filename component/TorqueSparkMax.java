@@ -272,31 +272,27 @@ public class TorqueSparkMax extends TorqueMotor {
         return sparkMax.getOutputCurrent();
     }
 
-    // The below methods cannot be removed as we must maintain legacy code.
-
     /**
-     * Get the velocity of the motor in meters
-     * 
-     * @param radius The radius (in meters) of the drive wheel
-     * @return The velocity of the motor
-     * 
-     * @deprecated
-     */
-    public double getVelocityMeters(double radius) {
-        return (2 * Math.PI * radius * getVelocity() / 60.0) / 4.0;
+    Finds Velocity of a Drive Wheel in RPMs
+    
+    @param motor TorqueSparkMax motor
+    @param gearRatio Gear Ratio
+    @return RPM of the Wheel
+    */
+    public static double getWheelRPM(TorqueSparkMax motor, double gearRatio) {
+        return motor.getVelocity() / gearRatio;
     }
-
+    
     /**
-     * Convert m/s to e_r/m
-     * 
-     * @param radius          Radius of drive
-     * @param metersPerSecond Velocity in m/s
-     * @return Velocity in e_r/m
-     * 
-     * @deprecated
-     */
-    public double velocityMetersToEncoder(double radius, double metersPerSecond) {
-        return metersPerSecond / 2 / Math.PI / radius * 60 * 4;
+    Finds Velocity of a Drive Wheel in meters per second
+        *
+    @param motor TorqueSparkMax motor
+    @param gearRatio Gear Ratio
+    @param wheelRadiusMeters Radius of Wheel in Meters
+    @return Velocity of Wheel in m/s
+    */
+    public static double getWheelVelocity(TorqueSparkMax motor, double gearRatio, double wheelRadiusMeters) {
+        return getWheelRPM(motor, gearRatio) * 2 * Math.PI * wheelRadiusMeters / 60;
     }
 
 }
