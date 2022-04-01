@@ -294,25 +294,4 @@ public class TorqueSparkMax extends TorqueMotor {
     public static double getWheelVelocity(TorqueSparkMax motor, double gearRatio, double wheelRadiusMeters) {
         return getWheelRPM(motor, gearRatio) * 2 * Math.PI * wheelRadiusMeters / 60;
     }
-
-    /**
-     * PLEASE FOR THE LOVE OF GOD JUST LEAVE THESE METHODS HERE FOR NOW
-     * 
-     * WE CAN DELETE ONCE WE GET RID OF BRAVO
-     */
-
-    public double getVelocityMeters(double radius) {
-        return (2 * Math.PI * radius * getVelocity() / 60.0) / 4.0;
-    }
-
-    /**
-     * Convert m/s to e_r/m
-     * 
-     * @param radius          Radius of drive
-     * @param metersPerSecond Velocity in m/s
-     * @return Velocity in e_r/m
-     */
-    public double velocityMetersToEncoder(double radius, double metersPerSecond) {
-        return metersPerSecond / 2 / Math.PI / radius * 60 * 4;
-    }
 }
