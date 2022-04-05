@@ -178,6 +178,10 @@ public class TorqueSparkMax extends TorqueMotor {
         sparkMaxEncoder.setPositionConversionFactor(factor);
     }
 
+    public void configureFastLeader() {
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 2);
+    }
+
     /**
      * Configure the CAN frames for a "dumb motor," which won't need to access CAN
      * data often or at all
@@ -301,6 +305,10 @@ public class TorqueSparkMax extends TorqueMotor {
         if (e != REVLibError.kOk) {
             System.out.println("Error setting SparkMax supply limit: " + e.name());
         }
+    }
+
+    public void burnFlash() {
+        sparkMax.burnFlash();
     }
 
     public double getOutputCurrent() {
