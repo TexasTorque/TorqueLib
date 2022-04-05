@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
@@ -177,6 +178,40 @@ public class TorqueSparkMax extends TorqueMotor {
         sparkMaxEncoder.setPositionConversionFactor(factor);
     }
 
+    /**
+     * Configure the CAN frames for a "dumb motor," which won't need to access CAN
+     * data often or at all
+     */
+    public void configureDumbCANFrame() {
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 200);
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 1000);
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 2000);
+    }
+
+    /**
+     * Configures the CAN frame for a no-follower encoder-positional only sparkmax;
+     * such as would be in a climber
+     */
+    public void configurePositionalCANFrame() {
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 143);
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+    }
+
+    /**
+     * Reduce the CAN frame interval for a follower
+     */
+    public void lowerFollowerCANFrame() {
+        for (CANSparkMax follower : sparkMaxFollowers) {
+            follower.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 100);
+            follower.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+            follower.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+            follower.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+        }
+    }
+
     @Override
     public double getVelocity() {
         return sparkMaxEncoder.getVelocity() * sparkMaxEncoder.getVelocityConversionFactor();
@@ -273,29 +308,29 @@ public class TorqueSparkMax extends TorqueMotor {
     }
 
     /**
-    Finds Velocity of a Drive Wheel in RPMs
-    
-    @param motor TorqueSparkMax motor
-    @param gearRatio Gear Ratio
-    @return RPM of the Wheel
-    */
+     * Finds Velocity of a Drive Wheel in RPMs
+     * 
+     * @param motor     TorqueSparkMax motor
+     * @param gearRatio Gear Ratio
+     * @return RPM of the Wheel
+     */
     public static double getWheelRPM(TorqueSparkMax motor, double gearRatio) {
         return motor.getVelocity() / gearRatio;
     }
-    
+
     /**
-    Finds Velocity of a Drive Wheel in meters per second
-        *
-    @param motor TorqueSparkMax motor
-    @param gearRatio Gear Ratio
-    @param wheelRadiusMeters Radius of Wheel in Meters
-    @return Velocity of Wheel in m/s
-    */
+     * Finds Velocity of a Drive Wheel in meters per second
+     *
+     * @param motor             TorqueSparkMax motor
+     * @param gearRatio         Gear Ratio
+     * @param wheelRadiusMeters Radius of Wheel in Meters
+     * @return Velocity of Wheel in m/s
+     */
     public static double getWheelVelocity(TorqueSparkMax motor, double gearRatio, double wheelRadiusMeters) {
         return getWheelRPM(motor, gearRatio) * 2 * Math.PI * wheelRadiusMeters / 60;
     }
 
-      /**
+    /**
      * PLEASE FOR THE LOVE OF GOD JUST LEAVE THESE METHODS HERE FOR NOW
      * 
      * WE CAN DELETE ONCE WE GET RID OF BRAVO
@@ -311,7 +346,7 @@ public class TorqueSparkMax extends TorqueMotor {
      * @param radius          Radius of drive
      * @param metersPerSecond Velocity in m/s
      * @return Velocity in e_r/m
-     */ 
+     */
     public double velocityMetersToEncoder(double radius, double metersPerSecond) {
         return metersPerSecond / 2 / Math.PI / radius * 60 * 4;
     }
