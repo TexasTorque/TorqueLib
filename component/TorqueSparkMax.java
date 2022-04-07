@@ -194,6 +194,17 @@ public class TorqueSparkMax extends TorqueMotor {
     }
 
     /**
+     * Configure the CAN frames for a "dumb motor" leader, which won't give data
+     * often but will update fast for its follower
+     */
+    public void configureDumbLeaderCANFrame() {
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 1000);
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
+        sparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 2000);
+    }
+
+    /**
      * Configures the CAN frame for a no-follower encoder-positional only sparkmax;
      * such as would be in a climber
      */
