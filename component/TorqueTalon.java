@@ -82,6 +82,10 @@ public class TorqueTalon extends TorqueMotor {
         talon.configPeakOutputReverse(kPID.min());
     } // configure PID
 
+    public void zeroEncoder() {
+        talon.setSelectedSensorPosition(0);
+    }
+
     @Override
     public void updatePID(KPID kPID) {
         talon.config_kP(0, kPID.p());
