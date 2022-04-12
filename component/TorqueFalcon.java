@@ -240,7 +240,13 @@ public class TorqueFalcon {
         falcon.config_kF(0, kPID.f());
         falcon.configPeakOutputForward(kPID.max());
         falcon.configPeakOutputReverse(kPID.min());
+    }
 
+    public void setIZone(double i) {
+        falcon.config_IntegralZone(0, (int) i);
+        for (WPI_TalonFX follower : followers) {
+            follower.config_IntegralZone(0, (int) i);
+        }
     }
 
     /*
