@@ -101,6 +101,7 @@ public class TorqueFalcon {
     public void addFollower(int port) {
         WPI_TalonFX follower = new WPI_TalonFX(port);
         follower.setNeutralMode(neutralMode);
+        follower.follow(falcon);
         followers.add(follower);
         all.add(follower);
     }
@@ -114,6 +115,7 @@ public class TorqueFalcon {
         WPI_TalonFX follower = new WPI_TalonFX(port);
         follower.setInverted(inverted);
         follower.setNeutralMode(neutralMode);
+        follower.follow(falcon);
         followers.add(follower);
         all.add(follower);
     }
