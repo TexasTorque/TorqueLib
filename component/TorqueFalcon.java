@@ -2,6 +2,7 @@ package org.texastorque.torquelib.component;
 
 import java.util.ArrayList;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -260,6 +261,20 @@ public class TorqueFalcon {
         falcon.config_IntegralZone(0, (int) i);
         for (WPI_TalonFX follower : followers) {
             follower.config_IntegralZone(0, (int) i);
+        }
+    }
+
+    public void configureStatorLimit(StatorCurrentLimitConfiguration currLimitCfg) {
+        ErrorCode e = falcon.configStatorCurrentLimit(currLimitCfg);
+        if (e != ErrorCode.OK) {
+            System.out.println("Error setting falcon stator limit!");
+        }
+    }
+
+    public void configureSupplyLimit(SupplyCurrentLimitConfiguration currLimitCfg) {
+        ErrorCode e = falcon.configSupplyCurrentLimit(currLimitCfg);
+        if (e != ErrorCode.OK) {
+            System.out.println("Error setting falcon stator limit!");
         }
     }
 
