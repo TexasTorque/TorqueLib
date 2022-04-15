@@ -216,7 +216,19 @@ public class TorqueFalcon {
         for (WPI_TalonFX follower : followers) {
             follower.set(ControlMode.Follower, port);
             // SmartDashboard.putNumber("FollowerVelocity", output);
+
         }
+    }
+
+    public void setRPS(double rps) {
+        set(rps * kUnitsPerRev / 10., ControlMode.Velocity);
+
+    }
+
+    /**
+     */
+    public void setRPM(double rpm) {
+        setRPS(rpm / 60.);
     }
 
     /*
@@ -339,23 +351,6 @@ public class TorqueFalcon {
     }
 
     /**
-     * Get absolute value of the current motor velocity in 100 ticks per
-     * millisecond.
-     * 
-     * @return Absolute value of the current motor velocity in 100 ticks per
-     *         millisecond.
-     */
-    public double getAbsoluteVelocity() {
-        try {
-            return Math.abs(falcon.getSelectedSensorVelocity());
-        } catch (Exception e) {
-            System.out.println(e);
-            System.out.println(encoderMissing);
-        }
-        return 0;
-    }
-
-    /**
      * Get current motor velocity in rotations per second.
      * 
      * @return Current motor velocity in rotations per second.
@@ -371,44 +366,13 @@ public class TorqueFalcon {
     }
 
     /**
-     * Get absolute value of the current motor velocity in rotations per second.
-     * 
-     * @return Absolute value of the current motor velocity in rotations per second.
-     */
-    public double getAbsoluteVelocityRPS() {
-        try {
-            return Math.abs(falcon.getSelectedSensorVelocity() / kUnitsPerRev * 10.);
-        } catch (Exception e) {
-            System.out.println(e);
-            System.out.println(encoderMissing);
-        }
-        return 0;
-    }
-
-    /**
      * Get current motor velocity in rotations per minuite.
      * 
      * @return Current motor velocity in rotations per minuite..
      */
     public double getVelocityRPM() {
         try {
-            return falcon.getSelectedSensorVelocity() / kUnitsPerRev * 600.;
-        } catch (Exception e) {
-            System.out.println(e);
-            System.out.println(encoderMissing);
-            return 0;
-        }
-    }
-
-    /**
-     * Get absolute value of the current motor velocity in rotations per minuite.
-     * 
-     * @return Absolute value of the current motor velocity in rotations per
-     *         minuite.
-     */
-    public double getAbsoluteVelocityRPM() {
-        try {
-            return Math.abs(falcon.getSelectedSensorVelocity() / kUnitsPerRev * 600.);
+            return getVelocityRPS() * 60;
         } catch (Exception e) {
             System.out.println(e);
             System.out.println(encoderMissing);
