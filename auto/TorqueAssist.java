@@ -23,6 +23,7 @@ public class TorqueAssist {
     private TorqueSequence sequence;
     private TorqueInput[] inputs;
     boolean done;
+    private boolean lastCondition;
 
     public TorqueAssist(TorqueSequence sequence) {
         this.sequence = sequence;
@@ -50,7 +51,6 @@ public class TorqueAssist {
         this.mode = mode;
     }
 
-
     public void requires(TorqueInput... inputs) {
         this.inputs = inputs;
     }
@@ -63,11 +63,14 @@ public class TorqueAssist {
             done = sequence.hasEnded();
         } else {
             done = false;
-            if (mode == AssistMode.RESET_SEQ)
-                sequence.reset();
-            else if (mode == AssistMode.RESET_BLOCK)
-                sequence.resetBlock();
+            if (lastCondition != condition) {
+                if (mode == AssistMode.RESET_SEQ)
+                    sequence.reset();
+                else if (mode == AssistMode.RESET_BLOCK)
+                    sequence.resetBlock();
+            }
         }
+        lastCondition = condition;
     }
 
     private void setRequired(boolean condition) {
