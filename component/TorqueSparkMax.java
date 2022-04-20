@@ -227,6 +227,10 @@ public class TorqueSparkMax extends TorqueMotor {
         }
     }
 
+    public double getTemperature() {
+        return sparkMax.getMotorTemperature();
+    }
+
     @Override
     public double getVelocity() {
         return sparkMaxEncoder.getVelocity() * sparkMaxEncoder.getVelocityConversionFactor();
