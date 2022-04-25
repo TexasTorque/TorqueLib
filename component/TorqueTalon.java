@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.texastorque.util.KPID;
@@ -29,13 +30,16 @@ public class TorqueTalon extends TorqueMotor {
 
     @Override
     public void addFollower(int port) {
-        talonFollowers.add(new WPI_TalonSRX(port));
+        WPI_TalonSRX srx = new WPI_TalonSRX(port);
+        srx.follow(talon);
+        talonFollowers.add(srx);
     } // add follower
 
     public void addFollower(int port, boolean invert) {
-        WPI_TalonSRX t = new WPI_TalonSRX(port);
-        t.setInverted(invert);
-        talonFollowers.add(t);
+        WPI_TalonSRX srx = new WPI_TalonSRX(port);
+        srx.setInverted(invert);
+        srx.follow(talon);
+        talonFollowers.add(srx);
 
     } // add follower
 
