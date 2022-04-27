@@ -3,11 +3,11 @@ package org.texastorque.torquelib.base;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
@@ -119,7 +119,7 @@ public abstract class TorqueIterative extends RobotBase {
 						testPeriodic();
 					}
 				} else if (isAutonomous()) {
-					if (DriverStation.getInstance().isEnabled() && !m_autoInitialized) {
+					if (DriverStation.isEnabled() && !m_autoInitialized) {
 
 						LiveWindow.setEnabled(false);
 						autoInit();
@@ -148,7 +148,7 @@ public abstract class TorqueIterative extends RobotBase {
 						teleopPeriodic();
 					}
 				}
-				m_ds.waitForData();
+				DriverStation.waitForData();
 			}
 		}
 	}
@@ -166,7 +166,7 @@ public abstract class TorqueIterative extends RobotBase {
 			if (isAutonomous() && m_autoInitialized) {
 				autoContinuous();
 				alwaysContinuous();
-			} else if (isOperatorControl() && m_teleopInitialized) {
+			} else if (isTeleop() && m_teleopInitialized) {
 				teleopContinuous();
 				alwaysContinuous();
 			} else if (isDisabled() && m_disabledInitialized) {
@@ -175,13 +175,16 @@ public abstract class TorqueIterative extends RobotBase {
 			} else if (isTest() && m_testInitialized) {
 				testContinuous();
 				alwaysContinuous();
+			} else if (isDisabled() && m_disabledInitialized) {
+				disabledContinuous();
+				alwaysContinuous();
 			}
 
 		}
 	}
 
 	private boolean nextPeriodReady() {
-		return m_ds.isNewControlData();
+		return DriverStation.isNewControlData();
 	}
 
 	/* ----------- Overridable continuous code ----------------- */

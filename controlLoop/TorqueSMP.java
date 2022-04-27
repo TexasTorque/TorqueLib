@@ -1,6 +1,8 @@
 package org.texastorque.torquelib.controlLoop;
 
-import static java.lang.Math.*;
+import static java.lang.Math.PI;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 /**
  * Created by Texas Torque (Matthew Webb)
@@ -23,9 +25,9 @@ public class TorqueSMP {
 	 * long as they are constant.
 	 *
 	 * @param mV
-	 *            Maximum velocity
+	 *           Maximum velocity
 	 * @param mA
-	 *            Maximum acceleration
+	 *           Maximum acceleration
 	 */
 	public TorqueSMP(double mV, double mA) {
 		maxV = mV;
@@ -41,7 +43,7 @@ public class TorqueSMP {
 	 * Generate the profile based a given distance.
 	 *
 	 * @param distance
-	 *            Distance
+	 *                 Distance
 	 */
 	public void generate(double distance) {
 		t1 = PI * maxV / (2.0 * maxA);

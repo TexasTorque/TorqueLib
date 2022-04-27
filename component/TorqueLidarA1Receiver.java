@@ -5,16 +5,17 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
-* This class provides an interface for receiving communication from the RPLidar A1
-* as described [here](https://github.com/TexasTorque/TorqueLidarA1).
-*
-* @author Jack
-* @apiNote was originally created during the 2021 season! 
-*/    
+ * This class provides an interface for receiving communication from the RPLidar
+ * A1
+ * as described [here](https://github.com/TexasTorque/TorqueLidarA1).
+ *
+ * @author Jack
+ * @apiNote was originally created during the 2021 season!
+ */
 public class TorqueLidarA1Receiver {
     private NetworkTableInstance NT_instance;
     private NetworkTable NT_table;
-    
+
     private NetworkTableEntry run;
     private NetworkTableEntry left;
     private NetworkTableEntry middle;
@@ -31,24 +32,24 @@ public class TorqueLidarA1Receiver {
     }
 
     /**
-    * Initiates a scan by setting run to true
-    */
+     * Initiates a scan by setting run to true
+     */
     public void startScan() {
         run.setBoolean(true);
     }
 
     /**
-    * Stops a scan by setting run to false
-    */
+     * Stops a scan by setting run to false
+     */
     public void stopScan() {
         run.setBoolean(false);
     }
 
     /**
-    * Toggles a scan by setting run to its opposite
-    *
-    * @return Boolean of the new run
-    */
+     * Toggles a scan by setting run to its opposite
+     *
+     * @return Boolean of the new run
+     */
     public boolean toggleScan() {
         boolean current = run.getBoolean(true); // This default is set to true, so the default operation is to stop
         run.setBoolean(!current);
@@ -56,42 +57,43 @@ public class TorqueLidarA1Receiver {
     }
 
     /**
-    * Returns if it found something under "left"
-    *
-    * If the request fails the default value returned is false!
-    * @return Boolean
-    */
+     * Returns if it found something under "left"
+     *
+     * If the request fails the default value returned is false!
+     * 
+     * @return Boolean
+     */
     public boolean foundLeft() {
         return left.getBoolean(false);
     }
 
     /**
-    * Returns if it found something under "middle"
-    *
-    * @apiNote If the request fails the default value returned is false!
-    * @return Boolean
-    */
+     * Returns if it found something under "middle"
+     *
+     * @apiNote If the request fails the default value returned is false!
+     * @return Boolean
+     */
     public boolean foundMiddle() {
         return middle.getBoolean(false);
     }
 
     /**
-    * Returns if it found something under "right"
-    * 
-    * @apiNote If the request fails the default value returned is false!
-    * @return Boolean
-    */
+     * Returns if it found something under "right"
+     * 
+     * @apiNote If the request fails the default value returned is false!
+     * @return Boolean
+     */
     public boolean foundRight() {
         return right.getBoolean(false);
     }
 
     /**
-    * Returns a length-3 boolean array of found indicies
-    *
-    * @return Boolean[]{left, middle, right}
-    */
+     * Returns a length-3 boolean array of found indicies
+     *
+     * @return Boolean[]{left, middle, right}
+     */
     public boolean[] foundArray() {
-        return new boolean[]{foundLeft(), foundMiddle(), foundRight()};
+        return new boolean[] { foundLeft(), foundMiddle(), foundRight() };
     }
 
 }

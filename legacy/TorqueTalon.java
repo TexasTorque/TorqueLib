@@ -4,13 +4,11 @@ import java.util.ArrayList;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.texastorque.torquelib.util.KPID;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 
 // I plan on doing a rewrite of (at least) this motor controller
 // Honestly might as well clean up TorqueLib and Utils... 
@@ -32,14 +30,17 @@ public class TorqueTalon extends TorqueMotor {
 
     @Override
     public void addFollower(int port) {
-        talonFollowers.add(new WPI_TalonSRX(port));
+        WPI_TalonSRX srx = new WPI_TalonSRX(port);
+        srx.follow(talon);
+        talonFollowers.add(srx);
     } // add follower
 
     public void addFollower(int port, boolean invert) {
-        WPI_TalonSRX t = new WPI_TalonSRX(port);
-        t.setInverted(invert);
-        talonFollowers.add(t);
-            
+        WPI_TalonSRX srx = new WPI_TalonSRX(port);
+        srx.setInverted(invert);
+        srx.follow(talon);
+        talonFollowers.add(srx);
+
     } // add follower
 
     public void setInverted(boolean set) {
@@ -61,8 +62,8 @@ public class TorqueTalon extends TorqueMotor {
         talon.set(ControlMode.PercentOutput, output);
         for (WPI_TalonSRX talonSRX : talonFollowers) {
             talonSRX.set(ControlMode.Follower, port);
-            //talonSRX.setInverted(invert);
-            SmartDashboard.putNumber("FollowerVelocity", output);
+            // talonSRX.setInverted(invert);
+            // SmartDashboard.putNumber("FollowerVelocity", output);
         } // takes care of followers
     } // generic set method
 
@@ -84,6 +85,10 @@ public class TorqueTalon extends TorqueMotor {
         talon.configPeakOutputForward(kPID.max());
         talon.configPeakOutputReverse(kPID.min());
     } // configure PID
+
+    public void zeroEncoder() {
+        talon.setSelectedSensorPosition(0);
+    }
 
     @Override
     public void updatePID(KPID kPID) {
@@ -123,4 +128,29 @@ public class TorqueTalon extends TorqueMotor {
         invert = !invert;
     } // invert follower - flips the direction of the follower from what it was
       // previously, default direction is same as leader
+
+    /**
+     * Set max amps supply
+     * 
+     * @param limit max amps
+     */
+    public void configureSupplyLimit(SupplyCurrentLimitConfiguration limit) {
+        ErrorCode e = talon.configSupplyCurrentLimit(limit);
+        if (e != ErrorCode.OK) {
+            System.out.println("Error configuring supply limit: " + e.name());
+        }
+    }
+
+    /**
+     * Set the voltage of the talon
+     * 
+     * @param outputVolts Volts to output [-12,12]
+     */
+    public void setVoltage(double outputVolts) {
+        talon.setVoltage(outputVolts);
+    }
+
+    public double getOutputCurrent() {
+        return talon.getStatorCurrent();
+    }
 } // Torque Talon

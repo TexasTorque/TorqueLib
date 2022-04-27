@@ -159,7 +159,7 @@ public class TorqueTMP {
 	 * Accelerate at maximum acceleration for the specified amount of time.
 	 *
 	 * @param dt
-	 *            The time to accelerate for.
+	 *           The time to accelerate for.
 	 */
 	private void accelerate(double dt) {
 		currentAcceleration = acceleration;
@@ -177,7 +177,7 @@ public class TorqueTMP {
 	 * Cruise for the specified amount of time.
 	 *
 	 * @param dt
-	 *            The time to cruise for.
+	 *           The time to cruise for.
 	 */
 	private void cruise(double dt) {
 		currentAcceleration = 0.0;
@@ -188,7 +188,7 @@ public class TorqueTMP {
 	 * Decelerate at -1 * maximum acceleration for the specified amount of time.
 	 *
 	 * @param dt
-	 *            The time to decelerate for.
+	 *           The time to decelerate for.
 	 */
 	private void decelerate(double dt) {
 		currentAcceleration = deceleration;

@@ -48,10 +48,12 @@ public class TorqueSlewLimiter {
         double dt = t - lastTime;
         double dx = val - lastVal;
 
-        if (Math.abs(val) - Math.abs(lastVal) >= 0) {
-            lastVal += Math.max(Math.min(dx, limitAsc * dt), -limitAsc * dt);
-        } else {
-            lastVal += Math.max(Math.min(dx, limitDesc * dt), -limitDesc * dt);
+        // ascending
+        if (Math.abs(val) > Math.abs(lastVal)) {
+            lastVal += Math.signum(dx) * Math.min(limitAsc * dt, Math.abs(dx));
+        } else { // descending
+            lastVal += Math.signum(dx) * Math.min(limitDesc * dt, Math.abs(dx));
+
         }
 
         lastTime = t;

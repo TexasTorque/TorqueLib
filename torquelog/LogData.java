@@ -26,5 +26,5 @@ public class LogData {
 		this.KEY = key;
 		this.P = p;
 	}
-	
+
 }
