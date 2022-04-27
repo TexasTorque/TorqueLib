@@ -2,17 +2,10 @@
 
 Code library created by and used within FRC 1477 Texas Torque.
 
-## Why did I fork
+## 2023 Refactor
 
-Basically the unorganization got to me...
-
-I want to make the following changes without breaking legacy code
-
-- Remove reliance on utils
-- Remove inconsistancy 
-- Fix formatting
-- Refactor and improve parts
-- Make the damn thing make sense
+This library, along with the Texas Torque project structure,
+is being overhauled for the 2023 season. These are breaking changes.
 
 ## Q/A
 
