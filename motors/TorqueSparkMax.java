@@ -74,12 +74,12 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
 
     @Override
     public double getPositionDegrees() {
-        return getPosition() / sparkMaxEncoder.getCountsPerRevolution() * 360.0 / 4.0 * 360.0;
+        return getPosition() / 360;
     }
 
     @Override
     public double getPositionRotations() {
-        return getPositionDegrees() / 360;
+        return getPosition
     }
 
     @Override
