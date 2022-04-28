@@ -7,12 +7,7 @@ package org.texastorque.torquelib.util;
  */
 public class KPID {
 
-    private double pGains;
-    private double iGains;
-    private double dGains;
-    private double fGains;
-    private double minOutput;
-    private double maxOutput;
+    private double pGains, iGains, dGains, fGains, minOutput, maxOutput, iZone;
 
     public KPID() {
         pGains = 0;
@@ -21,6 +16,7 @@ public class KPID {
         fGains = 0;
         minOutput = -1;
         maxOutput = 1;
+        iZone = 0;
     }
 
     public KPID(double pGains, double iGains, double dGains, double fGains, double minOutput, double maxOutput) {
@@ -30,6 +26,17 @@ public class KPID {
         this.fGains = fGains;
         this.minOutput = minOutput;
         this.maxOutput = maxOutput;
+        this.iZone = 0;
+    }
+
+    public KPID(double pGains, double iGains, double dGains, double fGains, double minOutput, double maxOutput, double iZone) {
+        this.pGains = pGains;
+        this.iGains = iGains;
+        this.dGains = dGains;
+        this.fGains = fGains;
+        this.minOutput = minOutput;
+        this.maxOutput = maxOutput;
+        this.iZone = iZone;
     }
 
     public void setP(double pGains) {
@@ -56,27 +63,35 @@ public class KPID {
         this.maxOutput = maxOutput;
     }
 
-    public double p() {
+    public void setIZone(double iZone) {
+        this.iZone = iZone;
+    }
+
+    public double getPGains() {
         return pGains;
     }
 
-    public double i() {
+    public double getIGains() {
         return iGains;
     }
 
-    public double d() {
+    public double getDGains() {
         return dGains;
     }
 
-    public double f() {
+    public double getFGains() {
         return fGains;
     }
 
-    public double min() {
+    public double getMin() {
         return minOutput;
     }
 
-    public double max() {
+    public double getMax() {
         return maxOutput;
+    }
+
+    public double getIZone() {
+        return iZone;
     }
 }
