@@ -14,4 +14,8 @@ public interface TorqueEncoderMotor {
     public double getVelocity();
     public double getVelocityRPS();
     public double getVelocityRPM();
+
+    public double getAcceleration();
+    public double getAccelerationRPS();
+    public double getAccelerationRPM();
 }

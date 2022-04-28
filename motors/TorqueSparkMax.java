@@ -30,7 +30,7 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
 
     private double encoderZero = 0;
 
-    public TorqueSparkMax(int port) {
+    public TorqueSparkMax(final int port) {
         super(port);
 
         this.lastVelocity = 0;
@@ -42,12 +42,12 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
     }
 
     @Override
-    public void addFollower(int port) {
+    public void addFollower(final int port) {
         sparkMaxFollowers.add(new CANSparkMax(port, MotorType.kBrushless));
     }
 
     @Override
-    public void configurePID(KPID kPID) {
+    public void configurePID(final KPID kPID) {
         pidController.setP(kPID.getPGains());
         pidController.setI(kPID.getIGains());
         pidController.setD(kPID.getDGains());
@@ -60,26 +60,71 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
     }
 
     @Override
-    public void setPercent(double percent) {
+    public void setPercent(final double percent) {
         sparkMax.set(percent);
-        for (CANSparkMax canSparkMax : sparkMaxFollowers) {
+        for (CANSparkMax canSparkMax : sparkMaxFollowers)
             canSparkMax.follow(sparkMax);
-        } 
+    }
+
+    // Setters implemented from TorquePIDMotor
+
+    @Override
+    public void setPosition(final double setpoint) {
+        setPositionRotations(setpoint / CLICKS_PER_ROTATION);
     }
 
     @Override
+    public void setPositionDegrees(final double setpoint) {
+        setPositionRotations(setpoint / 360);
+    }
+
+    @Override
+    public void setPositionRotations(final double setpoint) {
+        try {
+            pidController.setReference(setpoint, ControlType.kPosition);
+            for (CANSparkMax follower : sparkMaxFollowers)
+                follower.follow(sparkMax);
+        } catch (Exception e) {
+            System.out.printf("TorqueSparkMax port %d: You need to configure the PID", port);
+        }
+    }
+
+    @Override
+    public void setVelocity(final double setpoint) {
+        setPositionRotations(setpoint / CLICKS_PER_ROTATION); 
+    }
+
+    @Override
+    public void setVelocityRPS(final double setpoint) {
+        setPositionRotations(setpoint / 360); 
+    }
+
+    @Override
+    public void setVelocityRPM(final double setpoint) {
+        try {
+            pidController.setReference(setpoint, ControlType.kVelocity);
+            for (CANSparkMax follower : sparkMaxFollowers)
+                follower.follow(sparkMax);
+        } catch (Exception e) {
+            System.out.printf("TorqueSparkMax port %d: You need to configure the PID", port);
+        } 
+    }
+
+    // Getters implemented from TorqueEncoderMotor
+
+    @Override
     public double getPosition() {
-        return sparkMaxEncoder.getPosition() - encoderZero;
+        return getPosition() * CLICKS_PER_ROTATION;
     }
 
     @Override
     public double getPositionDegrees() {
-        return getPosition() / 360;
+        return getPosition() * 360;
     }
 
     @Override
     public double getPositionRotations() {
-        return getPosition
+        return sparkMaxEncoder.getPosition() - encoderZero;
     }
 
     @Override
@@ -89,7 +134,7 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
 
     @Override
     public double getVelocityRPS() {
-        return getVelocityRPM() * 60;
+        return getVelocityRPM() / 60;
     }
 
     @Override
@@ -98,40 +143,32 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
     }
 
     @Override
-    public double setPosition() {
-        // TODO Auto-generated method stub
-        return 0;
+    public double getAcceleration() {
+        return getAccelerationRPM() * CLICKS_PER_ROTATION;
     }
 
     @Override
-    public double setPositionDegrees() {
-        // TODO Auto-generated method stub
-        return 0;
+    public double getAccelerationRPS() {
+        return getAccelerationRPM() / 60; 
     }
 
     @Override
-    public double setPositionRotations() {
-        // TODO Auto-generated method stub
-        return 0;
+    public double getAccelerationRPM() {
+        final double currentVelocity = getVelocityRPM();
+        final long currentTime = System.currentTimeMillis();
+
+        final double acceleration = (currentVelocity - lastVelocity) / (currentTime - lastVelocityTime);
+
+        lastVelocity = currentVelocity;
+        lastVelocityTime = currentTime;
+
+        return acceleration;
     }
 
-    @Override
-    public double setVelocity() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
 
-    @Override
-    public double setVelocityRPS() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+  
 
-    @Override
-    public double setVelocityRPM() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+    
 
 
 }
