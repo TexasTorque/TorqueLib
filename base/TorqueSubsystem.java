@@ -19,4 +19,6 @@ public abstract class TorqueSubsystem {
     }
 
     public abstract void output();
+
+    public void smartDashboard() {}
 }

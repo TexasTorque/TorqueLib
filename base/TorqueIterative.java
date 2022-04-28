@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  *
  * CPU usage on the roboRio may be higher than when using the regular
  * IterativeRobot base class, but should not be a problem.
+ * 
+ * @apiNote This needs to be updated -justus
  *
  * @author TexasTorque
  */
