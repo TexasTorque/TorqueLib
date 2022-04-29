@@ -2,16 +2,10 @@ package org.texastorque.torquelib.motors;
 
 import java.util.ArrayList;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
-import com.revrobotics.SparkMaxAnalogSensor;
-import com.revrobotics.SparkMaxmotor;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import org.texastorque.torquelib.motors.base.TorqueEncoderMotor;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
@@ -19,7 +13,7 @@ import org.texastorque.torquelib.motors.base.TorquePIDMotor;
 import org.texastorque.torquelib.util.KPID;
 
 /**
- * The Texas Torque wrapper for the SparkMax motor controller.
+ * The Texas Torque wrapper for the Talon (SRX) motor controller.
  * 
  * @author Justus Languell
  * @author Jack Pittenger
@@ -33,10 +27,8 @@ public class TorqueTalon extends TorqueMotor implements TorquePIDMotor, TorqueEn
     private double lastVelocity;
     private long lastVelocityTime;
 
-    private double encoderZero = 0;
-
     /**
-     * Construct a new TorqueSparkMax motor.
+     * Construct a new TorqueTalon motor.
      * 
      * @param port The port (ID) of the motor.
      */
@@ -49,9 +41,9 @@ public class TorqueTalon extends TorqueMotor implements TorquePIDMotor, TorqueEn
     }
 
     /**
-     * Add a follower SparkMax.
+     * Add a follower Talon.
      * 
-     * @param port The port (ID) of the follower SparkMax.
+     * @param port The port (ID) of the follower Talon.
      */
     @Override
     public void addFollower(final int port) {
@@ -80,8 +72,7 @@ public class TorqueTalon extends TorqueMotor implements TorquePIDMotor, TorqueEn
         motor.config_kI(0, kPID.getIGains());
         motor.config_kD(0, kPID.getDGains());
         motor.config_kF(0, kPID.getFGains());
-        double iZone;
-        if ((iZone = kPID.getIZone()) > 0)
+        if (kPID.getIZone() > 0)
             motor.config_IntegralZone(0, kPID.getIZone());
         motor.configPeakOutputForward(kPID.getMax());
         motor.configPeakOutputReverse(kPID.getMin());
@@ -97,6 +88,213 @@ public class TorqueTalon extends TorqueMotor implements TorquePIDMotor, TorqueEn
         motor.set(ControlMode.PercentOutput, percent);
         for (WPI_TalonSRX follower : followers)
             follower.set(ControlMode.Follower, port);
+    }
+
+    /**
+     * Set the motor to output a certain voltage setpoint.
+     * 
+     * @param setpoint The voltage to output.
+     */
+    @Override
+    public void setVoltage(final double outputVolts) {
+        motor.setVoltage(outputVolts);
+        for (WPI_TalonSRX follower : followers)
+            follower.set(ControlMode.Follower, port);
+    }
+
+    // Setters implemented from TorquePIDMotor
+
+    /**
+     * Set the motor's position in encoder units.
+     * 
+     * @param setpoint The encoder units to set the motor to.
+     */
+    @Override
+    public void setPosition(final double setpoint) {
+        motor.set(ControlMode.Position, setpoint);
+        for (WPI_TalonSRX follower : followers)
+            follower.set(ControlMode.Follower, port);
+    }
+    
+    /**
+     * Set the motor's position in degrees.
+     * 
+     * @param setpoint The degrees to set the motor to.
+     */
+    @Override
+    public void setPositionDegrees(final double setpoint) {
+        setPositionRotations(setpoint / 360);
+    }
+
+    /**
+     * Set the motor's position in rotations.
+     * 
+     * @param setpoint The rotations to set the motor to.
+     */
+    @Override
+    public void setPositionRotations(final double setpoint) {
+        setPosition(setpoint * CLICKS_PER_ROTATION);
+    }
+
+    /**
+     * Set the motor's velocity in encoder units per second.
+     * 
+     * @param setpoint The encoder units per second to set the motor to.
+     */
+    @Override
+    public void setVelocity(final double setpoint) {
+        motor.set(ControlMode.Velocity, setpoint / 10);
+        for (WPI_TalonSRX follower : followers)
+            follower.set(ControlMode.Follower, port); 
+    }
+
+    /**
+     * Set the motor's velocity in RPS.
+     * 
+     * @param setpoint The RPS to set the motor to.
+     */
+    @Override
+    public void setVelocityRPS(final double setpoint) {
+        setVelocity(setpoint * CLICKS_PER_ROTATION);
+    }
+
+    /**
+     * Set the motor's velocity in RPM.
+     * 
+     * @param setpoint The RPM to set the motor to.
+     */
+    @Override
+    public void setVelocityRPM(final double setpoint) {
+        setVelocityRPS(setpoint / 60);
+    }
+
+    // Getters implemented from TorqueEncoderMotor
+
+    /**
+     * Get the position of the motor in encoder units.
+     *
+     * @return The position of the encoder in encoder units.
+     */
+    @Override
+    public double getPosition() {
+        return motor.getSelectedSensorPosition();
+    }
+    
+    /**
+     * Get the position of the motor in degrees.
+     *
+     * @return The position of the encoder in degrees.
+     */
+    @Override
+    public double getPositionDegrees() {
+        return getPositionRotations() * 360;
+    }
+
+    /**
+     * Get the position of the motor in rotations.
+     *
+     * @return The position of the encoder in rotations.
+     */
+    @Override
+    public double getPositionRotations() {
+        return getPosition() / CLICKS_PER_ROTATION;
+    }
+
+    /**
+     * Get the velocity of the motor in encoder units per second.
+     * 
+     * @return acceleration in encoder units per second.
+     */
+    @Override
+    public double getVelocity() {
+        return motor.getSelectedSensorVelocity() * 10;
+
+    }
+
+    /**
+     * Get the velocity of the motor in RPS.
+     * 
+     * @return acceleration in RPS.
+     */
+    @Override
+    public double getVelocityRPS() {
+        return getVelocity() / CLICKS_PER_ROTATION;
+
+    }
+
+    /**
+     * Get the velocity of the motor in RPM.
+     * 
+     * @return acceleration in RPM.
+     */
+    @Override
+    public double getVelocityRPM() {
+        return getVelocityRPS() * 60;
+    }
+
+     /**
+     * Get the acceleration of the motor in encoder units per second per second.
+     * 
+     * @return acceleration in encoder units per second per second.
+     */
+    @Override
+    public double getAcceleration() {
+        return getAccelerationRPS() * CLICKS_PER_ROTATION;
+    }
+
+      /**
+     * Get the acceleration of the motor in RPS/s.
+     * 
+     * @return acceleration in RPM/s.
+     */
+    @Override
+    public double getAccelerationRPS() {
+        return getAccelerationRPM() / 60; 
+    }
+
+    /**
+     * Get the acceleration of the motor in RPM/s.
+     * 
+     * @return acceleration in RPM/s.
+     */
+    @Override
+    public double getAccelerationRPM() {
+        final double currentVelocity = getVelocityRPM();
+        final long currentTime = System.currentTimeMillis();
+
+        final double acceleration = (currentVelocity - lastVelocity) / (currentTime - lastVelocityTime);
+
+        lastVelocity = currentVelocity;
+        lastVelocityTime = currentTime;
+
+        return acceleration;
+    }
+
+    /**
+     * Set max amps supply.
+     * 
+     * @param limit Max amps.
+     */
+    public void configureSupplyLimit(final SupplyCurrentLimitConfiguration limit) {
+        ErrorCode e = motor.configSupplyCurrentLimit(limit);
+        if (e != ErrorCode.OK)
+            System.out.printf("TorqueTalon port %d: Error configuring suply limit: %s\n", port, e.name());
+    }
+
+    /**
+     * Gets current used by the Talon.
+     * 
+     * @return The current used by the Talon.
+     */
+    public double getCurrent() {
+        return motor.getStatorCurrent();
+    }
+
+    /**
+     * Zero the encoder.
+     */
+    public void zeroEncoder() {
+        motor.setSelectedSensorPosition(0);
     }
 
 

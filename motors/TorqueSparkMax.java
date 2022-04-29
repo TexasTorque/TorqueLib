@@ -82,9 +82,8 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
         pidController.setI(kPID.getIGains());
         pidController.setD(kPID.getDGains());
         pidController.setFF(kPID.getFGains());
-        double iZone;
-        if ((iZone = kPID.getIZone()) > 0)
-            pidController.setIZone(iZone);
+        if (kPID.getIZone() > 0)
+            pidController.setIZone(kPID.getIZone());
         pidController.setOutputRange(kPID.getMin(), kPID.getMax());
     }
 
@@ -100,6 +99,17 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
             canSparkMax.follow(motor);
     }
 
+    /**
+     * Set the motor to output a certain voltage setpoint.
+     * 
+     * @param setpoint The voltage to output.
+     */
+    @Override
+    public void setVoltage(final double setpoint) {
+        motor.setVoltage(setpoint);
+        for (CANSparkMax follower : followers)
+            follower.follow(motor);
+    }
     // Setters implemented from TorquePIDMotor
 
     /**
@@ -134,7 +144,7 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
             for (CANSparkMax follower : followers)
                 follower.follow(motor);
         } catch (Exception e) {
-            System.out.printf("TorqueSparkMax port %d: You need to configure the PID", port);
+            System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
         }
     }
 
@@ -170,21 +180,8 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
             for (CANSparkMax follower : followers)
                 follower.follow(motor);
         } catch (Exception e) {
-            System.out.printf("TorqueSparkMax port %d: You need to configure the PID", port);
+            System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
         } 
-    }
-
-    // Extra set methods
-
-    /**
-     * Set the motor to output a certain voltage setpoint.
-     * 
-     * @param setpoint The voltage to output.
-     */
-    public void setVoltage(final double setpoint) {
-        motor.setVoltage(setpoint);
-        for (CANSparkMax follower : followers)
-            follower.follow(motor);
     }
 
     // Getters implemented from TorqueEncoderMotor
@@ -196,7 +193,7 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
      */
     @Override
     public double getPosition() {
-        return getPosition() * CLICKS_PER_ROTATION;
+        return getPositionRotations() * CLICKS_PER_ROTATION;
     }
     
     /**
@@ -206,7 +203,7 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
      */
     @Override
     public double getPositionDegrees() {
-        return getPosition() * 360;
+        return getPositionRotations() * 360;
     }
 
     /**
@@ -342,7 +339,6 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
         motor.burnFlash();
     }
 
-
     /** 
      * Configures an I-Zone on PID.
      * 
@@ -354,8 +350,6 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
     public void configureIZone(final double iZone) {
         pidController.setIZone(iZone);
     }
-
-
 
     // Smart motion functions.
 
