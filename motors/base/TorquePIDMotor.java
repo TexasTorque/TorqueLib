@@ -8,6 +8,8 @@ import org.texastorque.torquelib.util.KPID;
  * @author Justus Languell
  */
 public interface TorquePIDMotor {
+    public final double CLICKS_PER_ROTATION = 0;
+
     public void configurePID(final KPID kPID);
 
     public void setPosition(final double setpoint);

@@ -22,7 +22,7 @@ public class TorqueTalon extends TorqueMotor implements TorquePIDMotor, TorqueEn
     private WPI_TalonSRX motor;
     private ArrayList<WPI_TalonSRX> followers = new ArrayList<>();
 
-    private final double CLICKS_PER_ROTATION = 4096;
+    public final double CLICKS_PER_ROTATION = 4096;
 
     private double lastVelocity;
     private long lastVelocityTime;
@@ -275,10 +275,10 @@ public class TorqueTalon extends TorqueMotor implements TorquePIDMotor, TorqueEn
      * 
      * @param limit Max amps.
      */
-    public void configureSupplyLimit(final SupplyCurrentLimitConfiguration limit) {
+    public void setSupplyLimit(final SupplyCurrentLimitConfiguration limit) {
         ErrorCode e = motor.configSupplyCurrentLimit(limit);
         if (e != ErrorCode.OK)
-            System.out.printf("TorqueTalon port %d: Error configuring suply limit: %s\n", port, e.name());
+            System.out.printf("TorqueTalon port %d: Error configuring supply limit: %s\n", port, e.name());
     }
 
     /**

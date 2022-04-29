@@ -3,6 +3,7 @@ package org.texastorque.torquelib.motors;
 import java.util.ArrayList;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
@@ -14,6 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import org.texastorque.torquelib.motors.base.TorqueEncoderMotor;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
 import org.texastorque.torquelib.motors.base.TorquePIDMotor;
+import org.texastorque.torquelib.motors.util.TorqueSparkMaxMotionProfile;
 import org.texastorque.torquelib.util.KPID;
 
 /**
@@ -30,7 +32,7 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
     private SparkMaxAnalogSensor analogEncoder;
     private ArrayList<CANSparkMax> followers = new ArrayList<>();
 
-    private final double CLICKS_PER_ROTATION = encoder.getCountsPerRevolution();
+    public final double CLICKS_PER_ROTATION = encoder.getCountsPerRevolution();
 
     private double lastVelocity;
     private long lastVelocityTime;
@@ -351,7 +353,37 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
         pidController.setIZone(iZone);
     }
 
+    /**
+     * Set a supply limit for the SparkMax.
+     * 
+     * @param limit max amps.
+     */
+
+    public void setSupplyLimit(final int limit) {
+        REVLibError e = motor.setSmartCurrentLimit(limit);
+        if (e != REVLibError.kOk)
+            System.out.printf("TorqueSparkMax port %d: Error configuring supply limit: %s\n", port, e.name());
+
+
+    }
+
+
+
     // Smart motion functions.
+
+    /**
+     * Configure smart motion with a profile.
+     * 
+     * @param profile The smart motion profile.
+     * @param id The id for the PID, ussually 0.
+     */
+    public void configureSmartMotion(final TorqueSparkMaxMotionProfile profile, final int id) {
+        configureSmartMotion(profile.getMaxVelocity(), 
+                             profile.getMinVelocity(), 
+                             profile.getMaxAcceleration(), 
+                             profile.getAllowedError(), 
+                             id);
+    }
 
     /**
      * Configure needed variables for smart motion.
