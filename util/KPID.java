@@ -3,7 +3,7 @@ package org.texastorque.torquelib.util;
 /**
  * A class that represents a PIDF controller with a min and max output.
  * 
- * @author TexasTorque
+ * @author Texas Torque
  */
 public class KPID {
 

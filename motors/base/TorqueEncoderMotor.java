@@ -3,7 +3,7 @@ package org.texastorque.torquelib.motors.base;
 /**
  * Interface to include encoder feedback methods for motors.
  * 
- * @author Justus
+ * @author Justus Languell
  */
 public interface TorqueEncoderMotor {
 
