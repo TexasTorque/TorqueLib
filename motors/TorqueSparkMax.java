@@ -17,7 +17,6 @@ import org.texastorque.torquelib.motors.base.TorqueEncoderMotor;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
 import org.texastorque.torquelib.motors.base.TorquePIDMotor;
 import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
-import org.texastorque.torquelib.motors.util.TorqueSparkMaxMotionProfile;
 import org.texastorque.torquelib.util.KPID;
 
 /**
@@ -386,23 +385,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     }
 
-
-
     // Smart motion functions.
-
-    /**
-     * Configure smart motion with a profile.
-     * 
-     * @param profile The smart motion profile.
-     * @param id The id for the PID, ussually 0.
-     */
-    public void configureSmartMotion(final TorqueSparkMaxMotionProfile profile, final int id) {
-        configureSmartMotion(profile.getMaxVelocity(), 
-                             profile.getMinVelocity(), 
-                             profile.getMaxAcceleration(), 
-                             profile.getAllowedError(), 
-                             id);
-    }
 
     /**
      * Configure needed variables for smart motion.

@@ -152,7 +152,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      */
     @Override
     public SwerveModuleState getState() {
-        return new SwerveModuleState(encoderPerMinuteToMetersPerSecond(drive.getVelocity()), getRotation());
+        return new SwerveModuleState(encoderPerMinuteToMetersPerSecond(drive.getVelocityRPM()), getRotation());
     }
 
     /**
