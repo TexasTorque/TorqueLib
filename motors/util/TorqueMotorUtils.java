@@ -8,7 +8,7 @@ import org.texastorque.torquelib.motors.base.TorqueEncoderMotor;
  * @author Justus Languell
  * @author Jack Pittenger
  */
-public class TorqueMotorUtils {
+public final class TorqueMotorUtils {
 
     private TorqueMotorUtils() {}
 

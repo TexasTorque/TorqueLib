@@ -5,7 +5,8 @@ package org.texastorque.torquelib.motors.util;
  * 
  * @author Justus Languell
  */
-public class TorqueSparkMaxMotionProfile {
+@Deprecated
+public final class TorqueSparkMaxMotionProfile {
     private final double maxVelocity, minVelocity, maxAcceleration, allowedError;
 
     public TorqueSparkMaxMotionProfile(final double maxVelocity, 

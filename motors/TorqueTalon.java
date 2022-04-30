@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import org.texastorque.torquelib.motors.base.TorqueEncoderMotor;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
 import org.texastorque.torquelib.motors.base.TorquePIDMotor;
+import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
 import org.texastorque.torquelib.util.KPID;
 
 /**
@@ -18,7 +19,7 @@ import org.texastorque.torquelib.util.KPID;
  * @author Justus Languell
  * @author Jack Pittenger
  */
-public class TorqueTalon extends TorqueMotor implements TorquePIDMotor, TorqueEncoderMotor {
+public final class TorqueTalon extends TorqueMotor implements TorqueSmartMotor {
     private WPI_TalonSRX motor;
     private ArrayList<WPI_TalonSRX> followers = new ArrayList<>();
 

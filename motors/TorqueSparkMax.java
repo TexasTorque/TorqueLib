@@ -11,10 +11,12 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
 import org.texastorque.torquelib.motors.base.TorqueEncoderMotor;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
 import org.texastorque.torquelib.motors.base.TorquePIDMotor;
+import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
 import org.texastorque.torquelib.motors.util.TorqueSparkMaxMotionProfile;
 import org.texastorque.torquelib.util.KPID;
 
@@ -24,7 +26,7 @@ import org.texastorque.torquelib.util.KPID;
  * @author Justus Languell
  * @author Jack Pittenger
  */
-public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, TorqueEncoderMotor {
+public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMotor {
     private CANSparkMax motor;
     private RelativeEncoder encoder;
     private SparkMaxAlternateEncoder alternateEncoder;
@@ -184,6 +186,23 @@ public class TorqueSparkMax extends TorqueMotor implements TorquePIDMotor, Torqu
         } catch (Exception e) {
             System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
         } 
+    }
+
+    /**
+     * Set velocity using feed forwarrd and smart motion profile... i think?
+     * 
+     * @param setpoint The velocity to set the motor to.
+     * @param feedforward The feed forward to set the motor to.
+     * @param units The feed forward units.
+     */
+    public void setFeedForwardSmartVelocity(final double setpoint, final double feedforward, final ArbFFUnits units) {
+        try {
+            pidController.setReference(setpoint, ControlType.kSmartVelocity, 0, feedforward, units);
+            for (CANSparkMax follower : followers) 
+                follower.follow(motor);
+        } catch (Exception e) {
+            System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
+        }
     }
 
     // Getters implemented from TorqueEncoderMotor

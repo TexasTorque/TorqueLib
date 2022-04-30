@@ -13,6 +13,7 @@ public abstract class TorqueMotor {
     }
 
     public abstract void setPercent(final double percent);
+    public abstract void setVoltage(final double percent);
 
     public abstract void addFollower(final int port);
 
