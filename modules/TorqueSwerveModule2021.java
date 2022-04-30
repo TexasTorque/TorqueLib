@@ -29,50 +29,10 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     private final TorqueSparkMax drive;
     private final TorqueTalon rotate;
 
-    private double lastSpeed = 0, lastTime = Timer.getFPGATimestamp(), maxVelocity = 4;
+    private double lastSpeed = 0, lastTime = Timer.getFPGATimestamp(), maxVelocity;
     private final double driveGearing, wheelRadiusMeters;
 
-    public final static KPID DEFAULT_DRIVE_PID = new KPID(.00048464, 0, 0, 0, -1, 1, .2);
-    public final static SimpleMotorFeedforward DEFAULT_DRIVE_FEED_FORWARD = new SimpleMotorFeedforward(.27024, 2.4076, .5153);
-    public final static KPID DEFAULT_ROTATE_PID = new KPID(.3, 0, 0, 0, -1, 1);
-
     private final SimpleMotorFeedforward driveFeedForward;
-
-    /**
-     * Construct a new TorqueSwerveModule2021.
-     * 
-     * @param id                The id of the swerve module.
-     * @param drivePort         The port (can id) of the drive motor.
-     * @param rotatePort        The port (can id) of the rotation motor.
-     * @param driveGearing      The drive motor gearing.
-     * @param wheelRadiusMeters The radius of the wheel in meters.
-     */
-    public TorqueSwerveModule2021(final int id, final int drivePort, final int rotatePort, 
-            final double driveGearing, final double wheelRadiusMeters) {
-        super(id);
-
-        drive = new TorqueSparkMax(drivePort);
-        drive.configurePID(DEFAULT_DRIVE_PID);
-
-        drive.configureSmartMotion(
-                metersPerSecondToEncoderPerMinute(maxVelocity), 
-                metersPerSecondToEncoderPerMinute(.1),
-                metersPerSecondToEncoderPerMinute(2), 
-                metersPerSecondToEncoderPerMinute(.1), 
-                0);
-
-        drive.setSupplyLimit(40);
-        drive.burnFlash();
-
-        rotate = new TorqueTalon(rotatePort);
-        rotate.setSupplyLimit(new SupplyCurrentLimitConfiguration(true, 5, 10, .03));
-        rotate.configurePID(DEFAULT_ROTATE_PID);
-        rotate.zeroEncoder();
-
-        this.driveGearing = driveGearing;
-        this.wheelRadiusMeters = wheelRadiusMeters;
-        this.driveFeedForward = DEFAULT_DRIVE_FEED_FORWARD;
-    }
 
    /**
      * Construct a new TorqueSwerveModule2021.
@@ -131,7 +91,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
                 - rotate.getPosition(), rotate.CLICKS_PER_ROTATION / 2.) + rotate.getPosition());
 
         if (DriverStation.isTeleop()) {
-            drive.setPercent(-state.speedMetersPerSecond / maxVelocity); // HAHA, WTF IS THIS!
+            drive.setPercent(-state.speedMetersPerSecond / maxVelocity);
             return;
         }
 

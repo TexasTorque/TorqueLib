@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.Joystick;
  * A class that reads input from either a Logitech or Xbox controller.
  *
  * @author TexasTorque
+ * 
+ * @apiNote Needs proper update / replacement.
  */
 public final class GenericController extends Joystick {
     public static final int TYPE_LOGITECH = 1;

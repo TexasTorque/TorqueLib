@@ -13,6 +13,7 @@ import edu.wpi.first.util.WPIUtilJNI;
  * A modified form of the WPILIBJ SwerveOddometry class.
  * 
  * @author Jack Pittenger
+ * @author WPILib contributors 
  */
 public class TorqueSwerveOdometry {
 
