@@ -7,6 +7,10 @@ package org.texastorque.torquelib.base;
  * @author Justus
  */
 public abstract class TorqueSubsystem {
+
+    public interface TorqueSubsystemState {
+    }
+
     public abstract void initTeleop();
     public abstract void updateTeleop();
 

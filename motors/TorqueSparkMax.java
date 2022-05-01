@@ -113,6 +113,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         for (CANSparkMax follower : followers)
             follower.follow(motor);
     }
+
     // Setters implemented from TorquePIDMotor
 
     /**
@@ -350,6 +351,17 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     public double getCurrent() {
         return motor.getOutputCurrent();
+    }
+
+    /**
+     * Set the motor to output a certain current setpoint.
+     * 
+     * @param setpoint The current to output.
+     */
+    public void setCurrent(final double setpoint) {
+        pidController.setReference(setpoint, ControlType.kCurrent);
+        for (CANSparkMax follower : followers)
+            follower.follow(motor);
     }
 
     /**
