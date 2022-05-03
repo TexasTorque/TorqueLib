@@ -3,7 +3,7 @@ package org.texastorque.torquelib.motors.util;
 import org.texastorque.torquelib.motors.base.TorqueEncoderMotor;
 
 /**
- * A staticc class of useful motor methods.
+ * A static class of useful motor methods.
  * 
  * @author Justus Languell
  * @author Jack Pittenger

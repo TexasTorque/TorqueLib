@@ -7,7 +7,7 @@ package org.texastorque.torquelib.util;
  * 
  * @apiNote Needs proper update / replacement.
  */
-public class KPID {
+public final class KPID {
 
     private double pGains, iGains, dGains, fGains, minOutput, maxOutput, iZone;
 

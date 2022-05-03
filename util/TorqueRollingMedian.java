@@ -12,7 +12,7 @@ import java.util.Queue;
  * @author Jack Pittenger
  * @author Justus Languell
  */
-public class TorqueRollingMedian {
+public final class TorqueRollingMedian {
     private final int window;
     private final Queue<Double> med;
 

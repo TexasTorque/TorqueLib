@@ -15,7 +15,7 @@ import edu.wpi.first.util.WPIUtilJNI;
  * @author Jack Pittenger
  * @author WPILib contributors 
  */
-public class TorqueSwerveOdometry {
+public final class TorqueSwerveOdometry {
 
     private final SwerveDriveKinematics m_kinematics;
     private Pose2d m_poseMeters;

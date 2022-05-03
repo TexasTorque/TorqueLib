@@ -5,7 +5,7 @@ package org.texastorque.torquelib.util;
  * 
  * @author Jack Pittenger
  */
-public class TorqueClick {
+public final class TorqueClick {
     private boolean lastValue;
 
     public TorqueClick() {

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.SPI;
  * @author Justus Languell
  * @author Jack Pittenger
  */
-public class TorqueNavXGyro extends AHRS {
+public final class TorqueNavXGyro extends AHRS {
     private static volatile TorqueNavXGyro instance; 
 
     private double angleOffset = 0;
