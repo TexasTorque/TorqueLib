@@ -297,11 +297,4 @@ public final class TorqueTalon extends TorqueMotor implements TorqueSmartMotor {
     public void zeroEncoder() {
         motor.setSelectedSensorPosition(0);
     }
-
-
-
-    
-
-
-
 }

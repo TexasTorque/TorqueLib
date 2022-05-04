@@ -33,7 +33,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     private SparkMaxAnalogSensor analogEncoder;
     private ArrayList<CANSparkMax> followers = new ArrayList<>();
 
-    public final double CLICKS_PER_ROTATION = encoder.getCountsPerRevolution();
+    public final double CLICKS_PER_ROTATION;
 
     private double lastVelocity;
     private long lastVelocityTime;
@@ -54,6 +54,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         encoder = motor.getEncoder();
         analogEncoder = motor.getAnalog(SparkMaxAnalogSensor.Mode.kAbsolute);
         pidController = motor.getPIDController();
+        CLICKS_PER_ROTATION = encoder.getCountsPerRevolution();
     }
 
     /**

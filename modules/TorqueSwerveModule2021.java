@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * A representation of the 2021 Texas Torque custom swervedrive module.
@@ -57,12 +58,12 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
 
         drive = new TorqueSparkMax(drivePort);
         drive.configurePID(drivePID);
-        drive.configureSmartMotion(
-                metersPerSecondToEncoderPerMinute(this.maxVelocity = maxVelocity), 
-                metersPerSecondToEncoderPerMinute(.1),
-                metersPerSecondToEncoderPerMinute(maxAcceleration), 
-                metersPerSecondToEncoderPerMinute(.1), 
-                0);
+        // drive.configureSmartMotion(
+        //         metersPerSecondToEncoderPerMinute(this.maxVelocity = maxVelocity), 
+        //         metersPerSecondToEncoderPerMinute(.1),
+        //         metersPerSecondToEncoderPerMinute(maxAcceleration), 
+        //         metersPerSecondToEncoderPerMinute(.1), 
+        //         0);
 
         drive.setSupplyLimit(40);
         drive.burnFlash();
@@ -90,8 +91,16 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         rotate.setPosition(Math.IEEEremainder((state.angle.getDegrees() * rotate.CLICKS_PER_ROTATION / 360.) 
                 - rotate.getPosition(), rotate.CLICKS_PER_ROTATION / 2.) + rotate.getPosition());
 
+        if (id == 0) {
+
+            SmartDashboard.putNumber("Req", state.angle.getDegrees());
+            SmartDashboard.putNumber("Req", rotate.getPosition());
+        }
+
+
+
         if (DriverStation.isTeleop()) {
-            drive.setPercent(-state.speedMetersPerSecond / maxVelocity);
+            // drive.setPercent(-state.speedMetersPerSecond / maxVelocity);
             return;
         }
 
