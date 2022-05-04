@@ -88,13 +88,17 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     public void setDesiredState(SwerveModuleState state) {
         state = SwerveModuleState.optimize(state, getRotation());
 
-        rotate.setPosition(Math.IEEEremainder((state.angle.getDegrees() * rotate.CLICKS_PER_ROTATION / 360.) 
-                - rotate.getPosition(), rotate.CLICKS_PER_ROTATION / 2.) + rotate.getPosition());
+        final double requestedEncoderUnits = (state.angle.getDegrees() * rotate.CLICKS_PER_ROTATION / 360.);
+        final double adjustedEncoderUnits = Math.IEEEremainder(requestedEncoderUnits - rotate.getPosition(), rotate.CLICKS_PER_ROTATION / 2.)
+                + rotate.getPosition();
+
+        rotate.setPosition(adjustedEncoderUnits);
 
         if (id == 0) {
-
-            SmartDashboard.putNumber("Req", state.angle.getDegrees());
-            SmartDashboard.putNumber("Req", rotate.getPosition());
+            SmartDashboard.putNumber("ReqDeg", state.angle.getDegrees());
+            SmartDashboard.putNumber("ReqEnc", state.angle.getDegrees());
+            SmartDashboard.putNumber("RealEnc", rotate.getPosition());
+            SmartDashboard.putNumber("RealDeg", getRotationDegrees());
         }
 
 
