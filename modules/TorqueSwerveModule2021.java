@@ -76,7 +76,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         this.driveGearing = driveGearing;
         this.wheelRadiusMeters = wheelRadiusMeters;
         this.driveFeedForward = driveFeedForward;
-
+        this.maxVelocity = maxVelocity;
     }
 
     /**
@@ -88,23 +88,22 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     public void setDesiredState(SwerveModuleState state) {
         state = SwerveModuleState.optimize(state, getRotation());
 
-        final double requestedEncoderUnits = (state.angle.getDegrees() * rotate.CLICKS_PER_ROTATION / 360.);
-        final double adjustedEncoderUnits = Math.IEEEremainder(requestedEncoderUnits - rotate.getPosition(), rotate.CLICKS_PER_ROTATION / 2.)
+        final double requestedEncoderUnits = (state.angle.getDegrees() * rotate.CLICKS_PER_ROTATION * 2 / 360.);
+        final double adjustedEncoderUnits = Math.IEEEremainder(requestedEncoderUnits - rotate.getPosition(), rotate.CLICKS_PER_ROTATION * 2 / 2.)
                 + rotate.getPosition();
 
         rotate.setPosition(adjustedEncoderUnits);
 
         if (id == 0) {
             SmartDashboard.putNumber("ReqDeg", state.angle.getDegrees());
-            SmartDashboard.putNumber("ReqEnc", state.angle.getDegrees());
+            SmartDashboard.putNumber("ReqEnc",  requestedEncoderUnits);
             SmartDashboard.putNumber("RealEnc", rotate.getPosition());
             SmartDashboard.putNumber("RealDeg", getRotationDegrees());
         }
 
-
-
         if (DriverStation.isTeleop()) {
-            // drive.setPercent(-state.speedMetersPerSecond / maxVelocity);
+            final double setpoint = Math.min(-state.speedMetersPerSecond / maxVelocity, .75);
+            drive.setPercent(setpoint);
             return;
         }
 
@@ -148,8 +147,8 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      */
     private double getRotationDegrees() {
         double val = rotate.getPosition();
-        if (val % rotate.CLICKS_PER_ROTATION == 0) val += .0001;
-        double ret = val % rotate.CLICKS_PER_ROTATION * 180 / (rotate.CLICKS_PER_ROTATION);
+        if (val % rotate.CLICKS_PER_ROTATION== 0) val += .0001;
+        double ret = val % rotate.CLICKS_PER_ROTATION* 180 / (rotate.CLICKS_PER_ROTATION);
         if (Math.signum(val) == -1 && Math.floor(val / rotate.CLICKS_PER_ROTATION) % 2 == -0)
                 ret += 180;
         else if (Math.signum(val) == 1 && Math.floor(val / rotate.CLICKS_PER_ROTATION) % 2 == 1)
