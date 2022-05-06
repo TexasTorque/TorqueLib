@@ -1,7 +1,5 @@
 package org.texastorque.torquelib.modules.base;
 
-import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 

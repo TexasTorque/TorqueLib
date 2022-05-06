@@ -1,15 +1,31 @@
 package org.texastorque.torquelib.modules.test;
 
+import org.texastorque.torquelib.modules.TorqueSwerveModule2021;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+
 public final class SwerveModuleTests {
+
+    private static void printSMS(final SwerveModuleState[] states) {
+        for (final SwerveModuleState state : states)
+            System.out.println("> " + state.speedMetersPerSecond);
+    }
+
     public static void main(final String[] args) {
-        final double CLICKS_PER_ROTATION = 4096;
+        Rotation2d z = new Rotation2d(0);
 
-        final double set = 90;
-        final double pos = 100;
+        SwerveModuleState[] states = {
+            new SwerveModuleState(4.2, z),
+            new SwerveModuleState(3.9, z),
+            new SwerveModuleState(3.7, z),
+            new SwerveModuleState(3.8, z),
+        };
 
-        final double r = Math.IEEEremainder((set * CLICKS_PER_ROTATION / 360.) 
-                - pos, CLICKS_PER_ROTATION / 2.) + pos;
-        
-        System.out.println(r);
+        printSMS(states);
+
+        TorqueSwerveModule2021.equalizedDriveRatio(states, 4);
+
+        printSMS(states);
     } 
 }

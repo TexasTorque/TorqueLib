@@ -88,8 +88,8 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     public void setDesiredState(SwerveModuleState state) {
         state = SwerveModuleState.optimize(state, getRotation());
 
-        final double requestedEncoderUnits = (state.angle.getDegrees() * rotate.CLICKS_PER_ROTATION * 2 / 360.);
-        final double adjustedEncoderUnits = Math.IEEEremainder(requestedEncoderUnits - rotate.getPosition(), rotate.CLICKS_PER_ROTATION * 2 / 2.)
+        final double requestedEncoderUnits = (state.angle.getDegrees() * rotate.CLICKS_PER_ROTATION * 2 / 360);
+        final double adjustedEncoderUnits = Math.IEEEremainder(requestedEncoderUnits - rotate.getPosition(), rotate.CLICKS_PER_ROTATION)
                 + rotate.getPosition();
 
         rotate.setPosition(adjustedEncoderUnits);
@@ -102,7 +102,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         }
 
         if (DriverStation.isTeleop()) {
-            final double setpoint = Math.min(-state.speedMetersPerSecond / maxVelocity, .75);
+            final double setpoint = Math.min(-state.speedMetersPerSecond / maxVelocity, 1.);
             drive.setPercent(setpoint);
             return;
         }
@@ -178,6 +178,21 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     public double encoderPerMinuteToMetersPerSecond(double encodersPerMinute) {
             return encodersPerMinute * (1. / 60.) * (2 * Math.PI * wheelRadiusMeters / 1.)
                             * (driveGearing / 1.);
+    }
+
+    /**
+     * Equalizes drive speeds to never exceed full power on the Neo.
+     * 
+     * @param states The swerve module states.
+     * @param max Maximum translational speed.
+     */
+    public static void equalizedDriveRatio(SwerveModuleState[] states, final double max) {
+        double top = 0, buff;
+        for (final SwerveModuleState state : states)
+            if ((buff = (state.speedMetersPerSecond / max)) > top)
+                top = buff;
+        for (SwerveModuleState state : states)
+            state.speedMetersPerSecond /= top;
     }
 
 }
