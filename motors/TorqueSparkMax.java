@@ -68,10 +68,23 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     }
 
     /**
+     * Add a follower SparkMax and optionally invert.
+     * 
+     * @param port The port (ID) of the follower SparkMax.
+     */
+    @Override
+    public void addFollower(final int port, final boolean invert) {
+        CANSparkMax follower = new CANSparkMax(port, MotorType.kBrushless);
+        follower.setInverted(invert);
+        followers.add(follower);
+    }
+
+    /**
      * Sets the inversion status of the lead motor.
      * 
      * @param inverted To invert or not to invert.
      */
+    @Override
     public void invert(final boolean invert) {
         motor.setInverted(invert);
     }

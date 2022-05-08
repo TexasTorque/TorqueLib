@@ -35,6 +35,8 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
 
     private final SimpleMotorFeedforward driveFeedForward;
 
+    private boolean logging = false;
+
    /**
      * Construct a new TorqueSwerveModule2021.
      * 
@@ -95,14 +97,16 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         rotate.setPosition(adjustedEncoderUnits);
 
         if (id == 0) {
-            SmartDashboard.putNumber("ReqDeg", state.angle.getDegrees());
-            SmartDashboard.putNumber("ReqEnc",  requestedEncoderUnits);
-            SmartDashboard.putNumber("RealEnc", rotate.getPosition());
-            SmartDashboard.putNumber("RealDeg", getRotationDegrees());
+            putNumber("ReqDeg", state.angle.getDegrees());
+            putNumber("ReqEnc",  requestedEncoderUnits);
+            putNumber("RealEnc", rotate.getPosition());
+            putNumber("RealDeg", getRotationDegrees());
         }
 
         if (DriverStation.isTeleop()) {
             final double setpoint = Math.min(-state.speedMetersPerSecond / maxVelocity, 1.);
+            putNumber("ReqDrive", -state.speedMetersPerSecond);
+            putNumber("PwrDrive", setpoint);
             drive.setPercent(setpoint);
             return;
         }
@@ -191,8 +195,29 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         for (final SwerveModuleState state : states)
             if ((buff = (state.speedMetersPerSecond / max)) > top)
                 top = buff;
-        for (SwerveModuleState state : states)
-            state.speedMetersPerSecond /= top;
+        if (top != 0)
+            for (SwerveModuleState state : states)
+                state.speedMetersPerSecond /= top;
+    }
+
+    /**
+     * Set the logging status of the module.
+     * 
+     * @param logging To log or not to log.
+     */
+    public void setLogging(final boolean logging) {
+        this.logging = logging;
+    }
+
+    /**
+     * Put number if this module is logging.
+     * 
+     * @param key The key to smart dashboard.
+     * @param value The value to log.
+     */
+    private void putNumber(final String key, final double value) {
+        if (logging)
+            SmartDashboard.putNumber(String.format("%d %s", id, key), value);
     }
 
 }
