@@ -1,18 +1,17 @@
 package org.texastorque.torquelib.auto;
 
-import java.util.HashMap;
-
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.HashMap;
 
 /**
  * AutoManager base class. Handles backend methods
  * and containers.
- * 
+ *
  * Part of the Texas Torque Autonomous Framework.
- * 
+ *
  * @author Justus Languell
  * @author Jack Pittenger
  */
@@ -37,7 +36,7 @@ public abstract class TorqueAutoManager {
     /**
      * This is where we add sequenes
      */
-    protected abstract void init(); 
+    protected abstract void init();
 
     protected final void addSequence(String name, TorqueSequence seq) {
         autoSequences.put(name, seq);
@@ -59,8 +58,11 @@ public abstract class TorqueAutoManager {
     }
 
     public final void chooseCurrentSequence() {
-        String autoChoice = NetworkTableInstance.getDefault().getTable("SmartDashboard").getSubTable(autoSelectorKey)
-                .getEntry("selected").getString("N/A");
+        String autoChoice = NetworkTableInstance.getDefault()
+                                    .getTable("SmartDashboard")
+                                    .getSubTable(autoSelectorKey)
+                                    .getEntry("selected")
+                                    .getString("N/A");
 
         if (autoSequences.containsKey(autoChoice)) {
             System.out.println("Switching to auto: " + autoChoice);
@@ -82,19 +84,14 @@ public abstract class TorqueAutoManager {
     /**
      * Send sequence list to SmartDashboard
      */
-    public final void displayChoices() {
-        SmartDashboard.putData(autoSelectorKey, autoSelector);
-    }
+    public final void displayChoices() { SmartDashboard.putData(autoSelectorKey, autoSelector); }
 
     public final void resetCurrentSequence() {
-        if (currentSequence != null)
-            currentSequence.reset();
+        if (currentSequence != null) currentSequence.reset();
     }
 
     /**
      * Return the state variable that shows whether the sequence is ended or not
      */
-    public final boolean getSequenceEnded() {
-        return sequenceEnded;
-    }
+    public final boolean getSequenceEnded() { return sequenceEnded; }
 }

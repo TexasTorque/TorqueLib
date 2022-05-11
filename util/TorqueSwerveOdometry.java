@@ -11,10 +11,10 @@ import edu.wpi.first.util.WPIUtilJNI;
 
 /**
  * A modified form of the WPILIBJ SwerveOddometry class.
- * 
+ *
  * @author Jack Pittenger
- * @author WPILib contributors 
- * 
+ * @author WPILib contributors
+ *
  * @deprecated Being replaced by PoseEstimator.
  */
 @Deprecated
@@ -34,8 +34,7 @@ public final class TorqueSwerveOdometry {
      * @param gyroAngle   The angle reported by the gyroscope.
      * @param initialPose The starting position of the robot on the field.
      */
-    public TorqueSwerveOdometry(SwerveDriveKinematics kinematics,
-            Rotation2d gyroAngle, Pose2d initialPose) {
+    public TorqueSwerveOdometry(SwerveDriveKinematics kinematics, Rotation2d gyroAngle, Pose2d initialPose) {
         m_kinematics = kinematics;
         m_poseMeters = initialPose;
         m_gyroOffset = m_poseMeters.getRotation().minus(gyroAngle);
@@ -50,8 +49,7 @@ public final class TorqueSwerveOdometry {
      * @param kinematics The swerve drive kinematics for your drivetrain.
      * @param gyroAngle  The angle reported by the gyroscope.
      */
-    public TorqueSwerveOdometry(SwerveDriveKinematics kinematics,
-            Rotation2d gyroAngle) {
+    public TorqueSwerveOdometry(SwerveDriveKinematics kinematics, Rotation2d gyroAngle) {
         this(kinematics, gyroAngle, new Pose2d());
     }
 
@@ -76,9 +74,7 @@ public final class TorqueSwerveOdometry {
      *
      * @return The pose of the robot (x and y are in meters).
      */
-    public Pose2d getPoseMeters() {
-        return m_poseMeters;
-    }
+    public Pose2d getPoseMeters() { return m_poseMeters; }
 
     /**
      * Updates the robot's position on the field using forward kinematics and
@@ -95,21 +91,16 @@ public final class TorqueSwerveOdometry {
      *                           you instantiated your SwerveDriveKinematics.
      * @return The new pose of the robot.
      */
-    public Pose2d updateWithTime(double currentTimeSeconds,
-            Rotation2d gyroAngle,
-            SwerveModuleState... moduleStates) {
-        double period = m_prevTimeSeconds >= 0
-                ? currentTimeSeconds - m_prevTimeSeconds
-                : 0.0;
+    public Pose2d updateWithTime(double currentTimeSeconds, Rotation2d gyroAngle, SwerveModuleState... moduleStates) {
+        double period = m_prevTimeSeconds >= 0 ? currentTimeSeconds - m_prevTimeSeconds : 0.0;
         m_prevTimeSeconds = currentTimeSeconds;
 
         var angle = gyroAngle.plus(m_gyroOffset);
 
         var chassisState = m_kinematics.toChassisSpeeds(moduleStates);
-        var newPose = m_poseMeters.exp(
-                new Twist2d(chassisState.vxMetersPerSecond * period,
-                        -chassisState.vyMetersPerSecond * period,
-                        angle.minus(m_previousAngle).getRadians()));
+        var newPose = m_poseMeters.exp(new Twist2d(chassisState.vxMetersPerSecond * period,
+                                                   -chassisState.vyMetersPerSecond * period,
+                                                   angle.minus(m_previousAngle).getRadians()));
 
         m_previousAngle = angle;
         m_poseMeters = new Pose2d(newPose.getTranslation(), angle);
@@ -132,9 +123,7 @@ public final class TorqueSwerveOdometry {
      *                     instantiated your SwerveDriveKinematics.
      * @return The new pose of the robot.
      */
-    public Pose2d update(Rotation2d gyroAngle,
-            SwerveModuleState... moduleStates) {
-        return updateWithTime(WPIUtilJNI.now() * 1.0e-6, gyroAngle,
-                moduleStates);
+    public Pose2d update(Rotation2d gyroAngle, SwerveModuleState... moduleStates) {
+        return updateWithTime(WPIUtilJNI.now() * 1.0e-6, gyroAngle, moduleStates);
     }
 }

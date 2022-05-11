@@ -1,18 +1,16 @@
 package org.texastorque.torquelib.motors;
 
-import java.util.ArrayList;
-
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
-
+import java.util.ArrayList;
 import org.texastorque.torquelib.motors.base.TorqueEncoderMotor;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
 import org.texastorque.torquelib.motors.base.TorquePIDMotor;
@@ -21,7 +19,7 @@ import org.texastorque.torquelib.util.KPID;
 
 /**
  * The Texas Torque wrapper for the SparkMax motor controller.
- * 
+ *
  * @author Justus Languell
  * @author Jack Pittenger
  */
@@ -42,7 +40,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Construct a new TorqueSparkMax motor.
-     * 
+     *
      * @param port The port (ID) of the motor.
      */
     public TorqueSparkMax(final int port) {
@@ -59,7 +57,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Add a follower SparkMax.
-     * 
+     *
      * @param port The port (ID) of the follower SparkMax.
      */
     @Override
@@ -69,7 +67,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Add a follower SparkMax and optionally invert.
-     * 
+     *
      * @param port The port (ID) of the follower SparkMax.
      */
     @Override
@@ -81,7 +79,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Sets the inversion status of the lead motor.
-     * 
+     *
      * @param inverted To invert or not to invert.
      */
     @Override
@@ -90,7 +88,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     }
     /**
      * Configures the PID controller for the motor.
-     * 
+     *
      * @param kPID The KPID value to configure the motor too.
      */
     @Override
@@ -99,57 +97,50 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         pidController.setI(kPID.getIGains());
         pidController.setD(kPID.getDGains());
         pidController.setFF(kPID.getFGains());
-        if (kPID.getIZone() > 0)
-            pidController.setIZone(kPID.getIZone());
+        if (kPID.getIZone() > 0) pidController.setIZone(kPID.getIZone());
         pidController.setOutputRange(kPID.getMin(), kPID.getMax());
     }
 
     /**
      * Sets the output of the motor to the given percent.
-     * 
+     *
      * @param percent The percent the motor should output at.
      */
     @Override
     public final void setPercent(final double percent) {
         motor.set(percent);
-        for (CANSparkMax canSparkMax : followers)
-            canSparkMax.follow(motor);
+        for (CANSparkMax canSparkMax : followers) canSparkMax.follow(motor);
     }
 
     /**
      * Set the motor to output a certain voltage setpoint.
-     * 
+     *
      * @param setpoint The voltage to output.
      */
     @Override
     public final void setVoltage(final double setpoint) {
         motor.setVoltage(setpoint);
-        for (CANSparkMax follower : followers)
-            follower.follow(motor);
+        for (CANSparkMax follower : followers) follower.follow(motor);
     }
 
     // Setters implemented from TorquePIDMotor
 
     /**
      * Set the motor's position in encoder units.
-     * 
+     *
      * @param setpoint The encoder units to set the motor to.
      */
     @Override
     public final void setPosition(final double setpoint) {
         try {
             pidController.setReference(setpoint, ControlType.kPosition);
-            for (CANSparkMax follower : followers)
-                follower.follow(motor);
-        } catch (Exception e) {
-            System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
-        }
-
+            for (CANSparkMax follower : followers) follower.follow(motor);
+        } catch (Exception e) { System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port); }
     }
 
     /**
      * Set the motor's position in degrees.
-     * 
+     *
      * @param setpoint The degrees to set the motor to.
      */
     @Override
@@ -160,28 +151,28 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Set the motor's position in rotations.
-     * 
+     *
      * @param setpoint The rotations to set the motor to.
      */
     @Override
     public final void setPositionRotations(final double setpoint) {
         System.err.println("Method not implemented SparkMax.setPositionRotations()");
         System.exit(1);
-    } 
+    }
 
     /**
      * Set the motor's velocity in encoder units per second.
-     * 
+     *
      * @param setpoint The encoder units per second to set the motor to.
      */
     @Override
     public final void setVelocity(final double setpoint) {
-        setVelocityRPS(setpoint / CLICKS_PER_ROTATION); 
+        setVelocityRPS(setpoint / CLICKS_PER_ROTATION);
     }
 
     /**
      * Set the motor's velocity in RPS.
-     * 
+     *
      * @param setpoint The RPS to set the motor to.
      */
     @Override
@@ -191,35 +182,30 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Set the motor's velocity in RPM.
-     * 
+     *
      * @param setpoint The RPM to set the motor to.
      */
     @Override
     public final void setVelocityRPM(final double setpoint) {
         try {
             pidController.setReference(setpoint, ControlType.kVelocity);
-            for (CANSparkMax follower : followers)
-                follower.follow(motor);
-        } catch (Exception e) {
-            System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
-        } 
+            for (CANSparkMax follower : followers) follower.follow(motor);
+        } catch (Exception e) { System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port); }
     }
 
     /**
      * Set velocity using feed forwarrd and smart motion profile... i think?
-     * 
+     *
      * @param setpoint The velocity to set the motor to.
      * @param feedforward The feed forward to set the motor to.
      * @param units The feed forward units.
      */
-    public final void setFeedForwardSmartVelocity(final double setpoint, final double feedforward, final ArbFFUnits units) {
+    public final void setFeedForwardSmartVelocity(final double setpoint, final double feedforward,
+                                                  final ArbFFUnits units) {
         try {
             pidController.setReference(setpoint, ControlType.kSmartVelocity, 0, feedforward, units);
-            for (CANSparkMax follower : followers) 
-                follower.follow(motor);
-        } catch (Exception e) {
-            System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
-        }
+            for (CANSparkMax follower : followers) follower.follow(motor);
+        } catch (Exception e) { System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port); }
     }
 
     // Getters implemented from TorqueEncoderMotor
@@ -233,7 +219,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     public final double getPosition() {
         return getPositionRotations() * CLICKS_PER_ROTATION;
     }
-    
+
     /**
      * Get the position of the motor in degrees.
      *
@@ -256,7 +242,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Get the velocity of the motor in encoder units per second.
-     * 
+     *
      * @return acceleration in encoder units per second.
      */
     @Override
@@ -266,7 +252,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Get the velocity of the motor in RPS.
-     * 
+     *
      * @return acceleration in RPS.
      */
     @Override
@@ -276,7 +262,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Get the velocity of the motor in RPM.
-     * 
+     *
      * @return acceleration in RPM.
      */
     @Override
@@ -286,7 +272,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Get the acceleration of the motor in encoder units per second per second.
-     * 
+     *
      * @return acceleration in encoder units per second per second.
      */
     @Override
@@ -294,19 +280,19 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         return getAccelerationRPS() * CLICKS_PER_ROTATION;
     }
 
-      /**
+    /**
      * Get the acceleration of the motor in RPS/s.
-     * 
+     *
      * @return acceleration in RPM/s.
      */
     @Override
     public final double getAccelerationRPS() {
-        return getAccelerationRPM() / 60; 
+        return getAccelerationRPM() / 60;
     }
 
     /**
      * Get the acceleration of the motor in RPM/s.
-     * 
+     *
      * @return acceleration in RPM/s.
      */
     @Override
@@ -327,18 +313,14 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     /**
      * Restores the lead SparkMax to factory defaults.
      */
-    public final void restoreFactoryDefaults() {
-        motor.restoreFactoryDefaults();
-    }
+    public final void restoreFactoryDefaults() { motor.restoreFactoryDefaults(); }
 
-     /**
+    /**
      * @apiNote UNSAFE
      */
     public final void enableVoltageCompensation() {
         motor.enableVoltageCompensation(2);
-        for (CANSparkMax follower : followers) {
-            follower.enableVoltageCompensation(2);
-        }
+        for (CANSparkMax follower : followers) { follower.enableVoltageCompensation(2); }
     }
 
     /**
@@ -346,53 +328,43 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     public final void disableVoltageCompensation() {
         motor.disableVoltageCompensation();
-        for (CANSparkMax follower : followers) {
-            follower.disableVoltageCompensation();
-        }
-
+        for (CANSparkMax follower : followers) { follower.disableVoltageCompensation(); }
     }
 
-    /** 
+    /**
      * Gets voltage used by the SparkMax.
-     * 
+     *
      * @return The voltage used by the SparkMax.
      */
-    public final double getVoltage() {
-        return motor.getBusVoltage();
-    }
+    public final double getVoltage() { return motor.getBusVoltage(); }
 
     /**
      * Gets current used by the SparkMax.
-     * 
+     *
      * @return The current used by the SparkMax.
      */
-    public final double getCurrent() {
-        return motor.getOutputCurrent();
-    }
+    public final double getCurrent() { return motor.getOutputCurrent(); }
 
     /**
      * Set the motor to output a certain current setpoint.
-     * 
+     *
      * @param setpoint The current to output.
      */
     public final void setCurrent(final double setpoint) {
         pidController.setReference(setpoint, ControlType.kCurrent);
-        for (CANSparkMax follower : followers)
-            follower.follow(motor);
+        for (CANSparkMax follower : followers) follower.follow(motor);
     }
 
     /**
      * Burns the SparkMax flash.
      */
-    public final void burnFlash() {
-        motor.burnFlash();
-    }
+    public final void burnFlash() { motor.burnFlash(); }
 
-    /** 
+    /**
      * Configures an I-Zone on PID.
-     * 
+     *
      * @param iZone The I-Zone value to set.
-     * 
+     *
      * @deprecated I-Zone is now included in KPID.
      */
     @Deprecated
@@ -402,7 +374,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Set a supply limit for the SparkMax.
-     * 
+     *
      * @param limit max amps.
      */
 
@@ -410,35 +382,30 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         REVLibError e = motor.setSmartCurrentLimit(limit);
         if (e != REVLibError.kOk)
             System.out.printf("TorqueSparkMax port %d: Error configuring supply limit: %s\n", port, e.name());
-
-
     }
 
     // Smart motion functions.
 
     /**
      * Configure needed variables for smart motion.
-     * 
+     *
      * - setSmartMotionMaxVelocity() will limit the velocity in RPM of the pid
      * controller in Smart Motion mode - setSmartMotionMinOutputVelocity() will put
      * a lower bound in RPM of the pid controller in Smart Motion mode -
      * setSmartMotionMaxAccel() will limit the acceleration in RPM^2 of the pid
      * controller in Smart Motion mode - setSmartMotionAllowedClosedLoopError() will
      * set the max allowed error for the pid controller in Smart Motion mode
-     * 
+     *
      * @param maxVelocity     the max velocity
      * @param minVelocity     the min velocity
      * @param maxAcceleration the maxAcceleration
      * @param allowedError    the allowed amount of error
      * @param id              the id for the pid (usually 0)
-     *  
-     * @author Jack Pittenger 
+     *
+     * @author Jack Pittenger
      */
-    public final void configureSmartMotion(final double maxVelocity, 
-                                     final double minVelocity, 
-                                     final double maxAcceleration,
-                                     final double allowedError, 
-                                     final int id) {
+    public final void configureSmartMotion(final double maxVelocity, final double minVelocity,
+                                           final double maxAcceleration, final double allowedError, final int id) {
         pidController.setSmartMotionMaxVelocity(maxVelocity, id);
         pidController.setSmartMotionMinOutputVelocity(minVelocity, id);
         pidController.setSmartMotionMaxAccel(maxAcceleration, id);
@@ -450,18 +417,16 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Configures CAN frames to be quick on the lead motor.
-     * 
+     *
      * @apiNote Only use these methods if you know what you are doing.
      * @author Jack Pittenger
      */
-    public final void configureFastLeader() {
-        motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 2);
-    }
+    public final void configureFastLeader() { motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 2); }
 
     /**
      * Configure the CAN frames for a "dumb motor," which won't need to access CAN
      * data often or at all.
-     * 
+     *
      * @apiNote Only use these methods if you know what you are doing.
      * @author Jack Pittenger
      */
@@ -475,7 +440,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     /**
      * Configure the CAN frames for a "dumb motor" leader, which won't give data
      * often but will update fast for its follower.
-     * 
+     *
      * @apiNote Only use these methods if you know what you are doing.
      * @author Jack Pittenger
      */
@@ -489,7 +454,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     /**
      * Configures the CAN frame for a no-follower encoder-positional only sparkmax;
      * such as would be in a climber.
-     * 
+     *
      * @apiNote Only use these methods if you know what you are doing.
      * @author Jack Pittenger
      */
@@ -502,7 +467,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
 
     /**
      * Reduce the CAN frame interval for a follower.
-     * 
+     *
      * @apiNote Only use these methods if you know what you are doing.
      * @author Jack Pittenger
      */

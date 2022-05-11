@@ -6,13 +6,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 public abstract class TorqueSwerveModule {
     protected final int id;
 
-    protected TorqueSwerveModule(final int id) {
-        this.id = id;
-    }
+    protected TorqueSwerveModule(final int id) { this.id = id; }
 
-    public int getPort() {
-        return id;
-    }
+    public int getPort() { return id; }
 
     public abstract void setDesiredState(final SwerveModuleState state);
     public abstract SwerveModuleState getState();

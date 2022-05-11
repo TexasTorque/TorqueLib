@@ -8,11 +8,7 @@ public class SBBoolean extends SBEntry {
         SmartDashboard.putBoolean(name, defaultValue);
     }
 
-    public final void set(final boolean value) {
-        SmartDashboard.putBoolean(name, value);
-    }
+    public final void set(final boolean value) { SmartDashboard.putBoolean(name, value); }
 
-    public final boolean get() {
-        return SmartDashboard.getBoolean(name, (boolean) defaultValue);
-    } 
+    public final boolean get() { return SmartDashboard.getBoolean(name, (boolean)defaultValue); }
 }

@@ -2,15 +2,13 @@ package org.texastorque.torquelib.util;
 
 /**
  * A replacement for the TorqueToggle class (pretty much)
- * 
+ *
  * @author Jack Pittenger
  */
 public final class TorqueClick {
     private boolean lastValue;
 
-    public TorqueClick() {
-        lastValue = false;
-    }
+    public TorqueClick() { lastValue = false; }
 
     public boolean calc(final boolean current) {
         if (current) {
@@ -22,5 +20,4 @@ public final class TorqueClick {
         lastValue = current;
         return false;
     }
-
 }

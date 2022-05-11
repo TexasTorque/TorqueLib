@@ -2,7 +2,7 @@ package org.texastorque.torquelib.motors.base;
 
 /**
  * Interface to include encoder feedback methods for motors.
- * 
+ *
  * @author Justus Languell
  */
 public interface TorqueEncoderMotor {
@@ -21,12 +21,12 @@ public interface TorqueEncoderMotor {
 
     /**
      * Finds velocity of a drive wheel in RPMs.
-     * 
+     *
      * @param motor     Torque motor that implements TorqueEncoderMotor.
      * @param gearRatio The gear ratio of the wheel.
-     * 
+     *
      * @return RPM of the wheel.
-     * 
+     *
      * @author Jack Pittenger
      * @author Justus Languell
      */
@@ -40,9 +40,9 @@ public interface TorqueEncoderMotor {
      * @param motor     Torque motor that implements TorqueEncoderMotor.
      * @param gearRatio The gear ratio of the wheel.
      * @param wheelRadiusMeters Radius of the wheel in meters.
-     * 
+     *
      * @return Velocity of the wheel in m/s.
-     * 
+     *
      * @author Jack Pittenger
      * @author Justus Languell
      */

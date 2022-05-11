@@ -8,11 +8,7 @@ public class SBString extends SBEntry {
         SmartDashboard.putString(name, defaultValue);
     }
 
-    public final void set(final String value) {
-        SmartDashboard.putString(name, value);
-    }
+    public final void set(final String value) { SmartDashboard.putString(name, value); }
 
-    public final String get() {
-        return SmartDashboard.getString(name, (String) defaultValue);
-    } 
+    public final String get() { return SmartDashboard.getString(name, (String)defaultValue); }
 }

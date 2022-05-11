@@ -4,7 +4,7 @@ import org.texastorque.torquelib.util.KPID;
 
 /**
  * Interface to include PID methods for a PID motor.
- * 
+ *
  * @author Justus Languell
  */
 public interface TorquePIDMotor {

@@ -5,38 +5,29 @@ package org.texastorque.torquelib.base;
  *          You overload the update method
  *          You run it using the run method
  *          (this is for the assist sequence)
- * 
+ *
  * @author Justus (see me for questions)
- * 
+ *
  * @deprecated No longer used in new project structure.
  */
 @Deprecated
 public abstract class TorqueInput {
     private boolean blocked = false;
 
-    public final void block() {
-        blocked = true;
-    }
+    public final void block() { blocked = true; }
 
-    public final void unblock() {
-        blocked = false;
-    }
+    public final void unblock() { blocked = false; }
 
-    public final boolean isBlocked() {
-        return blocked;
-    }
+    public final boolean isBlocked() { return blocked; }
 
     public abstract void update();
 
-    protected void reset() {
-    };
+    protected void reset(){};
 
-    public void smartDashboard() {
-    };
+    public void smartDashboard(){};
 
     public final void run() {
-        if (!blocked)
-            update();
+        if (!blocked) update();
         unblock();
     }
 }

@@ -8,11 +8,7 @@ public class SBNumber extends SBEntry {
         SmartDashboard.putNumber(name, defaultValue);
     }
 
-    public final void set(final double value) {
-        SmartDashboard.putNumber(name, value);
-    }
+    public final void set(final double value) { SmartDashboard.putNumber(name, value); }
 
-    public final double get() {
-        return SmartDashboard.getNumber(name, (double) defaultValue);
-    } 
+    public final double get() { return SmartDashboard.getNumber(name, (double)defaultValue); }
 }
