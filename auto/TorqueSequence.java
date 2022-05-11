@@ -28,7 +28,7 @@ public abstract class TorqueSequence {
         commands.add(block);
     }
 
-    public void run() {
+    public final void run() {
         if (blockIndex < commands.size()) {
             boolean blockEnded = true;
             for (TorqueCommand command : commands.get(blockIndex)) {

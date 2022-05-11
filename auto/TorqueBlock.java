@@ -20,7 +20,7 @@ public class TorqueBlock extends ArrayList<TorqueCommand> {
         }
     }
 
-    public void addCommand(TorqueCommand command) {
+    public final void addCommand(TorqueCommand command) {
         add(command);
     }
 }

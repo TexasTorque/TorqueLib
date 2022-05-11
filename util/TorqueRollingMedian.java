@@ -33,7 +33,7 @@ public final class TorqueRollingMedian {
      * @param value The value to add.
      * @return The median value.
      */
-    public double calculate(final double value) {
+    public final double calculate(final double value) {
         if (med.size() >= window)
             med.poll();
         med.add(value);

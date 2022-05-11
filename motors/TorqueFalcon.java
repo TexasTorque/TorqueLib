@@ -63,7 +63,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @param port The port (ID) of the follower Falcon.
      */
     @Override
-    public void addFollower(final int port) {
+    public final void addFollower(final int port) {
         WPI_TalonFX follower = new WPI_TalonFX(port);
         follower.setNeutralMode(neutralMode);
         follower.follow(motor);
@@ -76,7 +76,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @param port The port (ID) of the follower Falcon.
      */
     @Override
-    public void addFollower(final int port, final boolean invert) {
+    public final void addFollower(final int port, final boolean invert) {
         WPI_TalonFX follower = new WPI_TalonFX(port);
         follower.setNeutralMode(neutralMode);
         follower.setInverted(invert);
@@ -90,7 +90,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @param inverted To invert or not to invert.
      */
     @Override
-    public void invert(final boolean invert) {
+    public final void invert(final boolean invert) {
         motor.setInverted(invert);
     }
 
@@ -100,7 +100,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @param kPID The KPID value to configure the motor too.
      */
     @Override
-    public void configurePID(final KPID kPID) {
+    public final void configurePID(final KPID kPID) {
         motor.config_kP(0, kPID.getPGains());
         motor.config_kI(0, kPID.getIGains());
         motor.config_kD(0, kPID.getDGains());
@@ -117,7 +117,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @param percent The percent the motor should output at.
      */
     @Override
-    public void setPercent(final double percent) {
+    public final void setPercent(final double percent) {
         motor.set(ControlMode.PercentOutput, percent);
         for (WPI_TalonFX follower : followers)
             follower.set(ControlMode.Follower, port);
@@ -129,7 +129,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @param setpoint The voltage to output.
      */
     @Override
-    public void setVoltage(final double outputVolts) {
+    public final void setVoltage(final double outputVolts) {
         motor.setVoltage(outputVolts);
         for (WPI_TalonFX follower : followers)
             follower.set(ControlMode.Follower, port);
@@ -143,7 +143,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @param setpoint The encoder units to set the motor to.
      */
     @Override
-    public void setPosition(final double setpoint) {
+    public final void setPosition(final double setpoint) {
         motor.set(ControlMode.Position, setpoint);
         for (WPI_TalonFX follower : followers)
             follower.set(ControlMode.Follower, port);
@@ -155,7 +155,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @param setpoint The degrees to set the motor to.
      */
     @Override
-    public void setPositionDegrees(final double setpoint) {
+    public final void setPositionDegrees(final double setpoint) {
         setPositionRotations(setpoint / 360);
     }
 
@@ -165,7 +165,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @param setpoint The rotations to set the motor to.
      */
     @Override
-    public void setPositionRotations(final double setpoint) {
+    public final void setPositionRotations(final double setpoint) {
         setPosition(setpoint * CLICKS_PER_ROTATION);
     }
 
@@ -175,7 +175,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @param setpoint The encoder units per second to set the motor to.
      */
     @Override
-    public void setVelocity(final double setpoint) {
+    public final void setVelocity(final double setpoint) {
         motor.set(ControlMode.Velocity, setpoint / 10);
         for (WPI_TalonFX follower : followers)
             follower.set(ControlMode.Follower, port); 
@@ -187,7 +187,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @param setpoint The RPS to set the motor to.
      */
     @Override
-    public void setVelocityRPS(final double setpoint) {
+    public final void setVelocityRPS(final double setpoint) {
         setVelocity(setpoint * CLICKS_PER_ROTATION);
     }
 
@@ -197,7 +197,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @param setpoint The RPM to set the motor to.
      */
     @Override
-    public void setVelocityRPM(final double setpoint) {
+    public final void setVelocityRPM(final double setpoint) {
         setVelocityRPS(setpoint / 60);
     }
 
@@ -209,7 +209,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @return The position of the encoder in encoder units.
      */
     @Override
-    public double getPosition() {
+    public final double getPosition() {
         return motor.getSelectedSensorPosition();
     }
     
@@ -219,7 +219,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @return The position of the encoder in degrees.
      */
     @Override
-    public double getPositionDegrees() {
+    public final double getPositionDegrees() {
         return getPositionRotations() * 360;
     }
 
@@ -229,7 +229,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @return The position of the encoder in rotations.
      */
     @Override
-    public double getPositionRotations() {
+    public final double getPositionRotations() {
         return getPosition() / CLICKS_PER_ROTATION;
     }
 
@@ -239,7 +239,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @return acceleration in encoder units per second.
      */
     @Override
-    public double getVelocity() {
+    public final double getVelocity() {
         return motor.getSelectedSensorVelocity() * 10;
 
     }
@@ -250,7 +250,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @return acceleration in RPS.
      */
     @Override
-    public double getVelocityRPS() {
+    public final double getVelocityRPS() {
         return getVelocity() / CLICKS_PER_ROTATION;
 
     }
@@ -261,7 +261,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @return acceleration in RPM.
      */
     @Override
-    public double getVelocityRPM() {
+    public final double getVelocityRPM() {
         return getVelocityRPS() * 60;
     }
 
@@ -271,7 +271,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @return acceleration in encoder units per second per second.
      */
     @Override
-    public double getAcceleration() {
+    public final double getAcceleration() {
         return getAccelerationRPS() * CLICKS_PER_ROTATION;
     }
 
@@ -281,7 +281,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @return acceleration in RPM/s.
      */
     @Override
-    public double getAccelerationRPS() {
+    public final double getAccelerationRPS() {
         return getAccelerationRPM() / 60; 
     }
 
@@ -291,7 +291,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * @return acceleration in RPM/s.
      */
     @Override
-    public double getAccelerationRPM() {
+    public final double getAccelerationRPM() {
         final double currentVelocity = getVelocityRPM();
         final long currentTime = System.currentTimeMillis();
 
@@ -308,7 +308,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * 
      * @param limit Supply limit config.
      */
-    public void setSupplyLimit(final SupplyCurrentLimitConfiguration limit) {
+    public final void setSupplyLimit(final SupplyCurrentLimitConfiguration limit) {
         ErrorCode e = motor.configSupplyCurrentLimit(limit);
         if (e != ErrorCode.OK)
             System.out.printf("TorqueFalcon port %d: Error configuring supply limit: %s\n", port, e.name());
@@ -320,7 +320,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * 
      * @param limit Stator limit config.
      */
-    public void setStatorLimit(final StatorCurrentLimitConfiguration limit) {
+    public final void setStatorLimit(final StatorCurrentLimitConfiguration limit) {
         ErrorCode e = motor.configStatorCurrentLimit(limit);
         if (e != ErrorCode.OK)
             System.out.printf("TorqueFalcon port %d: Error configuring supply limit: %s\n", port, e.name());
@@ -333,14 +333,14 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * 
      * @return The current used by the Falcon.
      */
-    public double getCurrent() {
+    public final double getCurrent() {
         return motor.getStatorCurrent();
     }
 
     /**
      * Zero the encoder.
      */
-    public void zeroEncoder() {
+    public final void zeroEncoder() {
         motor.setSelectedSensorPosition(0);
     }
 
@@ -349,7 +349,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
      * 
      * @param neutralMode Neutral mode.
      */
-    public void setNeutralMode(final NeutralMode neutralMode) {
+    public final void setNeutralMode(final NeutralMode neutralMode) {
         motor.setNeutralMode(neutralMode);
         for (WPI_TalonFX follower : followers)
             follower.setNeutralMode(neutralMode);

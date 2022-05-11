@@ -17,7 +17,7 @@ public class SBSelector<T> {
         this.name = name;
     }
 
-    public void add(String name, T value) {
+    public final void add(String name, T value) {
         if (options.size() == 0)
             selector.setDefaultOption(name, name);
         else 
@@ -27,11 +27,11 @@ public class SBSelector<T> {
         update();
     }
 
-    public void update() {
+    public final void update() {
         SmartDashboard.putData(name, selector);
     }
 
-    public T get() {
+    public final T get() {
         return options.get(NetworkTableInstance.getDefault().getTable("SmartDashboard").getSubTable(name)
                 .getEntry("selected").getString("N/A"));
     }

@@ -87,7 +87,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      * @param state The state of the swerve module.
      */
     @Override
-    public void setDesiredState(SwerveModuleState state) {
+    public final void setDesiredState(SwerveModuleState state) {
         state = SwerveModuleState.optimize(state, getRotation());
 
         final double requestedEncoderUnits = (state.angle.getDegrees() * rotate.CLICKS_PER_ROTATION * 2 / 360);
@@ -127,7 +127,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      * @return The SwerveModuleState that represents the current state of the module.
      */
     @Override
-    public SwerveModuleState getState() {
+    public final SwerveModuleState getState() {
         return new SwerveModuleState(encoderPerMinuteToMetersPerSecond(drive.getVelocityRPM()), getRotation());
     }
 
@@ -137,7 +137,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      * @return The Rotation2d that represents the motor rotation.
      */
     @Override
-    public Rotation2d getRotation() {
+    public final Rotation2d getRotation() {
         return Rotation2d.fromDegrees(getRotationDegrees());
     }
 
@@ -149,7 +149,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      * @author Jack Pittenger
      * @author Justus Languell
      */
-    private double getRotationDegrees() {
+    private final double getRotationDegrees() {
         double val = rotate.getPosition();
         if (val % rotate.CLICKS_PER_ROTATION== 0) val += .0001;
         double ret = val % rotate.CLICKS_PER_ROTATION* 180 / (rotate.CLICKS_PER_ROTATION);
@@ -167,7 +167,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      * 
      * @return Speed in rotations per minute.
      */
-    public double metersPerSecondToEncoderPerMinute(double metersPerSecond) {
+    public final double metersPerSecondToEncoderPerMinute(double metersPerSecond) {
         return metersPerSecond * (60. / 1.) * (1 / (2 * Math.PI * wheelRadiusMeters)
                         * (1. / driveGearing));
     }
@@ -179,7 +179,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      * 
      * @return Wheel speed in meters per second.
      */
-    public double encoderPerMinuteToMetersPerSecond(double encodersPerMinute) {
+    public final double encoderPerMinuteToMetersPerSecond(double encodersPerMinute) {
             return encodersPerMinute * (1. / 60.) * (2 * Math.PI * wheelRadiusMeters / 1.)
                             * (driveGearing / 1.);
     }
@@ -205,7 +205,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      * 
      * @param logging To log or not to log.
      */
-    public void setLogging(final boolean logging) {
+    public final void setLogging(final boolean logging) {
         this.logging = logging;
     }
 
@@ -215,7 +215,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      * @param key The key to smart dashboard.
      * @param value The value to log.
      */
-    private void putNumber(final String key, final double value) {
+    private final void putNumber(final String key, final double value) {
         if (logging)
             SmartDashboard.putNumber(String.format("%d %s", id, key), value);
     }

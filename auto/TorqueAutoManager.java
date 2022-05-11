@@ -13,16 +13,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * 
  * Part of the Texas Torque Autonomous Framework.
  * 
- * @author Jack, Justus
+ * @author Justus Languell
+ * @author Jack Pittenger
  */
 public abstract class TorqueAutoManager {
-    private HashMap<String, TorqueSequence> autoSequences;
-    private SendableChooser<String> autoSelector = new SendableChooser<String>();
+    private final HashMap<String, TorqueSequence> autoSequences;
+    private final SendableChooser<String> autoSelector = new SendableChooser<String>();
 
     private TorqueSequence currentSequence;
     private boolean sequenceEnded;
 
-    private final String autoSelectorKey = "AutoList";
+    private final String autoSelectorKey = "Auto List";
 
     public TorqueAutoManager() {
         autoSequences = new HashMap<String, TorqueSequence>();
@@ -33,9 +34,12 @@ public abstract class TorqueAutoManager {
         displayChoices();
     }
 
-    protected abstract void init(); // this is where we add sequences
+    /**
+     * This is where we add sequenes
+     */
+    protected abstract void init(); 
 
-    protected void addSequence(String name, TorqueSequence seq) {
+    protected final void addSequence(String name, TorqueSequence seq) {
         autoSequences.put(name, seq);
 
         if (autoSequences.size() == 0) {
@@ -45,7 +49,7 @@ public abstract class TorqueAutoManager {
         }
     }
 
-    public void runCurrentSequence() {
+    public final void runCurrentSequence() {
         if (currentSequence != null) {
             currentSequence.run();
             sequenceEnded = currentSequence.hasEnded(); // manage state of sequence
@@ -54,7 +58,7 @@ public abstract class TorqueAutoManager {
         }
     }
 
-    public void chooseCurrentSequence() {
+    public final void chooseCurrentSequence() {
         String autoChoice = NetworkTableInstance.getDefault().getTable("SmartDashboard").getSubTable(autoSelectorKey)
                 .getEntry("selected").getString("N/A");
 
@@ -70,7 +74,7 @@ public abstract class TorqueAutoManager {
     /**
      * Set sequence with sequence object
      */
-    public void setCurrentSequence(TorqueSequence seq) {
+    public final void setCurrentSequence(TorqueSequence seq) {
         currentSequence = seq;
         resetCurrentSequence();
     }
@@ -78,11 +82,11 @@ public abstract class TorqueAutoManager {
     /**
      * Send sequence list to SmartDashboard
      */
-    public void displayChoices() {
+    public final void displayChoices() {
         SmartDashboard.putData(autoSelectorKey, autoSelector);
     }
 
-    public void resetCurrentSequence() {
+    public final void resetCurrentSequence() {
         if (currentSequence != null)
             currentSequence.reset();
     }
@@ -90,7 +94,7 @@ public abstract class TorqueAutoManager {
     /**
      * Return the state variable that shows whether the sequence is ended or not
      */
-    public boolean getSequenceEnded() {
+    public final boolean getSequenceEnded() {
         return sequenceEnded;
     }
 }

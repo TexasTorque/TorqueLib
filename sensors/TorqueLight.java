@@ -30,33 +30,33 @@ public class TorqueLight {
         this.angle = angle;
     }
 
-    public void update() {
+    public final void update() {
         result = cam.getLatestResult();
         if (result.hasTargets())
             target = result.getBestTarget();
     }
 
-    public boolean hasTargets() {
+    public final boolean hasTargets() {
         return result.hasTargets();
     }
 
-    public double getTargetArea() {
+    public final double getTargetArea() {
         return target.getArea();
     }
 
-    public double getTargetYaw() {
+    public final double getTargetYaw() {
         return target.getYaw();
     }
 
-    public double getTargetPitch() {
+    public final double getTargetPitch() {
         return target.getPitch();
     }
 
-    public Transform2d getCameraToTarget() {
+    public final Transform2d getCameraToTarget() {
         return target.getCameraToTarget();
     }
 
-    public double getDistance() {
+    public final double getDistance() {
         return PhotonUtils.calculateDistanceToTargetMeters(
                 cameraHeight, targetHeight, angle.getRadians(), 
                 Units.degreesToRadians(getTargetPitch())

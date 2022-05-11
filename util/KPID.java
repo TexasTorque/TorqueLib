@@ -41,59 +41,59 @@ public final class KPID {
         this.iZone = iZone;
     }
 
-    public void setP(double pGains) {
+    public final void setP(double pGains) {
         this.pGains = pGains;
     }
 
-    public void setI(double iGains) {
+    public final void setI(double iGains) {
         this.iGains = iGains;
     }
 
-    public void setD(double dGains) {
+    public final void setD(double dGains) {
         this.dGains = dGains;
     }
 
-    public void setF(double fGains) {
+    public final void setF(double fGains) {
         this.fGains = fGains;
     }
 
-    public void setMin(double minOutput) {
+    public final void setMin(double minOutput) {
         this.minOutput = minOutput;
     }
 
-    public void setMax(double maxOutput) {
+    public final void setMax(double maxOutput) {
         this.maxOutput = maxOutput;
     }
 
-    public void setIZone(double iZone) {
+    public final void setIZone(double iZone) {
         this.iZone = iZone;
     }
 
-    public double getPGains() {
+    public final double getPGains() {
         return pGains;
     }
 
-    public double getIGains() {
+    public final double getIGains() {
         return iGains;
     }
 
-    public double getDGains() {
+    public final double getDGains() {
         return dGains;
     }
 
-    public double getFGains() {
+    public final double getFGains() {
         return fGains;
     }
 
-    public double getMin() {
+    public final double getMin() {
         return minOutput;
     }
 
-    public double getMax() {
+    public final double getMax() {
         return maxOutput;
     }
 
-    public double getIZone() {
+    public final double getIZone() {
         return iZone;
     }
 }

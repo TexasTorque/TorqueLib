@@ -7,7 +7,10 @@ package org.texastorque.torquelib.base;
  *          (this is for the assist sequence)
  * 
  * @author Justus (see me for questions)
+ * 
+ * @deprecated No longer used in new project structure.
  */
+@Deprecated
 public abstract class TorqueInput {
     private boolean blocked = false;
 

@@ -59,7 +59,7 @@ public class TorqueSpeedSettings {
      * 
      * @return The current speed setting.
      */
-    public double update(final boolean up, final boolean down, final boolean min, final boolean max) {
+    public final double update(final boolean up, final boolean down, final boolean min, final boolean max) {
         if (clickUp.calc(up))
             speed = (double) TorqueMathUtil.constrain(speed + increment, minimum, maximum);
         if (clickDown.calc(down))
@@ -78,7 +78,7 @@ public class TorqueSpeedSettings {
      * 
      * @return Current speed setting.
      */
-    public double getSpeed() {
+    public final double getSpeed() {
         return speed;
     }
 }

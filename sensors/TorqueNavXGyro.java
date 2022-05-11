@@ -23,36 +23,36 @@ public final class TorqueNavXGyro extends AHRS {
         getFusedHeading();
     } 
 
-    public void setAngleOffset(final double angleOffset) {
+    public final void setAngleOffset(final double angleOffset) {
         this.angleOffset = (angleOffset - getFusedHeading() + 360) % 360;
     }
 
-    public double getAngleOffset() {
+    public final double getAngleOffset() {
         return angleOffset;
     }
 
-    public double getDegreesClockwise() {
+    public final double getDegreesClockwise() {
         return (getFusedHeading() + angleOffset) % 360;
     }
 
-    public float getDegreesCounterClockwise() {
+    public final double getDegreesCounterClockwise() {
         return 360 - getFusedHeading();
     }
 
     @Override
-    public Rotation2d getRotation2d() {
+    public final Rotation2d getRotation2d() {
         return getRotation2dClockwise();
     }
 
-    public Rotation2d getRotation2dClockwise() {
+    public final Rotation2d getRotation2dClockwise() {
         return Rotation2d.fromDegrees(getDegreesClockwise());
     }
 
-    public Rotation2d getRotation2dCounterClockwise() {
+    public final Rotation2d getRotation2dCounterClockwise() {
         return Rotation2d.fromDegrees(getDegreesCounterClockwise());
     }
 
-    public static synchronized TorqueNavXGyro getInstance() {
+    public static final synchronized TorqueNavXGyro getInstance() {
         return instance == null ? instance = new TorqueNavXGyro() : instance;
     }
 }

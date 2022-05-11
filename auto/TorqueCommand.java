@@ -8,10 +8,9 @@ package org.texastorque.torquelib.auto;
  * @author Texas Torque
  */
 public abstract class TorqueCommand {
-
     private boolean ended = false, started = false;
 
-    public boolean run() {
+    public final boolean run() {
         if (ended)
             return ended;
         if (!started) {
@@ -26,7 +25,7 @@ public abstract class TorqueCommand {
         return ended;
     }
 
-    public void reset() {
+    public final void reset() {
         end();
         ended = false;
         started = false;

@@ -14,7 +14,10 @@ import edu.wpi.first.util.WPIUtilJNI;
  * 
  * @author Jack Pittenger
  * @author WPILib contributors 
+ * 
+ * @deprecated Being replaced by PoseEstimator.
  */
+@Deprecated
 public final class TorqueSwerveOdometry {
 
     private final SwerveDriveKinematics m_kinematics;

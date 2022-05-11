@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author TexasTorque
  * 
  * @apiNote Needs proper update / replacement.
+ * @deprecated A replacement will be written.
  */
+@Deprecated
 public final class GenericController extends Joystick {
     public static final int TYPE_LOGITECH = 1;
     public static final int TYPE_XBOX = 2;

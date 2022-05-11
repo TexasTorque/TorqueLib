@@ -17,10 +17,12 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  * CPU usage on the roboRio may be higher than when using the regular
  * IterativeRobot base class, but should not be a problem.
  * 
- * @apiNote This needs to be updated -justus
+ * @apiNote This needs to be updated - justus
+ * @deprecated A replacement will be written soon.
  *
- * @author TexasTorque
+ * @author Texas Torque.
  */
+@Deprecated
 public abstract class TorqueIterative extends RobotBase {
 
 	private volatile boolean m_disabledInitialized;
