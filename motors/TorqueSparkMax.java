@@ -137,7 +137,14 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public void setPosition(final double setpoint) {
-        setPositionRotations(setpoint / CLICKS_PER_ROTATION);
+        try {
+            pidController.setReference(setpoint, ControlType.kPosition);
+            for (CANSparkMax follower : followers)
+                follower.follow(motor);
+        } catch (Exception e) {
+            System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
+        }
+
     }
 
     /**
@@ -147,7 +154,8 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public void setPositionDegrees(final double setpoint) {
-        setPositionRotations(setpoint / 360);
+        System.err.println("Method not implemented SparkMax.setPositionDegrees()");
+        System.exit(1);
     }
 
     /**
@@ -157,14 +165,9 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public void setPositionRotations(final double setpoint) {
-        try {
-            pidController.setReference(setpoint, ControlType.kPosition);
-            for (CANSparkMax follower : followers)
-                follower.follow(motor);
-        } catch (Exception e) {
-            System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
-        }
-    }
+        System.err.println("Method not implemented SparkMax.setPositionRotations()");
+        System.exit(1);
+    } 
 
     /**
      * Set the motor's velocity in encoder units per second.

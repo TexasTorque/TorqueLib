@@ -20,7 +20,8 @@ public class TorqueLight {
     private final Rotation2d angle;
     
     public TorqueLight(final double cameraHeight, final double targetHeight, final Rotation2d angle) { 
-        this.cam = new PhotonCamera(NetworkTableInstance.getDefault(),"torquecam");
+        // this.cam = new PhotonCamera(NetworkTableInstance.getDefault(),"torquecam");
+        this.cam = null;
         this.result = new PhotonPipelineResult();
         this.target = new PhotonTrackedTarget();
 

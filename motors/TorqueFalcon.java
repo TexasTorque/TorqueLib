@@ -33,7 +33,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
     private double lastVelocity;
     private long lastVelocityTime;
 
-    private NeutralMode neutralMode = NeutralMode.EEPROMSetting;
+    private NeutralMode neutralMode;
     private final TalonFXConfiguration config;
 
     /**
@@ -44,6 +44,9 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
     public TorqueFalcon(final int port) {
         super(port);
 
+        motor = new WPI_TalonFX(port);
+
+        neutralMode = NeutralMode.EEPROMSetting;
         motor.setNeutralMode(neutralMode);
 
         config = new TalonFXConfiguration();
@@ -52,7 +55,6 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
 
         this.lastVelocity = 0;
         this.lastVelocityTime = System.currentTimeMillis();
-        motor = new WPI_TalonFX(port);
     }
 
     /**
