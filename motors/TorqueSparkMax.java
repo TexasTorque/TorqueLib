@@ -217,7 +217,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public final double getPosition() {
-        return getPositionRotations() * CLICKS_PER_ROTATION;
+        return encoder.getPosition() - encoderZero;
     }
 
     /**
@@ -227,7 +227,9 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public final double getPositionDegrees() {
-        return getPositionRotations() * 360;
+        System.err.println("Method not implemented SparkMax.getPositionDegrees()");
+        System.exit(1);
+        return 0;
     }
 
     /**
@@ -237,7 +239,9 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public final double getPositionRotations() {
-        return encoder.getPosition() - encoderZero;
+        System.err.println("Method not implemented SparkMax.getPositionRotations()");
+        System.exit(1);
+        return 0;
     }
 
     /**
@@ -478,5 +482,9 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
             follower.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
             follower.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
         }
+    }
+
+    public final void setEncoderZero(final double position) {
+        this.encoderZero = position + getPosition();
     }
 }
