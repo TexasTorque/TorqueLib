@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.HashMap;
 
-public class SBSelector<T> {
+public final class SBSelector<T> {
     private final HashMap<String, T> options;
     private final SendableChooser<String> selector;
     private final String name;

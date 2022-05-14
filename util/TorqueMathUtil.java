@@ -5,7 +5,7 @@ package org.texastorque.torquelib.util;
  *
  * @author Justus Languell
  */
-public class TorqueMathUtil {
+public final class TorqueMathUtil {
     private TorqueMathUtil() {}
 
     /**
