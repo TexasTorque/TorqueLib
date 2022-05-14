@@ -8,7 +8,7 @@ package org.texastorque.torquelib.auto;
  *
  * @author Justus
  */
-public class TorqueEmpty extends TorqueSequence {
+public final class TorqueEmpty extends TorqueSequence {
 
     public TorqueEmpty(String name) { super(name); }
 

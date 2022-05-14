@@ -6,7 +6,7 @@ package org.texastorque.torquelib.util;
  *
  * @author Justus Languell
  */
-public class TorqueSpeedSettings {
+public final class TorqueSpeedSettings {
 
     private final TorqueClick clickUp = new TorqueClick();
     private final TorqueClick clickDown = new TorqueClick();

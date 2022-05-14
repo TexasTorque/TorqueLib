@@ -18,7 +18,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
  * @author Jack Pittenger 
  * @author Justus Languell
  */
-public class TorqueLight {
+public final class TorqueLight {
     private final PhotonCamera cam;
 
     private PhotonPipelineResult result;

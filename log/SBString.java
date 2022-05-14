@@ -2,7 +2,7 @@ package org.texastorque.torquelib.log;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class SBString extends SBEntry {
+public final class SBString extends SBEntry {
     public SBString(final String name, final String defaultValue) {
         super(name, defaultValue);
         SmartDashboard.putString(name, defaultValue);
