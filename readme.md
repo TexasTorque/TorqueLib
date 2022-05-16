@@ -1,6 +1,12 @@
-# TorqueLib
+# [TorqueLib](http://torquelib.com/)
 
-Code library created by and used within FRC 1477, Texas Torque.
+Code library created by and used within [FRC 1477, Texas Torque](https://texastorque.org/).
+
+## Documentation
+
+TorqueLib documentation can be found at [www.torquelib.com](http://torquelib.com/).
+
+Theses JavaDocs are generated and hosted from [TorqueLibJavaDoc](https://github.com/TexasTorque/TorqueLibJavaDoc)
 
 ## Add to project
 
@@ -17,7 +23,7 @@ is being overhauled for the 2023 season. These are breaking changes.
 
 ## Authors
 
-- Gijs Landwehr (2013-2014)
-- Matthew Webb (2013-2014)
-- Jack Pittenger (2020-2023)
-- Justus Languell (2021-2024)
+- [Gijs Landwehr](https://www.gijs.land/) (2013-2014)
+- [Matthew Webb](https://www.linkedin.com/in/noviv/) (2013-2014)
+- [Jack Pittenger](https://saddy.dev/) (2020-2023)
+- [Justus Languell](https://www.justusl.com/) (2021-2024)
