@@ -18,7 +18,7 @@ import org.texastorque.torquelib.util.KPID;
 //TODO Peep this: https://github.com/Team364/BaseFalconSwerve/blob/main/src/main/java/frc/lib/math/Conversions.java
 
 /**
- * The Texas Torque wrapper for the Falcon (SRX) motor controller.
+ * The Texas Torque wrapper for the Falcon (TalonFX) motor controller.
  * 
  * @author Justus Languell
  * @author Jack Pittenger
@@ -27,6 +27,9 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
     private WPI_TalonFX motor;
     private ArrayList<WPI_TalonFX> followers = new ArrayList<>();
 
+     /**
+     * Clicks per rotation on the motor encoder.
+     */
     public final double CLICKS_PER_ROTATION = 4096;
 
     private double lastVelocity;
@@ -86,7 +89,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
     /**
      * Sets the inversion status of the lead motor.
      *
-     * @param inverted To invert or not to invert.
+     * @param invert To invert or not to invert.
      */
     @Override
     public final void invert(final boolean invert) {
@@ -123,7 +126,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
     /**
      * Set the motor to output a certain voltage setpoint.
      *
-     * @param setpoint The voltage to output.
+     * @param outputVolts The voltage to output.
      */
     @Override
     public final void setVoltage(final double outputVolts) {
