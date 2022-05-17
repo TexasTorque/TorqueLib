@@ -31,6 +31,9 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     private SparkMaxAnalogSensor analogEncoder;
     private ArrayList<CANSparkMax> followers = new ArrayList<>();
 
+     /**
+     * Clicks per rotation on the motor encoder.
+     */
     public final double CLICKS_PER_ROTATION;
 
     private double lastVelocity;
@@ -80,7 +83,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     /**
      * Sets the inversion status of the lead motor.
      *
-     * @param inverted To invert or not to invert.
+     * @param invert To invert or not to invert.
      */
     @Override
     public final void invert(final boolean invert) {

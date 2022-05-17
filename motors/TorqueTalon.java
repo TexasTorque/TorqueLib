@@ -12,7 +12,7 @@ import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
 import org.texastorque.torquelib.util.KPID;
 
 /**
- * The Texas Torque wrapper for the Talon (SRX) motor controller.
+ * The Texas Torque wrapper for the Talon (TalonSRX) motor controller.
  *
  * @author Justus Languell
  * @author Jack Pittenger
@@ -21,6 +21,9 @@ public final class TorqueTalon extends TorqueMotor implements TorqueSmartMotor {
     private WPI_TalonSRX motor;
     private ArrayList<WPI_TalonSRX> followers = new ArrayList<>();
 
+    /**
+     * Clicks per rotation on the motor encoder.
+     */
     public final double CLICKS_PER_ROTATION = 4096;
 
     private double lastVelocity;
@@ -67,7 +70,7 @@ public final class TorqueTalon extends TorqueMotor implements TorqueSmartMotor {
     /**
      * Sets the inversion status of the lead motor.
      *
-     * @param inverted To invert or not to invert.
+     * @param invert To invert or not to invert.
      */
     @Override
     public final void invert(final boolean invert) {
@@ -104,7 +107,7 @@ public final class TorqueTalon extends TorqueMotor implements TorqueSmartMotor {
     /**
      * Set the motor to output a certain voltage setpoint.
      *
-     * @param setpoint The voltage to output.
+     * @param outputVolts The voltage to output.
      */
     @Override
     public final void setVoltage(final double outputVolts) {
