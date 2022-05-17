@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -47,10 +49,13 @@ public final class TorqueLight {
     /**
      * Call this periodically to update the vision state.
      */
-    public final void update() {
+    public final void update(final boolean logging) {
         result = cam.getLatestResult();
-        if (result.hasTargets()) 
+        if (result.hasTargets())
             target = result.getBestTarget();
+        if (logging) {
+            SmartDashboard.putNumber("Target Dist", getDistance());
+        }
     }
 
     /**
