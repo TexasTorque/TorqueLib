@@ -15,7 +15,7 @@ public final class TorqueMathUtil {
      * @param a Value to constrain by
      * @return The constrained value of n
      */
-    public static double constrain(final double n, final double a) { return Math.max(Math.min(n, a), -a); }
+    public static final double constrain(final double n, final double a) { return Math.max(Math.min(n, a), -a); }
 
     /**
      * Return contrained value n between a and b
@@ -25,7 +25,7 @@ public final class TorqueMathUtil {
      * @param b Value to constrain the value under, the maximum value
      * @return The constrained value of n
      */
-    public static double constrain(final double n, final double a, final double b) {
+    public static final double constrain(final double n, final double a, final double b) {
         return Math.max(Math.min(n, b), a);
     }
 }
