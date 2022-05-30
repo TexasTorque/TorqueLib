@@ -230,9 +230,10 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public final double getPositionDegrees() {
-        System.err.println("Method not implemented SparkMax.getPositionDegrees()");
-        System.exit(1);
-        return 0;
+        return getPosition() * 360 / CLICKS_PER_ROTATION;
+        //System.err.println("Method not implemented SparkMax.getPositionDegrees()");
+        //System.exit(1);
+        //return 0;
     }
 
     /**

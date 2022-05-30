@@ -28,4 +28,6 @@ public final class TorqueMathUtil {
     public static final double constrain(final double n, final double a, final double b) {
         return Math.max(Math.min(n, b), a);
     }
+
+  
 }
