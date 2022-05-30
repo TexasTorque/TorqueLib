@@ -3,9 +3,12 @@ package org.texastorque.torquelib.util;
 /**
  * Uncatagorized static functions used throughout the codebase.
  * 
+ * @apiNote The fancy print functions are not done yet.
+ * 
  * @author Justus Languell
  */
 public final class TorqueUtils {
+    private TorqueUtils() {}
 
     /**
      * Defines either enclosing or parent.
@@ -193,7 +196,7 @@ public final class TorqueUtils {
      * Main function to run tests on this class.
      */
     public static final void main(final String[] arguments) {
-        print(PrintColor.GREEN.bolded(), "Hello, World!\n");
+        print(PrintColor.GREEN, "Hello, World!\n");
         println(PrintColor.GREEN, "Hello, World!");
         print(PrintColor.RED, "This", " is ", 5, " and ", 7, "\n");
         println(PrintColor.RED, "This", " is ", 5, " and ", 7);
