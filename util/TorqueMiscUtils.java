@@ -1,14 +1,14 @@
 package org.texastorque.torquelib.util;
 
 /**
- * Uncatagorized static functions used throughout the codebase.
+ * Miscellaneous and uncatagorized static functions used throughout the codebase.
  * 
  * @apiNote The fancy print functions are not done yet.
  * 
  * @author Justus Languell
  */
-public final class TorqueUtils {
-    private TorqueUtils() {}
+public final class TorqueMiscUtils {
+    private TorqueMiscUtils() {}
 
     /**
      * Defines either enclosing or parent.
