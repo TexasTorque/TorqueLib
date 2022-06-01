@@ -1,4 +1,6 @@
-package org.texastorque.torquelib.util;
+package org.texastorque.torquelib.control;
+
+import org.texastorque.torquelib.util.TorqueMathUtil;
 
 /**
  * An implementation of the speedshifter used in

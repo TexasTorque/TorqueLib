@@ -1,4 +1,4 @@
-package org.texastorque.torquelib.util;
+package org.texastorque.torquelib.control;
 
 public final class TorqueSubsequent {
     private boolean hasRan;

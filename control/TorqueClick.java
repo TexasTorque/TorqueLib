@@ -1,8 +1,8 @@
-package org.texastorque.torquelib.util;
+package org.texastorque.torquelib.control;
 
 /**
- * A replacement for the TorqueToggle class (pretty much)
- *
+ * Notifies when a boolean value initially changes from false to true.
+
  * @author Jack Pittenger
  */
 public final class TorqueClick {
