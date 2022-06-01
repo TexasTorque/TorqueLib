@@ -17,11 +17,11 @@ public final class TorqueMiscUtils {
     
     /**
      * A time method that can be used on the robot and 
-     * on a computer. Should really only be used for 
+     * on a computer. Should really only be used for relative use.
      * 
      * @returns The current time in seconds.
      */
-    public static final double getTimestamp() {
+    public static final double time() {
         return onRobot ? Timer.getFPGATimestamp() : System.currentTimeMillis() / 1000.;
     }
 
