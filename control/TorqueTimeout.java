@@ -29,7 +29,8 @@ public final class TorqueTimeout {
      */
     public final boolean calculate(final boolean action) {
         if (!action)
-            return (start = NOT_STARTED) != NOT_STARTED;
+            return (start = NOT_STARTED) != NOT_STARTED; // sets start to -1 and returns false
+                                                         // wastes about 2-3 cpu cycles 😎
         if (start == NOT_STARTED)
             start = TorqueMiscUtils.time();
         return TorqueMiscUtils.time() - start < timeout;
