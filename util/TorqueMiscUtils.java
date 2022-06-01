@@ -1,5 +1,7 @@
 package org.texastorque.torquelib.util;
 
+import edu.wpi.first.wpilibj.Timer;
+
 /**
  * Miscellaneous and uncatagorized static functions used throughout the codebase.
  * 
@@ -9,6 +11,19 @@ package org.texastorque.torquelib.util;
  */
 public final class TorqueMiscUtils {
     private TorqueMiscUtils() {}
+
+    public static final String osName = System.getProperty("os.name");
+    public static final boolean onRobot = osName.equals("ROBORIO"); // TODO: This is a placeholder
+    
+    /**
+     * A time method that can be used on the robot and 
+     * on a computer. Should really only be used for 
+     * 
+     * @returns The current time in seconds.
+     */
+    public static final double getTimestamp() {
+        return onRobot ? Timer.getFPGATimestamp() : System.currentTimeMillis() / 1000.;
+    }
 
     /**
      * Defines either enclosing or parent.

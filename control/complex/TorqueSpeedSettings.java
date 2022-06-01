@@ -1,5 +1,6 @@
-package org.texastorque.torquelib.control;
+package org.texastorque.torquelib.control.complex;
 
+import org.texastorque.torquelib.control.TorqueClick;
 import org.texastorque.torquelib.util.TorqueMathUtil;
 
 /**
@@ -62,11 +63,11 @@ public final class TorqueSpeedSettings {
      * @return The current speed setting.
      */
     public final double update(final boolean up, final boolean down, final boolean min, final boolean max) {
-        if (clickUp.calc(up)) speed = (double)TorqueMathUtil.constrain(speed + increment, minimum, maximum);
-        if (clickDown.calc(down)) speed = (double)TorqueMathUtil.constrain(speed - increment, minimum, maximum);
+        if (clickUp.calculate(up)) speed = (double)TorqueMathUtil.constrain(speed + increment, minimum, maximum);
+        if (clickDown.calculate(down)) speed = (double)TorqueMathUtil.constrain(speed - increment, minimum, maximum);
 
-        if (clickMin.calc(min)) speed = minimum;
-        if (clickMax.calc(max)) speed = maximum;
+        if (clickMin.calculate(min)) speed = minimum;
+        if (clickMax.calculate(max)) speed = maximum;
 
         return speed;
     }
