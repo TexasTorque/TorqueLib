@@ -31,7 +31,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     private SparkMaxAnalogSensor analogEncoder;
     private ArrayList<CANSparkMax> followers = new ArrayList<>();
 
-     /**
+    /**
      * Clicks per rotation on the motor encoder.
      */
     public final double CLICKS_PER_ROTATION;
@@ -231,9 +231,9 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     @Override
     public final double getPositionDegrees() {
         return getPosition() * 360 / CLICKS_PER_ROTATION;
-        //System.err.println("Method not implemented SparkMax.getPositionDegrees()");
-        //System.exit(1);
-        //return 0;
+        // System.err.println("Method not implemented SparkMax.getPositionDegrees()");
+        // System.exit(1);
+        // return 0;
     }
 
     /**
@@ -488,7 +488,5 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         }
     }
 
-    public final void setEncoderZero(final double position) {
-        this.encoderZero = position + getPosition();
-    }
+    public final void setEncoderZero(final double position) { this.encoderZero = position + getPosition(); }
 }

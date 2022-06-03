@@ -15,11 +15,11 @@ import org.texastorque.torquelib.motors.base.TorquePIDMotor;
 import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
 import org.texastorque.torquelib.util.KPID;
 
-//TODO Peep this: https://github.com/Team364/BaseFalconSwerve/blob/main/src/main/java/frc/lib/math/Conversions.java
+// TODO Peep this: https://github.com/Team364/BaseFalconSwerve/blob/main/src/main/java/frc/lib/math/Conversions.java
 
 /**
  * The Texas Torque wrapper for the Falcon (TalonFX) motor controller.
- * 
+ *
  * @author Justus Languell
  * @author Jack Pittenger
  */
@@ -27,7 +27,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
     private WPI_TalonFX motor;
     private ArrayList<WPI_TalonFX> followers = new ArrayList<>();
 
-     /**
+    /**
      * Clicks per rotation on the motor encoder.
      */
     public final double CLICKS_PER_ROTATION = 4096;

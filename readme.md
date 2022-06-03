@@ -14,7 +14,7 @@ Well the easiest way is to make your new project using [TorqueTemplate](https://
 
 But if you so insist, you can add it to an existing project using:
 
-`git submodule add https://github.com/TexasTorque/TorqueLib	src/main/java/org/texastorque/torquelib`
+`git submodule add https://github.com/TexasTorque/TorqueLib src/main/java/org/texastorque/torquelib`
 
 ## 2023 Refactor
 

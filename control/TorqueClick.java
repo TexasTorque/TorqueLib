@@ -13,9 +13,9 @@ public final class TorqueClick {
 
     /**
      * Has current just changed from false to true?
-     * 
+     *
      * @param current The current value to check.
-     * 
+     *
      * @return If the current value has just changed from false to true.
      */
     public final boolean calculate(final boolean current) {

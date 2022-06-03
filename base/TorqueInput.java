@@ -4,7 +4,7 @@ import org.texastorque.torquelib.util.GenericController;
 
 /**
  * Input base class. Holds references to controllers.
- * 
+ *
  * @author Justus Languell
  */
 public abstract class TorqueInput {
