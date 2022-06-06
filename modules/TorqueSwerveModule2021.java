@@ -32,6 +32,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     private final double driveGearing, wheelRadiusMeters;
 
     private final SimpleMotorFeedforward driveFeedForward;
+    private final int invCoef;
 
     private boolean logging = false;
 
@@ -54,6 +55,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
                                   final double maxVelocity, final double maxAcceleration,
                                   final SimpleMotorFeedforward driveFeedForward) {
         super(id);
+        invCoef = ((id & 1) << 1) - 1; // WTF? -> invCoef = id % 2 == 0 ? -1 : 1;
 
         drive = new TorqueSparkMax(drivePort);
         drive.configurePID(drivePID);
@@ -87,19 +89,17 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     public final void setDesiredState(SwerveModuleState state) {
         state = SwerveModuleState.optimize(state, getRotation());
 
-        final double requestedEncoderUnits = (state.angle.getDegrees() * rotate.CLICKS_PER_ROTATION * 2 / 360);
+        final double requestedEncoderUnits = (state.angle.getDegrees() * invCoef * rotate.CLICKS_PER_ROTATION * 2 / 360);
         final double adjustedEncoderUnits =
                 Math.IEEEremainder(requestedEncoderUnits - rotate.getPosition(), rotate.CLICKS_PER_ROTATION) +
                 rotate.getPosition();
 
         rotate.setPosition(adjustedEncoderUnits);
 
-        if (id == 0) {
-            putNumber("ReqDeg", state.angle.getDegrees());
-            putNumber("ReqEnc", requestedEncoderUnits);
-            putNumber("RealEnc", rotate.getPosition());
-            putNumber("RealDeg", getRotationDegrees());
-        }
+        putNumber("ReqDeg", state.angle.getDegrees());
+        putNumber("ReqEnc", requestedEncoderUnits);
+        putNumber("RealEnc", rotate.getPosition());
+        putNumber("RealDeg", getRotationDegrees());
 
         if (DriverStation.isTeleop()) {
             final double setpoint = Math.min(-state.speedMetersPerSecond / maxVelocity, 1.);
@@ -156,7 +156,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
             ret += 180;
         else if (Math.signum(val) == 1 && Math.floor(val / rotate.CLICKS_PER_ROTATION) % 2 == 1)
             ret -= 180;
-        return ret;
+        return ret * invCoef;
     }
 
     /**
@@ -209,6 +209,6 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      * @param value The value to log.
      */
     private final void putNumber(final String key, final double value) {
-        if (logging) SmartDashboard.putNumber(String.format("%d %s", id, key), value);
+        if (logging) SmartDashboard.putNumber(String.format("(%d) %s", id, key), value);
     }
 }
