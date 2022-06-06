@@ -16,6 +16,7 @@ import org.texastorque.torquelib.motors.base.TorqueMotor;
 import org.texastorque.torquelib.motors.base.TorquePIDMotor;
 import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
 import org.texastorque.torquelib.util.KPID;
+import org.texastorque.torquelib.util.TorqueMiscUtils;
 
 /**
  * The Texas Torque wrapper for the SparkMax motor controller.
@@ -148,8 +149,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public final void setPositionDegrees(final double setpoint) {
-        System.err.println("Method not implemented SparkMax.setPositionDegrees()");
-        System.exit(1);
+        TorqueMiscUtils.notImplemented();
     }
 
     /**
@@ -159,8 +159,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public final void setPositionRotations(final double setpoint) {
-        System.err.println("Method not implemented SparkMax.setPositionRotations()");
-        System.exit(1);
+        TorqueMiscUtils.notImplemented();
     }
 
     /**
@@ -231,9 +230,6 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     @Override
     public final double getPositionDegrees() {
         return getPosition() * 360 / CLICKS_PER_ROTATION;
-        // System.err.println("Method not implemented SparkMax.getPositionDegrees()");
-        // System.exit(1);
-        // return 0;
     }
 
     /**
@@ -243,8 +239,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public final double getPositionRotations() {
-        System.err.println("Method not implemented SparkMax.getPositionRotations()");
-        System.exit(1);
+        TorqueMiscUtils.notImplemented();
         return 0;
     }
 
