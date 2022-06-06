@@ -1,6 +1,6 @@
 package org.texastorque.torquelib.control;
 
-import org.texastorque.torquelib.util.TorqueMiscUtils;
+import org.texastorque.torquelib.util.TorqueMiscUtil;
 
 /**
  * Controls code execution based on an action and a timeout.
@@ -31,7 +31,7 @@ public final class TorqueTimeout {
         if (!action)
             return (start = NOT_STARTED) != NOT_STARTED; // sets start to -1 and returns false
                                                          // wastes about 2-3 cpu cycles 😎
-        if (start == NOT_STARTED) start = TorqueMiscUtils.time();
-        return TorqueMiscUtils.time() - start < timeout;
+        if (start == NOT_STARTED) start = TorqueMiscUtil.time();
+        return TorqueMiscUtil.time() - start < timeout;
     }
 }

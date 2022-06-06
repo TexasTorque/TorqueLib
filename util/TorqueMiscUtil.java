@@ -7,12 +7,12 @@ import edu.wpi.first.wpilibj.Timer;
  *
  * @author Justus Languell
  */
-public final class TorqueMiscUtils {
+public final class TorqueMiscUtil {
     /**
      * Private constructor to prevent outside instantiation.
      * Can be instantiated by the main function to run tests.
      */
-    private TorqueMiscUtils() {
+    private TorqueMiscUtil() {
         test();
     }
 
@@ -20,7 +20,7 @@ public final class TorqueMiscUtils {
      * Main function to run tests on this class.
      */
     public static final void main(final String[] arguments) {
-        new TorqueMiscUtils();
+        new TorqueMiscUtil();
     }
 
     /**
