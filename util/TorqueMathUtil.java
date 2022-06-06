@@ -51,13 +51,27 @@ public final class TorqueMathUtil {
     public static final boolean prime(final long n) {
         if (n == 2 || n == 3) return true;
         if (n < 2 || n % 2 == 0 || n % 3 == 0) return false;
-        for (long i = 6L; i <= ((long)Math.sqrt(n) + 1); i += 6)
+        for (long i = 6L; i <= ((long) Math.sqrt(n) + 1); i += 6)
             if (n % (i - 1) == 0 || n % (i + 1) == 0) return false;
         return true;
     }
 
     /**
+     * Check if a number is inside of a certain bounds (inclusive).
+     * 
+     * @param n The number to check.
+     * @param a The lower bound.
+     * @param b The upper bound.
+     * 
+     * @return If the number is inside the bounds.
+     */
+    public static final boolean constrained(final double n, final double a, final double b) {
+        return n >= a && n <= b;
+    }
+
+    /**
      * Main function to run tests on this class.
      */
-    public static final void main(final String[] arguments) { System.out.println(round(123.4567, -2)); }
+    public static final void main(final String[] arguments) { 
+    }
 }
