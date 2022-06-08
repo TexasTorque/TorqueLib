@@ -55,7 +55,8 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
                                   final double maxVelocity, final double maxAcceleration,
                                   final SimpleMotorFeedforward driveFeedForward) {
         super(id);
-        invCoef = ((id & 1) << 1) - 1; // WTF? -> invCoef = id % 2 == 0 ? -1 : 1;
+        //invCoef = ((id & 1) << 1) - 1; // WTF? -> invCoef = id % 2 == 0 ? -1 : 1;
+        invCoef = 1;
 
         drive = new TorqueSparkMax(drivePort);
         drive.configurePID(drivePID);
@@ -102,7 +103,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         putNumber("RealDeg", getRotationDegrees());
 
         if (DriverStation.isTeleop()) {
-            final double setpoint = Math.min(-state.speedMetersPerSecond / maxVelocity, 1.);
+            final double setpoint = Math.min(-state.speedMetersPerSecond / maxVelocity, 1.); //* invCoef;
             putNumber("ReqDrive", -state.speedMetersPerSecond);
             putNumber("PwrDrive", setpoint);
             drive.setPercent(setpoint);

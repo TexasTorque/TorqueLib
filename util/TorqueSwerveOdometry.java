@@ -99,7 +99,7 @@ public final class TorqueSwerveOdometry {
 
         var chassisState = m_kinematics.toChassisSpeeds(moduleStates);
         var newPose = m_poseMeters.exp(new Twist2d(chassisState.vxMetersPerSecond * period,
-                                                   -chassisState.vyMetersPerSecond * period,
+                                                   chassisState.vyMetersPerSecond * period,
                                                    angle.minus(m_previousAngle).getRadians()));
 
         m_previousAngle = angle;
