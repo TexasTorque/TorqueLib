@@ -68,6 +68,24 @@ public final class TorqueMathUtil {
     public static final boolean constrained(final double n, final double a, final double b) {
         return n >= a && n <= b;
     }
+    
+    /**
+     * Returns either requestedSpeed or zero depending on if it will keep currentPosition
+     * between minPosition and maxPosition.
+     * 
+     * @param requestedSpeed The requested speed.
+     * @param currentPosition The current position.
+     * @param minPosition The minimum position.
+     * @param maxPosition The maximum position.
+     * 
+     * @return The desired speed.
+     */
+    public static final double linearConstraint(final double requestedSpeed, final double currentPosition, 
+            final double minPosition, final double maxPosition) {
+        return  (currentPosition <= minPosition && requestedSpeed < 0) ? 0 :
+                (currentPosition >= maxPosition && requestedSpeed > 0) ? 0 :
+                requestedSpeed;
+    }
 
     /**
      * Main function to run tests on this class.
