@@ -68,6 +68,19 @@ public final class TorqueMathUtil {
     public static final boolean constrained(final double n, final double a, final double b) {
         return n >= a && n <= b;
     }
+
+    /**
+     * Check if a number is within a tolerance of another number.
+     * 
+     * @param x One number.
+     * @param y The other number.
+     * @param t The tolerance.
+     * 
+     * @return If the numbers are within tolerance.
+     */
+    public static final boolean toleranced(final double x, final double y, final double t) {
+        return y - t <= x && x <= y + t;
+    }
     
     /**
      * Returns either requestedSpeed or zero depending on if it will keep currentPosition
