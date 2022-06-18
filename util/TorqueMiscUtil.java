@@ -1,6 +1,8 @@
 package org.texastorque.torquelib.util;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Miscellaneous and uncatagorized static functions used throughout the codebase.
@@ -34,7 +36,9 @@ public final class TorqueMiscUtil {
     }
 
     public static final String osName = System.getProperty("os.name");
-    public static final boolean onRobot = osName.equals("ROBORIO"); // TODO: This is a placeholder
+    static { SmartDashboard.putString("OSNAME", osName); }
+
+    public static final boolean onRobot = RobotBase.isReal();
 
     /**
      * A time method that can be used on the robot and
