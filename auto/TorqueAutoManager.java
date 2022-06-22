@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.HashMap;
 
+import org.texastorque.torquelib.auto.sequences.TorqueEmpty;
+
 /**
  * AutoManager base class. Handles backend methods
  * and containers.

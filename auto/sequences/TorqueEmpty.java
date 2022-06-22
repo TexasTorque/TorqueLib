@@ -1,4 +1,6 @@
-package org.texastorque.torquelib.auto;
+package org.texastorque.torquelib.auto.sequences;
+
+import org.texastorque.torquelib.auto.TorqueSequence;
 
 /**
  * An empty TorqueSequence for use as default
