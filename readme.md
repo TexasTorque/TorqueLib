@@ -2,6 +2,18 @@
 
 Code library created by and used within [FRC 1477, Texas Torque](https://texastorque.org/).
 
+## Planned Changes
+
+An updated list of planned changes will be kept here.
+
+- GenericController will be deprecated and replaced.
+- KPID will be deprecated and replaced.
+- TorqueIterative will be deprecated and replaced.
+- TorqueGearBox will be removed and functionality will be moved to TorqueMathUtil.
+- TorqueMathUtil will be renamed to TorqueMath.
+- TorqueMiscUtil will be renamed to TorqueUtil.
+- TorqueLogging will be added as a replacment for SmartDashboard.
+
 ## Documentation
 
 TorqueLib documentation can be found at [www.torquelib.com](http://torquelib.com/).

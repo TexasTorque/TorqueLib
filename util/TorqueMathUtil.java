@@ -6,7 +6,7 @@ package org.texastorque.torquelib.util;
  * @author Justus Languell
  */
 public final class TorqueMathUtil {
-    private TorqueMathUtil() {}
+    private TorqueMathUtil() { TorqueMiscUtil.staticConstructor(); }
 
     /**
      * Return contrained value n between a and -a
@@ -98,11 +98,5 @@ public final class TorqueMathUtil {
         return  (currentPosition <= minPosition && requestedSpeed < 0) ? 0 :
                 (currentPosition >= maxPosition && requestedSpeed > 0) ? 0 :
                 requestedSpeed;
-    }
-
-    /**
-     * Main function to run tests on this class.
-     */
-    public static final void main(final String[] arguments) { 
     }
 }

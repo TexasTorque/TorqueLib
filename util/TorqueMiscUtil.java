@@ -10,30 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author Justus Languell
  */
 public final class TorqueMiscUtil {
-    /**
-     * Private constructor to prevent outside instantiation.
-     * Can be instantiated by the main function to run tests.
-     */
-    private TorqueMiscUtil() {
-        test();
-    }
-
-    /**
-     * Main function to run tests on this class.
-     */
-    public static final void main(final String[] arguments) {
-        new TorqueMiscUtil();
-    }
-
-    /**
-     * Test functions in the class from non-static context.
-     */
-    private final void test() {
-        System.out.printf("> %s\n", getStackTraceElement(30));
-        warnf("This is a warning\n");
-        errorf("This is an error\n");
-        notImplemented();
-    }
+    private TorqueMiscUtil() { TorqueMiscUtil.staticConstructor(); }
 
     public static final String osName = System.getProperty("os.name");
     static { SmartDashboard.putString("OSNAME", osName); }
@@ -88,5 +65,28 @@ public final class TorqueMiscUtil {
     public static final void notImplemented() {
         final StackTraceElement parent = getStackTraceElement(3);
         errorf("ERROR: %s.%s is not implemented.\n", parent.getClassName(), parent.getMethodName());
+    }
+
+    /**
+     * Automatically kills the program and displays that we are trying to
+     * instantiate the constructor of a static class.
+     */
+    public static final void staticConstructor() {
+        errorf("ERROR: %s is a static class and cannot be instantiated.",
+                getStackTraceElement(3).getClassName()); 
+    }
+
+    /**
+     * Returns a throwable exception that notifies the developer that they are
+     * attempting to instantiate a static class.
+     * 
+     * Call this in static constructors like so:
+     * throw staticConstructor();
+     * 
+     * @return The throwable exception.
+     */
+    public static final UnsupportedOperationException staticConstructorError() {
+        return new UnsupportedOperationException(String.format("ERROR: %s is a static class and cannot be instantiated.",
+                getStackTraceElement(3).getClassName()));
     }
 }
