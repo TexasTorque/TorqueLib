@@ -1,7 +1,5 @@
 package org.texastorque.torquelib.auto.commands;
 
-import edu.wpi.first.wpilibj.Timer;
-
 import java.util.function.BooleanSupplier;
 
 import org.texastorque.torquelib.auto.TorqueCommand;
