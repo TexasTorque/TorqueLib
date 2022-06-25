@@ -32,4 +32,8 @@ public final class TorqueLogging {
     public static final void putPose2d(final String identifier, final Pose2d value) {
         putString(identifier, String.format(FORMAT_POSE2D, value.getX(), value.getY(), value.getRotation().getDegrees())); 
     }
+
+    public static final void putBoolean(final String identifier, final boolean value) {
+        table.getEntry(identifier).setBoolean(value);
+    }
 }
