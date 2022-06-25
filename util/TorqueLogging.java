@@ -26,7 +26,13 @@ public final class TorqueLogging {
     }
 
     public static final void putNumber(final String identifier, final double value) {
-        putString(identifier, String.format("%03.3f", value));
+        putString(identifier, String.format(FORMAT_DECIMAL, value));
+    }
+
+    public static final void putNumber(final String identifier, final double... values) {
+        final StringBuilder builder = new StringBuilder();
+        for (final double value : values) builder.append(String.format(FORMAT_DECIMAL, value));
+        putString(identifier, builder.toString());
     }
 
     public static final void putPose2d(final String identifier, final Pose2d value) {
