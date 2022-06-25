@@ -15,7 +15,7 @@ public interface TorqueSubsystemState {
      * @param state The state enum.
      */
     public static void logState(final TorqueSubsystemState state) {
-        SmartDashboard.putString(state.getClass().getSimpleName(), state.toString());
+        // SmartDashboard.putString(state.getClass().getSimpleName(), state.toString());
         TorqueLogging.putString(state.getClass().getSimpleName(), state.toString());
     }
 }
