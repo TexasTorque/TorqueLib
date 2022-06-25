@@ -1,5 +1,7 @@
 package org.texastorque.torquelib.base;
 
+import org.texastorque.torquelib.util.TorqueLogging;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -14,5 +16,6 @@ public interface TorqueSubsystemState {
      */
     public static void logState(final TorqueSubsystemState state) {
         SmartDashboard.putString(state.getClass().getSimpleName(), state.toString());
+        TorqueLogging.putString(state.getClass().getSimpleName(), state.toString());
     }
 }
