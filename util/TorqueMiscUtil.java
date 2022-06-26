@@ -13,9 +13,9 @@ public final class TorqueMiscUtil {
     private TorqueMiscUtil() { TorqueMiscUtil.staticConstructor(); }
 
     public static final String osName = System.getProperty("os.name");
-    static { SmartDashboard.putString("OSNAME", osName); }
-
-    public static final boolean onRobot = RobotBase.isReal();
+    //static { SmartDashboard.putString("OSNAME", osName); }
+    //public static final boolean onRobot = RobotBase.isReal();
+    public static final boolean onRobot = !osName.equals("Mac OS X");
 
     /**
      * A time method that can be used on the robot and
