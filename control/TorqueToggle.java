@@ -14,7 +14,7 @@ public final class TorqueToggle {
         this.value = value;
     }
 
-    public final void set(final boolean toggle) {
+    public final void calculate(final boolean toggle) {
         if (click.calculate(toggle)) value = !value;
     }
 
