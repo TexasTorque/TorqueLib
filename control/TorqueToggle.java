@@ -1,7 +1,7 @@
 package org.texastorque.torquelib.control;
 
 /**
- * A containerized boolean wrapper that uses TorqueClick logic.
+ * A wrapper to toggle a variable based on the output of a TorqueClick.
  * 
  * @author Justus Languell
  */
@@ -14,8 +14,8 @@ public final class TorqueToggle {
         this.value = value;
     }
 
-    public final void set(final boolean value) {
-        this.value = click.calculate(value);
+    public final void set(final boolean toggle) {
+        if (click.calculate(toggle)) value = !value;
     }
 
     public final boolean get() { return value; }
