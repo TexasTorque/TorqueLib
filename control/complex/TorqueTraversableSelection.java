@@ -18,7 +18,7 @@ public final class TorqueTraversableSelection<T> {
     private int index, lastIndex;
     private final T[] values;
     
-    public TorqueTraversableSelection(final T[] values) {
+    public TorqueTraversableSelection(final T... values) {
         this.values = values;
     }
 
