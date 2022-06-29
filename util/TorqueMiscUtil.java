@@ -67,6 +67,15 @@ public final class TorqueMiscUtil {
         errorf("ERROR: %s.%s is not implemented.\n", parent.getClassName(), parent.getMethodName());
     }
 
+      /**
+     * Automatically kills the program and displays that this method
+     * is unimplemented to the console.
+     */
+    public static final void outOfDate() {
+        final StackTraceElement parent = getStackTraceElement(3);
+        errorf("ERROR: %s.%s is not out of date.\n", parent.getClassName(), parent.getMethodName());
+    }
+
     /**
      * Automatically kills the program and displays that we are trying to
      * instantiate the constructor of a static class.
