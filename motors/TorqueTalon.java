@@ -1,15 +1,15 @@
 package org.texastorque.torquelib.motors;
 
+import java.util.ArrayList;
+
+import org.texastorque.torquelib.motors.base.TorqueMotor;
+import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
+import org.texastorque.torquelib.util.KPID;
+
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import java.util.ArrayList;
-import org.texastorque.torquelib.motors.base.TorqueEncoderMotor;
-import org.texastorque.torquelib.motors.base.TorqueMotor;
-import org.texastorque.torquelib.motors.base.TorquePIDMotor;
-import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
-import org.texastorque.torquelib.util.KPID;
 
 /**
  * The Texas Torque wrapper for the Talon (TalonSRX) motor controller.

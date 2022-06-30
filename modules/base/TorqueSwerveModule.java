@@ -3,6 +3,9 @@ package org.texastorque.torquelib.modules.base;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
+/**
+ * Swerve module base class
+ */
 public abstract class TorqueSwerveModule {
     protected final int id;
 

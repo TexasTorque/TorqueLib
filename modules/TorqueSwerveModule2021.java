@@ -1,17 +1,19 @@
 package org.texastorque.torquelib.modules;
 
+import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
+import org.texastorque.torquelib.motors.TorqueSparkMax;
+import org.texastorque.torquelib.motors.TorqueTalon;
+import org.texastorque.torquelib.util.KPID;
+
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
-import org.texastorque.torquelib.motors.TorqueSparkMax;
-import org.texastorque.torquelib.motors.TorqueTalon;
-import org.texastorque.torquelib.util.KPID;
 
 /**
  * A representation of the 2021 Texas Torque custom swervedrive module.

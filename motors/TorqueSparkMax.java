@@ -1,5 +1,12 @@
 package org.texastorque.torquelib.motors;
 
+import java.util.ArrayList;
+
+import org.texastorque.torquelib.motors.base.TorqueMotor;
+import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
+import org.texastorque.torquelib.util.KPID;
+import org.texastorque.torquelib.util.TorqueMiscUtil;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -10,13 +17,6 @@ import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
-import java.util.ArrayList;
-import org.texastorque.torquelib.motors.base.TorqueEncoderMotor;
-import org.texastorque.torquelib.motors.base.TorqueMotor;
-import org.texastorque.torquelib.motors.base.TorquePIDMotor;
-import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
-import org.texastorque.torquelib.util.KPID;
-import org.texastorque.torquelib.util.TorqueMiscUtil;
 
 /**
  * The Texas Torque wrapper for the SparkMax motor controller.

@@ -1,6 +1,7 @@
 package org.texastorque.torquelib.sensors;
 
 import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.SPI;
 

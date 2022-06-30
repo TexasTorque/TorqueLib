@@ -2,8 +2,6 @@ package org.texastorque.torquelib.base;
 
 import org.texastorque.torquelib.util.TorqueLogging;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /**
  * A enum interface that is extended by enums that
  * describe subsystem state.

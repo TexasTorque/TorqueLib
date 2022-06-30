@@ -8,8 +8,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.texastorque.torquelib.control.TorqueRamp;
-import org.texastorque.torquelib.control.TorqueTimeout;
-import org.texastorque.torquelib.motors.TorqueFalcon;
 
 public final class Test {
     public static final String TEST_FILE_PATH =

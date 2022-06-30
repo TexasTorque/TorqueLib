@@ -1,13 +1,14 @@
 package org.texastorque.torquelib.base;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * A modified version of the WPILIBJ IterativeRobot template that uses two

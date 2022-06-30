@@ -1,13 +1,11 @@
-package org.texastorque.torquelib.control.complex;
-
-import org.texastorque.torquelib.control.TorqueClick;
+package org.texastorque.torquelib.control;
 
 /**
  * Wrapper for an array that has a selector that can be 
  * incremented or decremented on controller inputs.
  * 
  * [1, 2, 3, 4, 5]
- *  <- ^ -> 
+ *  <- ^ -> ß
  * 
  * @author Justus Languell
  */

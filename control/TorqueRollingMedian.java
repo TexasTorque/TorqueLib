@@ -1,4 +1,4 @@
-package org.texastorque.torquelib.util;
+package org.texastorque.torquelib.control;
 
 import java.util.Arrays;
 import java.util.LinkedList;

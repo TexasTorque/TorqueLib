@@ -1,8 +1,6 @@
 package org.texastorque.torquelib.util;
 
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Miscellaneous and uncatagorized static functions used throughout the codebase.

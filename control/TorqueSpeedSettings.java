@@ -1,11 +1,10 @@
-package org.texastorque.torquelib.control.complex;
+package org.texastorque.torquelib.control;
 
-import org.texastorque.torquelib.control.TorqueClick;
 import org.texastorque.torquelib.util.TorqueMathUtil;
 
 /**
  * An implementation of the speedshifter used in
- * some of the robots.
+ * some of the robots.ß
  *
  * @author Justus Languell
  */
