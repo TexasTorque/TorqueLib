@@ -3,7 +3,7 @@ package org.texastorque.torquelib.control;
 /**
  * Improvments to the algorithm used to drive a West Coast Drivetrain
  * durring teleop. Encapsulated in a class.
- * 
+ *
  * @author Justusß
  */
 public final class TorqueWCDTeleopDriver {
@@ -25,27 +25,15 @@ public final class TorqueWCDTeleopDriver {
         right = coef * (turn * y - forward * Math.pow(x, power) * Math.signum(x));
     }
 
-    public final double getLeft() {
-        return left;
-    }
+    public final double getLeft() { return left; }
 
-    public final double getRight() {
-        return right;
-    }
+    public final double getRight() { return right; }
 
-    public final void setForwardCoef(double forward) {
-        this.forward = forward;
-    }
+    public final void setForwardCoef(double forward) { this.forward = forward; }
 
-    public final void setTurnCoef(double turn) {
-        this.turn = turn;
-    }
+    public final void setTurnCoef(double turn) { this.turn = turn; }
 
-    public final void setLeft(double left) {
-        this.left = left;
-    }
+    public final void setLeft(double left) { this.left = left; }
 
-    public final void setRight(double right) {
-        this.right = right;
-    }
+    public final void setRight(double right) { this.right = right; }
 }

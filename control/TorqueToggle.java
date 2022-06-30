@@ -2,7 +2,7 @@ package org.texastorque.torquelib.control;
 
 /**
  * A wrapper to toggle a variable based on the output of a TorqueClick.
- * 
+ *
  * @author Justus Languell
  */
 public final class TorqueToggle {

@@ -51,52 +51,50 @@ public final class TorqueMathUtil {
     public static final boolean prime(final long n) {
         if (n == 2 || n == 3) return true;
         if (n < 2 || n % 2 == 0 || n % 3 == 0) return false;
-        for (long i = 6L; i <= ((long) Math.sqrt(n) + 1); i += 6)
+        for (long i = 6L; i <= ((long)Math.sqrt(n) + 1); i += 6)
             if (n % (i - 1) == 0 || n % (i + 1) == 0) return false;
         return true;
     }
 
     /**
      * Check if a number is inside of a certain bounds (inclusive).
-     * 
+     *
      * @param n The number to check.
      * @param a The lower bound.
      * @param b The upper bound.
-     * 
+     *
      * @return If the number is inside the bounds.
      */
-    public static final boolean constrained(final double n, final double a, final double b) {
-        return n >= a && n <= b;
-    }
+    public static final boolean constrained(final double n, final double a, final double b) { return n >= a && n <= b; }
 
     /**
      * Check if a number is within a tolerance of another number.
-     * 
+     *
      * @param x One number.
      * @param y The other number.
      * @param t The tolerance.
-     * 
+     *
      * @return If the numbers are within tolerance.
      */
     public static final boolean toleranced(final double x, final double y, final double t) {
         return y - t <= x && x <= y + t;
     }
-    
+
     /**
      * Returns either requestedSpeed or zero depending on if it will keep currentPosition
      * between minPosition and maxPosition.
-     * 
+     *
      * @param requestedSpeed The requested speed.
      * @param currentPosition The current position.
      * @param minPosition The minimum position.
      * @param maxPosition The maximum position.
-     * 
+     *
      * @return The desired speed.
      */
-    public static final double linearConstraint(final double requestedSpeed, final double currentPosition, 
-            final double minPosition, final double maxPosition) {
-        return  (currentPosition <= minPosition && requestedSpeed < 0) ? 0 :
-                (currentPosition >= maxPosition && requestedSpeed > 0) ? 0 :
-                requestedSpeed;
+    public static final double linearConstraint(final double requestedSpeed, final double currentPosition,
+                                                final double minPosition, final double maxPosition) {
+        return (currentPosition <= minPosition && requestedSpeed < 0) ? 0
+        : (currentPosition >= maxPosition && requestedSpeed > 0)      ? 0
+                                                                      : requestedSpeed;
     }
 }

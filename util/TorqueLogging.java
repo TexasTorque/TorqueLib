@@ -7,15 +7,15 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
  * Replacment for SmartDashboard.
- * 
+ *
  * @author Justus Languell
  */
 public final class TorqueLogging {
     public static final String TABLE_IDENTIFIER = "Log";
 
     public static final String FORMAT_DECIMAL = "%03.3f";
-    public static final String FORMAT_POSE2D = String.format("(%s, %s) %s°", 
-            FORMAT_DECIMAL, FORMAT_DECIMAL, FORMAT_DECIMAL);
+    public static final String FORMAT_POSE2D =
+            String.format("(%s, %s) %s°", FORMAT_DECIMAL, FORMAT_DECIMAL, FORMAT_DECIMAL);
     public static final String FORMAT_CHASSIS_SPEEDS = FORMAT_POSE2D;
 
     private static final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
@@ -38,12 +38,13 @@ public final class TorqueLogging {
     }
 
     public static final void putPose2d(final String identifier, final Pose2d value) {
-        putString(identifier, String.format(FORMAT_POSE2D, value.getX(), value.getY(), value.getRotation().getDegrees())); 
+        putString(identifier,
+                  String.format(FORMAT_POSE2D, value.getX(), value.getY(), value.getRotation().getDegrees()));
     }
 
     public static final void putChassisSpeeds(final String identifier, final ChassisSpeeds value) {
-        putString(identifier, String.format(FORMAT_CHASSIS_SPEEDS, value.vxMetersPerSecond, 
-                value.vyMetersPerSecond, value.omegaRadiansPerSecond));
+        putString(identifier, String.format(FORMAT_CHASSIS_SPEEDS, value.vxMetersPerSecond, value.vyMetersPerSecond,
+                                            value.omegaRadiansPerSecond));
     }
 
     public static final void putBoolean(final String identifier, final boolean value) {

@@ -11,8 +11,8 @@ public final class TorqueMiscUtil {
     private TorqueMiscUtil() { TorqueMiscUtil.staticConstructor(); }
 
     public static final String osName = System.getProperty("os.name");
-    //static { SmartDashboard.putString("OSNAME", osName); }
-    //public static final boolean onRobot = RobotBase.isReal();
+    // static { SmartDashboard.putString("OSNAME", osName); }
+    // public static final boolean onRobot = RobotBase.isReal();
     public static final boolean onRobot = !osName.equals("Mac OS X");
 
     /**
@@ -65,7 +65,7 @@ public final class TorqueMiscUtil {
         errorf("ERROR: %s.%s is not implemented.\n", parent.getClassName(), parent.getMethodName());
     }
 
-      /**
+    /**
      * Automatically kills the program and displays that this method
      * is unimplemented to the console.
      */
@@ -79,21 +79,20 @@ public final class TorqueMiscUtil {
      * instantiate the constructor of a static class.
      */
     public static final void staticConstructor() {
-        errorf("ERROR: %s is a static class and cannot be instantiated.",
-                getStackTraceElement(3).getClassName()); 
+        errorf("ERROR: %s is a static class and cannot be instantiated.", getStackTraceElement(3).getClassName());
     }
 
     /**
      * Returns a throwable exception that notifies the developer that they are
      * attempting to instantiate a static class.
-     * 
+     *
      * Call this in static constructors like so:
      * throw staticConstructor();
-     * 
+     *
      * @return The throwable exception.
      */
     public static final UnsupportedOperationException staticConstructorError() {
-        return new UnsupportedOperationException(String.format("ERROR: %s is a static class and cannot be instantiated.",
-                getStackTraceElement(3).getClassName()));
+        return new UnsupportedOperationException(String.format(
+                "ERROR: %s is a static class and cannot be instantiated.", getStackTraceElement(3).getClassName()));
     }
 }

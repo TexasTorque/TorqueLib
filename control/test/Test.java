@@ -6,7 +6,6 @@ import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import org.texastorque.torquelib.control.TorqueRamp;
 
 public final class Test {
@@ -41,7 +40,7 @@ public final class Test {
         // }, 0, 3000, TimeUnit.MILLISECONDS);
     }
 
-    //private final TorqueTimeout t = new TorqueTimeout(5);
+    // private final TorqueTimeout t = new TorqueTimeout(5);
     private final TorqueRamp ramp = new TorqueRamp(10, 3.2, 12);
 
     private final void init() {}

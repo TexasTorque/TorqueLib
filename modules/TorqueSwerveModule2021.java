@@ -1,19 +1,17 @@
 package org.texastorque.torquelib.modules;
 
-import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
-import org.texastorque.torquelib.motors.TorqueSparkMax;
-import org.texastorque.torquelib.motors.TorqueTalon;
-import org.texastorque.torquelib.util.KPID;
-
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
-
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
+import org.texastorque.torquelib.motors.TorqueSparkMax;
+import org.texastorque.torquelib.motors.TorqueTalon;
+import org.texastorque.torquelib.util.KPID;
 
 /**
  * A representation of the 2021 Texas Torque custom swervedrive module.
@@ -57,7 +55,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
                                   final double maxVelocity, final double maxAcceleration,
                                   final SimpleMotorFeedforward driveFeedForward) {
         super(id);
-        //invCoef = ((id & 1) << 1) - 1; // WTF? -> invCoef = id % 2 == 0 ? -1 : 1;
+        // invCoef = ((id & 1) << 1) - 1; // WTF? -> invCoef = id % 2 == 0 ? -1 : 1;
         invCoef = 1;
 
         drive = new TorqueSparkMax(drivePort);
@@ -92,7 +90,8 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     public final void setDesiredState(SwerveModuleState state) {
         state = SwerveModuleState.optimize(state, getRotation());
 
-        final double requestedEncoderUnits = (state.angle.getDegrees() * invCoef * rotate.CLICKS_PER_ROTATION * 2 / 360);
+        final double requestedEncoderUnits =
+                (state.angle.getDegrees() * invCoef * rotate.CLICKS_PER_ROTATION * 2 / 360);
         final double adjustedEncoderUnits =
                 Math.IEEEremainder(requestedEncoderUnits - rotate.getPosition(), rotate.CLICKS_PER_ROTATION) +
                 rotate.getPosition();
