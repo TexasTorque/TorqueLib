@@ -1,6 +1,6 @@
 package org.texastorque.torquelib.control;
 
-import org.texastorque.torquelib.util.TorqueMiscUtil;
+import org.texastorque.torquelib.util.TorqueUtil;
 
 /**
  * Request a time with set() and have calculate() return true
@@ -22,7 +22,7 @@ public final class TorqueRequestableTimeout {
      */
     public final void set(final double requested) {
         this.requested = Math.max(this.requested, requested);
-        last = TorqueMiscUtil.time();
+        last = TorqueUtil.time();
     }
 
     /**
@@ -32,7 +32,7 @@ public final class TorqueRequestableTimeout {
      */
     public final boolean calculate() {
         if (requested <= 0 || last <= 0) return false;
-        final double current = TorqueMiscUtil.time();
+        final double current = TorqueUtil.time();
         requested -= current - last;
         last = current;
         return requested > 0;

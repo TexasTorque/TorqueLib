@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
 import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
 import org.texastorque.torquelib.util.KPID;
-import org.texastorque.torquelib.util.TorqueMiscUtil;
+import org.texastorque.torquelib.util.TorqueUtil;
 
 /**
  * The Texas Torque wrapper for the SparkMax motor controller.
@@ -147,7 +147,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public final void setPositionDegrees(final double setpoint) {
-        TorqueMiscUtil.notImplemented();
+        TorqueUtil.notImplemented();
     }
 
     /**
@@ -157,7 +157,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public final void setPositionRotations(final double setpoint) {
-        TorqueMiscUtil.notImplemented();
+        TorqueUtil.notImplemented();
     }
 
     /**
@@ -237,7 +237,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     @Override
     public final double getPositionRotations() {
-        TorqueMiscUtil.notImplemented();
+        TorqueUtil.notImplemented();
         return 0;
     }
 

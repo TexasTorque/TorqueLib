@@ -1,6 +1,6 @@
 package org.texastorque.torquelib.control;
 
-import org.texastorque.torquelib.util.TorqueMiscUtil;
+import org.texastorque.torquelib.util.TorqueUtil;
 
 /**
  * Returns a certain value that linearly increases over time.
@@ -21,7 +21,7 @@ public final class TorqueRamp {
     public final double calculate(final boolean action) {
         if (!action) return (start = NOT_STARTED) + 1;
 
-        if (start == NOT_STARTED) start = TorqueMiscUtil.time();
-        return Math.min(slope * (TorqueMiscUtil.time() - start) + initial, end);
+        if (start == NOT_STARTED) start = TorqueUtil.time();
+        return Math.min(slope * (TorqueUtil.time() - start) + initial, end);
     }
 }

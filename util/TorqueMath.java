@@ -5,8 +5,8 @@ package org.texastorque.torquelib.util;
  *
  * @author Justus Languell
  */
-public final class TorqueMathUtil {
-    private TorqueMathUtil() { TorqueMiscUtil.staticConstructor(); }
+public final class TorqueMath {
+    private TorqueMath() { TorqueUtil.staticConstructor(); }
 
     /**
      * Return contrained value n between a and -a

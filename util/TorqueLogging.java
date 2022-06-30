@@ -21,7 +21,7 @@ public final class TorqueLogging {
     private static final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
     private static final NetworkTable table = ntInstance.getTable(TABLE_IDENTIFIER);
 
-    private TorqueLogging() { TorqueMiscUtil.staticConstructor(); }
+    private TorqueLogging() { TorqueUtil.staticConstructor(); }
 
     public static final void putString(final String identifier, final String value) {
         table.getEntry(identifier).setString(value);
