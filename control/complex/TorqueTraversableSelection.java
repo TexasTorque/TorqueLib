@@ -39,4 +39,5 @@ public final class TorqueTraversableSelection<T> {
     }
     
     public final T get() { return values[index]; }
+    public final T get(final int index) { return values[index]; }
 }
