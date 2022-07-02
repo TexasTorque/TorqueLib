@@ -80,6 +80,20 @@ public final class TorqueMath {
         return y - t <= x && x <= y + t;
     }
 
+      /**
+     * Check if a number is within a tolerance of another number with independent sides.
+     *
+     * @param x One number.
+     * @param y The other number.
+     * @param u The upper tolerance.
+     * @param l The lower tolerance.
+     *
+     * @return If the numbers are within tolerance.
+     */
+    public static final boolean toleranced(final double x, final double y, final double u, final double l) {
+        return y - l <= x && x <= y + u;
+    }
+
     /**
      * Returns either requestedSpeed or zero depending on if it will keep currentPosition
      * between minPosition and maxPosition.
