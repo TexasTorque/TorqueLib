@@ -46,6 +46,8 @@ def with_license(path, source):
     return source
 
 def validate(path):
+    if 'package-info.java' in path:
+        return
     source = open(path, 'r').read()
     source = with_license(path, source)
     open(path, 'w').write(source)
