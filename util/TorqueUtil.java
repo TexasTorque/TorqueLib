@@ -1,5 +1,8 @@
 package org.texastorque.torquelib.util;
 
+import java.util.Arrays;
+import java.util.function.BiConsumer;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -96,4 +99,42 @@ public final class TorqueUtil {
         return new UnsupportedOperationException(String.format(
                 "ERROR: %s is a static class and cannot be instantiated.", getStackTraceElement(3).getClassName()));
     }
+
+    /**
+     * Enumerated For (enumeratedFor) is a class that *trys* to
+     * implement similar functionality to Python:
+     * 
+     *  for i, element in enumerate(iterable):
+     *      doSomething(i, element)
+     * 
+     * in the form:
+     * 
+     *  <T>enumeratedFor(iterable, (i, element) -> {
+     *      doSomething(i, element);
+     *  });
+     * 
+     * So not that much more verbose, but you do have to specify type!
+     *
+     * @param <T> Type of the iterable.
+     * @param iterable The iterable to iterate over.
+     * @param f The functional interface to call. 
+     * 
+     * @author Justus Languell
+     */
+    public static final <T> void enumeratedFor(final Iterable<T> iterable, final BiConsumer<Integer, T> f) {
+        int i = 0;
+        for (final T element : iterable) f.accept(i++, element);
+    }
+
+    /**
+     * A wrapper for enumeratedFor that supports static arrays.
+     * 
+     * @param <T> Type of the iterable.
+     * @param array The array to iterate over.
+     * @param f The functional interface to call.
+     */
+    public static final <T> void enumeratedFor(final T[] array, final BiConsumer<Integer, T> f) {
+        enumeratedFor(Arrays.asList(array), f);
+    }
+
 }

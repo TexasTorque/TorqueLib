@@ -67,6 +67,18 @@ public final class TorqueMath {
      */
     public static final boolean constrained(final double n, final double a, final double b) { return n >= a && n <= b; }
 
+     /**
+     * Check if a number is within a tolerance of 0.
+     *
+     * @param x One number.
+     * @param t The tolerance.
+     *
+     * @return If the numbers are within tolerance.
+     */
+    public static final boolean toleranced(final double x, final double t) {
+        return Math.abs(x) <= t;
+    }    
+
     /**
      * Check if a number is within a tolerance of another number.
      *
@@ -80,6 +92,20 @@ public final class TorqueMath {
         return y - t <= x && x <= y + t;
     }
 
+    /**
+     * Another approach to 3 param toleranced, the one used in 2
+     * param toleranced. Should do the same thing?
+     *
+     * @param x One number.
+     * @param y The other number.
+     * @param t The tolerance.
+     *
+     * @return If the numbers are within tolerance.
+     */
+    public static final boolean toleranced2(final double x, final double y, final double t) {
+        return Math.abs(x - y) <= t;
+    }
+    
       /**
      * Check if a number is within a tolerance of another number with independent sides.
      *
