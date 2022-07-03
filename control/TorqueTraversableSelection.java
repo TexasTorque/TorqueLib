@@ -10,13 +10,16 @@ package org.texastorque.torquelib.control;
  * @author Justus Languell
  */
 public final class TorqueTraversableSelection<T> {
-    private final TorqueClick increment = new TorqueClick();
-    private final TorqueClick decrement = new TorqueClick();
+    private final TorqueClick increment = new TorqueClick(), decrement = new TorqueClick();
 
-    private int index, lastIndex;
+    private int index = 0, lastIndex = 0;
     private final T[] values;
 
     public TorqueTraversableSelection(final T... values) { this.values = values; }
+    public TorqueTraversableSelection(int index, final T... values) { 
+        this.index = index; 
+        this.values = values; 
+    }
 
     public final T calculate(final boolean decrement, final boolean increment) {
         if (this.decrement.calculate(decrement)) index = Math.max(index - 1, 0);
