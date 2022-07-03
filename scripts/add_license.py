@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+#
+# Add license headers to the codebase
+#
+# (c) Justus Languell 2022
+
 import os, datetime
 
 license_email = 'jus@gtsbr.org'
