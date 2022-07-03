@@ -7,8 +7,7 @@ import edu.wpi.first.wpilibj.Joystick;
  *
  * @author TexasTorque
  *
- * @apiNote Needs proper update / replacement.
- * @deprecated A replacement will be written.
+ * @deprecated Use TorqueController instead ({@link org.texastorque.torquelib.util.GenericController}).
  */
 @Deprecated
 public final class GenericController extends Joystick {
