@@ -7,13 +7,14 @@ package org.texastorque.torquelib.control;
  * @apiNote Functional replacement for KPID
  * ({@link org.texastorque.torquelib.util.KPID})
  * 
+ * TODO: Documentation
+ * TODO: Implement PID calculation functions
+ * TODO: Replace KPID in the rest of the codebase
+ * 
  * @author Justus Languell
  */
 public final class TorquePID {
-    public static final void main(final String[] arguments) {
-        final TorquePID pid = TorquePID.create(1).build();
-        System.out.println(pid);
-    }
+        
 
     private final double proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone;
 

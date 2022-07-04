@@ -26,7 +26,7 @@ public final class TorqueWCDTeleopDriver {
         this.coef = coef;
     }
 
-    public final void update(final double x, final double y) {
+    public final void calculate(final double x, final double y) {
         left = -coef * (-turn * y - forward * Math.pow(x, power) * Math.signum(x));
         right = coef * (turn * y - forward * Math.pow(x, power) * Math.signum(x));
     }
