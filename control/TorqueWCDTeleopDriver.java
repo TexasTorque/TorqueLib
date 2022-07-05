@@ -1,3 +1,9 @@
+/**
+ * Copyright 2011-2022 Texas Torque.
+ * 
+ * This file is part of TorqueLib, which is licensed under the MIT license.
+ * For more details, see ./license.txt or write <jus@gtsbr.org>.
+ */
 package org.texastorque.torquelib.control;
 
 /**
@@ -20,7 +26,7 @@ public final class TorqueWCDTeleopDriver {
         this.coef = coef;
     }
 
-    public final void update(final double x, final double y) {
+    public final void calculate(final double x, final double y) {
         left = -coef * (-turn * y - forward * Math.pow(x, power) * Math.signum(x));
         right = coef * (turn * y - forward * Math.pow(x, power) * Math.signum(x));
     }
