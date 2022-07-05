@@ -9,6 +9,10 @@ public final class TorqueToggle {
     private final TorqueClick click;
     private boolean value;
 
+    public TorqueToggle() { 
+        this.click = new TorqueClick();
+    }
+    
     public TorqueToggle(final boolean value) {
         this.click = new TorqueClick(value);
         this.value = value;
