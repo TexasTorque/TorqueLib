@@ -1,5 +1,7 @@
 package org.texastorque.torquelib.control;
 
+import org.texastorque.torquelib.util.TorqueUtil;
+
 /**
  * A class representation of a PID controller with 
  * control loop methods.
@@ -14,7 +16,11 @@ package org.texastorque.torquelib.control;
  * @author Justus Languell
  */
 public final class TorquePID {
-        
+
+    public final double calculate() {
+        TorqueUtil.notImplemented();
+        return 0.;
+    }
 
     private final double proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone;
 

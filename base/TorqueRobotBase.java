@@ -21,4 +21,6 @@ package org.texastorque.torquelib.base;
  *
  * @author Justus Languell
  */
-public class TorqueRobotBase {}
+public class TorqueRobotBase {
+    
+}
