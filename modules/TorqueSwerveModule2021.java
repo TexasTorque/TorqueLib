@@ -174,7 +174,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      *
      * @return Speed in rotations per minute.
      */
-    public final double metersPerSecondToEncoderPerMinute(double metersPerSecond) {
+    public final double metersPerSecondToEncoderPerMinute(final double metersPerSecond) {
         return metersPerSecond * (60. / 1.) * (1 / (2 * Math.PI * wheelRadiusMeters) * (1. / driveGearing));
     }
 
@@ -185,14 +185,14 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      *
      * @return Wheel speed in meters per second.
      */
-    public final double encoderPerMinuteToMetersPerSecond(double encodersPerMinute) {
+    public final double encoderPerMinuteToMetersPerSecond(final double encodersPerMinute) {
         return encodersPerMinute * (1. / 60.) * (2 * Math.PI * wheelRadiusMeters / 1.) * (driveGearing / 1.);
     }
 
     /**
      * Equalizes drive speeds to never exceed full power on the Neo.
      *
-     * @param states The swerve module states.
+     * @param states The swerve module states, this is mutated!
      * @param max Maximum translational speed.
      */
     public static void equalizedDriveRatio(SwerveModuleState[] states, final double max) {
