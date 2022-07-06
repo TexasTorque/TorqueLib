@@ -1,32 +1,40 @@
-/**
- * Copyright 2011-2022 Texas Torque.
- * 
- * This file is part of TorqueLib, which is licensed under the MIT license.
- * For more details, see ./license.txt or write <jus@gtsbr.org>.
- */
 package org.texastorque.torquelib.control;
 
-/**
- * A wrapper to toggle a variable based on the output of a TorqueClick.
- *
- * @author Justus Languell
- */
-public final class TorqueToggle {
-    private final TorqueClick click;
-    private boolean value;
+public class TorqueToggle {
 
-    public TorqueToggle() { 
-        this.click = new TorqueClick();
-    }
-    
-    public TorqueToggle(final boolean value) {
-        this.click = new TorqueClick(value);
-        this.value = value;
-    }
+	private boolean toggle;
+	private boolean lastValue;
 
-    public final void calculate(final boolean toggle) {
-        if (click.calculate(toggle)) value = !value;
-    }
+	public TorqueToggle() {
+		toggle = false;
+		lastValue = false;
+	}
 
-    public final boolean get() { return value; }
+	public TorqueToggle(boolean override) {
+		toggle = override;
+	}
+
+	public void calculate(boolean currentValue) {
+		// Checks for an edge in boolean state. We only want to perform an action once
+		// when we go from False to True
+		if (currentValue != lastValue) {
+			// If the value is true now, it is the first time it is true. Flip the toggle.
+			if (currentValue) {
+				toggle = !toggle;
+			}
+
+			// Keep track of the previous value. Does not need to be updated iflastCheck is
+			// already equal to current.
+			lastValue = currentValue;
+		}
+	}
+
+	public void set(boolean override) {
+		toggle = override;
+	}
+
+	public boolean get() {
+		return toggle;
+	}
+
 }
