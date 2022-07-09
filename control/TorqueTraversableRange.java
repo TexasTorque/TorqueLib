@@ -14,7 +14,7 @@ import org.texastorque.torquelib.util.TorqueMath;
  *
  * @author Justus Languell
  */
-public final class TorqueSpeedSettings {
+public final class TorqueTraversableRange {
 
     private final TorqueClick clickUp = new TorqueClick();
     private final TorqueClick clickDown = new TorqueClick();
@@ -34,7 +34,7 @@ public final class TorqueSpeedSettings {
      * @param minimum The maximum speed setting.
      * @param maximum The minimum speed setting.
      */
-    public TorqueSpeedSettings(final double speed, final double minimum, final double maximum) {
+    public TorqueTraversableRange(final double speed, final double minimum, final double maximum) {
         this.speed = speed;
         this.minimum = minimum;
         this.maximum = maximum;
@@ -49,7 +49,7 @@ public final class TorqueSpeedSettings {
      * @param maximum   The minimum speed setting.
      * @param increment The increment of the speed settings.
      */
-    public TorqueSpeedSettings(final double speed, final double minimum, final double maximum, final double increment) {
+    public TorqueTraversableRange(final double speed, final double minimum, final double maximum, final double increment) {
         this.speed = speed;
         this.minimum = minimum;
         this.maximum = maximum;

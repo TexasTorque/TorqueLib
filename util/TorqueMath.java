@@ -143,4 +143,30 @@ public final class TorqueMath {
         : (currentPosition >= maxPosition && requestedSpeed > 0)      ? 0
                                                                       : requestedSpeed;
     }
+
+    /**
+     * Returns an array with range of [min, max] and steps of increment.
+     * 
+     * @param min Min value (inclusive).
+     * @param max Max value (inclusive).
+     * @param increment Step increment.
+     * @return The array in range.
+     */
+    public static final double[] range(final double min, final double max, final double increment) {
+        final double[] array = new double[(int)((max - min) / increment) + 1];
+        for (double i = min; i <= max; i += increment)
+            array[(int)((i - min) / increment)] = i;
+        return array;
+    }
+
+    /**
+     * Returns an array with range of [min, max] and steps of 1.
+     * 
+     * @param min Min value (inclusive).
+     * @param max Max value (inclusive).
+     * @return The array in range.
+     */
+    public static final double[] range(final double min, final double max) {
+        return range(min, max, 1);
+    }
 }
