@@ -1,10 +1,16 @@
+/**
+ * Copyright 2011-2022 Texas Torque.
+ * 
+ * This file is part of TorqueLib, which is licensed under the MIT license.
+ * For more details, see ./license.txt or write <jus@gtsbr.org>.
+ */
 package org.texastorque.torquelib.control;
 
-import org.texastorque.torquelib.util.TorqueMiscUtil;
+import org.texastorque.torquelib.util.TorqueUtil;
 
 /**
  * Returns a certain value that linearly increases over time.
- * 
+ *
  * @author Justus Languell
  */
 public final class TorqueRamp {
@@ -19,10 +25,9 @@ public final class TorqueRamp {
     }
 
     public final double calculate(final boolean action) {
-        if (!action)
-            return (start = NOT_STARTED) + 1;
+        if (!action) return (start = NOT_STARTED) + 1;
 
-        if (start == NOT_STARTED) start = TorqueMiscUtil.time();
-        return Math.min(slope * (TorqueMiscUtil.time() - start) + initial, end);
+        if (start == NOT_STARTED) start = TorqueUtil.time();
+        return Math.min(slope * (TorqueUtil.time() - start) + initial, end);
     }
 }

@@ -1,3 +1,9 @@
+/**
+ * Copyright 2011-2022 Texas Torque.
+ * 
+ * This file is part of TorqueLib, which is licensed under the MIT license.
+ * For more details, see ./license.txt or write <jus@gtsbr.org>.
+ */
 package org.texastorque.torquelib.control.test;
 
 import java.io.File;
@@ -6,10 +12,7 @@ import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import org.texastorque.torquelib.control.TorqueRamp;
-import org.texastorque.torquelib.control.TorqueTimeout;
-import org.texastorque.torquelib.motors.TorqueFalcon;
 
 public final class Test {
     public static final String TEST_FILE_PATH =
@@ -43,7 +46,7 @@ public final class Test {
         // }, 0, 3000, TimeUnit.MILLISECONDS);
     }
 
-    //private final TorqueTimeout t = new TorqueTimeout(5);
+    // private final TorqueTimeout t = new TorqueTimeout(5);
     private final TorqueRamp ramp = new TorqueRamp(10, 3.2, 12);
 
     private final void init() {}

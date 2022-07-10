@@ -1,25 +1,30 @@
-package org.texastorque.torquelib.control.complex;
-
-import org.texastorque.torquelib.control.TorqueClick;
+/**
+ * Copyright 2011-2022 Texas Torque.
+ * 
+ * This file is part of TorqueLib, which is licensed under the MIT license.
+ * For more details, see ./license.txt or write <jus@gtsbr.org>.
+ */
+package org.texastorque.torquelib.control;
 
 /**
- * Wrapper for an array that has a selector that can be 
+ * Wrapper for an array that has a selector that can be
  * incremented or decremented on controller inputs.
- * 
+ *
  * [1, 2, 3, 4, 5]
- *  <- ^ -> 
- * 
+ *  <- ^ -> ß
+ *
  * @author Justus Languell
  */
 public final class TorqueTraversableSelection<T> {
-    private final TorqueClick increment = new TorqueClick();
-    private final TorqueClick decrement = new TorqueClick();
+    private final TorqueClick increment = new TorqueClick(), decrement = new TorqueClick();
 
-    private int index, lastIndex;
+    private int index = 0, lastIndex = 0;
     private final T[] values;
-    
-    public TorqueTraversableSelection(final T[] values) {
-        this.values = values;
+
+    public TorqueTraversableSelection(final T... values) { this.values = values; }
+    public TorqueTraversableSelection(int index, final T... values) { 
+        this.index = index; 
+        this.values = values; 
     }
 
     public final T calculate(final boolean decrement, final boolean increment) {
@@ -30,13 +35,14 @@ public final class TorqueTraversableSelection<T> {
 
     /**
      * Check if the class has been updated since the last call of this method.
-     * 
+     *
      * @return Has the class been updated since the last call of this method.
      */
     public final boolean hasUpdated() {
         if (index == lastIndex) return false;
         return (lastIndex = index) == index;
     }
-    
+
     public final T get() { return values[index]; }
+    public final T get(final int index) { return values[index]; }
 }

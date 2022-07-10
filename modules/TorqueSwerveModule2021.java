@@ -1,3 +1,9 @@
+/**
+ * Copyright 2011-2022 Texas Torque.
+ * 
+ * This file is part of TorqueLib, which is licensed under the MIT license.
+ * For more details, see ./license.txt or write <jus@gtsbr.org>.
+ */
 package org.texastorque.torquelib.modules;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -55,7 +61,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
                                   final double maxVelocity, final double maxAcceleration,
                                   final SimpleMotorFeedforward driveFeedForward) {
         super(id);
-        //invCoef = ((id & 1) << 1) - 1; // WTF? -> invCoef = id % 2 == 0 ? -1 : 1;
+        // invCoef = ((id & 1) << 1) - 1; // WTF? -> invCoef = id % 2 == 0 ? -1 : 1;
         invCoef = 1;
 
         drive = new TorqueSparkMax(drivePort);
@@ -90,7 +96,8 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     public final void setDesiredState(SwerveModuleState state) {
         state = SwerveModuleState.optimize(state, getRotation());
 
-        final double requestedEncoderUnits = (state.angle.getDegrees() * invCoef * rotate.CLICKS_PER_ROTATION * 2 / 360);
+        final double requestedEncoderUnits =
+                (state.angle.getDegrees() * invCoef * rotate.CLICKS_PER_ROTATION * 2 / 360);
         final double adjustedEncoderUnits =
                 Math.IEEEremainder(requestedEncoderUnits - rotate.getPosition(), rotate.CLICKS_PER_ROTATION) +
                 rotate.getPosition();
@@ -167,7 +174,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      *
      * @return Speed in rotations per minute.
      */
-    public final double metersPerSecondToEncoderPerMinute(double metersPerSecond) {
+    public final double metersPerSecondToEncoderPerMinute(final double metersPerSecond) {
         return metersPerSecond * (60. / 1.) * (1 / (2 * Math.PI * wheelRadiusMeters) * (1. / driveGearing));
     }
 
@@ -178,14 +185,14 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      *
      * @return Wheel speed in meters per second.
      */
-    public final double encoderPerMinuteToMetersPerSecond(double encodersPerMinute) {
+    public final double encoderPerMinuteToMetersPerSecond(final double encodersPerMinute) {
         return encodersPerMinute * (1. / 60.) * (2 * Math.PI * wheelRadiusMeters / 1.) * (driveGearing / 1.);
     }
 
     /**
      * Equalizes drive speeds to never exceed full power on the Neo.
      *
-     * @param states The swerve module states.
+     * @param states The swerve module states, this is mutated!
      * @param max Maximum translational speed.
      */
     public static void equalizedDriveRatio(SwerveModuleState[] states, final double max) {

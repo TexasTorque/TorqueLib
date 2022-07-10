@@ -1,6 +1,12 @@
+/**
+ * Copyright 2011-2022 Texas Torque.
+ * 
+ * This file is part of TorqueLib, which is licensed under the MIT license.
+ * For more details, see ./license.txt or write <jus@gtsbr.org>.
+ */
 package org.texastorque.torquelib.control;
 
-import org.texastorque.torquelib.util.TorqueMiscUtil;
+import org.texastorque.torquelib.util.TorqueUtil;
 
 /**
  * Controls code execution based on an action and a timeout.
@@ -31,7 +37,7 @@ public final class TorqueTimeout {
         if (!action)
             return (start = NOT_STARTED) != NOT_STARTED; // sets start to -1 and returns false
                                                          // wastes about 2-3 cpu cycles 😎
-        if (start == NOT_STARTED) start = TorqueMiscUtil.time();
-        return TorqueMiscUtil.time() - start < timeout;
+        if (start == NOT_STARTED) start = TorqueUtil.time();
+        return TorqueUtil.time() - start < timeout;
     }
 }

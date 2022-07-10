@@ -1,3 +1,9 @@
+/**
+ * Copyright 2011-2022 Texas Torque.
+ * 
+ * This file is part of TorqueLib, which is licensed under the MIT license.
+ * For more details, see ./license.txt or write <jus@gtsbr.org>.
+ */
 package org.texastorque.torquelib.auto;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -5,7 +11,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.HashMap;
-
 import org.texastorque.torquelib.auto.sequences.TorqueEmpty;
 
 /**

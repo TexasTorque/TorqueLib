@@ -1,3 +1,9 @@
+/**
+ * Copyright 2011-2022 Texas Torque.
+ * 
+ * This file is part of TorqueLib, which is licensed under the MIT license.
+ * For more details, see ./license.txt or write <jus@gtsbr.org>.
+ */
 package org.texastorque.torquelib.motors;
 
 import com.ctre.phoenix.ErrorCode;
@@ -5,9 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import java.util.ArrayList;
-import org.texastorque.torquelib.motors.base.TorqueEncoderMotor;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
-import org.texastorque.torquelib.motors.base.TorquePIDMotor;
 import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
 import org.texastorque.torquelib.util.KPID;
 

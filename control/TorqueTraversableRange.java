@@ -1,15 +1,20 @@
-package org.texastorque.torquelib.control.complex;
+/**
+ * Copyright 2011-2022 Texas Torque.
+ * 
+ * This file is part of TorqueLib, which is licensed under the MIT license.
+ * For more details, see ./license.txt or write <jus@gtsbr.org>.
+ */
+package org.texastorque.torquelib.control;
 
-import org.texastorque.torquelib.control.TorqueClick;
-import org.texastorque.torquelib.util.TorqueMathUtil;
+import org.texastorque.torquelib.util.TorqueMath;
 
 /**
  * An implementation of the speedshifter used in
- * some of the robots.
+ * some of the robots.ß
  *
  * @author Justus Languell
  */
-public final class TorqueSpeedSettings {
+public final class TorqueTraversableRange {
 
     private final TorqueClick clickUp = new TorqueClick();
     private final TorqueClick clickDown = new TorqueClick();
@@ -29,7 +34,7 @@ public final class TorqueSpeedSettings {
      * @param minimum The maximum speed setting.
      * @param maximum The minimum speed setting.
      */
-    public TorqueSpeedSettings(final double speed, final double minimum, final double maximum) {
+    public TorqueTraversableRange(final double speed, final double minimum, final double maximum) {
         this.speed = speed;
         this.minimum = minimum;
         this.maximum = maximum;
@@ -44,7 +49,7 @@ public final class TorqueSpeedSettings {
      * @param maximum   The minimum speed setting.
      * @param increment The increment of the speed settings.
      */
-    public TorqueSpeedSettings(final double speed, final double minimum, final double maximum, final double increment) {
+    public TorqueTraversableRange(final double speed, final double minimum, final double maximum, final double increment) {
         this.speed = speed;
         this.minimum = minimum;
         this.maximum = maximum;
@@ -63,8 +68,8 @@ public final class TorqueSpeedSettings {
      * @return The current speed setting.
      */
     public final double update(final boolean up, final boolean down, final boolean min, final boolean max) {
-        if (clickUp.calculate(up)) speed = (double)TorqueMathUtil.constrain(speed + increment, minimum, maximum);
-        if (clickDown.calculate(down)) speed = (double)TorqueMathUtil.constrain(speed - increment, minimum, maximum);
+        if (clickUp.calculate(up)) speed = (double)TorqueMath.constrain(speed + increment, minimum, maximum);
+        if (clickDown.calculate(down)) speed = (double)TorqueMath.constrain(speed - increment, minimum, maximum);
 
         if (clickMin.calculate(min)) speed = minimum;
         if (clickMax.calculate(max)) speed = maximum;
