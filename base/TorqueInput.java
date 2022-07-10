@@ -12,6 +12,10 @@ import org.texastorque.torquelib.util.GenericController;
  * Input base class. Holds references to controllers.
  *
  * @author Justus Languell
+ * 
+ * @deprecated Holds references to {@link GenericController}, which is deprecated.
+ * 
+ * @apiNote Use {@link TorqueInput2} until this class is updated.
  */
 public abstract class TorqueInput {
     protected GenericController driver, operator;
