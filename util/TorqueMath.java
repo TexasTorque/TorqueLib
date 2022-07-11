@@ -6,6 +6,8 @@
  */
 package org.texastorque.torquelib.util;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * A static class of useful math utilities.
  *
@@ -169,4 +171,30 @@ public final class TorqueMath {
     public static final double[] range(final double min, final double max) {
         return range(min, max, 1);
     }
+
+    /**
+	 * This method will return an integer (as a long) in the range [1, high].
+	 *
+	 * @param high The upper bound of range the number could be from.
+	 *
+	 * @return The randomly generated number.
+	 */
+	public static final long random(final long high) {
+		return random(1, high);
+	}
+
+    /**
+	 * This method will return an integer (as a long) in the range [low, high].
+	 *
+	 * @param low The lower bound range the number could be from.
+	 * @param high The upper bound of range the number could be from.
+	 *
+	 * @return The randomly generated number.
+	 */
+	public static final long random(final long low, final long high) {
+		// return (long) (Math.random() * (high - low + 1)) + low;
+        // ThreadLocalRandom is more efficient
+        return ThreadLocalRandom.current().nextLong(low, high + 1);
+
+	}
 }
