@@ -9,11 +9,11 @@ package org.texastorque.torquelib.auto.commands;
 import java.util.function.Supplier;
 import org.texastorque.torquelib.auto.TorqueCommand;
 
-public final class Generic extends TorqueCommand {
+public final class TorqueGeneric extends TorqueCommand {
     private final Runnable onInit, onContinuous, onEnd;
     private final Supplier<Boolean> condition;
 
-    public Generic(final Builder builder) {
+    public TorqueGeneric(final Builder builder) {
         this.onInit = builder.init;
         this.onContinuous = builder.continuous;
         this.onEnd = builder.end;
@@ -68,6 +68,6 @@ public final class Generic extends TorqueCommand {
             return this;
         }
 
-        public final Generic build() { return new Generic(this); }
+        public final TorqueGeneric build() { return new TorqueGeneric(this); }
     }
 }

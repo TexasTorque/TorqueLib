@@ -143,4 +143,25 @@ public final class TorqueUtil {
         enumeratedFor(Arrays.asList(array), f);
     }
 
+    public final static class Pair<T, U> {
+        public final T first;
+        public final U second;
+
+        public Pair(final T first, final U second) {
+            this.first = first;
+            this.second = second;
+        }
+    }
+
+    public final static class Triple<T, U, V> {
+        public final T first;
+        public final U second;
+        public final V third;
+
+        public Triple(final T first, final U second, final V third) {
+            this.first = first;
+            this.second = second;
+            this.third = third;
+        }
+    }
 }
