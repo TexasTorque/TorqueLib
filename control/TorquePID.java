@@ -23,6 +23,7 @@ public final class TorquePID {
     }
 
     private final double proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone;
+    private final boolean hasIntegralZone;
 
     private TorquePID(final Builder b) {
         proportional = b.proportional;
@@ -32,6 +33,7 @@ public final class TorquePID {
         minOutput = b.minOutput;
         maxOutput = b.maxOutput;
         integralZone = b.integralZone;
+        hasIntegralZone = b.hasIntegralZone;
     }
 
     public static final Builder create(final int p) {
@@ -41,6 +43,7 @@ public final class TorquePID {
     public static final class Builder {
         private double proportional, integral = 0, derivative = 0, feedForward = 0,
                        minOutput = -1, maxOutput = 1, integralZone = 0;
+        private boolean hasIntegralZone = false;
 
         private Builder(final double proportional) { 
             this.proportional = proportional; 
@@ -78,6 +81,7 @@ public final class TorquePID {
         }
 
         public final Builder addIntegralZone(final double integralZone) {
+            this.hasIntegralZone = true;
             this.integralZone = integralZone;
             return this;
         }
@@ -111,6 +115,10 @@ public final class TorquePID {
 
     public final double getIntegralZone() {
         return integralZone;
+    }
+
+    public final boolean hasIntegralZone() {
+        return hasIntegralZone;
     }
 
     @Override

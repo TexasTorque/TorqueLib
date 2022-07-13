@@ -6,6 +6,7 @@
  */
 package org.texastorque.torquelib.motors.base;
 
+import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.util.KPID;
 
 /**
@@ -16,7 +17,10 @@ import org.texastorque.torquelib.util.KPID;
 public interface TorquePIDMotor {
     public final double CLICKS_PER_ROTATION = 0;
 
+    @Deprecated
     public void configurePID(final KPID kPID);
+
+    public void configurePID(final TorquePID pid);
 
     public void setPosition(final double setpoint);
     public void setPositionDegrees(final double setpoint);

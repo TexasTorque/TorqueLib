@@ -11,6 +11,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import java.util.ArrayList;
+
+import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
 import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
 import org.texastorque.torquelib.util.KPID;
@@ -87,6 +89,7 @@ public final class TorqueTalon extends TorqueMotor implements TorqueSmartMotor {
      * @param kPID The KPID value to configure the motor too.
      */
     @Override
+    @Deprecated
     public final void configurePID(final KPID kPID) {
         motor.config_kP(0, kPID.getPGains());
         motor.config_kI(0, kPID.getIGains());
@@ -95,6 +98,23 @@ public final class TorqueTalon extends TorqueMotor implements TorqueSmartMotor {
         if (kPID.getIZone() > 0) motor.config_IntegralZone(0, kPID.getIZone());
         motor.configPeakOutputForward(kPID.getMax());
         motor.configPeakOutputReverse(kPID.getMin());
+    }
+
+    /**
+     * Configures the PID controller for the motor.
+     *
+     * @param pid The PID to configure the motor with.
+     */
+    @Override
+    public final void configurePID(final TorquePID pid) {
+        motor.config_kP(0, pid.getProportional());
+        motor.config_kI(0, pid.getIntegral());
+        motor.config_kD(0, pid.getDerivative());
+        motor.config_kF(0, pid.getFeedForward());
+        if (pid.hasIntegralZone())
+            motor.config_IntegralZone(0, pid.getIntegralZone());
+        motor.configPeakOutputForward(pid.getMaxOutput());
+        motor.configPeakOutputReverse(pid.getMinOutput());
     }
 
     /**

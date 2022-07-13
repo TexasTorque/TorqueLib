@@ -12,7 +12,10 @@ package org.texastorque.torquelib.util;
  * @author Texas Torque
  *
  * @apiNote Needs proper update / replacement.
+ * 
+ * @deprecated Use {@link org.texastorque.torquelib.control.TorquePID} instead.
  */
+@Deprecated
 public final class KPID {
 
     private double pGains, iGains, dGains, fGains, minOutput, maxOutput, iZone;

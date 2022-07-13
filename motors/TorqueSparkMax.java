@@ -17,6 +17,8 @@ import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 import java.util.ArrayList;
+
+import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
 import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
 import org.texastorque.torquelib.util.KPID;
@@ -100,6 +102,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      * @param kPID The KPID value to configure the motor too.
      */
     @Override
+    @Deprecated
     public final void configurePID(final KPID kPID) {
         pidController.setP(kPID.getPGains());
         pidController.setI(kPID.getIGains());
@@ -107,6 +110,22 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         pidController.setFF(kPID.getFGains());
         if (kPID.getIZone() > 0) pidController.setIZone(kPID.getIZone());
         pidController.setOutputRange(kPID.getMin(), kPID.getMax());
+    }
+
+      /**
+     * Configures the PID controller for the motor.
+     *
+     * @param pid The PID to configure the motor with.
+     */
+    @Override
+    public final void configurePID(final TorquePID pid) {
+        pidController.setP(pid.getProportional());
+        pidController.setI(pid.getIntegral());
+        pidController.setD(pid.getDerivative());
+        pidController.setFF(pid.getFeedForward());
+        if (pid.hasIntegralZone())
+            pidController.setIZone(pid.getIntegralZone());
+        pidController.setOutputRange(pid.getMinOutput(), pid.getMaxOutput());
     }
 
     /**
