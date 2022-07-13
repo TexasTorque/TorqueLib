@@ -36,6 +36,10 @@ public final class TorquePID {
         hasIntegralZone = b.hasIntegralZone;
     }
 
+    public static final Builder create() {
+        return new Builder(1);
+    }
+
     public static final Builder create(final double p) {
         return new Builder(p);
     }
