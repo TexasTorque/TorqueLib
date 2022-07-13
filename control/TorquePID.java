@@ -2,6 +2,8 @@ package org.texastorque.torquelib.control;
 
 import org.texastorque.torquelib.util.TorqueUtil;
 
+import edu.wpi.first.math.controller.PIDController;
+
 /**
  * A class representation of a PID controller with 
  * control loop methods.
@@ -24,6 +26,14 @@ public final class TorquePID {
 
     private final double proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone;
     private final boolean hasIntegralZone;
+
+    public final PIDController createPIDController() {
+        return new PIDController(proportional, integral, derivative);
+    }
+
+    public final PIDController createPIDController(final double period) {
+        return new PIDController(proportional, integral, derivative, period);
+    }
 
     private TorquePID(final Builder b) {
         proportional = b.proportional;
