@@ -17,9 +17,5 @@ import org.texastorque.torquelib.auto.TorqueSequence;
  * @author Justus
  */
 public final class TorqueEmpty extends TorqueSequence {
-
-    public TorqueEmpty(String name) { super(name); }
-
-    @Override
-    protected final void init() {}
+    public TorqueEmpty() {}
 }

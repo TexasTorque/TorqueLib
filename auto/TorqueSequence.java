@@ -16,18 +16,13 @@ import java.util.ArrayList;
  * @author Texas Torque
  */
 public abstract class TorqueSequence {
-    private ArrayList<TorqueBlock> commands = new ArrayList<TorqueBlock>();
+    private final ArrayList<TorqueBlock> commands = new ArrayList<TorqueBlock>();
     private boolean ended = false;
     private int blockIndex = 0;
-    private String name = "unnamed";
 
     public TorqueSequence() {}
 
-    public TorqueSequence(String name) { this.name = name; }
-
-    protected abstract void init();
-
-    protected void addBlock(TorqueBlock block) { commands.add(block); }
+    protected final void addBlock(final TorqueBlock block) { commands.add(block); }
 
     public final void run() {
         if (blockIndex < commands.size()) {
@@ -40,20 +35,17 @@ public abstract class TorqueSequence {
             ended = true;
     }
 
-    public boolean hasEnded() { return ended; }
+    public final boolean hasEnded() { return ended; }
 
     public final void reset() {
         ended = false;
         blockIndex = 0;
-        for (TorqueBlock block : commands) {
-            for (TorqueCommand command : block) { command.reset(); }
-        }
+        for (TorqueBlock block : commands) 
+            for (TorqueCommand command : block) command.reset();
     }
 
     public final void resetBlock() {
         ended = false;
         for (TorqueCommand command : commands.get(blockIndex)) command.reset();
     }
-
-    public String getName() { return name; }
 }

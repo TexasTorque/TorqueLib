@@ -31,10 +31,10 @@ public abstract class TorqueAutoManager {
 
     private final String autoSelectorKey = "Auto List";
 
-    public TorqueAutoManager() {
+    protected TorqueAutoManager() {
         autoSequences = new HashMap<String, TorqueSequence>();
 
-        addSequence("Empty", new TorqueEmpty("Empty")); // default
+        addSequence("Empty", new TorqueEmpty()); // default
 
         init();
         displayChoices();
@@ -45,23 +45,21 @@ public abstract class TorqueAutoManager {
      */
     protected abstract void init();
 
-    protected final void addSequence(String name, TorqueSequence seq) {
+    protected final void addSequence(final String name, final TorqueSequence seq) {
         autoSequences.put(name, seq);
 
-        if (autoSequences.size() == 0) {
+        if (autoSequences.size() == 0)
             autoSelector.setDefaultOption(name, name);
-        } else {
+        else
             autoSelector.addOption(name, name);
-        }
     }
 
     public final void runCurrentSequence() {
         if (currentSequence != null) {
             currentSequence.run();
             sequenceEnded = currentSequence.hasEnded(); // manage state of sequence
-        } else {
+        } else
             DriverStation.reportError("No auto selected!", false);
-        }
     }
 
     public final void chooseCurrentSequence() {
@@ -71,10 +69,8 @@ public abstract class TorqueAutoManager {
                                     .getEntry("selected")
                                     .getString("N/A");
 
-        if (autoSequences.containsKey(autoChoice)) {
-            System.out.println("Switching to auto: " + autoChoice);
+        if (autoSequences.containsKey(autoChoice))
             currentSequence = autoSequences.get(autoChoice);
-        }
 
         resetCurrentSequence();
         sequenceEnded = false;
@@ -83,7 +79,7 @@ public abstract class TorqueAutoManager {
     /**
      * Set sequence with sequence object
      */
-    public final void setCurrentSequence(TorqueSequence seq) {
+    public final void setCurrentSequence(final TorqueSequence seq) {
         currentSequence = seq;
         resetCurrentSequence();
     }
