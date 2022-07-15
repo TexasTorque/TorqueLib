@@ -16,7 +16,6 @@ public final class TorqueClick {
     private boolean lastValue;
 
     public TorqueClick() { lastValue = false; }
-    public TorqueClick(final boolean value) { lastValue = value; }
 
     /**
      * Has current just changed from false to true?

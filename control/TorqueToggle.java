@@ -1,40 +1,35 @@
 package org.texastorque.torquelib.control;
 
-public class TorqueToggle {
+/**
+ * This is the cool TorqueToggle.
+ * 
+ * Use this one instead.
+ */
+public final class TorqueToggle {
 
-	private boolean toggle;
-	private boolean lastValue;
+	private final TorqueClick click;
+	private boolean value;
 
 	public TorqueToggle() {
-		toggle = false;
-		lastValue = false;
+		this(false);
 	}
 
-	public TorqueToggle(boolean override) {
-		toggle = override;
+	public TorqueToggle(final boolean value) {
+		click = new TorqueClick();
+		set(value);
 	}
 
-	public void calculate(boolean currentValue) {
-		// Checks for an edge in boolean state. We only want to perform an action once
-		// when we go from False to True
-		if (currentValue != lastValue) {
-			// If the value is true now, it is the first time it is true. Flip the toggle.
-			if (currentValue) {
-				toggle = !toggle;
-			}
-
-			// Keep track of the previous value. Does not need to be updated iflastCheck is
-			// already equal to current.
-			lastValue = currentValue;
-		}
+	public final void calculate(final boolean current) {
+		if (click.calculate(current))
+			value = !value;
 	}
 
-	public void set(boolean override) {
-		toggle = override;
+	public final void set(final boolean value) {
+		this.value = value;
 	}
 
-	public boolean get() {
-		return toggle;
+	public final boolean get() {
+		return value;
 	}
 
 }

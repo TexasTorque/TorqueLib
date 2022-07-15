@@ -1,5 +1,7 @@
 package org.texastorque.torquelib.control;
 
+import org.texastorque.torquelib.util.TorqueUtil;
+
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -9,12 +11,10 @@ import edu.wpi.first.wpilibj.Timer;
  *
  * @author Jack Pittenger
  */
-public class TorqueSlewLimiter {
-    private final double limitAsc;
-    private final double limitDesc;
+public final class TorqueSlewLimiter {
+    private final double limitAsc, limitDesc;
 
-    private double lastVal;
-    private double lastTime;
+    private double lastVal, lastTime;
 
     /**
      * Creates a new TorqueSlewLimiter with the ascending and descending limit the
@@ -22,7 +22,7 @@ public class TorqueSlewLimiter {
      * 
      * @param limit The max units-per-second
      */
-    public TorqueSlewLimiter(double limit) {
+    public TorqueSlewLimiter(final double limit) {
         this.limitAsc = limit;
         this.limitDesc = limit;
     }
@@ -34,7 +34,7 @@ public class TorqueSlewLimiter {
      * @param limitAsc  The max units-per-second increasing absolutely
      * @param limitDesc The max units-per-second descending absolutely
      */
-    public TorqueSlewLimiter(double limitAsc, double limitDesc) {
+    public TorqueSlewLimiter(final double limitAsc, final double limitDesc) {
         this.limitAsc = limitAsc;
         this.limitDesc = limitDesc;
     }
@@ -43,21 +43,11 @@ public class TorqueSlewLimiter {
      * @param val The requested input
      * @return The limited value
      */
-    public double calculate(double val) {
-        double t = Timer.getFPGATimestamp();
-        double dt = t - lastTime;
-        double dx = val - lastVal;
-
-        // ascending
-        if (Math.abs(val) > Math.abs(lastVal)) {
-            lastVal += Math.signum(dx) * Math.min(limitAsc * dt, Math.abs(dx));
-        } else { // descending
-            lastVal += Math.signum(dx) * Math.min(limitDesc * dt, Math.abs(dx));
-
-        }
-
+    public final double calculate(final double val) {
+        final double t = TorqueUtil.time();
+        lastVal =+ Math.signum(val - lastVal) * Math.min(Math.abs(val) > Math.abs(lastVal) 
+                ? limitAsc : limitDesc * t - lastTime, Math.abs(val - lastVal));
         lastTime = t;
-
         return lastVal;
     }
 }
