@@ -1,5 +1,7 @@
 package org.texastorque.torquelib.control;
 
+import java.util.function.Function;
+
 import org.texastorque.torquelib.util.TorqueUtil;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -33,6 +35,14 @@ public final class TorquePID {
 
     public final PIDController createPIDController(final double period) {
         return new PIDController(proportional, integral, derivative, period);
+    }
+
+    public final PIDController createPIDController(final Function<PIDController, PIDController> function) {
+        return function.apply(createPIDController());
+    }
+
+    public final PIDController createPIDController(final double period, final Function<PIDController, PIDController> function) {
+        return function.apply(createPIDController(period));
     }
 
     private TorquePID(final Builder b) {
