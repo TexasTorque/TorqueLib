@@ -2,8 +2,6 @@ package org.texastorque.torquelib.control;
 
 import org.texastorque.torquelib.util.TorqueUtil;
 
-import edu.wpi.first.wpilibj.Timer;
-
 /**
  * This class implements a slew rate limiter. In a nutshell, this limits the
  * rate-of-change of the units to avoid sharp movement acceleration while still

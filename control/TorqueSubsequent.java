@@ -25,7 +25,7 @@ public final class TorqueSubsequent {
      */
     public final boolean calculate() {
         if (hasRan) return false;
-        return this.hasRan = true;
+        return hasRan = true;
     }
 
     /**
