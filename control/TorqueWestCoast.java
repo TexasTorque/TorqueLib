@@ -10,13 +10,15 @@ package org.texastorque.torquelib.control;
  * Improvments to the algorithm used to drive a West Coast Drivetrain
  * durring teleop. Encapsulated in a class.
  *
- * @author Justusß
+ * @author ß
+ * @author Justus Languell 
+ * @author Jacob Daniels
  */
-public final class TorqueWCDTeleopDriver {
+public final class TorqueWestCoast {
     private final double power = 4;
     private double forward = 3, turn = .2, coef = 1, left = 0, right = 0;
 
-    public TorqueWCDTeleopDriver(final double forward, final double turn) {
+    public TorqueWestCoast(final double forward, final double turn) {
         this.forward = forward;
         this.turn = turn;
     }
