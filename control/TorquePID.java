@@ -21,29 +21,19 @@ import edu.wpi.first.math.controller.PIDController;
  */
 public final class TorquePID {
 
+    // * Variable fields
+
+    private final double proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone;
+    private final boolean hasIntegralZone;
+
+    // * Calculation
+
     public final double calculate() {
         TorqueUtil.notImplemented();
         return 0.;
     }
 
-    private final double proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone;
-    private final boolean hasIntegralZone;
-
-    public final PIDController createPIDController() {
-        return new PIDController(proportional, integral, derivative);
-    }
-
-    public final PIDController createPIDController(final double period) {
-        return new PIDController(proportional, integral, derivative, period);
-    }
-
-    public final PIDController createPIDController(final Function<PIDController, PIDController> function) {
-        return function.apply(createPIDController());
-    }
-
-    public final PIDController createPIDController(final double period, final Function<PIDController, PIDController> function) {
-        return function.apply(createPIDController(period));
-    }
+    // * Construction and builder
 
     private TorquePID(final Builder b) {
         proportional = b.proportional;
@@ -113,6 +103,8 @@ public final class TorquePID {
         public final TorquePID build() { return new TorquePID(this); }
     }
 
+    // * Getters
+
     public final double getProportional() {
         return proportional;
     }
@@ -150,5 +142,23 @@ public final class TorquePID {
         return String.format("PID(PRO: %3.2f, INT: %3.2f, DER: %3.2f, F: %3.2f, MIN: %3.2f, MAX: %3.2f, IZO: %3.2f)",
             proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone);
         
+    }
+
+    // * PIDController generator methods
+
+    public final PIDController createPIDController() {
+        return new PIDController(proportional, integral, derivative);
+    }
+
+    public final PIDController createPIDController(final double period) {
+        return new PIDController(proportional, integral, derivative, period);
+    }
+
+    public final PIDController createPIDController(final Function<PIDController, PIDController> function) {
+        return function.apply(createPIDController());
+    }
+
+    public final PIDController createPIDController(final double period, final Function<PIDController, PIDController> function) {
+        return function.apply(createPIDController(period));
     }
 }

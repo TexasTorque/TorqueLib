@@ -6,8 +6,10 @@
  */
 package org.texastorque.torquelib.sensors;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,33 +33,21 @@ public final class TorqueLight {
     private PhotonPipelineResult result;
     private PhotonTrackedTarget target;
 
-    private final double cameraHeight, targetHeight;
-    private final Rotation2d angle;
-
     /**
      * Creates a new TorqueLight object with desired physical parameters.
-     *
-     * @param cameraHeight The height of the camera in meters.
-     * @param targetHeight The height of the target in meters.
-     * @param angle        The angle of the camera as a Rotation2d.
      */
-    public TorqueLight(final double cameraHeight, final double targetHeight, final Rotation2d angle) {
+    public TorqueLight() {
         this.cam = new PhotonCamera(NetworkTableInstance.getDefault(), "torquecam");
         this.result = new PhotonPipelineResult();
         this.target = new PhotonTrackedTarget();
-
-        this.cameraHeight = cameraHeight;
-        this.targetHeight = targetHeight;
-        this.angle = angle;
     }
 
     /**
      * Call this periodically to update the vision state.
      */
-    public final void update(final boolean logging) {
+    public final void update() {
         result = cam.getLatestResult();
         if (result.hasTargets()) target = result.getBestTarget();
-        if (logging) { SmartDashboard.putNumber("Target Dist", getDistance()); }
     }
 
     /**
@@ -102,8 +92,18 @@ public final class TorqueLight {
      *
      * @return The distance to the target in meters.
      */
-    public final double getDistance() {
+    public static final double getDistanceToElevatedTarget(final TorqueLight camera, 
+            final double cameraHeight, final double targetHeight, final Rotation2d angle) {
         return PhotonUtils.calculateDistanceToTargetMeters(cameraHeight, targetHeight, angle.getRadians(),
-                                                           Units.degreesToRadians(getTargetPitch()));
+                                                           Units.degreesToRadians(camera.getTargetPitch()));
+    }
+
+    /**
+     * Reads the camera latency in milliseconds.
+     * 
+     * @return The camera latency in milliseconds
+     */
+    public final double getLatency() {
+        return result.getLatencyMillis();
     }
 }
