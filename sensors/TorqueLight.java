@@ -85,8 +85,18 @@ public final class TorqueLight {
      * @return Transformation2d object that represents the
      *         distance betweeen the camera and the target.
      */
-    public final Transform2d getCameraToTarget() { return target.getCameraToTarget(); }
+    public final Transform2d getCameraToTarget() {
+        return target.getCameraToTarget();
+    }
 
+    /**
+     * 
+     * @return The number of targets that the camera detects.
+     */
+    public final double getNumberOfTargets() {
+        return result.getTargets().size();
+    }
+    
     /**
      * Calculates the distance to the target in meters.
      *
@@ -95,7 +105,33 @@ public final class TorqueLight {
     public static final double getDistanceToElevatedTarget(final TorqueLight camera, 
             final double cameraHeight, final double targetHeight, final Rotation2d angle) {
         return PhotonUtils.calculateDistanceToTargetMeters(cameraHeight, targetHeight, angle.getRadians(),
-                                                           Units.degreesToRadians(camera.getTargetPitch()));
+                Units.degreesToRadians(camera.getTargetPitch()));
+    }
+
+    /**
+     * Gets the estimated robot position using vision calculations.
+     * 
+     * @param camera The camera object we are using.
+     * @param theta_r Robot's CCW rotation w/ respect to the field.
+     * @param theta_dp Camera detection pitch.
+     * @param theta_dy Camera detection yaw.
+     * @param H_h Height (m) of the targets.
+     * @param H_c Height (m) of the camera.
+     * @param theta_cp Camera mount's pitch.
+     * @param r_tc Radius of the turret + camera.
+     * @param theta_t Polar degree rotation of the turret relative the camera.
+     * @param r_H Radius of the hub.
+     * @param x_H X position of the hub.
+     * @param y_H Y position of the hub.
+     */
+    public final Pose2d getRobotPose(final TorqueLight camera, final Rotation2d theta_r, final Rotation2d theta_dp, 
+            final Rotation2d theta_dy, final double H_h, final double H_c, final Rotation2d theta_cp, final double r_tc,
+            final double theta_t, final double r_H, final double x_h, final double y_h) {
+        final double d = (H_h - H_c) / Math.tan(theta_dp.getRadians() + theta_cp.getRadians()) + r_H - r_tc;
+        final double theta_f = theta_r.getRadians() + theta_dp.getRadians() + theta_dy.getRadians();
+        final double x_r = x_h - (Math.cos(theta_f) * d);
+        final double y_r = y_h - (Math.sin(theta_f) * d);
+        return new Pose2d(x_r, y_r, theta_r);
     }
 
     /**
