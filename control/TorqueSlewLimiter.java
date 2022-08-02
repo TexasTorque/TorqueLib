@@ -43,9 +43,40 @@ public final class TorqueSlewLimiter {
      */
     public final double calculate(final double val) {
         final double t = TorqueUtil.time();
-        lastVal =+ Math.signum(val - lastVal) * Math.min(Math.abs(val) > Math.abs(lastVal) 
+        lastVal += Math.signum(val - lastVal) * Math.min(Math.abs(val) > Math.abs(lastVal) 
                 ? limitAsc : limitDesc * t - lastTime, Math.abs(val - lastVal));
         lastTime = t;
         return lastVal;
     }
+
+     /**
+     * @param val The requested input
+     * @param use For testing
+     * @return The limited value
+     */
+    public final double calculate(final double val, final boolean use) {
+        return use ? calculate(val) : val;        
+    }
+
+    // /**
+    //  * @param val The requested input
+    //  * @return The limited value
+    //  */
+    // public double calculate(double val) {
+    //     double t = TorqueUtil.time();
+    //     double dt = t - lastTime;
+    //     double dx = val - lastVal;
+
+    //     // ascending
+    //     if (Math.abs(val) > Math.abs(lastVal)) {
+    //         lastVal += Math.signum(dx) * Math.min(limitAsc * dt, Math.abs(dx));
+    //     } else { // descending
+    //         lastVal += Math.signum(dx) * Math.min(limitDesc * dt, Math.abs(dx));
+
+    //     }
+
+    //     lastTime = t;
+
+    //     return lastVal;
+    // }
 }

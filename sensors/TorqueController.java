@@ -6,9 +6,13 @@
  */
 package org.texastorque.torquelib.sensors;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+
 import org.texastorque.torquelib.util.TorqueMath;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * A class representation of a controller, used for gathering
@@ -852,5 +856,25 @@ public final class TorqueController {
     public final void setRumble(final boolean rumble) {
         setRumbleLeft(rumble);
         setRumbleRight(rumble);
+    }
+
+    public final ArrayList<Method> getActiveBooleanMethods() {
+        final ArrayList<Method> methods = new ArrayList<Method>();
+        for (final Method method : TorqueController.class.getMethods())
+            if (method.getReturnType() == Boolean.class)
+                try {
+                    if (method.invoke(this).equals(true))
+                        methods.add(method);
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                }
+        return methods;
+    }
+
+    public final void logActiveBooleanMethods() {
+        final StringBuilder sb = new StringBuilder();
+        for (final Method method : getActiveBooleanMethods())
+            sb.append(method.getName()).append(" ");
+        SmartDashboard.putString("Active Booleans", sb.toString());
     }
 }

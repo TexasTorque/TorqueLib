@@ -38,6 +38,7 @@ public final class TorqueLight {
      */
     public TorqueLight() {
         this.cam = new PhotonCamera(NetworkTableInstance.getDefault(), "torquecam");
+        NetworkTableInstance.getDefault().getTable("photonvision").getEntry("ledMode").setNumber(1);
         this.result = new PhotonPipelineResult();
         this.target = new PhotonTrackedTarget();
     }

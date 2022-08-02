@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.texastorque.torquelib.control.TorqueRamp;
+import org.texastorque.torquelib.control.TorqueSlewLimiter;
 
 public final class Test {
     public static final String TEST_FILE_PATH =
@@ -47,12 +48,21 @@ public final class Test {
     }
 
     // private final TorqueTimeout t = new TorqueTimeout(5);
-    private final TorqueRamp ramp = new TorqueRamp(10, 3.2, 12);
+    private final TorqueSlewLimiter limiter = new TorqueSlewLimiter(1);
+    
+    private long counter = 0;
+    private boolean state = false;
 
     private final void init() {}
 
     private final void update() {
-        System.out.println(ramp.calculate(action()));
+        counter++;
+        if (counter % 10 == 0)
+            state = !state;
+
+        final double speed = state ? 1 : -1;
+
+        System.out.printf("%d -> %f -> %f\n", counter, speed, limiter.calculate(speed));
 
         // System.out.printf("State: %b, Cals: %b\n", state, click.calculate(state));
     }
