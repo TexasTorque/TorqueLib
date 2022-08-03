@@ -125,7 +125,7 @@ public final class TorqueLight {
      * @param x_H X position of the hub.
      * @param y_H Y position of the hub.
      */
-    public final Pose2d getRobotPose(final TorqueLight camera, final Rotation2d theta_r, final Rotation2d theta_dp, 
+    public static final Pose2d getRobotPose(final TorqueLight camera, final Rotation2d theta_r, final Rotation2d theta_dp, 
             final Rotation2d theta_dy, final double H_h, final double H_c, final Rotation2d theta_cp, final double r_tc,
             final double theta_t, final double r_H, final double x_h, final double y_h) {
         final double d = (H_h - H_c) / Math.tan(theta_dp.getRadians() + theta_cp.getRadians()) + r_H - r_tc;
