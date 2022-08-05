@@ -271,10 +271,9 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         if (logging) SmartDashboard.putNumber(String.format("(%d) %s", id, key), value);
     }
 
-    private static final double HOTDOG_SPEED = .25;
-
-    public final void hotdog() {
+    public final void spin(final double speed) {
         drive.setPercent(0);
-        rotate.setPercent(HOTDOG_SPEED);
+        rotate.setPercent(speed);
     }
+
 }
