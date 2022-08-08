@@ -9,10 +9,10 @@ package org.texastorque.torquelib.sensors;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -73,11 +73,29 @@ public final class TorqueLight {
     public final double getTargetYaw() { return target.getYaw(); }
 
     /**
+     * Returns the avg yaw angle of the targets as degrees.
+     *
+     * @return The avg yaw angle of the targets as degrees.
+     */
+    public final double getAverageYaw() { 
+        return result.getTargets().stream().mapToDouble(t -> t.getYaw()).average().getAsDouble();
+    }
+
+    /**
      * Returns the pitch angle of the target as degrees.
      *
      * @return The pitch angle of the target as degrees.
      */
     public final double getTargetPitch() { return target.getPitch(); }
+
+      /**
+     * Returns the avg pitch angle of the targets as degrees.
+     *
+     * @return The avg pitch angle of the targets as degrees.
+     */
+    public final double getAveragePitch() { 
+        return result.getTargets().stream().mapToDouble(t -> t.getPitch()).average().getAsDouble();
+    }
 
     /**
      * Returns a transformation that represents the distance
@@ -125,13 +143,16 @@ public final class TorqueLight {
      * @param x_H X position of the hub.
      * @param y_H Y position of the hub.
      */
-    public final Pose2d getRobotPose(final TorqueLight camera, final Rotation2d theta_r, final Rotation2d theta_dp, 
+    public static final Pose2d getRobotPose(final TorqueLight camera, final Rotation2d theta_r, final Rotation2d theta_dp, 
             final Rotation2d theta_dy, final double H_h, final double H_c, final Rotation2d theta_cp, final double r_tc,
             final double theta_t, final double r_H, final double x_h, final double y_h) {
         final double d = (H_h - H_c) / Math.tan(theta_dp.getRadians() + theta_cp.getRadians()) + r_H - r_tc;
-        final double theta_f = theta_r.getRadians() + theta_dp.getRadians() + theta_dy.getRadians();
-        final double x_r = x_h - (Math.cos(theta_f) * d);
-        final double y_r = y_h - (Math.sin(theta_f) * d);
+        // final double theta_f = theta_r.getRadians() + theta_dp.getRadians() + theta_dy.getRadians();
+        final Rotation2d theta_f = theta_r.plus(Rotation2d.fromDegrees(theta_t)).plus(theta_dy);
+        final double theta_fr = theta_r.getRadians();
+        SmartDashboard.putNumber("theta_f", theta_f.getDegrees());
+        final double x_r = x_h - (Math.cos(theta_fr) * d);
+        final double y_r = y_h - (Math.sin(theta_fr) * d);
         return new Pose2d(x_r, y_r, theta_r);
     }
 

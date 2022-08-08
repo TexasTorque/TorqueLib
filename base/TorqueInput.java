@@ -15,4 +15,12 @@ public abstract class TorqueInput<T> {
     protected T driver, operator;
 
     public abstract void update();
+
+    public final T getDriver() {
+        return driver;
+    }
+
+    public final T getOperator() {
+        return operator;
+    }
 }

@@ -8,6 +8,7 @@ package org.texastorque.torquelib.util;
 
 import java.util.Arrays;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -143,7 +144,7 @@ public final class TorqueUtil {
         enumeratedFor(Arrays.asList(array), f);
     }
 
-    public final static class Pair<T, U> {
+    public static final class Pair<T, U> {
         public final T first;
         public final U second;
 
@@ -153,7 +154,7 @@ public final class TorqueUtil {
         }
     }
 
-    public final static class Triple<T, U, V> {
+    public static final class Triple<T, U, V> {
         public final T first;
         public final U second;
         public final V third;
@@ -163,5 +164,21 @@ public final class TorqueUtil {
             this.second = second;
             this.third = third;
         }
+    }
+
+    public final static class TimeResult<T> {
+        public final T result;
+        public final double time;
+
+        public TimeResult(final T result, final double time) {
+            this.result = result;
+            this.time = time;
+        }
+    }
+
+    public static final <T> TimeResult<T> time(final Supplier<T> f) throws Exception {
+        final double start = time();
+        final T result = f.get();
+        return new TimeResult<>(result, (time() - start) / 1000.);
     }
 }

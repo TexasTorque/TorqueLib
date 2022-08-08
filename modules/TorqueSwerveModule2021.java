@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.texastorque.torquelib.control.TorqueClick;
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
 import org.texastorque.torquelib.motors.TorqueSparkMax;
@@ -269,4 +270,10 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     private final void putNumber(final String key, final double value) {
         if (logging) SmartDashboard.putNumber(String.format("(%d) %s", id, key), value);
     }
+
+    public final void spin(final double speed) {
+        drive.setPercent(0);
+        rotate.setPercent(speed);
+    }
+
 }

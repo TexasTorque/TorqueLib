@@ -6,7 +6,10 @@
  */
 package org.texastorque.torquelib.util;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.ToDoubleFunction;
 
 /**
  * A static class of useful math utilities.
@@ -221,6 +224,31 @@ public final class TorqueMath {
         // return (long) (Math.random() * (high - low + 1)) + low;
         // ThreadLocalRandom is more efficient
         return ThreadLocalRandom.current().nextLong(low, high + 1);
+	}
 
+    /**
+     * Takes the average of a list of numbers.
+     * 
+     * @param list The list of numbers.
+     * 
+     * @return The average of the list.
+     */
+    public static final double average(final List<? extends Number> list) {
+        return average(list, t -> t.doubleValue());
+    }
+
+     /**
+     * Takes the average of the mapped functional outputs on a list of objects.
+     * 
+     * @param list The list of numbers.
+     * @param function The function to generate the number.
+     * 
+     * @return The average of the list.
+     */
+    public static final <T> double average(final List<T> list, final ToDoubleFunction<T> function) {
+        return list.stream().mapToDouble(function).average().getAsDouble();
+    }
+
+    public static final void main(String[] args) throws Exception {
     }
 }
