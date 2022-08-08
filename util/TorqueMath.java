@@ -11,10 +11,12 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * A static class of useful math utilities.
  *
- * @author Justus Languell
+ * @author Justus Languell, Omar Afzal
  */
 public final class TorqueMath {
-    private TorqueMath() { TorqueUtil.staticConstructor(); }
+    private TorqueMath() {
+        TorqueUtil.staticConstructor();
+    }
 
     /**
      * Return contrained value n between a and -a
@@ -23,7 +25,9 @@ public final class TorqueMath {
      * @param a Value to constrain by
      * @return The constrained value of n
      */
-    public static final double constrain(final double n, final double a) { return Math.max(Math.min(n, a), -a); }
+    public static final double constrain(final double n, final double a) {
+        return Math.max(Math.min(n, a), -a);
+    }
 
     /**
      * Return contrained value n between a and b
@@ -46,7 +50,7 @@ public final class TorqueMath {
      * @return The rounded number
      */
     public static final double round(final double num, final long dec) {
-        return (long)Math.round((num * Math.pow(10, dec))) / Math.pow(10, dec);
+        return (long) Math.round((num * Math.pow(10, dec))) / Math.pow(10, dec);
     }
 
     /**
@@ -57,10 +61,13 @@ public final class TorqueMath {
      * @return If the numbers if prime or not.
      */
     public static final boolean prime(final long n) {
-        if (n == 2 || n == 3) return true;
-        if (n < 2 || n % 2 == 0 || n % 3 == 0) return false;
-        for (long i = 6L; i <= ((long)Math.sqrt(n) + 1); i += 6)
-            if (n % (i - 1) == 0 || n % (i + 1) == 0) return false;
+        if (n == 2 || n == 3)
+            return true;
+        if (n < 2 || n % 2 == 0 || n % 3 == 0)
+            return false;
+        for (long i = 6L; i <= ((long) Math.sqrt(n) + 1); i += 6)
+            if (n % (i - 1) == 0 || n % (i + 1) == 0)
+                return false;
         return true;
     }
 
@@ -73,9 +80,11 @@ public final class TorqueMath {
      *
      * @return If the number is inside the bounds.
      */
-    public static final boolean constrained(final double n, final double a, final double b) { return n >= a && n <= b; }
+    public static final boolean constrained(final double n, final double a, final double b) {
+        return n >= a && n <= b;
+    }
 
-     /**
+    /**
      * Check if a number is within a tolerance of 0.
      *
      * @param x One number.
@@ -85,7 +94,7 @@ public final class TorqueMath {
      */
     public static final boolean toleranced(final double x, final double t) {
         return Math.abs(x) <= t;
-    }    
+    }
 
     /**
      * Check if a number is within a tolerance of another number.
@@ -113,9 +122,10 @@ public final class TorqueMath {
     public static final boolean toleranced2(final double x, final double y, final double t) {
         return Math.abs(x - y) <= t;
     }
-    
-      /**
-     * Check if a number is within a tolerance of another number with independent sides.
+
+    /**
+     * Check if a number is within a tolerance of another number with independent
+     * sides.
      *
      * @param x One number.
      * @param y The other number.
@@ -129,35 +139,51 @@ public final class TorqueMath {
     }
 
     /**
-     * Returns either requestedSpeed or zero depending on if it will keep currentPosition
+     * Returns either requestedSpeed or zero depending on if it will keep
+     * currentPosition
      * between minPosition and maxPosition.
      *
-     * @param requestedSpeed The requested speed.
+     * @param requestedSpeed  The requested speed.
      * @param currentPosition The current position.
-     * @param minPosition The minimum position.
-     * @param maxPosition The maximum position.
+     * @param minPosition     The minimum position.
+     * @param maxPosition     The maximum position.
      *
      * @return The desired speed.
      */
     public static final double linearConstraint(final double requestedSpeed, final double currentPosition,
-                                                final double minPosition, final double maxPosition) {
+            final double minPosition, final double maxPosition) {
         return (currentPosition <= minPosition && requestedSpeed < 0) ? 0
-        : (currentPosition >= maxPosition && requestedSpeed > 0)      ? 0
-                                                                      : requestedSpeed;
+                : (currentPosition >= maxPosition && requestedSpeed > 0) ? 0
+                        : requestedSpeed;
+    }
+
+    /**
+     * Constrains a number between a minimum and maximum.
+     *
+     * @param max The maximum value.
+     * @param min The minimum value.
+     * @param val The value to constrain.
+     *
+     * @return The constrained value.
+     */
+    public static final double linearConstraint(double max, double min, double val) {
+        if (val > max) return max;
+        if (val < min) return min;
+        return val;
     }
 
     /**
      * Returns an array with range of [min, max] and steps of increment.
      * 
-     * @param min Min value (inclusive).
-     * @param max Max value (inclusive).
+     * @param min       Min value (inclusive).
+     * @param max       Max value (inclusive).
      * @param increment Step increment.
      * @return The array in range.
      */
     public static final double[] range(final double min, final double max, final double increment) {
-        final double[] array = new double[(int)((max - min) / increment) + 1];
+        final double[] array = new double[(int) ((max - min) / increment) + 1];
         for (double i = min; i <= max; i += increment)
-            array[(int)((i - min) / increment)] = i;
+            array[(int) ((i - min) / increment)] = i;
         return array;
     }
 
@@ -173,28 +199,28 @@ public final class TorqueMath {
     }
 
     /**
-	 * This method will return an integer (as a long) in the range [1, high].
-	 *
-	 * @param high The upper bound of range the number could be from.
-	 *
-	 * @return The randomly generated number.
-	 */
-	public static final long random(final long high) {
-		return random(1, high);
-	}
+     * This method will return an integer (as a long) in the range [1, high].
+     *
+     * @param high The upper bound of range the number could be from.
+     *
+     * @return The randomly generated number.
+     */
+    public static final long random(final long high) {
+        return random(1, high);
+    }
 
     /**
-	 * This method will return an integer (as a long) in the range [low, high].
-	 *
-	 * @param low The lower bound range the number could be from.
-	 * @param high The upper bound of range the number could be from.
-	 *
-	 * @return The randomly generated number.
-	 */
-	public static final long random(final long low, final long high) {
-		// return (long) (Math.random() * (high - low + 1)) + low;
+     * This method will return an integer (as a long) in the range [low, high].
+     *
+     * @param low  The lower bound range the number could be from.
+     * @param high The upper bound of range the number could be from.
+     *
+     * @return The randomly generated number.
+     */
+    public static final long random(final long low, final long high) {
+        // return (long) (Math.random() * (high - low + 1)) + low;
         // ThreadLocalRandom is more efficient
         return ThreadLocalRandom.current().nextLong(low, high + 1);
 
-	}
+    }
 }
