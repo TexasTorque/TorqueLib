@@ -52,8 +52,8 @@ public final class TorqueRollingMedian {
             return vals[vals.length / 2];
     }
 
-    public static void main(final String[] args) {
-        TorqueRollingMedian rm = new TorqueRollingMedian(3);
+    public static final void main(final String[] args) {
+        final TorqueRollingMedian rm = new TorqueRollingMedian(3);
         System.out.println(rm.calculate(7));   // 7
         System.out.println(rm.calculate(8));   // 7.5
         System.out.println(rm.calculate(9));   // 8

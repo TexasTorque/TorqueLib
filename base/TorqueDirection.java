@@ -4,10 +4,15 @@ package org.texastorque.torquelib.base;
  * An enum to represent a three state representation of 
  * a direction with a quick multiplier.
  * 
+ * Implements TorqueSubsystemState for the static logging
+ * method.
+ * 
  * @author Justus
  */
-public enum TorqueDirection {
+public enum TorqueDirection implements TorqueSubsystemState {
     REVERSE, NEUTRAL, FORWARD; 
 
     public final double get() { return ordinal() - 1.; }
+
+    public static final TorqueDirection OFF = NEUTRAL;
 }
