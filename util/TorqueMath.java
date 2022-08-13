@@ -14,7 +14,7 @@ import java.util.function.ToDoubleFunction;
 /**
  * A static class of useful math utilities.
  *
- * @author Justus Languell, Omar Afzal
+ * @author Justus Languell
  */
 public final class TorqueMath {
     private TorqueMath() {
@@ -161,21 +161,6 @@ public final class TorqueMath {
     }
 
     /**
-     * Constrains a number between a minimum and maximum.
-     *
-     * @param max The maximum value.
-     * @param min The minimum value.
-     * @param val The value to constrain.
-     *
-     * @return The constrained value.
-     */
-    public static final double linearConstraint(double max, double min, double val) {
-        if (val > max) return max;
-        if (val < min) return min;
-        return val;
-    }
-
-    /**
      * Returns an array with range of [min, max] and steps of increment.
      * 
      * @param min       Min value (inclusive).
@@ -224,7 +209,7 @@ public final class TorqueMath {
         // return (long) (Math.random() * (high - low + 1)) + low;
         // ThreadLocalRandom is more efficient
         return ThreadLocalRandom.current().nextLong(low, high + 1);
-	}
+    }
 
     /**
      * Takes the average of a list of numbers.
@@ -237,10 +222,10 @@ public final class TorqueMath {
         return average(list, t -> t.doubleValue());
     }
 
-     /**
+    /**
      * Takes the average of the mapped functional outputs on a list of objects.
      * 
-     * @param list The list of numbers.
+     * @param list     The list of numbers.
      * @param function The function to generate the number.
      * 
      * @return The average of the list.
