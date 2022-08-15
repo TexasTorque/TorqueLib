@@ -1,4 +1,4 @@
-# My liberal use of `final`?
+# My liberal use of `final`
 
 For someone who asks why [I (Justus)](https://justusl.com) use `final` in every possible context.
 
