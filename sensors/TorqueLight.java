@@ -143,16 +143,45 @@ public final class TorqueLight {
      * @param x_H X position of the hub.
      * @param y_H Y position of the hub.
      */
-    public static final Pose2d getRobotPose(final TorqueLight camera, final Rotation2d theta_r, final Rotation2d theta_dp, 
+    // public static final Pose2d getRobotPose(final TorqueLight camera, final Rotation2d theta_r, final Rotation2d theta_dp, 
+    //         final Rotation2d theta_dy, final double H_h, final double H_c, final Rotation2d theta_cp, final double r_tc,
+    //         final double theta_t, final double r_H, final double x_h, final double y_h) {
+    //     final double d = (H_h - H_c) / Math.tan(theta_dp.getRadians() + theta_cp.getRadians()) + r_H - r_tc;
+    //     final double theta_f = theta_r.getRadians() + theta_dp.getRadians() + theta_dy.getRadians();
+    //     final double x_r = x_h - (Math.cos(theta_fr) * d);
+    //     final double y_r = y_h - (Math.sin(theta_fr) * d);
+    //     return new Pose2d(x_r, y_r, theta_r);
+    // }
+
+     /**
+     * Gets the estimated robot position using vision calculations.
+     * 
+     * @param camera The camera object we are using.
+     * @param theta_r Robot's CCW rotation w/ respect to the field.
+     * @param theta_dp Camera detection pitch.
+     * @param theta_dy Camera detection yaw.
+     * @param H_h Height (m) of the targets.
+     * @param H_c Height (m) of the camera.
+     * @param theta_cp Camera mount's pitch.
+     * @param r_tc Radius of the turret + camera.
+     * @param theta_t Polar degree rotation of the turret relative the camera.
+     * @param r_H Radius of the hub.
+     * @param x_H X position of the hub.
+     * @param y_H Y position of the hub.
+     */
+    public static final Pose2d getRobotPose(final Rotation2d theta_r, final Rotation2d theta_dp, 
             final Rotation2d theta_dy, final double H_h, final double H_c, final Rotation2d theta_cp, final double r_tc,
             final double theta_t, final double r_H, final double x_h, final double y_h) {
+
+        SmartDashboard.putNumber("f(theta_r)", theta_r.getDegrees());
+        SmartDashboard.putNumber("f(theta_dp)", theta_dp.getDegrees());
+        SmartDashboard.putNumber("f(theta_dy)", theta_dy.getDegrees());
+        SmartDashboard.putNumber("f(theta_t)", theta_t);
+
         final double d = (H_h - H_c) / Math.tan(theta_dp.getRadians() + theta_cp.getRadians()) + r_H - r_tc;
-        // final double theta_f = theta_r.getRadians() + theta_dp.getRadians() + theta_dy.getRadians();
-        final Rotation2d theta_f = theta_r.plus(Rotation2d.fromDegrees(theta_t)).plus(theta_dy);
-        final double theta_fr = theta_r.getRadians();
-        SmartDashboard.putNumber("theta_f", theta_f.getDegrees());
-        final double x_r = x_h - (Math.cos(theta_fr) * d);
-        final double y_r = y_h - (Math.sin(theta_fr) * d);
+        final double theta_f = theta_r.getRadians() + theta_dp.getRadians() + theta_dy.getRadians();
+        final double x_r = x_h - (Math.cos(theta_f) * d);
+        final double y_r = y_h - (Math.sin(theta_f) * d);
         return new Pose2d(x_r, y_r, theta_r);
     }
 
