@@ -36,7 +36,7 @@ public final class TorqueNavXGyro extends AHRS {
 
     public final double getDegreesClockwise() { return (getFusedHeading() + angleOffset) % 360; }
 
-    public final double getDegreesCounterClockwise() { return 360 - getFusedHeading(); }
+    public final double getDegreesCounterClockwise() { return 360 - getDegreesClockwise(); }
 
     @Override
     public final Rotation2d getRotation2d() {
