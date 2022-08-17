@@ -1,16 +1,15 @@
 package org.texastorque.torquelib.control;
 
-import java.util.function.Function;
-
 import edu.wpi.first.math.controller.PIDController;
+import java.util.function.Function;
 
 /**
  * A class representation of a PID controller that extends
  * the WPILib PIDController.
- * 
+ *
  * @apiNote Functional replacement for KPID
  * ({@link org.texastorque.torquelib.util.KPID})
- * 
+ *
  * @author Justus Languell
  */
 public final class TorquePID extends PIDController {
@@ -24,6 +23,8 @@ public final class TorquePID extends PIDController {
 
     private TorquePID(final Builder b) {
         super(b.proportional, b.integral, b.derivative, b.period);
+        if (b.hasContinuousRange) enableContinuousInput(b.minInput, b.maxInput);
+        if (b.tolerance != -1) setTolerance(b.tolerance);
         proportional = b.proportional;
         integral = b.integral;
         derivative = b.derivative;
@@ -35,22 +36,16 @@ public final class TorquePID extends PIDController {
         period = b.period;
     }
 
-    public static final Builder create() {
-        return new Builder(1);
-    }
+    public static final Builder create() { return new Builder(1); }
 
-    public static final Builder create(final double p) {
-        return new Builder(p);
-    }
+    public static final Builder create(final double p) { return new Builder(p); }
 
     public static final class Builder {
-        private double proportional, integral = 0, derivative = 0, feedForward = 0,
-                       minOutput = -1, maxOutput = 1, integralZone = 0, period = .02;
-        private boolean hasIntegralZone = false;
+        private double proportional, integral = 0, derivative = 0, feedForward = 0, minOutput = -1, maxOutput = 1,
+                                     integralZone = 0, period = .02, minInput = 0, maxInput = 0, tolerance = -1;
+        private boolean hasIntegralZone = false, hasContinuousRange = false;
 
-        private Builder(final double proportional) { 
-            this.proportional = proportional; 
-        }
+        private Builder(final double proportional) { this.proportional = proportional; }
 
         public final Builder addIntegral(final double integral) {
             this.integral = integral;
@@ -89,8 +84,32 @@ public final class TorquePID extends PIDController {
             return this;
         }
 
+        public final Builder addMinContinuousInput(final double min) {
+            this.hasContinuousRange = true;
+            this.minInput = min;
+            return this;
+        }
+
+        public final Builder addMaxContinuousInput(final double max) {
+            this.hasContinuousRange = true;
+            this.maxInput = max;
+            return this;
+        }
+
+        public final Builder addContinuousInputRange(final double min, final double max) {
+            this.hasContinuousRange = true;
+            this.minInput = min;
+            this.maxInput = max;
+            return this;
+        }
+
         public final Builder setPeriod(final double period) {
             this.period = period;
+            return this;
+        }
+
+        public final Builder setTolerance(final double tolerance) {
+            this.tolerance = tolerance;
             return this;
         }
 
@@ -99,43 +118,26 @@ public final class TorquePID extends PIDController {
 
     // * Getters
 
-    public final double getProportional() {
-        return proportional;
-    }
+    public final double getProportional() { return proportional; }
 
-    public final double getIntegral() {
-        return integral;
-    }
+    public final double getIntegral() { return integral; }
 
-    public final double getDerivative() {
-        return derivative;
-    }
+    public final double getDerivative() { return derivative; }
 
-    public final double getFeedForward() {
-        return feedForward;
-    }
+    public final double getFeedForward() { return feedForward; }
 
-    public final double getMinOutput() {
-        return minOutput;
-    }
+    public final double getMinOutput() { return minOutput; }
 
-    public final double getMaxOutput() {
-        return maxOutput;
-    }
+    public final double getMaxOutput() { return maxOutput; }
 
-    public final double getIntegralZone() {
-        return integralZone;
-    }
+    public final double getIntegralZone() { return integralZone; }
 
-    public final boolean hasIntegralZone() {
-        return hasIntegralZone;
-    }
+    public final boolean hasIntegralZone() { return hasIntegralZone; }
 
     @Override
     public final String toString() {
         return String.format("PID(PRO: %3.2f, INT: %3.2f, DER: %3.2f, F: %3.2f, MIN: %3.2f, MAX: %3.2f, IZO: %3.2f)",
-            proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone);
-        
+                             proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone);
     }
 
     // * PIDController generator methods
