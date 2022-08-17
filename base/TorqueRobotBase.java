@@ -5,6 +5,13 @@
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
 package org.texastorque.torquelib.base;
+
+import java.util.ArrayList;
+
+import org.texastorque.torquelib.auto.TorqueAutoManager;
+
+import edu.wpi.first.wpilibj.TimedRobot;
+
 /**
  * A replacment for TorqueIterative.
  *
@@ -21,6 +28,81 @@ package org.texastorque.torquelib.base;
  *
  * @author Justus Languell
  */
-public class TorqueRobotBase {
-    
+public class TorqueRobotBase extends TimedRobot {
+    private static final double HERTZ = 50;
+    public static final double PERIOD = 1. / HERTZ;
+
+    private final TorqueInput input;
+    private final TorqueAutoManager autoManager;
+
+    private final ArrayList<TorqueSubsystem> subsystems = new ArrayList<TorqueSubsystem>();
+
+    public TorqueRobotBase(final TorqueInput input, final TorqueAutoManager autoManager) { 
+       this(input, autoManager, PERIOD); 
+    }
+
+    public TorqueRobotBase(final TorqueInput input, final TorqueAutoManager autoManager, final double period) { 
+        super(PERIOD); 
+        this.input = input;
+        this.autoManager = autoManager;
+    }
+
+    public final void addSubsystem(final TorqueSubsystem subsystem) {
+        subsystems.add(subsystem);
+    }
+
+    @Override
+    public final void robotInit() {
+        
+    }
+
+    @Override
+    public final void disabledInit() {
+        // This makes no sense
+        // subsystems.forEach(subsystem -> subsystem.initialize(TorqueMode.DISABLED));
+    }
+
+    @Override
+    public final void disabledPeriodic() {
+        // This makes no sense
+        // subsystems.forEach(subsystem -> subsystem.update(TorqueMode.DISABLED));
+    }
+
+    @Override
+    public final void teleopInit() {
+        subsystems.forEach(subsystem -> subsystem.initialize(TorqueMode.TELEOP));
+    }
+
+    @Override
+    public final void teleopPeriodic() {
+        input.update();
+        subsystems.forEach(subsystem -> subsystem.update(TorqueMode.TELEOP));
+    }
+
+    @Override
+    public final void autonomousInit() {
+        autoManager.chooseCurrentSequence();
+        subsystems.forEach(subsystem -> subsystem.initialize(TorqueMode.AUTO));
+    }
+
+    @Override
+    public final void autonomousPeriodic() {
+        autoManager.runCurrentSequence();
+        subsystems.forEach(subsystem -> subsystem.update(TorqueMode.AUTO));
+    }
+
+    @Override
+    public final void testInit() {
+        subsystems.forEach(subsystem -> subsystem.initialize(TorqueMode.TEST));
+    }
+
+    @Override
+    public final void testPeriodic() {
+        input.update();
+        subsystems.forEach(subsystem -> subsystem.update(TorqueMode.TEST));
+    }
+
+    @Override
+    public final void endCompetition() {}
+
 }
