@@ -2,40 +2,28 @@ package org.texastorque.torquelib.control;
 
 import java.util.function.Function;
 
-import org.texastorque.torquelib.util.TorqueUtil;
-
 import edu.wpi.first.math.controller.PIDController;
 
 /**
- * A class representation of a PID controller with 
- * control loop methods.
+ * A class representation of a PID controller that extends
+ * the WPILib PIDController.
  * 
  * @apiNote Functional replacement for KPID
  * ({@link org.texastorque.torquelib.util.KPID})
  * 
- * TODO: Documentation
- * TODO: Implement PID calculation functions
- * TODO: Replace KPID in the rest of the codebase
- * 
  * @author Justus Languell
  */
-public final class TorquePID {
+public final class TorquePID extends PIDController {
 
     // * Variable fields
 
-    private final double proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone;
+    private final double proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone, period;
     private final boolean hasIntegralZone;
-
-    // * Calculation
-
-    public final double calculate() {
-        TorqueUtil.notImplemented();
-        return 0.;
-    }
 
     // * Construction and builder
 
     private TorquePID(final Builder b) {
+        super(b.proportional, b.integral, b.derivative, b.period);
         proportional = b.proportional;
         integral = b.integral;
         derivative = b.derivative;
@@ -44,6 +32,7 @@ public final class TorquePID {
         maxOutput = b.maxOutput;
         integralZone = b.integralZone;
         hasIntegralZone = b.hasIntegralZone;
+        period = b.period;
     }
 
     public static final Builder create() {
@@ -56,7 +45,7 @@ public final class TorquePID {
 
     public static final class Builder {
         private double proportional, integral = 0, derivative = 0, feedForward = 0,
-                       minOutput = -1, maxOutput = 1, integralZone = 0;
+                       minOutput = -1, maxOutput = 1, integralZone = 0, period = .02;
         private boolean hasIntegralZone = false;
 
         private Builder(final double proportional) { 
@@ -97,6 +86,11 @@ public final class TorquePID {
         public final Builder addIntegralZone(final double integralZone) {
             this.hasIntegralZone = true;
             this.integralZone = integralZone;
+            return this;
+        }
+
+        public final Builder setPeriod(final double period) {
+            this.period = period;
             return this;
         }
 
@@ -147,18 +141,10 @@ public final class TorquePID {
     // * PIDController generator methods
 
     public final PIDController createPIDController() {
-        return new PIDController(proportional, integral, derivative);
-    }
-
-    public final PIDController createPIDController(final double period) {
         return new PIDController(proportional, integral, derivative, period);
     }
 
     public final PIDController createPIDController(final Function<PIDController, PIDController> function) {
         return function.apply(createPIDController());
-    }
-
-    public final PIDController createPIDController(final double period, final Function<PIDController, PIDController> function) {
-        return function.apply(createPIDController(period));
     }
 }
