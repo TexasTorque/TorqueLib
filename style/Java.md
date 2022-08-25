@@ -4,11 +4,11 @@ By [Justus Languell](https://www.justusl.com/), loosely based of the [Google Jav
 
 ## Contents
 
-* [File Struture](##File-Struture)
-* [Formatting](##Formatting)
-* [Naming](##Naming)
-* [Programming Practices](##Programming-Practices)
-* [Javadoc](##Javadoc)
+* [File Struture](#File-Struture)
+* [Formatting](#Formatting)
+* [Naming](#Naming)
+* [Programming Practices](#Programming-Practices)
+* [Javadoc](#Javadoc)
 
 ## File Struture
 
