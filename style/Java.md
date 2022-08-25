@@ -1,6 +1,6 @@
 # Texas Torque Java Style Guide
 
-By [Justus Languell](https://www.justusl.com/), loosely based of the [Google Java Sytle Guide](https://google.github.io/styleguide/javaguide.html), with a lot of personal opinion.
+By [Justus Languell](https://www.justusl.com/), loosely based on the [Google Java Sytle Guide](https://google.github.io/styleguide/javaguide.html), with a lot of personal opinion.
 
 ## Contents
 
