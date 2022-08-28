@@ -271,6 +271,10 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         if (logging) SmartDashboard.putNumber(String.format("(%d) %s", id, key), value);
     }
 
+    public final double getDisplacement() {
+        return drive.getPosition();
+    }
+
     public final void spin(final double speed) {
         drive.setPercent(0);
         rotate.setPercent(speed);
