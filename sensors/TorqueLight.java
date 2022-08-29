@@ -36,11 +36,15 @@ public final class TorqueLight {
     /**
      * Creates a new TorqueLight object with desired physical parameters.
      */
-    public TorqueLight() {
-        this.cam = new PhotonCamera(NetworkTableInstance.getDefault(), "torquecam");
+    public TorqueLight(final String name) {
+        this.cam = new PhotonCamera(NetworkTableInstance.getDefault(), name);
         NetworkTableInstance.getDefault().getTable("photonvision").getEntry("ledMode").setNumber(1);
         this.result = new PhotonPipelineResult();
         this.target = new PhotonTrackedTarget();
+    }
+   
+    public TorqueLight() {
+        this("torquevision");
     }
 
     /**
