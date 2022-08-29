@@ -8,6 +8,7 @@ package org.texastorque.torquelib.util;
 
 import java.util.Arrays;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -180,5 +181,18 @@ public final class TorqueUtil {
         final double start = time();
         final T result = f.get();
         return new TimeResult<>(result, (time() - start) / 1000.);
+    }
+
+    /**
+     * Apply or don't modify a value based on a condition using a transforming function.
+     * 
+     * @param <T> Type or parameter and return.
+     * @param use To modify or not to modify.
+     * @param value The input value.
+     * @param function The function that modifies the input value.
+     * @return The modified or unmodified value.
+     */
+    public static final <T> T conditionalApply(final boolean use, final T value, final Function<T, T> function) {
+        return use ? function.apply(value) : value;
     }
 }
