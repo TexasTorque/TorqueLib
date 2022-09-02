@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public final class TorqueBlock extends ArrayList<TorqueCommand> {
     public TorqueBlock() { super(); }
 
+    // loops might be able to have local variable marked final
     public TorqueBlock(final TorqueCommand... commands) {
         for (TorqueCommand command : commands) add(command);
     }
