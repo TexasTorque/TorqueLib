@@ -24,12 +24,16 @@ public abstract class TorqueSequence {
 
     protected final void addBlock(final TorqueBlock block) { commands.add(block); }
 
+    protected final void addBlock(final TorqueCommand... commands) {
+        addBlock(new TorqueBlock(commands));
+    }
+    
+    // loops might be able to have local variable marked final
     public final void run() {
         if (blockIndex < commands.size()) {
             boolean blockEnded = true;
-            for (TorqueCommand command : commands.get(blockIndex)) {
+            for (TorqueCommand command : commands.get(blockIndex))
                 if (!command.run()) blockEnded = false;
-            }
             if (blockEnded) blockIndex++;
         } else if (!ended)
             ended = true;
