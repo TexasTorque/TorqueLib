@@ -44,7 +44,7 @@ public final class TorqueLight {
     }
    
     public TorqueLight() {
-        this("torquevision");
+        this("torquecam");
     }
 
     /**
