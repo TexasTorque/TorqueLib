@@ -1,3 +1,9 @@
+/**
+ * Copyright 2011-2022 Texas Torque.
+ *
+ * This file is part of TorqueLib, which is licensed under the MIT license.
+ * For more details, see ./license.txt or write <jus@gtsbr.org>.
+ */
 package org.texastorque.torquelib.control;
 
 import org.texastorque.torquelib.util.TorqueUtil;
@@ -17,7 +23,7 @@ public final class TorqueSlewLimiter {
     /**
      * Creates a new TorqueSlewLimiter with the ascending and descending limit the
      * same.
-     * 
+     *
      * @param limit The max units-per-second
      */
     public TorqueSlewLimiter(final double limit) {
@@ -28,7 +34,7 @@ public final class TorqueSlewLimiter {
     /**
      * Creates a new TorqueSlewLimiter with a different ascending and descending
      * limit.
-     * 
+     *
      * @param limitAsc  The max units-per-second increasing absolutely
      * @param limitDesc The max units-per-second descending absolutely
      */
@@ -43,20 +49,19 @@ public final class TorqueSlewLimiter {
      */
     public final double calculate(final double val) {
         final double t = TorqueUtil.time();
-        lastVal += Math.signum(val - lastVal) * Math.min(Math.abs(val) > Math.abs(lastVal) 
-                ? limitAsc : limitDesc * t - lastTime, Math.abs(val - lastVal));
+        lastVal += Math.signum(val - lastVal) *
+                   Math.min(Math.abs(val) > Math.abs(lastVal) ? limitAsc : limitDesc * t - lastTime,
+                            Math.abs(val - lastVal));
         lastTime = t;
         return lastVal;
     }
 
-     /**
+    /**
      * @param val The requested input
      * @param use For testing
      * @return The limited value
      */
-    public final double calculate(final double val, final boolean use) {
-        return use ? calculate(val) : val;        
-    }
+    public final double calculate(final double val, final boolean use) { return use ? calculate(val) : val; }
 
     // /**
     //  * @param val The requested input

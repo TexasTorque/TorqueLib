@@ -1,16 +1,24 @@
+/**
+ * Copyright 2011-2022 Texas Torque.
+ *
+ * This file is part of TorqueLib, which is licensed under the MIT license.
+ * For more details, see ./license.txt or write <jus@gtsbr.org>.
+ */
 package org.texastorque.torquelib.base;
 
 /**
- * An enum to represent a three state representation of 
+ * An enum to represent a three state representation of
  * a direction with a quick multiplier.
- * 
+ *
  * Implements TorqueSubsystemState for the static logging
  * method.
- * 
+ *
  * @author Justus
  */
 public enum TorqueDirection implements TorqueSubsystemState {
-    REVERSE, NEUTRAL, FORWARD; 
+    REVERSE,
+    NEUTRAL,
+    FORWARD;
 
     public final double get() { return ordinal() - 1.; }
 

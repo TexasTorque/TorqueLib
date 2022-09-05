@@ -8,7 +8,7 @@ An updated list of planned changes will be kept here.
 
 - [ ] TorqueIterative replacement.
 - [ ] GenericController replacement.
-- [X] KPID replacement.
+- [x] KPID replacement.
 - [x] TorqueGearBox removal.
 - [x] TorqueMathUtil renamed to TorqueMath.
 - [x] TorqueMiscUtil renamed to TorqueUtil.
