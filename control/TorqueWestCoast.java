@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -11,7 +11,7 @@ package org.texastorque.torquelib.control;
  * durring teleop. Encapsulated in a class.
  *
  * @author ß
- * @author Justus Languell 
+ * @author Justus Languell
  * @author Jacob Daniels
  */
 public final class TorqueWestCoast {

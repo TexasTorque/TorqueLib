@@ -1,18 +1,17 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
 package org.texastorque.torquelib.util;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Miscellaneous and uncatagorized static functions used throughout the codebase.
@@ -25,7 +24,9 @@ public final class TorqueUtil {
     public static final String osName = System.getProperty("os.name");
     // public static final boolean onRobot = RobotBase.isReal();
     public static final boolean onRobot = !osName.equals("Mac OS X");
-    static { if (onRobot) SmartDashboard.putString("OSNAME", osName); }
+    static {
+        if (onRobot) SmartDashboard.putString("OSNAME", osName);
+    }
 
     /**
      * A time method that can be used on the robot and
@@ -111,22 +112,22 @@ public final class TorqueUtil {
     /**
      * Enumerated For (enumeratedFor) is a class that *trys* to
      * implement similar functionality to Python:
-     * 
+     *
      *  for i, element in enumerate(iterable):
      *      doSomething(i, element)
-     * 
+     *
      * in the form:
-     * 
+     *
      *  <T>enumeratedFor(iterable, (i, element) -> {
      *      doSomething(i, element);
      *  });
-     * 
+     *
      * So not that much more verbose, but you do have to specify type!
      *
      * @param <T> Type of the iterable.
      * @param iterable The iterable to iterate over.
-     * @param f The functional interface to call. 
-     * 
+     * @param f The functional interface to call.
+     *
      * @author Justus Languell
      */
     public static final <T> void enumeratedFor(final Iterable<T> iterable, final BiConsumer<Integer, T> f) {
@@ -136,7 +137,7 @@ public final class TorqueUtil {
 
     /**
      * A wrapper for enumeratedFor that supports static arrays.
-     * 
+     *
      * @param <T> Type of the iterable.
      * @param array The array to iterate over.
      * @param f The functional interface to call.
@@ -185,7 +186,7 @@ public final class TorqueUtil {
 
     /**
      * Apply or don't modify a value based on a condition using a transforming function.
-     * 
+     *
      * @param <T> Type or parameter and return.
      * @param use To modify or not to modify.
      * @param value The input value.

@@ -2,7 +2,7 @@
 
 # Script to help me generate methods for TorqueController.java
 
-map_ = [1, 0, 5, 4, 6, 6, 9, 10, 5, 6, 2, 3, 7, 8, 3, 4, 2, 1];
+map_ = [1, 0, 5, 4, 6, 6, 9, 10, 5, 6, 2, 3, 7, 8, 3, 4, 2, 1]
 
 buttons = {
     'left stick click': 6,
@@ -17,9 +17,10 @@ buttons = {
     'A button': 17
 }
 
-def gen_buttons(): 
+
+def gen_buttons():
     print('// * DEPRECATED Button interface functions')
-    for button, index in buttons.items(): 
+    for button, index in buttons.items():
         print(f'''/**
  * Check if the {button.replace(' click', '')} is currently down.
  * 
@@ -33,8 +34,8 @@ public final boolean get{button.title().replace(' ', '')}() {{
     return down({map_[index]});
 }}
 ''')
-    print('// * Button down interface functions') 
-    for button, index in buttons.items(): 
+    print('// * Button down interface functions')
+    for button, index in buttons.items():
         print(f'''/**
  * Check if the {button.replace('click', '')} is currently down.
  * 
@@ -44,8 +45,8 @@ public final boolean is{button.title().replace(' ', '')}Down() {{
     return down({map_[index]});
 }}
 ''')
-    print('// * Button pressed interface functions') 
-    for button, index in buttons.items(): 
+    print('// * Button pressed interface functions')
+    for button, index in buttons.items():
         print(f'''/**
  * Check if the {button.replace('click', '')} is being pressed.
  * 
@@ -56,7 +57,7 @@ public final boolean is{button.title().replace(' ', '')}Pressed() {{
 }}
 ''')
     print('// * Button released interface functions')
-    for button, index in buttons.items(): 
+    for button, index in buttons.items():
         print(f'''/**
  * Check if the {button.replace('click', '')} is being released.
  * 
@@ -66,6 +67,7 @@ public final boolean is{button.title().replace(' ', '')}Released() {{
     return released({map_[index]});
 }}
 ''')
-    
+
+
 if __name__ == '__main__':
     gen_buttons()

@@ -1,4 +1,4 @@
-/**  
+/**
  * A package that contains uncatagorized utlity classes.
  * This package is divided into two secions:
 

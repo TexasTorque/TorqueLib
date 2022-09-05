@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -42,10 +41,8 @@ public final class TorqueLight {
         this.result = new PhotonPipelineResult();
         this.target = new PhotonTrackedTarget();
     }
-   
-    public TorqueLight() {
-        this("torquecam");
-    }
+
+    public TorqueLight() { this("torquecam"); }
 
     /**
      * Call this periodically to update the vision state.
@@ -81,7 +78,7 @@ public final class TorqueLight {
      *
      * @return The avg yaw angle of the targets as degrees.
      */
-    public final double getAverageYaw() { 
+    public final double getAverageYaw() {
         return result.getTargets().stream().mapToDouble(t -> t.getYaw()).average().getAsDouble();
     }
 
@@ -92,12 +89,12 @@ public final class TorqueLight {
      */
     public final double getTargetPitch() { return target.getPitch(); }
 
-      /**
+    /**
      * Returns the avg pitch angle of the targets as degrees.
      *
      * @return The avg pitch angle of the targets as degrees.
      */
-    public final double getAveragePitch() { 
+    public final double getAveragePitch() {
         return result.getTargets().stream().mapToDouble(t -> t.getPitch()).average().getAsDouble();
     }
 
@@ -108,32 +105,28 @@ public final class TorqueLight {
      * @return Transformation2d object that represents the
      *         distance betweeen the camera and the target.
      */
-    public final Transform2d getCameraToTarget() {
-        return target.getCameraToTarget();
-    }
+    public final Transform2d getCameraToTarget() { return target.getCameraToTarget(); }
 
     /**
-     * 
+     *
      * @return The number of targets that the camera detects.
      */
-    public final double getNumberOfTargets() {
-        return result.getTargets().size();
-    }
-    
+    public final double getNumberOfTargets() { return result.getTargets().size(); }
+
     /**
      * Calculates the distance to the target in meters.
      *
      * @return The distance to the target in meters.
      */
-    public static final double getDistanceToElevatedTarget(final TorqueLight camera, 
-            final double cameraHeight, final double targetHeight, final Rotation2d angle) {
+    public static final double getDistanceToElevatedTarget(final TorqueLight camera, final double cameraHeight,
+                                                           final double targetHeight, final Rotation2d angle) {
         return PhotonUtils.calculateDistanceToTargetMeters(cameraHeight, targetHeight, angle.getRadians(),
-                Units.degreesToRadians(camera.getTargetPitch()));
+                                                           Units.degreesToRadians(camera.getTargetPitch()));
     }
 
     /**
      * Gets the estimated robot position using vision calculations.
-     * 
+     *
      * @param camera The camera object we are using.
      * @param theta_r Robot's CCW rotation w/ respect to the field.
      * @param theta_dp Camera detection pitch.
@@ -147,9 +140,10 @@ public final class TorqueLight {
      * @param x_H X position of the hub.
      * @param y_H Y position of the hub.
      */
-    // public static final Pose2d getRobotPose(final TorqueLight camera, final Rotation2d theta_r, final Rotation2d theta_dp, 
-    //         final Rotation2d theta_dy, final double H_h, final double H_c, final Rotation2d theta_cp, final double r_tc,
-    //         final double theta_t, final double r_H, final double x_h, final double y_h) {
+    // public static final Pose2d getRobotPose(final TorqueLight camera, final Rotation2d theta_r, final Rotation2d
+    // theta_dp,
+    //         final Rotation2d theta_dy, final double H_h, final double H_c, final Rotation2d theta_cp, final double
+    //         r_tc, final double theta_t, final double r_H, final double x_h, final double y_h) {
     //     final double d = (H_h - H_c) / Math.tan(theta_dp.getRadians() + theta_cp.getRadians()) + r_H - r_tc;
     //     final double theta_f = theta_r.getRadians() + theta_dp.getRadians() + theta_dy.getRadians();
     //     final double x_r = x_h - (Math.cos(theta_fr) * d);
@@ -157,9 +151,9 @@ public final class TorqueLight {
     //     return new Pose2d(x_r, y_r, theta_r);
     // }
 
-     /**
+    /**
      * Gets the estimated robot position using vision calculations.
-     * 
+     *
      * @param camera The camera object we are using.
      * @param theta_r Robot's CCW rotation w/ respect to the field.
      * @param theta_dp Camera detection pitch.
@@ -173,9 +167,10 @@ public final class TorqueLight {
      * @param x_H X position of the hub.
      * @param y_H Y position of the hub.
      */
-    public static final Pose2d getRobotPose(final Rotation2d theta_r, final Rotation2d theta_dp, 
-            final Rotation2d theta_dy, final double H_h, final double H_c, final Rotation2d theta_cp, final double r_tc,
-            final double theta_t, final double r_H, final double x_h, final double y_h) {
+    public static final Pose2d getRobotPose(final Rotation2d theta_r, final Rotation2d theta_dp,
+                                            final Rotation2d theta_dy, final double H_h, final double H_c,
+                                            final Rotation2d theta_cp, final double r_tc, final double theta_t,
+                                            final double r_H, final double x_h, final double y_h) {
 
         SmartDashboard.putNumber("f(theta_r)", theta_r.getDegrees());
         SmartDashboard.putNumber("f(theta_dp)", theta_dp.getDegrees());
@@ -191,10 +186,8 @@ public final class TorqueLight {
 
     /**
      * Reads the camera latency in milliseconds.
-     * 
+     *
      * @return The camera latency in milliseconds
      */
-    public final double getLatency() {
-        return result.getLatencyMillis();
-    }
+    public final double getLatency() { return result.getLatencyMillis(); }
 }

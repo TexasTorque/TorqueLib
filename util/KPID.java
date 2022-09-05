@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -12,7 +12,7 @@ package org.texastorque.torquelib.util;
  * @author Texas Torque
  *
  * @apiNote Needs proper update / replacement.
- * 
+ *
  * @deprecated Use {@link org.texastorque.torquelib.control.TorquePID} instead.
  */
 @Deprecated

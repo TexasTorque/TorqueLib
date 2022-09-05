@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -17,7 +17,6 @@ import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 import java.util.ArrayList;
-
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
 import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
@@ -112,7 +111,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         pidController.setOutputRange(kPID.getMin(), kPID.getMax());
     }
 
-      /**
+    /**
      * Configures the PID controller for the motor.
      *
      * @param pid The PID to configure the motor with.
@@ -123,8 +122,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         pidController.setI(pid.getIntegral());
         pidController.setD(pid.getDerivative());
         pidController.setFF(pid.getFeedForward());
-        if (pid.hasIntegralZone())
-            pidController.setIZone(pid.getIntegralZone());
+        if (pid.hasIntegralZone()) pidController.setIZone(pid.getIntegralZone());
         pidController.setOutputRange(pid.getMinOutput(), pid.getMaxOutput());
     }
 

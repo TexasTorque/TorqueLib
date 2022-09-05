@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -69,8 +69,7 @@ public abstract class TorqueAutoManager {
                                     .getEntry("selected")
                                     .getString("N/A");
 
-        if (autoSequences.containsKey(autoChoice))
-            currentSequence = autoSequences.get(autoChoice);
+        if (autoSequences.containsKey(autoChoice)) currentSequence = autoSequences.get(autoChoice);
 
         resetCurrentSequence();
         sequenceEnded = false;

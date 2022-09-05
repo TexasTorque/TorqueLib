@@ -1,16 +1,14 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
 package org.texastorque.torquelib.base;
 
-import java.util.ArrayList;
-
-import org.texastorque.torquelib.auto.TorqueAutoManager;
-
 import edu.wpi.first.wpilibj.TimedRobot;
+import java.util.ArrayList;
+import org.texastorque.torquelib.auto.TorqueAutoManager;
 
 /**
  * A replacment for TorqueIterative.
@@ -37,24 +35,20 @@ public class TorqueRobotBase extends TimedRobot {
 
     private final ArrayList<TorqueSubsystem> subsystems = new ArrayList<TorqueSubsystem>();
 
-    public TorqueRobotBase(final TorqueInput input, final TorqueAutoManager autoManager) { 
-       this(input, autoManager, PERIOD); 
+    public TorqueRobotBase(final TorqueInput input, final TorqueAutoManager autoManager) {
+        this(input, autoManager, PERIOD);
     }
 
-    public TorqueRobotBase(final TorqueInput input, final TorqueAutoManager autoManager, final double period) { 
-        super(PERIOD); 
+    public TorqueRobotBase(final TorqueInput input, final TorqueAutoManager autoManager, final double period) {
+        super(PERIOD);
         this.input = input;
         this.autoManager = autoManager;
     }
 
-    public final void addSubsystem(final TorqueSubsystem subsystem) {
-        subsystems.add(subsystem);
-    }
+    public final void addSubsystem(final TorqueSubsystem subsystem) { subsystems.add(subsystem); }
 
     @Override
-    public final void robotInit() {
-        
-    }
+    public final void robotInit() {}
 
     @Override
     public final void disabledInit() {
@@ -104,5 +98,4 @@ public class TorqueRobotBase extends TimedRobot {
 
     @Override
     public final void endCompetition() {}
-
 }

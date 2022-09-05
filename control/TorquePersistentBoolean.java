@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -44,15 +44,11 @@ public final class TorquePersistentBoolean {
 
     public final boolean any() { return any(true); }
 
-    public final boolean any(final boolean value) {
-        return portion(value) > 0;
-    }
+    public final boolean any(final boolean value) { return portion(value) > 0; }
 
     public final boolean all() { return all(true); }
 
-    public final boolean all(final boolean value) {
-        return portion(value) >= 1.;
-    }
+    public final boolean all(final boolean value) { return portion(value) >= 1.; }
 
     public final double portion() { return portion(true); }
 
@@ -60,6 +56,6 @@ public final class TorquePersistentBoolean {
      * Calculates the % of window that is "value".
      */
     public final double portion(final boolean value) {
-        return values.stream().mapToInt(v -> v ? 1 : 0).sum() / (double) values.size();
+        return values.stream().mapToInt(v -> v ? 1 : 0).sum() / (double)values.size();
     }
 }
