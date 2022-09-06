@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -14,7 +14,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import org.texastorque.torquelib.control.TorqueClick;
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
@@ -45,7 +44,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
 
     private boolean logging = false;
 
-     /**
+    /**
      * Construct a new TorqueSwerveModule2021.
      *
      * @param id                The id of the swerve module.
@@ -103,10 +102,10 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      * @param maxVelocity       The maximum velocity of the drive motor in meters per second.
      * @param maxAcceleration   The maximum acceleration of the drive motor in meters per second per second.
      * @param driveFeedForward  The drive motor feed forward for autonomous.
-     * 
+     *
      * @deprecated Uses KPID, use TorquePID instead.
      */
-    @Deprecated 
+    @Deprecated
     public TorqueSwerveModule2021(final int id, final int drivePort, final int rotatePort, final double driveGearing,
                                   final double wheelRadiusMeters, final KPID drivePID, final KPID rotatePID,
                                   final double maxVelocity, final double maxAcceleration,
@@ -271,13 +270,10 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         if (logging) SmartDashboard.putNumber(String.format("(%d) %s", id, key), value);
     }
 
-    public final double getDisplacement() {
-        return drive.getPosition();
-    }
+    public final double getDisplacement() { return drive.getPosition(); }
 
     public final void spin(final double speed) {
         drive.setPercent(0);
         rotate.setPercent(speed);
     }
-
 }

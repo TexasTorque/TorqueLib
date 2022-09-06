@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -24,10 +24,8 @@ public abstract class TorqueSequence {
 
     protected final void addBlock(final TorqueBlock block) { commands.add(block); }
 
-    protected final void addBlock(final TorqueCommand... commands) {
-        addBlock(new TorqueBlock(commands));
-    }
-    
+    protected final void addBlock(final TorqueCommand... commands) { addBlock(new TorqueBlock(commands)); }
+
     // loops might be able to have local variable marked final
     public final void run() {
         if (blockIndex < commands.size()) {
@@ -44,7 +42,7 @@ public abstract class TorqueSequence {
     public final void reset() {
         ended = false;
         blockIndex = 0;
-        for (TorqueBlock block : commands) 
+        for (TorqueBlock block : commands)
             for (TorqueCommand command : block) command.reset();
     }
 

@@ -15,6 +15,7 @@ languages = {
 
 counts = {}
 
+
 def count(path):
     if only_torquelib and 'torquelib' not in path:
         return
@@ -23,10 +24,12 @@ def count(path):
     if ext not in counts:
         counts[ext] = 0
     counts[ext] += len(source.split('\n'))
-    
+
+
 if __name__ == '__main__':
     for root, subdirs, files in os.walk(os.path.realpath('./src/main/java/org/texastorque')):
         [count(root + '/' + file) for file in files]
     for lang, ext in languages.items():
         lines = counts[ext]
-        print(f'{lang}: {lines} lines = ~{max(lines // 46, 1)} pages') if lines > 0 else None
+        print(
+            f'{lang}: {lines} lines = ~{max(lines // 46, 1)} pages') if lines > 0 else None

@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
  * Replacment for SmartDashboard.
- * 
+ *
  * Am going to experiment with fancy ShuffleBoardd stuff.
  *
  * @author Justus Languell
@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public final class TorqueLogging {
 
     // public static final ShuffleboardTab tab = Shuffleboard.getTab("Texas Torque");
-
 
     public static final String TABLE_IDENTIFIER = "Log";
 

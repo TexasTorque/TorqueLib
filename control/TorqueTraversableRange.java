@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -49,7 +49,8 @@ public final class TorqueTraversableRange {
      * @param maximum   The minimum speed setting.
      * @param increment The increment of the speed settings.
      */
-    public TorqueTraversableRange(final double speed, final double minimum, final double maximum, final double increment) {
+    public TorqueTraversableRange(final double speed, final double minimum, final double maximum,
+                                  final double increment) {
         this.speed = speed;
         this.minimum = minimum;
         this.maximum = maximum;

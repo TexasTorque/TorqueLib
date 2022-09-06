@@ -4,11 +4,11 @@ By [Justus Languell](https://www.justusl.com/), loosely based on the [Google Jav
 
 ## Contents
 
-* [File Struture](#File-Struture)
-* [Formatting](#Formatting)
-* [Naming](#Naming)
-* [Programming Practices](#Programming-Practices)
-* [Javadoc](#Javadoc)
+- [File Struture](#File-Struture)
+- [Formatting](#Formatting)
+- [Naming](#Naming)
+- [Programming Practices](#Programming-Practices)
+- [Javadoc](#Javadoc)
 
 ## File Struture
 
@@ -30,77 +30,77 @@ For the remaining non-ASCII characters, either the actual Unicode character (e.g
 
 A source file must be structured as follows:
 
-* License or package information.
-* Package statement (not line-wrapped).
-* Import statements (not line-wrapped).
-* Exactly one top-level class.
+- License or package information.
+- Package statement (not line-wrapped).
+- Import statements (not line-wrapped).
+- Exactly one top-level class.
 
 **Exactly one** blank lines between the sections.
 
 ### Import Statements
 
-* Import statements are not line-wrapped.
-* Do not use wildcard imports on classes.
-* Do not use static imports on classes.
-* Put static imports before plain imports.
+- Import statements are not line-wrapped.
+- Do not use wildcard imports on classes.
+- Do not use static imports on classes.
+- Put static imports before plain imports.
 
 ### Class Layout
 
 Layout beyond what specified below is left to the author.
 
-* Singleton instance if applicable.
-* `public static final` constants.
-* Class variable fields.
-* Constructors
-* Methods
+- Singleton instance if applicable.
+- `public static final` constants.
+- Class variable fields.
+- Constructors
+- Methods
 
 ## Formatting
 
 You don't need to worry about too much formatting because we use Clang-Format. The Texas Torque Clang-Format for Java is specified as below:
 
 ```yaml
-Language: Java     
+Language: Java
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 ColumnLimit: 120
-ContinuationIndentWidth: 8    
-AllowShortBlocksOnASingleLine: true    
-AllowShortCaseLabelsOnASingleLine: true    
-AllowShortEnumsOnASingleLine: true    
-AllowShortFunctionsOnASingleLine: true    
-AllowShortIfStatementsOnASingleLine: AllIfsAndElse    
-AllowShortLoopsOnASingleLine: true    
-AllowShortIfStatementsOnASingleLine: true    
+ContinuationIndentWidth: 8
+AllowShortBlocksOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortLoopsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: true
 IndentRequires: true
 BreakBeforeBraces: Attach
 UseTab: Never
 BreakAfterJavaFieldAnnotations: true
 AlignOperands: true
-AlignTrailingComments: true 
+AlignTrailingComments: true
 ```
 
 ### Quick rules
 
-* Braces **always go on the same line as the statement**.
-* If braces are optional, you don't have to use them, just be consistent with that block of code.
-* One line `methods`/`if`/`else`/`for`/`while` are allowed.
-* The line limit is 120 characters.
-* Indentation is 4 spaces.
-* A continuation of the previous line is indented 8 spaces.
-* Always break a line on an opeator, start the next line with the operator.
-* Horizontal alignment is never required but is optional.
-* Single line variable declarations with commas are allowed (ex: `int a, b = 5;`)
-* Don't use `switch` statements.
-* Grouping paranthesis are recomended.
+- Braces **always go on the same line as the statement**.
+- If braces are optional, you don't have to use them, just be consistent with that block of code.
+- One line `methods`/`if`/`else`/`for`/`while` are allowed.
+- The line limit is 120 characters.
+- Indentation is 4 spaces.
+- A continuation of the previous line is indented 8 spaces.
+- Always break a line on an opeator, start the next line with the operator.
+- Horizontal alignment is never required but is optional.
+- Single line variable declarations with commas are allowed (ex: `int a, b = 5;`)
+- Don't use `switch` statements.
+- Grouping paranthesis are recomended.
 
 ### The order of field modifiers
 
 You do need to worry about the order of field modifiers (from left to right):
 
-* `private`, `protected`, or `public`
-* `static`
-* `final`
-* `volatile` or `synchronized`
+- `private`, `protected`, or `public`
+- `static`
+- `final`
+- `volatile` or `synchronized`
 
 ### Horizontal white space
 
@@ -108,26 +108,26 @@ This is ussually taken care of by Clang-Format, but we pretty much use Google's 
 
 Beyond where required by the language or other style rules, and apart from literals, comments and Javadoc, a single ASCII space also appears in the following places only.
 
-* Separating any reserved word, such as `if`, `for`, or `catch`, from an open parenthesis (() that follows it on that line
-* Separating any reserved word, such as `else` or `catch`, from a closing curly brace (}) that precedes it on that line
-* Before any open curly brace (`{`), with two exceptions:
-  * `@SomeAnnotation({a, b})` (no space is used)
-  * `String[][] x = {{"foo"}};` (no space is required between `{{`, by item 9 below)
-* On both sides of any binary or ternary operator. This also applies to the following "operator-like" symbols:
-  * the ampersand in a conjunctive type bound: `<T extends Foo & Bar>`
-  * the pipe for a catch block that handles multiple exceptions: `catch (FooException | BarException e)`
-  * the colon (`:`) in an enhanced `for` ("foreach") statement
-the arrow in a lambda expression: `(String str) -> str.length()`
-* but not
-  * the two colons (`::`) of a method reference, which is written like `Object::toString`
-  * the dot separator (`.`), which is written like `object.toString()`
-* After `,`, `:`, `;`, or the closing parenthesis (`)`) of a cast
-* Between any content and a double slash (`//`) which begins a comment. Multiple spaces are allowed.
-* Between a double slash (`//`) which begins a comment and the comment's text. Multiple spaces are allowed.
-* Between the type and variable of a declaration: `List<String> list`
-* Optional just inside both braces of an array initializer
-  * `new int[] {5, 6}` and `new int[] { 5, 6 }` are both valid
-* Between a type annotation and `[]` or `...`.
+- Separating any reserved word, such as `if`, `for`, or `catch`, from an open parenthesis (() that follows it on that line
+- Separating any reserved word, such as `else` or `catch`, from a closing curly brace (}) that precedes it on that line
+- Before any open curly brace (`{`), with two exceptions:
+  - `@SomeAnnotation({a, b})` (no space is used)
+  - `String[][] x = {{"foo"}};` (no space is required between `{{`, by item 9 below)
+- On both sides of any binary or ternary operator. This also applies to the following "operator-like" symbols:
+  - the ampersand in a conjunctive type bound: `<T extends Foo & Bar>`
+  - the pipe for a catch block that handles multiple exceptions: `catch (FooException | BarException e)`
+  - the colon (`:`) in an enhanced `for` ("foreach") statement
+    the arrow in a lambda expression: `(String str) -> str.length()`
+- but not
+  - the two colons (`::`) of a method reference, which is written like `Object::toString`
+  - the dot separator (`.`), which is written like `object.toString()`
+- After `,`, `:`, `;`, or the closing parenthesis (`)`) of a cast
+- Between any content and a double slash (`//`) which begins a comment. Multiple spaces are allowed.
+- Between a double slash (`//`) which begins a comment and the comment's text. Multiple spaces are allowed.
+- Between the type and variable of a declaration: `List<String> list`
+- Optional just inside both braces of an array initializer
+  - `new int[] {5, 6}` and `new int[] { 5, 6 }` are both valid
+- Between a type annotation and `[]` or `...`.
 
 This rule is never interpreted as requiring or forbidding additional space at the start or end of a line; it addresses only interior space.
 
@@ -135,10 +135,10 @@ This rule is never interpreted as requiring or forbidding additional space at th
 
 We use:
 
-* `@Override` (Always use this!)
-* `@Deprecated`
-* `@FunctionalInterface`
-* `@SuppressWarnings`
+- `@Override` (Always use this!)
+- `@Deprecated`
+- `@FunctionalInterface`
+- `@SuppressWarnings`
 
 ### Comments
 
@@ -166,10 +166,10 @@ Special prefixes or suffixes are not used. No Hungarian case.
 
 Invalid names:
 
-* `name_`
-* `mName`
-* `s_name`
-* `kName`
+- `name_`
+- `mName`
+- `s_name`
+- `kName`
 
 WPILib loves to use the `mInstanceVariable` and `kConstantOrEnum` bullshit, we do not.
 
@@ -244,15 +244,15 @@ somethingThatYieldsAFoo().aStaticMethod(); // very bad
 
 We use `final` in every possible context.
 
-* To be overly explicit for readability  purposes
-* To prevent unwanted mutation
+- To be overly explicit for readability purposes
+- To prevent unwanted mutation
 
 #### Why?
 
 This mostly applies to fields and local variables. Declaring immutability is important.
 It lets us know how a value will change over runtime, and how we can avoid side effects.
-This is the same reason I use `final` in parameters declarations. If a parameter is *not*
-marked `final` in my code it *will* be mutated. To keep this connotation, we must use `final`
+This is the same reason I use `final` in parameters declarations. If a parameter is _not_
+marked `final` in my code it _will_ be mutated. To keep this connotation, we must use `final`
 everywhere else. I also use `final` when I can to explicitly specify extendibility. This is
 important in building a library, like [TorqueLib](https://github.com/TexasTorque/TorqueLib),
 and as a result of this, I use it in the entire Texas Torque codebase. The most extraneous
@@ -294,5 +294,5 @@ Any of the standard "block tags" that are used appear in the order `@param`, `@r
 
 At the minimum, Javadoc is present for every public class, and every public or protected member of such a class, with a few exceptions:
 
-* Javadoc is optional for "simple, obvious" members like `getFoo()`, in cases where there really and truly is nothing else worthwhile to say but "Returns the foo".
-* Javadoc is not always present on a method that overrides a supertype method.
+- Javadoc is optional for "simple, obvious" members like `getFoo()`, in cases where there really and truly is nothing else worthwhile to say but "Returns the foo".
+- Javadoc is not always present on a method that overrides a supertype method.

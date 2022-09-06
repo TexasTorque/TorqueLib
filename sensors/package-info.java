@@ -4,9 +4,9 @@
  * - Sensors
  * - Cameras
  * - Gyros
- * This package is very limited at the moment, but as more 
+ * This package is very limited at the moment, but as more
  * sensors are used, this package will grow.
- * 
+ *
  * @author Justus Languell
  * @author Jack Pittenger
  */

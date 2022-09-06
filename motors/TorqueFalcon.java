@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -15,7 +15,6 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import java.util.ArrayList;
-
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
 import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
@@ -130,8 +129,7 @@ public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor 
         motor.config_kI(0, pid.getIntegral());
         motor.config_kD(0, pid.getDerivative());
         motor.config_kF(0, pid.getFeedForward());
-        if (pid.hasIntegralZone())
-            motor.config_IntegralZone(0, pid.getIntegralZone());
+        if (pid.hasIntegralZone()) motor.config_IntegralZone(0, pid.getIntegralZone());
         motor.configPeakOutputForward(pid.getMaxOutput());
         motor.configPeakOutputReverse(pid.getMinOutput());
     }

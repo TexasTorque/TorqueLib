@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -49,7 +49,7 @@ public final class Test {
 
     // private final TorqueTimeout t = new TorqueTimeout(5);
     private final TorqueSlewLimiter limiter = new TorqueSlewLimiter(1);
-    
+
     private long counter = 0;
     private boolean state = false;
 
@@ -57,8 +57,7 @@ public final class Test {
 
     private final void update() {
         counter++;
-        if (counter % 10 == 0)
-            state = !state;
+        if (counter % 10 == 0) state = !state;
 
         final double speed = state ? 1 : -1;
 

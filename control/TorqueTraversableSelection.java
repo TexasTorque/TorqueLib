@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2022 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
@@ -22,9 +22,9 @@ public final class TorqueTraversableSelection<T> {
     private final T[] values;
 
     public TorqueTraversableSelection(final T... values) { this.values = values; }
-    public TorqueTraversableSelection(int index, final T... values) { 
-        this.index = index; 
-        this.values = values; 
+    public TorqueTraversableSelection(int index, final T... values) {
+        this.index = index;
+        this.values = values;
     }
 
     public final T calculate(final boolean decrement, final boolean increment) {
