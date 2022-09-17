@@ -267,7 +267,9 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      * @param value The value to log.
      */
     private final void putNumber(final String key, final double value) {
-        if (logging) SmartDashboard.putNumber(String.format("(%d) %s", id, key), value);
+        // if (logging) SmartDashboard.putNumber(String.format("S(%d) %s", id, key), value);
+        // if (logging) SmartDashboard.putString(String.format("S(%d) %s", id, key), String.format("%.3f", value));
+        if (logging) SmartDashboard.putString(String.format("[SM] %s (%d)", id, key), String.format("%.3f", value));
     }
 
     public final double getDisplacement() { return drive.getPosition(); }
