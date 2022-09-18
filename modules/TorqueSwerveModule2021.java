@@ -116,12 +116,12 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
 
         drive = new TorqueSparkMax(drivePort);
         drive.configurePID(drivePID);
-        // drive.configureSmartMotion(
-        //         metersPerSecondToEncoderPerMinute(this.maxVelocity = maxVelocity),
-        //         metersPerSecondToEncoderPerMinute(.1),
-        //         metersPerSecondToEncoderPerMinute(maxAcceleration),
-        //         metersPerSecondToEncoderPerMinute(.1),
-        //         0);
+        drive.configureSmartMotion(
+                metersPerSecondToEncoderPerMinute(this.maxVelocity = maxVelocity),
+                metersPerSecondToEncoderPerMinute(.1),
+                metersPerSecondToEncoderPerMinute(maxAcceleration),
+                metersPerSecondToEncoderPerMinute(.1),
+                0);
 
         drive.setSupplyLimit(40);
         drive.burnFlash();
@@ -269,7 +269,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     private final void putNumber(final String key, final double value) {
         // if (logging) SmartDashboard.putNumber(String.format("S(%d) %s", id, key), value);
         // if (logging) SmartDashboard.putString(String.format("S(%d) %s", id, key), String.format("%.3f", value));
-        if (logging) SmartDashboard.putString(String.format("[SM] %s (%d)", id, key), String.format("%.3f", value));
+        if (logging) SmartDashboard.putString(String.format("[SM] %s (%d)", key, id), String.format("%.3f", value));
     }
 
     public final double getDisplacement() { return drive.getPosition(); }
