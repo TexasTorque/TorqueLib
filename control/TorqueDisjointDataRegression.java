@@ -4,12 +4,11 @@ import java.util.Comparator;
 import java.util.TreeSet;
 
 /**
-    Jack P, Omar A
+    @author Jack Pittenger, Omar Afzal
  */
 public class TorqueDisjointDataRegression {
 
     private TreeSet<DisjointData> baseData;
-    // [[distance, rpm, hood], []]
 
     public TorqueDisjointDataRegression() {
         baseData = new TreeSet<DisjointData>(new DisjointDataComparator());
@@ -20,6 +19,7 @@ public class TorqueDisjointDataRegression {
     }
 
     DisjointData cache = new DisjointData(0, 0, 0);
+
     /**
         Returns the closest disjoint data based on the distance provided. 
     */
@@ -37,6 +37,12 @@ public class TorqueDisjointDataRegression {
         private double hood;
         private double rpm;
 
+        /**
+         * 
+         * @param distance
+         * @param hood
+         * @param rpm
+         */
         public DisjointData(double distance, double hood, double rpm) {
             this.distance = distance;
             this.hood = hood;
@@ -47,7 +53,7 @@ public class TorqueDisjointDataRegression {
             return hood;
         }
 
-        public double getRpm() {
+        public double getRPM() {
             return rpm;
         }
     }
