@@ -56,6 +56,10 @@ public class TorqueDisjointDataRegression {
         public double getRPM() {
             return rpm;
         }
+
+        public double getDistance() {
+            return distance;
+        }
     }
 
     class DisjointDataComparator implements Comparator<DisjointData> {
