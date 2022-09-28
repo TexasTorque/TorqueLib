@@ -25,15 +25,46 @@ public class TorqueDisjointDataRegression {
     */
     public DisjointData calculate(double distance) {
         cache.distance = distance;
-        DisjointData d = baseData.floor(cache);
-        if (d == null)
-            return baseData.ceiling(cache);
-        else
-            return d;
+        DisjointData lowestPoint = baseData.floor(cache);
+        DisjointData highestPoint = baseData.ceiling(cache);
+
+        if (lowestPoint == null)
+            return highestPoint;
+        else if (highestPoint == null)
+            return lowestPoint;
+
+        if (Math.abs(lowestPoint.getDistance() - distance) < .3) { // If the data point is within .3m, then theres no need to interpolate
+            return lowestPoint;
+        } else if (Math.abs(highestPoint.getDistance() - distance) < .3){
+            return highestPoint;
+        } else return getLinearPoint(lowestPoint, highestPoint, distance);
+
+    }
+
+    /**
+        Returns a calculated data point based off of a linear fit between the two closest disjoint data points
+    */
+    public DisjointData getLinearPoint(TorqueDisjointDataRegression.DisjointData lowestPoint, TorqueDisjointDataRegression.DisjointData highestPoint, double distance) {
+        double deltaDistance = highestPoint.getDistance() - lowestPoint.getDistance();
+        double deltaHood = highestPoint.getHood() - lowestPoint.getHood();
+        double deltaRPM = highestPoint.getRPM() - lowestPoint.getRPM();
+
+        double slopeHood = deltaHood / deltaDistance;
+        double slopeRPM = deltaRPM / deltaDistance;
+        double hoodYInt = 0;
+        double rpmYInt = 0;
+
+        if (slopeRPM * lowestPoint.getDistance() != lowestPoint.getRPM()) rpmYInt = lowestPoint.getRPM() - (slopeRPM * lowestPoint.getDistance());
+        if (slopeHood * lowestPoint.getDistance() != lowestPoint.getHood()) hoodYInt = lowestPoint.getHood() - (slopeHood * lowestPoint.getDistance());
+
+        DisjointData linearData = new DisjointData(lowestPoint.getDistance(), highestPoint.getDistance(), (distance * slopeHood + hoodYInt), (distance * slopeRPM + rpmYInt));
+        return linearData;
     }
 
     public class DisjointData {
         public double distance;
+        private double lowestPoint;
+        private double highestPoint;
         private double hood;
         private double rpm;
 
@@ -49,6 +80,20 @@ public class TorqueDisjointDataRegression {
             this.rpm = rpm;
         }
 
+         /**
+         * 
+         * @param lowestPoint
+         * @param highestPoint
+         * @param hood
+         * @param rpm
+         */
+        public DisjointData(double lowestPoint, double highestPoint, double hood, double rpm) {
+            this.lowestPoint = lowestPoint;
+            this.highestPoint = highestPoint;
+            this.hood = hood;
+            this.rpm = rpm;
+        }
+
         public double getHood() {
             return hood;
         }
@@ -59,6 +104,14 @@ public class TorqueDisjointDataRegression {
 
         public double getDistance() {
             return distance;
+        }
+
+        public double getLowestPoint() {
+            return lowestPoint;
+        }
+
+        public double getHighestPoint() {
+            return highestPoint;
         }
     }
 
