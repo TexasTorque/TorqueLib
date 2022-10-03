@@ -66,19 +66,13 @@ public final class TorqueController {
     public TorqueController(final ControllerPort port, final double deadband) { this(port.ordinal(), deadband); }
 
     /**
-     * A smart little algorithm for scaling around the deadzones.
-     *
-     * Since I am such a GOD programmer, I condensed the old 10
-     * line function into only 1 line.
-     *
-     * TODO: Maybe add a boolean to decide if we want the scalar functionality.
-     *
      * @param raw The raw joystick input value.
      *
      * @return The scaled input value.
      */
     private final double scale(final double raw) {
-        return TorqueMath.toleranced(raw, 0) ? 0 : (raw - Math.signum(raw) * deadband) / (1 - deadband);
+        return TorqueMath.toleranced(raw, deadband) ? 0 
+                : raw;
     }
 
     // * Low level Joystick calls
