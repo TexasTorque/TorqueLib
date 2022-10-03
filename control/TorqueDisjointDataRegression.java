@@ -3,13 +3,13 @@ package org.texastorque.torquelib.control;
 import java.util.Comparator;
 import java.util.TreeSet;
 
+
 /**
     @author Jack Pittenger, Omar Afzal
  */
 public class TorqueDisjointDataRegression {
 
     private TreeSet<DisjointData> baseData;
-
     public TorqueDisjointDataRegression() {
         baseData = new TreeSet<DisjointData>(new DisjointDataComparator());
     }
@@ -33,34 +33,47 @@ public class TorqueDisjointDataRegression {
         else if (highestPoint == null)
             return lowestPoint;
 
-        if (Math.abs(lowestPoint.getDistance() - distance) < .3) { // If the data point is within .3m, then theres no need to interpolate
+        if (Math.abs(lowestPoint.getDistance() - distance) < .2) { // If the data point is within .3m, then theres no need to interpolate
             return lowestPoint;
-        } else if (Math.abs(highestPoint.getDistance() - distance) < .3){
+        } else if (Math.abs(highestPoint.getDistance() - distance) < .2){
             return highestPoint;
-        } else return getLinearPoint(lowestPoint, highestPoint, distance);
+        } else return getLerpPoint(lowestPoint, highestPoint, distance);
 
     }
 
     /**
         Returns a calculated data point based off of a linear fit between the two closest disjoint data points
     */
-    public DisjointData getLinearPoint(TorqueDisjointDataRegression.DisjointData lowestPoint, TorqueDisjointDataRegression.DisjointData highestPoint, double distance) {
+    public DisjointData getLinearPoint(TorqueDisjointDataRegression.DisjointData lowestPoint,
+            TorqueDisjointDataRegression.DisjointData highestPoint, double distance) {
         double deltaDistance = highestPoint.getDistance() - lowestPoint.getDistance();
-        double deltaHood = highestPoint.getHood() - lowestPoint.getHood();
-        double deltaRPM = highestPoint.getRPM() - lowestPoint.getRPM();
 
-        double slopeHood = deltaHood / deltaDistance;
-        double slopeRPM = deltaRPM / deltaDistance;
-        double hoodYInt = 0;
-        double rpmYInt = 0;
+        double slopeHood = (highestPoint.getHood() - lowestPoint.getHood()) / deltaDistance;
+        double slopeRPM = (highestPoint.getRPM() - lowestPoint.getRPM()) / deltaDistance;
+        double hoodYInt = 0, rpmYInt = 0;
 
-        if (slopeRPM * lowestPoint.getDistance() != lowestPoint.getRPM()) rpmYInt = lowestPoint.getRPM() - (slopeRPM * lowestPoint.getDistance());
-        if (slopeHood * lowestPoint.getDistance() != lowestPoint.getHood()) hoodYInt = lowestPoint.getHood() - (slopeHood * lowestPoint.getDistance());
+        if (slopeRPM * lowestPoint.getDistance() != lowestPoint.getRPM())
+            rpmYInt = lowestPoint.getRPM() - (slopeRPM * lowestPoint.getDistance());
+        if (slopeHood * lowestPoint.getDistance() != lowestPoint.getHood())
+            hoodYInt = lowestPoint.getHood() - (slopeHood * lowestPoint.getDistance());
 
-        DisjointData linearData = new DisjointData(lowestPoint.getDistance(), highestPoint.getDistance(), (distance * slopeHood + hoodYInt), (distance * slopeRPM + rpmYInt));
+        DisjointData linearData = new DisjointData(lowestPoint.getDistance(), highestPoint.getDistance(),
+                (distance * slopeHood + hoodYInt), (distance * slopeRPM + rpmYInt));
         return linearData;
     }
 
+     /**
+        Returns a calculated data point based off of a lerp fit between the two closest disjoint data points
+    */
+    public DisjointData getLerpPoint(TorqueDisjointDataRegression.DisjointData lowestPoint,
+            TorqueDisjointDataRegression.DisjointData highestPoint, double distance) {
+        double hoodLerp = lowestPoint.getHood() + (highestPoint.getHood() - lowestPoint.getHood()) * 1. / 3.;
+        double rpmLerp = lowestPoint.getRPM() + (highestPoint.getRPM() - lowestPoint.getRPM()) * 1. / 3.;
+        DisjointData lerpData = new DisjointData(lowestPoint.getDistance(), highestPoint.getDistance(), hoodLerp,
+                rpmLerp);
+        return lerpData;
+    }
+    
     public class DisjointData {
         public double distance;
         private double lowestPoint;
