@@ -214,7 +214,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
             ret += 180;
         else if (Math.signum(val) == 1 && Math.floor(val / rotate.CLICKS_PER_ROTATION) % 2 == 1)
             ret -= 180;
-        return ret * invCoef;
+        return -ret * invCoef;
     }
 
     /**
