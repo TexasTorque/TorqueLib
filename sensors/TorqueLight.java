@@ -7,11 +7,17 @@
 package org.texastorque.torquelib.sensors;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.Map;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -105,7 +111,7 @@ public final class TorqueLight {
      * @return Transformation2d object that represents the
      *         distance betweeen the camera and the target.
      */
-    public final Transform2d getCameraToTarget() { return target.getCameraToTarget(); }
+    // public final Transform2d getCameraToTarget() { return target.getCameraToTarget(); }
 
     /**
      *
@@ -170,17 +176,26 @@ public final class TorqueLight {
     public static final Pose2d getRobotPose(final Rotation2d theta_r, final Rotation2d theta_dp,
                                             final Rotation2d theta_dy, final double H_h, final double H_c,
                                             final Rotation2d theta_cp, final double r_tc, final double theta_t,
-                                            final double r_H, final double x_h, final double y_h) {
+            final double r_H, final double x_h, final double y_h) {
 
-        SmartDashboard.putNumber("f(theta_r)", theta_r.getDegrees());
-        SmartDashboard.putNumber("f(theta_dp)", theta_dp.getDegrees());
-        SmartDashboard.putNumber("f(theta_dy)", theta_dy.getDegrees());
-        SmartDashboard.putNumber("f(theta_t)", theta_t);
 
         final double d = (H_h - H_c) / Math.tan(theta_dp.getRadians() + theta_cp.getRadians()) + r_H - r_tc;
-        final double theta_f = theta_r.getRadians() + theta_dp.getRadians() + theta_dy.getRadians();
+        final double theta_f = theta_r.getRadians() + Math.toRadians(theta_t) - theta_dy.getRadians();
         final double x_r = x_h - (Math.cos(theta_f) * d);
         final double y_r = y_h - (Math.sin(theta_f) * d);
+        return new Pose2d(x_r, y_r, theta_r);
+    }
+    
+    public final Pose2d getRobotPoseAprilTag(final Map<Integer, Pose3d> knownTags, final double cp, final double H_c, final Rotation2d theta_r, final double theta_t) {
+        Pose3d aprilTag = knownTags.getOrDefault(target.getFiducialId(), null);
+        if (aprilTag == null) {
+            DriverStation.reportWarning("Failure to get AprilTag position for ID:" + target.getFiducialId(), false);
+            return null;
+        }
+        final double d = (aprilTag.getZ() - H_c) / Math.tan(Math.toRadians(target.getPitch()) + Math.toRadians(cp));
+        final double theta_f = theta_r.getRadians() + Math.toRadians(theta_t) + Math.toRadians(-target.getYaw());
+        final double x_r = aprilTag.getX() - (Math.cos(theta_f) * d);
+        final double y_r = aprilTag.getY() - (Math.sin(theta_f) * d);
         return new Pose2d(x_r, y_r, theta_r);
     }
 
