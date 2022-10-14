@@ -3,49 +3,51 @@ package org.texastorque.torquelib.control;
 import java.util.Comparator;
 import java.util.TreeSet;
 
-
 /**
-    @author Jack Pittenger, Omar Afzal
+    * Implements a lookup table with lerp interpolation between values
+    * @author Jack Pittenger, Omar Afzal
  */
-public class TorqueDisjointDataRegression {
+public class TorqueLookUpTable {
 
-    private TreeSet<DisjointData> baseData;
-    public TorqueDisjointDataRegression() {
-        baseData = new TreeSet<DisjointData>(new DisjointDataComparator());
+    private TreeSet<TorqueDisjointData> baseData;
+
+    public TorqueLookUpTable() {
+        baseData = new TreeSet<TorqueDisjointData>(new TorqueDisjointDataComparator());
     }
 
-    public void addDisjointData(DisjointData data) {
+    public void addDisjointData(TorqueDisjointData data) {
         baseData.add(data);
     }
 
-    DisjointData cache = new DisjointData(0, 0, 0);
+    TorqueDisjointData cache = new TorqueDisjointData(0, 0, 0);
 
     /**
         Returns the closest disjoint data based on the distance provided. 
     */
-    public DisjointData calculate(double distance) {
+    public TorqueDisjointData calculate(double distance) {
         cache.distance = distance;
-        DisjointData lowestPoint = baseData.floor(cache);
-        DisjointData highestPoint = baseData.ceiling(cache);
+        TorqueDisjointData lowestPoint = baseData.floor(cache);
+        TorqueDisjointData highestPoint = baseData.ceiling(cache);
 
         if (lowestPoint == null)
             return highestPoint;
         else if (highestPoint == null)
             return lowestPoint;
 
-        if (Math.abs(lowestPoint.getDistance() - distance) < .2) { // If the data point is within .3m, then theres no need to interpolate
+        if (Math.abs(lowestPoint.getDistance() - distance) <= .15) { // If the data point is within .3m, then theres no need to interpolate
             return lowestPoint;
-        } else if (Math.abs(highestPoint.getDistance() - distance) < .2){
+        } else if (Math.abs(highestPoint.getDistance() - distance) <= .15) {
             return highestPoint;
-        } else return getLerpPoint(lowestPoint, highestPoint, distance);
+        } else
+            return getLerpPoint(lowestPoint, highestPoint, distance);
 
     }
 
     /**
         Returns a calculated data point based off of a linear fit between the two closest disjoint data points
     */
-    public DisjointData getLinearPoint(TorqueDisjointDataRegression.DisjointData lowestPoint,
-            TorqueDisjointDataRegression.DisjointData highestPoint, double distance) {
+    public TorqueDisjointData getLinearPoint(TorqueLookUpTable.TorqueDisjointData lowestPoint,
+            TorqueLookUpTable.TorqueDisjointData highestPoint, double distance) {
         double deltaDistance = highestPoint.getDistance() - lowestPoint.getDistance();
 
         double slopeHood = (highestPoint.getHood() - lowestPoint.getHood()) / deltaDistance;
@@ -57,24 +59,25 @@ public class TorqueDisjointDataRegression {
         if (slopeHood * lowestPoint.getDistance() != lowestPoint.getHood())
             hoodYInt = lowestPoint.getHood() - (slopeHood * lowestPoint.getDistance());
 
-        DisjointData linearData = new DisjointData(lowestPoint.getDistance(), highestPoint.getDistance(),
+        TorqueDisjointData linearData = new TorqueDisjointData(lowestPoint.getDistance(), highestPoint.getDistance(),
                 (distance * slopeHood + hoodYInt), (distance * slopeRPM + rpmYInt));
         return linearData;
     }
 
-     /**
-        Returns a calculated data point based off of a lerp fit between the two closest disjoint data points
+    /**
+       Returns a calculated data point based off of a lerp fit between the two closest disjoint data points
     */
-    public DisjointData getLerpPoint(TorqueDisjointDataRegression.DisjointData lowestPoint,
-            TorqueDisjointDataRegression.DisjointData highestPoint, double distance) {
+    public TorqueDisjointData getLerpPoint(TorqueLookUpTable.TorqueDisjointData lowestPoint,
+            TorqueLookUpTable.TorqueDisjointData highestPoint, double distance) {
         double hoodLerp = lowestPoint.getHood() + (highestPoint.getHood() - lowestPoint.getHood()) * 1. / 3.;
         double rpmLerp = lowestPoint.getRPM() + (highestPoint.getRPM() - lowestPoint.getRPM()) * 1. / 3.;
-        DisjointData lerpData = new DisjointData(lowestPoint.getDistance(), highestPoint.getDistance(), hoodLerp,
+        TorqueDisjointData lerpData = new TorqueDisjointData(lowestPoint.getDistance(), highestPoint.getDistance(),
+                hoodLerp,
                 rpmLerp);
         return lerpData;
     }
-    
-    public class DisjointData {
+
+    public class TorqueDisjointData {
         public double distance;
         private double lowestPoint;
         private double highestPoint;
@@ -87,20 +90,20 @@ public class TorqueDisjointDataRegression {
          * @param hood
          * @param rpm
          */
-        public DisjointData(double distance, double hood, double rpm) {
+        public TorqueDisjointData(double distance, double hood, double rpm) {
             this.distance = distance;
             this.hood = hood;
             this.rpm = rpm;
         }
 
-         /**
-         * 
-         * @param lowestPoint
-         * @param highestPoint
-         * @param hood
-         * @param rpm
-         */
-        public DisjointData(double lowestPoint, double highestPoint, double hood, double rpm) {
+        /**
+        * 
+        * @param lowestPoint
+        * @param highestPoint
+        * @param hood
+        * @param rpm
+        */
+        public TorqueDisjointData(double lowestPoint, double highestPoint, double hood, double rpm) {
             this.lowestPoint = lowestPoint;
             this.highestPoint = highestPoint;
             this.hood = hood;
@@ -128,10 +131,10 @@ public class TorqueDisjointDataRegression {
         }
     }
 
-    class DisjointDataComparator implements Comparator<DisjointData> {
+    class TorqueDisjointDataComparator implements Comparator<TorqueDisjointData> {
 
         @Override
-        public int compare(DisjointData o1, DisjointData o2) {
+        public int compare(TorqueDisjointData o1, TorqueDisjointData o2) {
             return o1.distance > o2.distance ? 1 : o1.distance < o2.distance ? -1 : 0;
         }
     }

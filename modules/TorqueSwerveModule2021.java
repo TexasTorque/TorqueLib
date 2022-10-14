@@ -14,7 +14,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.texastorque.torquelib.control.TorqueClick;
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
 import org.texastorque.torquelib.motors.TorqueSparkMax;
@@ -59,9 +58,9 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      * @param driveFeedForward  The drive motor feed forward for autonomous.
      */
     public TorqueSwerveModule2021(final int id, final int drivePort, final int rotatePort, final double driveGearing,
-                                  final double wheelRadiusMeters, final TorquePID drivePID, final TorquePID rotatePID,
-                                  final double maxVelocity, final double maxAcceleration,
-                                  final SimpleMotorFeedforward driveFeedForward) {
+            final double wheelRadiusMeters, final TorquePID drivePID, final TorquePID rotatePID,
+            final double maxVelocity, final double maxAcceleration,
+            final SimpleMotorFeedforward driveFeedForward) {
         super(id);
         // invCoef = ((id & 1) << 1) - 1; // WTF? -> invCoef = id % 2 == 0 ? -1 : 1;
         invCoef = 1;
@@ -79,7 +78,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         drive.burnFlash();
 
         rotate = new TorqueTalon(rotatePort);
-        rotate.setSupplyLimit(new SupplyCurrentLimitConfiguration(true, 5, 10, .03));
+        rotate.setSupplyLimit(new SupplyCurrentLimitConfiguration(false, 5, 10, .03));
         rotate.configurePID(rotatePID);
         rotate.zeroEncoder();
 
@@ -107,9 +106,9 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      */
     @Deprecated
     public TorqueSwerveModule2021(final int id, final int drivePort, final int rotatePort, final double driveGearing,
-                                  final double wheelRadiusMeters, final KPID drivePID, final KPID rotatePID,
-                                  final double maxVelocity, final double maxAcceleration,
-                                  final SimpleMotorFeedforward driveFeedForward) {
+            final double wheelRadiusMeters, final KPID drivePID, final KPID rotatePID,
+            final double maxVelocity, final double maxAcceleration,
+            final SimpleMotorFeedforward driveFeedForward) {
         super(id);
         // invCoef = ((id & 1) << 1) - 1; // WTF? -> invCoef = id % 2 == 0 ? -1 : 1;
         invCoef = 1;
@@ -137,6 +136,8 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         this.maxVelocity = maxVelocity;
     }
 
+    private boolean currentLimited = true;
+
     /**
      * Set the state of the swerve module.
      *
@@ -144,12 +145,16 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      */
     @Override
     public final void setDesiredState(SwerveModuleState state) {
+        if (currentLimited) {
+
+        }
+
         state = SwerveModuleState.optimize(state, getRotation());
 
-        final double requestedEncoderUnits =
-                (state.angle.getDegrees() * invCoef * rotate.CLICKS_PER_ROTATION * 2 / 360);
-        final double adjustedEncoderUnits =
-                Math.IEEEremainder(requestedEncoderUnits - rotate.getPosition(), rotate.CLICKS_PER_ROTATION) +
+        final double requestedEncoderUnits = (state.angle.getDegrees() * invCoef * rotate.CLICKS_PER_ROTATION * 2
+                / 360);
+        final double adjustedEncoderUnits = Math.IEEEremainder(requestedEncoderUnits - rotate.getPosition(),
+                rotate.CLICKS_PER_ROTATION) +
                 rotate.getPosition();
 
         rotate.setPosition(adjustedEncoderUnits);
@@ -158,9 +163,10 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         putNumber("ReqEnc", requestedEncoderUnits);
         putNumber("RealEnc", rotate.getPosition());
         putNumber("RealDeg", getRotationDegrees());
+        putNumber("RCurrent", rotate.getCurrent());
 
         if (DriverStation.isTeleop()) {
-            final double setpoint = Math.min(-state.speedMetersPerSecond / maxVelocity, 1.); //* invCoef;
+            final double setpoint = Math.min(-state.speedMetersPerSecond / maxVelocity, 1.); // invCoef;
             putNumber("ReqDrive", -state.speedMetersPerSecond);
             putNumber("PwrDrive", setpoint);
             drive.setPercent(setpoint);
@@ -208,13 +214,14 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      */
     private final double getRotationDegrees() {
         double val = rotate.getPosition();
-        if (val % rotate.CLICKS_PER_ROTATION == 0) val += .0001;
+        if (val % rotate.CLICKS_PER_ROTATION == 0)
+            val += Double.MIN_VALUE;
         double ret = val % rotate.CLICKS_PER_ROTATION * 180 / (rotate.CLICKS_PER_ROTATION);
         if (Math.signum(val) == -1 && Math.floor(val / rotate.CLICKS_PER_ROTATION) % 2 == -0)
             ret += 180;
         else if (Math.signum(val) == 1 && Math.floor(val / rotate.CLICKS_PER_ROTATION) % 2 == 1)
             ret -= 180;
-        return -ret * invCoef;
+        return ret * invCoef;
     }
 
     /**
@@ -248,9 +255,11 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     public static void equalizedDriveRatio(SwerveModuleState[] states, final double max) {
         double top = 0, buff;
         for (final SwerveModuleState state : states)
-            if ((buff = (state.speedMetersPerSecond / max)) > top) top = buff;
+            if ((buff = (state.speedMetersPerSecond / max)) > top)
+                top = buff;
         if (top != 0)
-            for (SwerveModuleState state : states) state.speedMetersPerSecond /= top;
+            for (SwerveModuleState state : states)
+                state.speedMetersPerSecond /= top;
     }
 
     /**
@@ -258,7 +267,9 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
      *
      * @param logging To log or not to log.
      */
-    public final void setLogging(final boolean logging) { this.logging = logging; }
+    public final void setLogging(final boolean logging) {
+        this.logging = logging;
+    }
 
     /**
      * Put number if this module is logging.
@@ -269,13 +280,25 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     private final void putNumber(final String key, final double value) {
         // if (logging) SmartDashboard.putNumber(String.format("S(%d) %s", id, key), value);
         // if (logging) SmartDashboard.putString(String.format("S(%d) %s", id, key), String.format("%.3f", value));
-        if (logging) SmartDashboard.putString(String.format("[SM] %s (%d)", key, id), String.format("%.3f", value));
+        if (!logging)
+            return;
+        SmartDashboard.putString(String.format("[SM] %s (%d)", key, id), String.format("%.3f", value));
     }
 
-    public final double getDisplacement() { return drive.getPosition(); }
+    public final double getDisplacement() {
+        return drive.getPosition();
+    }
 
     public final void spin(final double speed) {
         drive.setPercent(0);
         rotate.setPercent(speed);
+    }
+
+    public double getRotatePosition() {
+        return rotate.getPosition();
+    }
+
+    public void setRotatePosition(double pos) {
+        rotate.setPosition(pos);
     }
 }
