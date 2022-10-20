@@ -9,7 +9,7 @@ package org.texastorque.torquelib.control;
 import org.texastorque.torquelib.util.TorqueMath;
 
 /**
- * An implementation of the speedshifter used in
+ * An implementation of the valueshifter used in
  * some of the robots.ß
  *
  * @author Justus Languell
@@ -25,63 +25,63 @@ public final class TorqueTraversableRange {
     private final double minimum;
     private final double increment;
 
-    private double speed;
+    private double value;
 
     /**
-     * Creates a new TorqueSpeedSettings object with default increment of 0.1.
+     * Creates a new TorquevalueSettings object with default increment of 0.1.
      *
-     * @param speed   The initial speed setting.
-     * @param minimum The maximum speed setting.
-     * @param maximum The minimum speed setting.
+     * @param value   The initial value setting.
+     * @param minimum The maximum value setting.
+     * @param maximum The minimum value setting.
      */
-    public TorqueTraversableRange(final double speed, final double minimum, final double maximum) {
-        this.speed = speed;
+    public TorqueTraversableRange(final double value, final double minimum, final double maximum) {
+        this.value = value;
         this.minimum = minimum;
         this.maximum = maximum;
         this.increment = .1;
     }
 
     /**
-     * Creates a new TorqueSpeedSettings object.
+     * Creates a new TorquevalueSettings object.
      *
-     * @param speed     The initial speed setting.
-     * @param minimum   The maximum speed setting.
-     * @param maximum   The minimum speed setting.
-     * @param increment The increment of the speed settings.
+     * @param value     The initial value setting.
+     * @param minimum   The maximum value setting.
+     * @param maximum   The minimum value setting.
+     * @param increment The increment of the value settings.
      */
-    public TorqueTraversableRange(final double speed, final double minimum, final double maximum,
+    public TorqueTraversableRange(final double value, final double minimum, final double maximum,
                                   final double increment) {
-        this.speed = speed;
+        this.value = value;
         this.minimum = minimum;
         this.maximum = maximum;
         this.increment = increment;
     }
 
     /**
-     * Updates (and optionally returns) the speed setting based on the controller
+     * Updates (and optionally returns) the value setting based on the controller
      * input.
      *
-     * @param up   The button mapped to incrementing speed.
-     * @param down The button mapped to decrementing speed.
-     * @param min  The button mapped to setting speed to minimum.
-     * @param max  The button mapped to setting speed to maximum.
+     * @param up   The button mapped to incrementing value.
+     * @param down The button mapped to decrementing value.
+     * @param min  The button mapped to setting value to minimum.
+     * @param max  The button mapped to setting value to maximum.
      *
-     * @return The current speed setting.
+     * @return The current value setting.
      */
     public final double update(final boolean up, final boolean down, final boolean min, final boolean max) {
-        if (clickUp.calculate(up)) speed = (double)TorqueMath.constrain(speed + increment, minimum, maximum);
-        if (clickDown.calculate(down)) speed = (double)TorqueMath.constrain(speed - increment, minimum, maximum);
+        if (clickUp.calculate(up)) value = (double)TorqueMath.constrain(value + increment, minimum, maximum);
+        if (clickDown.calculate(down)) value = (double)TorqueMath.constrain(value - increment, minimum, maximum);
 
-        if (clickMin.calculate(min)) speed = minimum;
-        if (clickMax.calculate(max)) speed = maximum;
+        if (clickMin.calculate(min)) value = minimum;
+        if (clickMax.calculate(max)) value = maximum;
 
-        return speed;
+        return value;
     }
 
     /**
-     * Returns the current speed setting.
+     * Returns the current value setting.
      *
-     * @return Current speed setting.
+     * @return Current value setting.
      */
-    public final double getSpeed() { return speed; }
+    public final double get() { return value; }
 }
