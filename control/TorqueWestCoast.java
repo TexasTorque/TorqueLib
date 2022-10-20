@@ -6,6 +6,8 @@
  */
 package org.texastorque.torquelib.control;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * Improvments to the algorithm used to drive a West Coast Drivetrain
  * durring teleop. Encapsulated in a class.
@@ -15,7 +17,7 @@ package org.texastorque.torquelib.control;
  * @author Jacob Daniels
  */
 public final class TorqueWestCoast {
-    private final double power = 4;
+    private final double power = 2;
     private double forward = 3, turn = .2, coef = 1, left = 0, right = 0;
 
     public TorqueWestCoast(final double forward, final double turn) {
@@ -28,18 +30,18 @@ public final class TorqueWestCoast {
         this.coef = coef;
     }
 
-    public final void calculate(final double x, final double y) {
-        left = -coef * (-turn * y - forward * Math.pow(x, power) * Math.signum(x));
-        right = coef * (turn * y - forward * Math.pow(x, power) * Math.signum(x));
+    public final void calculate(final double speed, final double rotation) {
+        left = -coef * (-forward * speed - turn * Math.pow(rotation, power) * Math.signum(rotation));
+        right = coef * (forward * speed - turn * Math.pow(rotation, power) * Math.signum(rotation));
     }
 
     public final double getLeft() { return left; }
 
     public final double getRight() { return right; }
 
-    public final void setForwardCoef(double forward) { this.forward = forward; }
+    public final void setForwardCoef(final double forward) { this.forward = forward; }
 
-    public final void setTurnCoef(double turn) { this.turn = turn; }
+    public final void setTurnCoef(final double turn) { this.turn = turn; }
 
     public final void setLeft(double left) { this.left = left; }
 
