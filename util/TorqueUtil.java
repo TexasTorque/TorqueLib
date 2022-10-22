@@ -23,7 +23,8 @@ public final class TorqueUtil {
 
     public static final String osName = System.getProperty("os.name");
     // public static final boolean onRobot = RobotBase.isReal();
-    public static final boolean onRobot = !osName.equals("Mac OS X");
+    //public static final boolean onRobot = !osName.equals("Mac OS X");
+    public static final boolean onRobot = osName.equals("Linux");
     static {
         if (onRobot) SmartDashboard.putString("OSNAME", osName);
     }
