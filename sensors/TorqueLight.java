@@ -186,6 +186,7 @@ public final class TorqueLight {
         return new Pose2d(x_r, y_r, theta_r);
     }
     
+    // This function needs to be upated to not use a turret and account for an offset camera mount.
     public final Pose2d getRobotPoseAprilTag(final Map<Integer, Pose3d> knownTags, final double cp, final double H_c, final Rotation2d theta_r, final double theta_t) {
         Pose3d aprilTag = knownTags.getOrDefault(target.getFiducialId(), null);
         if (aprilTag == null) {
