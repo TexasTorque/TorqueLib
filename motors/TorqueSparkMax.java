@@ -505,4 +505,11 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     }
 
     public final void setEncoderZero(final double position) { this.encoderZero = position + getPosition(); }
+
+    public final ArrayList<CANSparkMax> getCanSparkMax() {
+        ArrayList<CANSparkMax> list = new ArrayList<>();
+        list.add(motor);
+        list.addAll(followers);
+        return list;
+    }
 }
