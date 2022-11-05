@@ -504,6 +504,14 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         }
     }
 
+    public final void setPositionConversionFactor(double positionFactor) {
+        encoder.setPositionConversionFactor(positionFactor);
+    }
+
+    public final void setVelocityConversionFactor(double velocityFactor) {
+        encoder.setVelocityConversionFactor(velocityFactor);
+    }
+
     public final void setEncoderZero(final double position) { this.encoderZero = position + getPosition(); }
 
     public final ArrayList<CANSparkMax> getCanSparkMax() {

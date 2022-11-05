@@ -9,9 +9,11 @@ package org.texastorque.torquelib.sensors;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -187,79 +189,26 @@ public final class TorqueLight {
         return new Pose2d(x_r, y_r, theta_r);
     }
     
-    /**
-     * Gets the estimated robot position using vision calculations.
-     *
-     * @param knownTags The map of known April tag positions.
-     * @param cp Camera mount's pitch.
-     * @param H_c Height of the camera.
-     * @param theta_r Rotation of the robot.
-     * @param theta_t Rotation of the camera relative the robot.
-     * 
-     * @return The estimated robot position.
-     */
-    public final Pose2d getRobotPoseAprilTag(final Map<Integer, Pose3d> knownTags, final double cp, final double H_c, final Rotation2d theta_r, final double theta_t) {
-        // final Pose3d aprilTag = knownTags.getOrDefault(target.getFiducialId(), null);
-        // if (aprilTag == null) {
-        //     DriverStation.reportWarning("Failure to get AprilTag position for ID:" + target.getFiducialId(), false);
-        //     return null;
-        // }
-        // final double d = (aprilTag.getZ() - H_c) / Math.tan(Math.toRadians(target.getPitch()) + Math.toRadians(cp));
-        // final double theta_f = theta_r.getRadians() + Math.toRadians(theta_t) + Math.toRadians(-target.getYaw());
-        // final double x_r = aprilTag.getX() - (Math.cos(theta_f) * d);
-        // final double y_r = aprilTag.getY() - (Math.sin(theta_f) * d);
-        // return new Pose2d(x_r, y_r, theta_r);
-
+    public final Pose3d getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags) {
         final Pose3d aprilTag = knownTags.getOrDefault(target.getFiducialId(), null);
-        final Translation2d translation = getTranslationToKnownAprilTag(knownTags, cp, H_c, theta_r, theta_t);
-        final double x_r = aprilTag.getX() + translation.getX();
-        final double y_r = aprilTag.getY() + translation.getY();
-        return new Pose2d(x_r, y_r, theta_r);
+        if (aprilTag == null) return new Pose3d();
+        return aprilTag.transformBy(getTransformToAprilTag3d());
     }
 
-     /**
-     * Gets the translation to a known position April tag.
-     *
-     * @param knownTags The map of known April tag positions.
-     * @param cp Camera mount's pitch.
-     * @param H_c Height of the camera.
-     * @param theta_r Rotation of the robot.
-     * @param theta_t Rotation of the camera relative the robot.
-     * 
-     * @return The estimated robot position.
-     */
-    public final Translation2d getTranslationToKnownAprilTag(final Map<Integer, Pose3d> knownTags, final double cp, final double H_c, final Rotation2d theta_r, final double theta_t) {
-        final Pose3d aprilTag = knownTags.getOrDefault(target.getFiducialId(), null);
-        if (aprilTag == null) {
-            DriverStation.reportWarning("Failure to get AprilTag position for ID:" + target.getFiducialId(), false);
-            return null;
-        }
-        final double d = (aprilTag.getZ() - H_c) / Math.tan(Math.toRadians(target.getPitch()) + Math.toRadians(cp));
-        final double theta_f = theta_r.getRadians() + Math.toRadians(theta_t) + Math.toRadians(-target.getYaw());
-        final double x_r =  -(Math.cos(theta_f) * d);
-        final double y_r =  -(Math.sin(theta_f) * d);
-
-        return new Translation2d(x_r, y_r);
+    public final Pose2d getRobotPoseAprilTag2d(final Map<Integer, Pose3d> knownTags) {
+        return getRobotPoseAprilTag3d(knownTags).toPose2d();
     }
 
-    /**
-     * Gets the translation to an April tag with a known height.
-     *
-     * @param knownTags The map of known April tag positions.
-     * @param cp Camera mount's pitch.
-     * @param H_c Height of the camera.
-     * @param theta_r Rotation of the robot.
-     * @param theta_t Rotation of the camera relative the robot.
-     * 
-     * @return The estimated robot position.
-     */
-    public final Translation2d getTranslationToKnownHeightAprilTag(final double H_t, final double cp, final double H_c, final Rotation2d theta_r, final double theta_t) {
-        final double d = (H_t - H_c) / Math.tan(Math.toRadians(target.getPitch()) + Math.toRadians(cp));
-        final double theta_f = theta_r.getRadians() + Math.toRadians(theta_t) + Math.toRadians(-target.getYaw());
-        final double x_r =  -(Math.cos(theta_f) * d);
-        final double y_r =  -(Math.sin(theta_f) * d);
-        return new Translation2d(x_r, y_r);
+    public final Transform3d getTransformToAprilTag3d() {
+        if (target == null) return new Transform3d();
+        return target.getCameraToTarget().inverse();
     }
+
+    public final Transform2d getTransformToKnownTag2d() {
+        final Pose2d pose = (new Pose3d(getTransformToAprilTag3d())).toPose2d();
+        return new Transform2d(pose.getTranslation(), pose.getRotation());
+    }
+
 
     /**
      * Reads the camera latency in milliseconds.
