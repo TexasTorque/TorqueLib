@@ -16,6 +16,9 @@ import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import java.util.ArrayList;
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.motors.base.TorqueMotor;
@@ -430,11 +433,15 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      */
     public final void configureSmartMotion(final double maxVelocity, final double minVelocity,
                                            final double maxAcceleration, final double allowedError, final int id) {
-        pidController.setSmartMotionMaxVelocity(maxVelocity, id);
-        pidController.setSmartMotionMinOutputVelocity(minVelocity, id);
-        pidController.setSmartMotionMaxAccel(maxAcceleration, id);
-        pidController.setSmartMotionAllowedClosedLoopError(allowedError, id);
-    }
+        var r = pidController.setSmartMotionMaxVelocity(maxVelocity, id);
+        System.out.println(r);
+        r = pidController.setSmartMotionMinOutputVelocity(minVelocity, id);
+        System.out.println(r);
+        r = pidController.setSmartMotionMaxAccel(maxAcceleration, id);
+        System.out.println(r);
+        r = pidController.setSmartMotionAllowedClosedLoopError(allowedError, id);
+        System.out.println(r);
+    } //TODO: @Juicestus Format at home
 
     // Sparkmax specific CAN utilization reduction functions.
     // Only use these methods if you know what you are doing.

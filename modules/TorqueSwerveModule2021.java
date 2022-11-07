@@ -65,14 +65,19 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         // invCoef = ((id & 1) << 1) - 1; // WTF? -> invCoef = id % 2 == 0 ? -1 : 1;
         invCoef = 1;
 
+        this.driveGearing = driveGearing;
+        this.wheelRadiusMeters = wheelRadiusMeters;
+        this.driveFeedForward = driveFeedForward;
+        this.maxVelocity = maxVelocity;
+
         drive = new TorqueSparkMax(drivePort);
         drive.configurePID(drivePID);
-        // drive.configureSmartMotion(
-        //         metersPerSecondToEncoderPerMinute(this.maxVelocity = maxVelocity),
-        //         metersPerSecondToEncoderPerMinute(.1),
-        //         metersPerSecondToEncoderPerMinute(maxAcceleration),
-        //         metersPerSecondToEncoderPerMinute(.1),
-        //         0);
+        drive.configureSmartMotion(
+                metersPerSecondToEncoderPerMinute(maxVelocity),
+                metersPerSecondToEncoderPerMinute(.001), // min speed
+                metersPerSecondToEncoderPerMinute(maxAcceleration),
+                metersPerSecondToEncoderPerMinute(.1), // resolution
+                0);
 
         drive.setSupplyLimit(40);
         drive.burnFlash();
@@ -82,10 +87,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         rotate.configurePID(rotatePID);
         rotate.zeroEncoder();
 
-        this.driveGearing = driveGearing;
-        this.wheelRadiusMeters = wheelRadiusMeters;
-        this.driveFeedForward = driveFeedForward;
-        this.maxVelocity = maxVelocity;
+       
     }
 
     /**
