@@ -161,6 +161,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
             pidController.setReference(setpoint, ControlType.kPosition);
             for (CANSparkMax follower : followers) follower.follow(motor);
         } catch (Exception e) { System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port); }
+        encoder.setPosition(0);
     }
 
     /**
