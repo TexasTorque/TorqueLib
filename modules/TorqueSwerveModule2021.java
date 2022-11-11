@@ -76,7 +76,7 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
                 metersPerSecondToEncoderPerMinute(maxVelocity),
                 metersPerSecondToEncoderPerMinute(.001), // min speed
                 metersPerSecondToEncoderPerMinute(maxAcceleration),
-                metersPerSecondToEncoderPerMinute(.1), // resolution
+                metersPerSecondToEncoderPerMinute(.001), // resolution
                 0);
 
         drive.setSupplyLimit(40);
@@ -86,8 +86,6 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         rotate.setSupplyLimit(new SupplyCurrentLimitConfiguration(false, 5, 10, .03));
         rotate.configurePID(rotatePID);
         rotate.zeroEncoder();
-
-       
     }
 
     /**

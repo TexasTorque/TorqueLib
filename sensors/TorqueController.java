@@ -71,8 +71,7 @@ public final class TorqueController {
      * @return The scaled input value.
      */
     private final double scale(final double raw) {
-        return TorqueMath.toleranced(raw, deadband) ? 0 
-                : raw;
+        return TorqueMath.scaledDeadband(raw, deadband);
     }
 
     // * Low level Joystick calls

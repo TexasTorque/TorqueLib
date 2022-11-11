@@ -40,16 +40,16 @@ public final class TorqueMath {
         return Math.max(Math.min(n, b), a);
     }
 
-     /**
-     * Return deadbanded value n between a and b
-     *
-     * @param n Value to be deadbanded
-     * @param a Value to deadband the value over, the minimum value
-     * @param b Value to deadband the value under, the maximum value
-     * @return The deadband output
-     */
-    public static final double deadband(final double n, final double a, final double b) {
-        return toleranced(n, 0, a, b) ? 0 : n;
+    //  /**
+    //  * Return deadbanded value n between a and b
+    //  *
+    //  * @param n Value to be deadbanded
+    //  * @param a Value to deadband the value over, the minimum value
+    //  * @param b Value to deadband the value under, the maximum value
+    //  * @return The deadband output
+    //  */
+    public static final double scaledDeadband(final double value, final double scale) {
+        return Math.abs(value) < scale ? 0 : (value - (Math.abs(value) / value) * scale) / (1. - scale);
     }
 
     /**
