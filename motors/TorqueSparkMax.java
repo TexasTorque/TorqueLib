@@ -109,7 +109,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         try {
             pidController.setReference(setpoint, ControlType.kPosition);
             for (TorqueSparkMax follower : followers)
-                follower.PIDControllerSetReference(setpoint);
+                follower.setPosition(setpoint);
         } catch (Exception e) {
             System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
         }
@@ -158,7 +158,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     public final void setPercent(final double percent) {
         motor.set(percent);
         for (TorqueSparkMax follower : followers)
-            follower.set(percent);
+            follower.setPercent(percent);
     }
 
     /**
@@ -224,8 +224,8 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     public final void setVelocityRPM(final double setpoint) {
         try {
             pidController.setReference(setpoint, ControlType.kVelocity);
-            for (CANSparkMax follower : followers)
-                follower.follow(motor);
+            for (TorqueSparkMax follower : followers)
+                follower.setVelocityRPM(setpoint);
         } catch (Exception e) {
             System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
         }
@@ -242,7 +242,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
             final ArbFFUnits units) {
         try {
             pidController.setReference(setpoint, ControlType.kSmartVelocity, 0, feedforward, units);
-            for (CANSparkMax follower : followers)
+            for (TorqueSparkMax follower : followers)
                 follower.setFeedForwardSmartVelocity(setpoint, feedforward);
         } catch (Exception e) {
             System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
