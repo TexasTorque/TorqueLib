@@ -22,7 +22,7 @@ import org.texastorque.torquelib.util.TorqueMath;
  * @author Justus Languell
  */
 public final class TorqueController {
-    private static final double DEFAULT_DEADBAND = 0.1, TRIGGER_DOWN_POSITION = 0.2;
+    private static final double DEFAULT_DEADBAND = 0.05, TRIGGER_DOWN_POSITION = 0.2;
 
     public static enum ControllerPort {
         DRIVER,

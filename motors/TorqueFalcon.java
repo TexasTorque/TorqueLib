@@ -27,7 +27,10 @@ import org.texastorque.torquelib.util.KPID;
  *
  * @author Justus Languell
  * @author Jack Pittenger
+ * 
+ * @deprecated NOT SUITABLE FOR 2023
  */
+@Deprecated
 public final class TorqueFalcon extends TorqueMotor implements TorqueSmartMotor {
     private WPI_TalonFX motor;
     private ArrayList<WPI_TalonFX> followers = new ArrayList<>();

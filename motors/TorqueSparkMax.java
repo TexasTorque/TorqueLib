@@ -31,7 +31,10 @@ import org.texastorque.torquelib.util.TorqueUtil;
  *
  * @author Justus Languell
  * @author Jack Pittenger
+ * 
+ * @deprecated NOT SUITABLE FOR 2023
  */
+@Deprecated
 public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMotor {
     private CANSparkMax motor;
     private RelativeEncoder encoder;
@@ -231,23 +234,23 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         }
     }
 
-    /**
-     * Set velocity using feed forwarrd and smart motion profile... i think?
-     *
-     * @param setpoint The velocity to set the motor to.
-     * @param feedforward The feed forward to set the motor to.
-     * @param units The feed forward units.
-     */
-    public final void setFeedForwardSmartVelocity(final double setpoint, final double feedforward,
-            final ArbFFUnits units) {
-        try {
-            pidController.setReference(setpoint, ControlType.kSmartVelocity, 0, feedforward, units);
-            for (TorqueSparkMax follower : followers)
-                follower.setFeedForwardSmartVelocity(setpoint, feedforward);
-        } catch (Exception e) {
-            System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
-        }
-    }
+    // /**
+    //  * Set velocity using feed forwarrd and smart motion profile... i think?
+    //  *
+    //  * @param setpoint The velocity to set the motor to.
+    //  * @param feedforward The feed forward to set the motor to.
+    //  * @param units The feed forward units.
+    //  */
+    // public final void setFeedForwardSmartVelocity(final double setpoint, final double feedforward,
+    //         final ArbFFUnits units) {
+    //     try {
+    //         pidController.setReference(setpoint, ControlType.kSmartVelocity, 0, feedforward, units);
+    //         for (TorqueSparkMax follower : followers)
+    //             follower.setFeedForwardSmartVelocity(setpoint, feedforward);
+    //     } catch (Exception e) {
+    //         System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port);
+    //     }
+    // }
 
     // Getters implemented from TorqueEncoderMotor
 
@@ -359,15 +362,15 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         motor.restoreFactoryDefaults();
     }
 
-    /**
-     * @apiNote UNSAFE
-     */
-    public final void enableVoltageCompensation() {
-        motor.enableVoltageCompensation(2);
-        for (TorqueSparkMax follower : followers) {
-            follower.enableVoltageCompensation(2);
-        }
-    }
+    // /**
+    //  * @apiNote UNSAFE
+    //  */
+    // public final void enableVoltageCompensation() {
+    //     motor.enableVoltageCompensation(2);
+    //     for (TorqueSparkMax follower : followers) {
+    //         follower.enableVoltageCompensation(2);
+    //     }
+    // }
 
     /**
      * @apiNote UNSAFE
@@ -554,10 +557,10 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         this.encoderZero = position + getPosition();
     }
 
-    public final ArrayList<CANSparkMax> getCanSparkMax() {
-        ArrayList<CANSparkMax> list = new ArrayList<>();
-        list.add(motor);
-        list.addAll(followers);
-        return list;
-    }
+    // public final ArrayList<CANSparkMax> getCanSparkMax() {
+    //     ArrayList<CANSparkMax> list = new ArrayList<>();
+    //     list.add(motor);
+    //     list.addAll(followers);
+    //     return list;
+    // }
 }
