@@ -96,4 +96,12 @@ public abstract class TorqueAutoManager {
      * Return the state variable that shows whether the sequence is ended or not
      */
     public final boolean getSequenceEnded() { return sequenceEnded; }
+
+    /**
+     * A preconstructed blank automanager.
+     */
+    public static final class TorqueBlankAutoManager extends TorqueAutoManager {
+        @Override
+        protected void init() {}
+    }
 }
