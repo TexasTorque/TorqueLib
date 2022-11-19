@@ -53,6 +53,15 @@ public final class TorqueNEO {
         followers = new ArrayList<>();
     }
 
+    public void setBreakMode(final boolean isBreak) {
+        motor.setIdleMode(isBreak ? CANSparkMax.IdleMode.kBrake : CANSparkMax.IdleMode.kCoast);
+    }
+
+    public void setConversionFactors(final double posFactor, final double veloFactor) {
+        encoder.setPositionConversionFactor(posFactor);
+        encoder.setVelocityConversionFactor(veloFactor);
+    }
+
     /**
      * Add a follower motor ID.
      * 
@@ -63,6 +72,8 @@ public final class TorqueNEO {
         followers.add(new CANSparkMax(id, MotorType.kBrushless));
         followers.get(followers.size() - 1).follow(motor, invert);
     }
+
+    public void burnFlash() { motor.burnFlash(); }
 
     // ********************************
     // * VOLTAGE AND CURRENT CONTROLS *
@@ -95,6 +106,15 @@ public final class TorqueNEO {
 
     public double getVolts() {
         return motor.getBusVoltage();
+    }
+
+     /**
+     * Set the voltage compensation for the motor.
+     * 
+     * @param volts Voltage compensation.
+     */
+    public void setVoltageCompensation(final double volts) {
+        checkError(motor.enableVoltageCompensation(volts));
     }
 
      /**
@@ -141,36 +161,40 @@ public final class TorqueNEO {
         checkError(controller.setOutputRange(pid.getMinOutput(), pid.getMaxOutput()), "output range");
     }
 
-    public void setPositionRotations(final double rotations) {
-        checkError(controller.setReference(rotations, ControlType.kPosition));
+    /**
+     * Default unit is rotations, changed with setConversionFactors method.
+     * 
+     * @param pos The position to set.
+     */
+    public void setPosition(final double pos) {
+        checkError(controller.setReference(pos, ControlType.kPosition));
     }
 
-    public double getPositionRotations() {
+    /**
+     * Default unit is rotations, changed with setConversionFactors method.
+     * 
+     * @return The position.
+     */
+    public double getPosition() {
         return encoder.getPosition();
     }
 
-    public void setPositionDegrees(final double degrees) {
-        checkError(controller.setReference(degrees / 360, ControlType.kVelocity));
+    /**
+     * Default unit is RPM, changed with setConversionFactors method.
+     * 
+     * @param velo The velocity to set.
+     */
+    public void setVelocity(final double velo) {
+        checkError(controller.setReference(velo, ControlType.kVelocity));
     }
 
-    public double getRotationDegrees() {
-        return getPositionRotations() * 360;
-    }
-
-    public void setVelocityRPM(final double rpm) {
-        checkError(controller.setReference(rpm, ControlType.kVelocity));
-    }
-
-    public double getVelocityRPM() {
+    /**
+     * Default unit is RPM, changed with setConversionFactors method.
+     * 
+     * @return The velocity.
+     */
+    public double getVelocity() {
         return encoder.getVelocity();
-    }
-
-    public void setVelocityRPS(final double rps) {
-        checkError(controller.setReference(rps * 60, ControlType.kVelocity));
-    }
-
-    public double getVelocityRPS() {
-        return getVelocityRPM() / 60;
     }
 
     // *************************
@@ -213,22 +237,25 @@ public final class TorqueNEO {
         checkError(controller.setSmartMotionMaxAccel(profile.maxAcceleration, profile.slot), "max acceleration");
         checkError(controller.setSmartMotionAllowedClosedLoopError(profile.allowedError, profile.slot), "allowed error");
     }
-
-    public void setSmartPositionRotations(final double rotations) {
-        checkError(controller.setReference(rotations, ControlType.kSmartMotion));
+       
+    /**
+     * Default unit is rotations, changed with setConversionFactors method.
+     * 
+     * @param pos The position to set.
+     */
+    public void setSmartPosition(final double pos) {
+        checkError(controller.setReference(pos, ControlType.kSmartMotion));
     }
 
-    public void setSmartPositionDegrees(final double degrees) {
-        checkError(controller.setReference(degrees / 360, ControlType.kSmartMotion));
+    /**
+     * Default unit is RPM, changed with setConversionFactors method.
+     * 
+     * @param velo The velocity to set.
+     */ 
+    public void setSmartVelocity(final double velo) {
+        checkError(controller.setReference(velo, ControlType.kSmartVelocity));
     }
 
-    public void setSmartVelocityRPM(final double rpm) {
-        checkError(controller.setReference(rpm, ControlType.kSmartVelocity));
-    }
-
-    public void setSmartVelocityRPS(final double rps) {
-        checkError(controller.setReference(rps * 60, ControlType.kSmartVelocity));
-    }
 
     // *********************
     // * UTILITY FUNCTIONS *
