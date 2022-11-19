@@ -4,7 +4,7 @@
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@gtsbr.org>.
  */
-package org.texastorque.torquelib.motors;
+package org.texastorque.torquelib.motors.legacy;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.ArrayList;
 import org.texastorque.torquelib.control.TorquePID;
-import org.texastorque.torquelib.motors.base.TorqueMotor;
-import org.texastorque.torquelib.motors.base.TorqueSmartMotor;
+import org.texastorque.torquelib.motors.legacy.base.TorqueMotor;
+import org.texastorque.torquelib.motors.legacy.base.TorqueSmartMotor;
 import org.texastorque.torquelib.util.KPID;
 import org.texastorque.torquelib.util.TorqueUtil;
 
@@ -473,7 +473,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
         r = pidController.setSmartMotionAllowedClosedLoopError(allowedError, id);
         System.out.println(r);
     } //TODO: @Juicestus Format at home
-
+    //controller.setReference
     // Sparkmax specific CAN utilization reduction functions.
     // Only use these methods if you know what you are doing.
 

@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
-import org.texastorque.torquelib.motors.TorqueSparkMax;
-import org.texastorque.torquelib.motors.TorqueTalon;
+import org.texastorque.torquelib.motors.legacy.TorqueSparkMax;
+import org.texastorque.torquelib.motors.legacy.TorqueTalon;
 import org.texastorque.torquelib.util.KPID;
 
 /**
