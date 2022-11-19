@@ -175,10 +175,10 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
 
         final double currentTime = Timer.getFPGATimestamp();
 
-        drive.setFeedForwardSmartVelocity(
-                -metersPerSecondToEncoderPerMinute(state.speedMetersPerSecond),
-                -driveFeedForward.calculate(lastSpeed, state.speedMetersPerSecond, currentTime - lastTime),
-                ArbFFUnits.kVoltage);
+        // drive.setFeedForwardSmartVelocity(
+        //         -metersPerSecondToEncoderPerMinute(state.speedMetersPerSecond),
+        //         -driveFeedForward.calculate(lastSpeed, state.speedMetersPerSecond, currentTime - lastTime),
+        //         ArbFFUnits.kVoltage);
 
         lastSpeed = state.speedMetersPerSecond;
         lastTime = currentTime;
