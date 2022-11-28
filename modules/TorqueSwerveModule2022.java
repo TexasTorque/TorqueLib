@@ -1,5 +1,6 @@
 package org.texastorque.torquelib.modules;
 
+import org.opencv.core.RotatedRect;
 import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
 import org.texastorque.torquelib.motors.TorqueNEO;
 
@@ -8,6 +9,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Super cool flipped swerve module built in 2023 by Abishek.
@@ -29,6 +31,9 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     // Velocity controllers.
     private final PIDController drivePID, turnPID;
     private final SimpleMotorFeedforward driveFeedForward;
+
+    // Rotation offset for tearing
+    private double offset = 0; 
 
     public TorqueSwerveModule2022(final int driveID, final int turnID, final int encoderID, final TorqueSwerveModuleConfiguration config) {
         super(driveID);
@@ -80,11 +85,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     
     @Override 
     public Rotation2d getRotation() {
-        return new Rotation2d(encoder.get());
+        return new Rotation2d(getTurnEncoder());
     }
 
     private double getTurnEncoder() {
-        return -1.0 * encoder.get();
+        //return -encoder.get(); // with Cancoder
+        return coterminal(((turn.getPosition() - offset) / config.turnGearRatio) * 2 * Math.PI); // with Neo encoder
     }
 
     public void stop() {
@@ -97,6 +103,19 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         turn.setPercent(turnPIDOutput);
     }
 
+    public void tear() {
+        offset = turn.getPosition(); // with Neo encoder
+    }
+
+    private static double coterminal(final double rotation) {
+        double coterminal = rotation;
+        final double full = Math.signum(rotation) * 2 * Math.PI;
+        while (coterminal > Math.PI || coterminal < -Math.PI)
+            coterminal -= full;
+        return coterminal; 
+    }
+
+
     /**
      * A structure to define the constants for the swerve module.
      * 
@@ -104,6 +123,10 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
      * the module.
      */
     public static final class TorqueSwerveModuleConfiguration {
+        public static final TorqueSwerveModuleConfiguration defaultConfig = new TorqueSwerveModuleConfiguration();
+
+        public double magic = 6.57 / (8.0 + 1.0 / 3.0);
+
         public int 
                 driveMaxCurrent = 35, // amps
                 turnMaxCurrent = 25; // amps
@@ -113,17 +136,22 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
                 maxAcceleration = 3.0, // m/s^2
                 maxAngularSpeed = Math.PI, // radians/s
                 maxAngularAcceleration = Math.PI, // radians/s
+
+                // The following will most likely need to be overriden
+                // depending on the weight of each robot
                 driveStaticGain = 0.015, 
-                driveFeedForward = 0.285, 
-                drivePGain = 0.25, 
+                driveFeedForward = 0.212, 
+                drivePGain = 0.2, 
                 driveIGain = 0.0,
                 driveDGain = 0.0,
+
                 driveRampRate = 3.0, // %power/s 
-                driveGearRatio = 8.333, // Translation motor to wheel
-                wheelDiameter = 0.1524, // m
+                driveGearRatio = 6.57, // Translation motor to wheel
+                wheelDiameter = 4.0 * 0.0254, // m
                 driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI), // m/s
                 turnPGain = 0.6,
                 turnIGain = 0.0,
-                turnDGain = 0.0;
+                turnDGain = 0.0,
+                turnGearRatio = 12.41; // Rotation motor to wheel
     }
 }
