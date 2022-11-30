@@ -6,6 +6,8 @@
  */
 package org.texastorque.torquelib.base;
 
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
 /**
  * Subsystem template.
  * Extend this class for each subsystem class and override the methods.
@@ -13,6 +15,9 @@ package org.texastorque.torquelib.base;
  * @author Justus Languell
  */
 public abstract class TorqueSubsystem {
+    // Tab for the subsystem
+    protected ShuffleboardTab tab;
+
     @Deprecated
     public void initTeleop() {}
     // public abstract void initTeleop();

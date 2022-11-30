@@ -197,4 +197,19 @@ public final class TorqueUtil {
     public static final <T> T conditionalApply(final boolean use, final T value, final Function<T, T> function) {
         return use ? function.apply(value) : value;
     }
+
+
+    /**
+     * Appends doubles like an ordered pair in parenthesis.
+     * 
+     * @param values
+     * @return
+     */
+    public static final String group(int leading, int trailing, final double... values) {
+        final StringBuilder sb = new StringBuilder();
+        final String format = "%0" + String.format("%d.%d", leading, trailing) + "f, ";
+        for (final double value : values)
+            sb.append(String.format(format, value));
+        return "( " + sb.toString().substring(0, sb.length() - 2) + " )";
+    }
 }
