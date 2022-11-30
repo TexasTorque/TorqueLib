@@ -134,7 +134,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
                 voltageCompensation = 12.6, // volts
                 maxVelocity = 3.25, // m/s
                 maxAcceleration = 3.0, // m/s^2
-                maxAngularSpeed = Math.PI, // radians/s
+                maxAngularVelocity = Math.PI, // radians/s
                 maxAngularAcceleration = Math.PI, // radians/s
 
                 // The following will most likely need to be overriden
