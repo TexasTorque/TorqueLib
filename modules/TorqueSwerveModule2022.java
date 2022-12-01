@@ -34,9 +34,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
     // Rotation offset for tearing
     private double neoEncoderOffset = 0; 
+    public final double staticOffset;
 
-    public TorqueSwerveModule2022(final int driveID, final int turnID, final int encoderID, final TorqueSwerveModuleConfiguration config) {
+    public TorqueSwerveModule2022(final int driveID, final int turnID, final int encoderID, 
+            final double staticOffset, final TorqueSwerveModuleConfiguration config) {
         super(driveID);
+        this.staticOffset = staticOffset;
         this.config = config;
 
         // Configure the drive motor.
@@ -69,13 +72,13 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
         // Calculate drive output
-        final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
-        final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
-        drive.setPercent(drivePIDOutput + driveFFOutput);
+        // final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
+        // final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
+        // drive.setPercent(drivePIDOutput + driveFFOutput);
 
         // Calculate turn output
-        final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
-        turn.setPercent(turnPIDOutput);
+        // final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
+        // turn.setPercent(turnPIDOutput);
     }
 
     @Override
@@ -89,7 +92,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     }
 
     private double getTurnEncoder() {
-        return getTurnNEOEncoder();
+        // return getTurnNEOEncoder();
+        return getTurnCANEncoder();
     }
 
     private double getTurnCANEncoder() {
