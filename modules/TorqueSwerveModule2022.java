@@ -4,6 +4,10 @@ import org.opencv.core.RotatedRect;
 import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
 import org.texastorque.torquelib.motors.TorqueNEO;
 
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorTimeBase;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,7 +30,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     private final TorqueNEO drive, turn;
 
     // The CANCoder for wheel angle measurement. (?)
-    private final AnalogPotentiometer encoder;
+    private final AnalogPotentiometer potentiometer;
+    private final CANCoder cancoder;
 
     // Velocity controllers.
     private final PIDController drivePID, turnPID;
@@ -57,8 +62,17 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         turn.setBreakMode(true);
         turn.burnFlash();
 
-        // Configure the encoder
-        encoder = new AnalogPotentiometer(encoderID, 2.0 * Math.PI, 0.0);
+        // Configure the cancoder
+        potentiometer = new AnalogPotentiometer(encoderID, 2.0 * Math.PI, 0.0);
+
+        cancoder = new CANCoder(encoderID);
+        final CANCoderConfiguration cancoderConfig = new CANCoderConfiguration();
+        // set units of the CANCoder to radians, with velocity being radians per second
+        cancoderConfig.sensorCoefficient = 2 * Math.PI / 4096.0;
+        cancoderConfig.unitString = "rad";
+        cancoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
+        cancoder.configAllSettings(cancoderConfig);
+        
 
         // Configure the controllers
         drivePID = new PIDController(config.drivePGain, config.driveIGain, config.driveDGain);
@@ -92,14 +106,22 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     }
 
     private double getTurnEncoder() {
-        // return getTurnNEOEncoder();
-        return getTurnCANEncoder();
+        getTurnCancoder();
+        getTurnPotentiometer();
+        getTurnNEOEncoder();
+        return getTurnCancoder();
     }
 
-    private double getTurnCANEncoder() {
-        final double value = -encoder.get();
+    private double getTurnCancoder() {
+        final double value = cancoder.getPosition();
         SmartDashboard.putNumber("cancoder", value);
         return value;
+    }
+
+    private double getTurnPotentiometer() {
+        final double value = cancoder.getPosition();
+        SmartDashboard.putNumber("potentiometer", value);
+        return value; 
     }
 
     private double getTurnNEOEncoder() {
@@ -120,7 +142,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
     public void tear() {
         // neoEncoderOffset = turn.getPosition(); // with Neo encoder
-        neoEncoderOffset = getTurnCANEncoder();
     }
 
     private static double coterminal(final double rotation) {
