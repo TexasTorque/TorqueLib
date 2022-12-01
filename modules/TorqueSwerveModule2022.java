@@ -33,7 +33,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     private final SimpleMotorFeedforward driveFeedForward;
 
     // Rotation offset for tearing
-    private double offset = 0; 
+    private double neoEncoderOffset = 0; 
 
     public TorqueSwerveModule2022(final int driveID, final int turnID, final int encoderID, final TorqueSwerveModuleConfiguration config) {
         super(driveID);
@@ -89,8 +89,19 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     }
 
     private double getTurnEncoder() {
-        //return -encoder.get(); // with Cancoder
-        return coterminal(((turn.getPosition() - offset) / config.turnGearRatio) * 2 * Math.PI); // with Neo encoder
+        return getTurnNEOEncoder();
+    }
+
+    private double getTurnCANEncoder() {
+        final double value = -encoder.get();
+        SmartDashboard.putNumber("cancoder", value);
+        return value;
+    }
+
+    private double getTurnNEOEncoder() {
+        final double value = coterminal(((turn.getPosition() - neoEncoderOffset) / config.turnGearRatio) * 2 * Math.PI); // with Neo encoder
+        SmartDashboard.putNumber("neo encoder", value);
+        return value;
     }
 
     public void stop() {
@@ -104,7 +115,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     }
 
     public void tear() {
-        offset = turn.getPosition(); // with Neo encoder
+        // neoEncoderOffset = turn.getPosition(); // with Neo encoder
+        neoEncoderOffset = getTurnCANEncoder();
     }
 
     private static double coterminal(final double rotation) {
