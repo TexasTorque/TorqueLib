@@ -18,8 +18,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Super cool flipped swerve module built in 2023 by Abishek.
  * 
- * https://drive.google.com/file/d/1KftGS1G6L668PEpUwcPeUHwzFnFnMYsh/view?usp=sharing
+ * https://drive.google.com/file/d/1bvgo75gqLzoerBIEtEObXep_6gpac6mZ/view?usp=sharing 
+ * https://drive.google.com/file/d/1q4cmx3Ntscfynn_1Tc8W9VAqR9Tgn0NT/view?usp=sharing
  * 
+ * The module uses a Rev NEO for drive and rotation control. It uses a CTRE Cancoder 
+ * positioned 1:1 with the wheel rotation.
+ * 
+ * The code is largely based off the FRC 1706 swerve module.
+ * 
+ * The rotation of the modules is [0, 2π) radians, with 0 being straight ahead (I think).
+ * 
+ *     0 or 2π
+ *        ↑
+ *  π/2 ← * → 3π/2
+ *        ↓
+ *        π
+ *
  * @author Justus Languell
  */
 public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
