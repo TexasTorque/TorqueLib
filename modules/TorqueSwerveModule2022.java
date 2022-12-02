@@ -42,9 +42,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     // Rotation offset for tearing
     public final double staticOffset;
 
-    public TorqueSwerveModule2022(final int driveID, final int turnID, final int encoderID, 
+    public final String name;
+
+    public TorqueSwerveModule2022(final String name, final int driveID, final int turnID, final int encoderID, 
             final double staticOffset, final TorqueSwerveModuleConfiguration config) {
         super(driveID);
+        this.name = name.replaceAll(" ", "_").toLowerCase();
         this.staticOffset = staticOffset;
         this.config = config;
 
@@ -90,12 +93,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         // Calculate drive output
         final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
         final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
-        SmartDashboard.putNumber("Drive PID Output", drivePIDOutput);
+        log("Drive PID Output", drivePIDOutput + driveFFOutput);
         // drive.setPercent(drivePIDOutput + driveFFOutput);
 
         // Calculate turn output
         final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
-        SmartDashboard.putNumber("Turn PID Output", turnPIDOutput);
+        log("Turn PID Output", turnPIDOutput);
         // turn.setPercent(turnPIDOutput);
     }
 
@@ -118,20 +121,17 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
     private double getTurnCancoder() {
         final double value = cancoder.getPosition();
-        SmartDashboard.putNumber("cancoder", value);
-        return value;
+        return log("cancoder", value);
     }
 
     private double getTurnPotentiometer() {
         final double value = potentiometer.get();
-        SmartDashboard.putNumber("potentiometer", value);
-        return value; 
+        return log("potentiometer", value);
     }
 
     private double getTurnNEOEncoder() {
         final double value = coterminal(((turn.getPosition()) / config.turnGearRatio) * 2 * Math.PI); // with Neo encoder
-        SmartDashboard.putNumber("neo encoder", value);
-        return value;
+        return log("neo encoder", value);
     }
 
     public void stop() {
@@ -150,6 +150,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         while (coterminal > Math.PI || coterminal < -Math.PI)
             coterminal -= full;
         return coterminal; 
+    }
+
+    private double log(final String item, final double value) {
+        final String key = name + "." + item.replaceAll(" ", "_").toLowerCase();
+        SmartDashboard.putNumber(String.format("%s::%s", name, key), value);
+        return value;
     }
 
 
@@ -191,4 +197,5 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
                 turnDGain = 0.0,
                 turnGearRatio = 12.41; // Rotation motor to wheel
     }
+
 }

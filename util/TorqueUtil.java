@@ -202,8 +202,8 @@ public final class TorqueUtil {
     /**
      * Appends doubles like an ordered pair in parenthesis.
      * 
-     * @param values
-     * @return
+     * @param values Doubles to append.
+     * @return The resulting string.
      */
     public static final String group(int leading, int trailing, final double... values) {
         final StringBuilder sb = new StringBuilder();
