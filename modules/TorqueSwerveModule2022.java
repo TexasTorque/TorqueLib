@@ -29,7 +29,9 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     // The NEO motors for turn and drive.
     private final TorqueNEO drive, turn;
 
-    // The CANCoder for wheel angle measurement. (?)
+    // The CANCoder for wheel angle measurement.
+    // FRC 1706 used AnalogPotentiometer, but everyone else uses CANCoder.
+    // I have both implemented, lets see which one works.
     private final AnalogPotentiometer potentiometer;
     private final CANCoder cancoder;
 
@@ -38,7 +40,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     private final SimpleMotorFeedforward driveFeedForward;
 
     // Rotation offset for tearing
-    private double neoEncoderOffset = 0; 
     public final double staticOffset;
 
     public TorqueSwerveModule2022(final int driveID, final int turnID, final int encoderID, 
@@ -65,6 +66,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         // Configure the cancoder
         potentiometer = new AnalogPotentiometer(encoderID, 2.0 * Math.PI, 0.0);
 
+        // Cancoder docs: https://api.ctr-electronics.com/phoenix/release/java/com/ctre/phoenix/sensors/CANCoder.html
         cancoder = new CANCoder(encoderID);
         final CANCoderConfiguration cancoderConfig = new CANCoderConfiguration();
         // set units of the CANCoder to radians, with velocity being radians per second
@@ -86,12 +88,14 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
         // Calculate drive output
-        // final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
-        // final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
+        final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
+        final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
+        SmartDashboard.putNumber("Drive PID Output", drivePIDOutput);
         // drive.setPercent(drivePIDOutput + driveFFOutput);
 
         // Calculate turn output
-        // final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
+        final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
+        SmartDashboard.putNumber("Turn PID Output", turnPIDOutput);
         // turn.setPercent(turnPIDOutput);
     }
 
@@ -119,13 +123,13 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     }
 
     private double getTurnPotentiometer() {
-        final double value = cancoder.getPosition();
+        final double value = potentiometer.get();
         SmartDashboard.putNumber("potentiometer", value);
         return value; 
     }
 
     private double getTurnNEOEncoder() {
-        final double value = coterminal(((turn.getPosition() - neoEncoderOffset) / config.turnGearRatio) * 2 * Math.PI); // with Neo encoder
+        final double value = coterminal(((turn.getPosition()) / config.turnGearRatio) * 2 * Math.PI); // with Neo encoder
         SmartDashboard.putNumber("neo encoder", value);
         return value;
     }
@@ -138,10 +142,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     public void zero() { 
         final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), 0);
         turn.setPercent(turnPIDOutput);
-    }
-
-    public void tear() {
-        // neoEncoderOffset = turn.getPosition(); // with Neo encoder
     }
 
     private static double coterminal(final double rotation) {
