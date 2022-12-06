@@ -4,7 +4,7 @@
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
-package org.texastorque.torquelib.util;
+package org.texastorque.torquelib.legacy;
 
 /**
  * A class that represents a PIDF controller with a min and max output.

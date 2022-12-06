@@ -1,4 +1,4 @@
-package org.texastorque.torquelib.util;
+package org.texastorque.torquelib.legacy;
 
 import edu.wpi.first.wpilibj.Joystick;
 

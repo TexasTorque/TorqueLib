@@ -4,7 +4,7 @@
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
-package org.texastorque.torquelib.util;
+package org.texastorque.torquelib.legacy;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Joystick;
  *
  * @author TexasTorque
  *
- * @deprecated Use TorqueController instead ({@link org.texastorque.torquelib.util.GenericController}).
+ * @deprecated Use TorqueController instead ({@link org.texastorque.torquelib.legacy.GenericController}).
  */
 @Deprecated
 public final class GenericController extends Joystick {

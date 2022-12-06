@@ -4,10 +4,10 @@
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
-package org.texastorque.torquelib.motors.legacy.base;
+package org.texastorque.torquelib.legacy.base;
 
 import org.texastorque.torquelib.control.TorquePID;
-import org.texastorque.torquelib.util.KPID;
+import org.texastorque.torquelib.legacy.KPID;
 
 /**
  * Interface to include PID methods for a PID motor.

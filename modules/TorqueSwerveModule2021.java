@@ -14,11 +14,12 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.texastorque.torquelib.control.TorquePID;
+import org.texastorque.torquelib.legacy.KPID;
+import org.texastorque.torquelib.legacy.TorqueSparkMax;
+import org.texastorque.torquelib.legacy.TorqueTalon;
 import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
-import org.texastorque.torquelib.motors.legacy.TorqueSparkMax;
-import org.texastorque.torquelib.motors.legacy.TorqueTalon;
-import org.texastorque.torquelib.util.KPID;
 
 /**
  * A representation of the 2021 Texas Torque custom swervedrive module.

@@ -7,4 +7,4 @@
  * @author Justus Languell
  * @author Jack Pittenger
  */
-package org.texastorque.torquelib.motors.legacy;
+package org.texastorque.torquelib.legacy;

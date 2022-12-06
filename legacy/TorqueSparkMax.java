@@ -4,7 +4,7 @@
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
-package org.texastorque.torquelib.motors.legacy;
+package org.texastorque.torquelib.legacy;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -20,10 +20,10 @@ import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.ArrayList;
+
 import org.texastorque.torquelib.control.TorquePID;
-import org.texastorque.torquelib.motors.legacy.base.TorqueMotor;
-import org.texastorque.torquelib.motors.legacy.base.TorqueSmartMotor;
-import org.texastorque.torquelib.util.KPID;
+import org.texastorque.torquelib.legacy.base.TorqueMotor;
+import org.texastorque.torquelib.legacy.base.TorqueSmartMotor;
 import org.texastorque.torquelib.util.TorqueUtil;
 
 /**

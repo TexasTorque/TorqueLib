@@ -17,7 +17,7 @@ import org.texastorque.torquelib.util.TorqueMath;
  * driver input.
  *
  * @apiNote Functional replacement for GenericController
- * ({@link org.texastorque.torquelib.util.GenericController})
+ * ({@link org.texastorque.torquelib.legacy.GenericController})
  *
  * @author Justus Languell
  */

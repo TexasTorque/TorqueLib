@@ -14,7 +14,7 @@ import java.util.function.Function;
  * the WPILib PIDController.
  *
  * @apiNote Functional replacement for KPID
- * ({@link org.texastorque.torquelib.util.KPID})
+ * ({@link org.texastorque.torquelib.legacy.KPID})
  *
  * @author Justus Languell
  */
