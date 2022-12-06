@@ -7,7 +7,7 @@
 import os
 import datetime
 
-license_email = 'jus@gtsbr.org'
+license_email = 'jus@justusl.com'
 
 
 def find_project(path):
@@ -63,6 +63,7 @@ def with_license(path, source):
 def validate(path):
     if 'package-info.java' in path:
         return
+    print('Licensing ' + path)
     source = open(path, 'r').read()
     source = with_license(path, source)
     open(path, 'w').write(source)
