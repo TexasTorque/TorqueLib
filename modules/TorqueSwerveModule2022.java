@@ -6,6 +6,7 @@ import org.texastorque.torquelib.motors.TorqueNEO;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -24,7 +25,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * The module uses a Rev NEO for drive and rotation control. It uses a CTRE Cancoder 
  * positioned 1:1 with the wheel rotation.
  * 
- * The code is largely based off the FRC 1706 swerve module.
+ * The code is kinda based off the FRC 1706 swerve module.
+ * 
+ * Cancoder docs: https://api.ctr-electronics.com/phoenix/release/java/com/ctre/phoenix/sensors/CANCoder.html
  * 
  * The rotation of the modules is [0, 2π) radians, with 0 being straight ahead (I think).
  * 
@@ -44,9 +47,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     private final TorqueNEO drive, turn;
 
     // The CANCoder for wheel angle measurement.
-    // FRC 1706 used AnalogPotentiometer, but everyone else uses CANCoder.
-    // I have both implemented, lets see which one works.
-    private final AnalogPotentiometer potentiometer;
     private final CANCoder cancoder;
 
     // Velocity controllers.
@@ -56,6 +56,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     // Rotation offset for tearing
     public final double staticOffset;
 
+    // The name of the module that we can use for SmartDashboard outputs
     public final String name;
 
     public TorqueSwerveModule2022(final String name, final int driveID, final int turnID, final int encoderID, 
@@ -80,16 +81,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         turn.setBreakMode(true);
         turn.burnFlash();
 
-        // Configure the cancoder
-        potentiometer = new AnalogPotentiometer(encoderID, 2.0 * Math.PI, 0.0);
-
-        // Cancoder docs: https://api.ctr-electronics.com/phoenix/release/java/com/ctre/phoenix/sensors/CANCoder.html
         cancoder = new CANCoder(encoderID);
         final CANCoderConfiguration cancoderConfig = new CANCoderConfiguration();
-        // set units of the CANCoder to radians, with velocity being radians per second
         cancoderConfig.sensorCoefficient = 2 * Math.PI / 4096.0;
         cancoderConfig.unitString = "rad";
         cancoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
+        //cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         cancoder.configAllSettings(cancoderConfig);
         
 
@@ -108,12 +105,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
         final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
         log("Drive PID Output", drivePIDOutput + driveFFOutput);
-        // drive.setPercent(drivePIDOutput + driveFFOutput);
+        drive.setPercent(drivePIDOutput + driveFFOutput);
 
         // Calculate turn output
         final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
         log("Turn PID Output", turnPIDOutput);
-        // turn.setPercent(turnPIDOutput);
+        turn.setPercent(turnPIDOutput);
     }
 
     @Override
@@ -127,25 +124,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     }
 
     private double getTurnEncoder() {
-        getTurnCancoder();
-        getTurnPotentiometer();
-        getTurnNEOEncoder();
         return getTurnCancoder();
     }
 
     private double getTurnCancoder() {
-        final double value = cancoder.getPosition();
-        return log("cancoder", value);
-    }
-
-    private double getTurnPotentiometer() {
-        final double value = potentiometer.get();
-        return log("potentiometer", value);
-    }
-
-    private double getTurnNEOEncoder() {
-        final double value = coterminal(((turn.getPosition()) / config.turnGearRatio) * 2 * Math.PI); // with Neo encoder
-        return log("neo encoder", value);
+        // Should not need to use Coterminal
+        return log("cancoder", cancoder.getPosition() - staticOffset);
     }
 
     public void stop() {
@@ -154,8 +138,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     }
 
     public void zero() { 
-        final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), 0);
-        turn.setPercent(turnPIDOutput);
+        turn.setPercent(log("zero pid", turnPID.calculate(getTurnEncoder(), 0)));
     }
 
     private static double coterminal(final double rotation) {
@@ -171,7 +154,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         SmartDashboard.putNumber(String.format("%s::%s", name, key), value);
         return value;
     }
-
 
     /**
      * A structure to define the constants for the swerve module.
