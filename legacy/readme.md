@@ -1,6 +1,5 @@
-# Texas Torque Motor and Motor Controller Package
+# Texas Torque Legacy Classes
 
-This package contains wrapper classes that are used to abstract
-common functionality for a motor. The use of common base classes
-and interfaces helps with writing generic motor implementations
-that can be easily modified if mechanical so choose. :)
+This package contains a bunch of legacy classes that shouldn't really
+find their way into new code. They're still here for backwards compatability
+within this library and support for old projects.
