@@ -201,7 +201,7 @@ public final class TorqueLight {
 
     public final Transform3d getTransformToAprilTag3d() {
         if (target == null) return new Transform3d();
-        return target.getCameraToTarget().inverse();
+        return target.getBestCameraToTarget().inverse();
     }
 
     public final Transform2d getTransformToKnownTag2d() {

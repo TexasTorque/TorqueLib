@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj.Filesystem;
  */
 public final class TorqueAprilTagMap extends HashMap<Integer, Pose3d> {
 
+    public static final String DEFAULT_FILENAME = "AprilTags.json";
+
     private TorqueAprilTagMap() { super(); }
 
     /**
@@ -36,9 +38,8 @@ public final class TorqueAprilTagMap extends HashMap<Integer, Pose3d> {
      * @return The deserialized TorqueAprilTagMap.
      */
     public static final TorqueAprilTagMap fromJSON() {
-        return fromJSON("AprilTags.json");
+        return fromJSON(DEFAULT_FILENAME);
     }
-
 
     /**
      * Deserializes a TorqueAprilTagMap from a JSON file from a filename.
