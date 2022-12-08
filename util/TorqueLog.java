@@ -8,41 +8,50 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 
 public final class TorqueLog {
-    
 
     public static final int ROWS = 6, COLUMNS = 10;
     private final boolean[][] board = new boolean[ROWS][COLUMNS];
 
     public final String title;
     private final ShuffleboardTab tab;
-    // We are just adding keys we have used to a hashmap so we can check
-    // if we have already used them in O(1) time instead of O(n).
-    // The value and type of the entry doesnt matter so we will just
-    // be adding "true" values.
     private final HashMap<String, NetworkTableEntry> keys; 
 
     public TorqueLog(final String title) {
         this.title = title;
-        // tab = Shuffleboard.getTab(title);
-        tab = null;
+        tab = Shuffleboard.getTab(title);
         keys = new HashMap<String, NetworkTableEntry>();
     }
 
-
-
-    // public void log(final String key, final Object value, final int width, final int height, final WidgetType type) {
-     
-    //     if (!keys.containsKey(key)) {
-    //         final NetworkTableEntry entry = tab.add(key, value).withWidget(type).withSize(0, 0).withPosition(0, 0).getEntry();
-    //         x += 
-    //         keys.put(key, entry);
-    //         return;
-    //     }
-    // }
-
-
-
+    public void log(final String key, final Object value, final int width, final int height, final WidgetType type) {
+        if (!keys.containsKey(key)) {
+            final Position pos = calculatePosition(width, height);
+            if (pos == Position.INVALID) {
+                System.out.println("Could not fit element " + key + " in log " + title);
+                return;
+            }
+            final NetworkTableEntry entry = tab.add(key, value)
+                    .withWidget(type)
+                    .withSize(width, height)
+                    .withPosition(pos.x, pos.y)
+                    .getEntry();
+            keys.put(key, entry);
+            return;
+        }
+        keys.get(key).setValue(value);
+    }
+ 
     
+    private Position calculatePosition(int width, int height) {
+        for (int i = 0; i < board.length; i++)
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j]) continue;
+                if (!elementWillFit(i, j, width, height)) continue;
+                markElementsTaken(i, j, width, height);
+                return new Position(i, j);
+            }
+        return Position.INVALID;
+    }
+
     private boolean elementWillFit(final int x, final int y, final int width, final int height) {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -55,24 +64,10 @@ public final class TorqueLog {
         return true;
     }
 
-    public Position calculatePosition(int width, int height) {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                System.out.println("Checking " + i + ", " + j);
-                if (!board[i][j]) {
-                    System.out.println("Found empty space at " + i + ", " + j);
-                    if (elementWillFit(i, j, width, height)) {
-                        for (int k = 0; k < height; k++) {
-                            for (int l = 0; l < width; l++) {
-                                board[i + k][j + l] = true;
-                            }
-                        }
-                        return new Position(i, j);
-                    } 
-                }
-            }
-        }
-        return Position.INVALID;
+    private void markElementsTaken(final int i, final int j, final int width, final int height) {
+         for (int k = 0; k < height; k++)
+            for (int l = 0; l < width; l++)
+                board[i + k][j + l] = true;
     }
 
     private static class Position {
@@ -84,29 +79,31 @@ public final class TorqueLog {
         public static final Position INVALID = new Position(-1, -1);
     }
 
-    public void printBoard() {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                System.out.print((board[i][j] ? 'X' : '_') + " ");
-            }
-            System.out.println();
-        }
-    }
-    
-
     public static void main(final String[] args) {
-        TorqueLog log = new TorqueLog("test");
-        log.calculatePosition(2, 2);
-        log.calculatePosition(2, 1);
-        log.calculatePosition(3, 1);
-        log.calculatePosition(4, 3);
-        log.calculatePosition(1, 1);
-        log.calculatePosition(3, 2);
-        log.calculatePosition(1, 2);
-        log.printBoard();
     }
 
-
-
-
+ 
+    // This is an example of unhealthy nesting... 6 whole layers!!
+    // This was the original state of the calculatePosition method.
+    // The rule of thumb is after 3 layers of nesting YOU MUST refactor.
+    // You can refactor through:
+    // 1. Extracting into functions (ie. elementsWillFit, markElementsTaken)
+    // 2. Inverting conditions with early return, continue, break (validation checking) 
+    // public Position calculatePosition(int width, int height) {
+    //     for (int i = 0; i < board.length; i++) {                     // layer 1
+    //         for (int j = 0; j < board[i].length; j++) {              // layer 2
+    //             if (!board[i][j]) {                                  // layer 3
+    //                 if (elementWillFit(i, j, width, height)) {       // layer 4
+    //                     for (int k = 0; k < height; k++) {           // layer 5
+    //                         for (int l = 0; l < width; l++) {        // layer 6
+    //                             board[i + k][j + l] = true;
+    //                         }
+    //                     }
+    //                     return new Position(i, j);
+    //                 } 
+    //             }
+    //         }
+    //     }
+    //     return Position.INVALID;
+    // }
 }
