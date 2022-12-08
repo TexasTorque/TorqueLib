@@ -15,7 +15,7 @@ package org.texastorque.torquelib.base;
  *
  * @author Justus
  */
-public enum TorqueDirection implements TorqueSubsystemState {
+public enum TorqueDirection {
     REVERSE,
     NEUTRAL,
     FORWARD;
