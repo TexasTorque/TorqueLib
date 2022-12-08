@@ -19,13 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
  */
 public final class TorqueLog {
 
-  public static final WidgetType 
-            W_TEXT = BuiltInWidgets.kTextView,
-            W_BOOL = BuiltInWidgets.kBooleanBox,
-            W_DIAL = BuiltInWidgets.kDial,
-            W_GRAPH = BuiltInWidgets.kGraph,
-            W_SLIDER = BuiltInWidgets.kNumberSlider,
-            W_BAR = BuiltInWidgets.kNumberBar;
+   
 
     public static final int ROWS = 6, COLUMNS = 10;
     private final boolean[][] board = new boolean[ROWS][COLUMNS];
@@ -44,7 +38,6 @@ public final class TorqueLog {
         tab = Shuffleboard.getTab(title);
         keys = new HashMap<String, NetworkTableEntry>();
     }
-
 
     /**
      * Log a value to the dashboard with properties.
@@ -90,10 +83,26 @@ public final class TorqueLog {
         log(key, value, width,  height, type, null);
     }
 
+    /**
+     * Log a boolean value to the dashboard and infer the widget type.
+     * 
+     * @param key The title of the widget.
+     * @param value The value to log in the widget.
+     * @param width The width of the widget in cells.
+     * @param height The height of the widget in cells.
+     */
     public void log(final String key, final boolean value, final int width, final int height) {
         log(key, value, width, height, BuiltInWidgets.kBooleanBox);
     }
 
+    /**
+     * Log a string value to the dashboard and infer the widget type.
+     * 
+     * @param key The title of the widget.
+     * @param value The value to log in the widget.
+     * @param width The width of the widget in cells.
+     * @param height The height of the widget in cells.
+     */
     public void log(final String key, final String value, final int width, final int height) {
         log(key, value, width, height, BuiltInWidgets.kTextView);
     }
@@ -167,27 +176,24 @@ public final class TorqueLog {
         public static final Position INVALID = new Position(-1, -1);
     }
  
-    // This is an example of unhealthy nesting... 6 whole layers!!
-    // This was the original state of the calculatePositison method.
-    // The rule of thumb is after 3 layers of nesting YOU MUST refactor.
-    // You can refactor through:
-    // 1. Extracting into functions (ie. widgetWillFit, markWidgetTaken)
-    // 2. Inverting conditions with early return, continue, break (validation checking) 
-    // public Position calculatePosition(int width, int height) {
-    //     for (int i = 0; i < board.length; i++) {                     // layer 1
-    //         for (int j = 0; j < board[i].length; j++) {              // layer 2
-    //             if (!board[i][j]) {                                  // layer 3
-    //                 if (widgetWillFit(i, j, width, height)) {       // layer 4
-    //                     for (int k = 0; k < height; k++) {           // layer 5
-    //                         for (int l = 0; l < width; l++) {        // layer 6
-    //                             board[i + k][j + l] = true;
-    //                         }
-    //                     }
-    //                     return new Position(i, j);
-    //                 } 
-    //             }
-    //         }
-    //     }
-    //     return Position.INVALID;
-    // }
+
+    public static final WidgetType W_TEXT = BuiltInWidgets.kTextView;
+    public static final WidgetType W_BOOL = BuiltInWidgets.kBooleanBox;
+    public static final WidgetType W_DIAL = BuiltInWidgets.kDial;
+    public static final WidgetType W_GRAPH = BuiltInWidgets.kGraph;
+    public static final WidgetType W_SLIDER = BuiltInWidgets.kNumberSlider;
+    public static final WidgetType W_BAR = BuiltInWidgets.kNumberBar;
+
+    /**
+    * Custom properties:
+    *
+    * <table>
+    * <tr><th>Name</th><th>Type</th><th>Default Value</th><th>Notes</th></tr>
+    * <tr><td>Major tick spacing</td><td>Number</td><td>45</td><td>Degrees</td></tr>
+    * <tr><td>Starting angle</td><td>Number</td><td>180</td>
+    * <td>How far to rotate the entire dial, in degrees</td></tr>
+    * <tr><td>Show tick mark ring</td><td>Boolean</td><td>true</td></tr>
+    * </table>
+    */
+    public static final WidgetType W_GYRO = BuiltInWidgets.kGyro;
 }
