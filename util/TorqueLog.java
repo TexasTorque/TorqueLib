@@ -1,10 +1,13 @@
 package org.texastorque.torquelib.util;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 
 /**
@@ -15,6 +18,14 @@ import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
  * @author Justus Languell
  */
 public final class TorqueLog {
+
+  public static final WidgetType 
+            W_TEXT = BuiltInWidgets.kTextView,
+            W_BOOL = BuiltInWidgets.kBooleanBox,
+            W_DIAL = BuiltInWidgets.kDial,
+            W_GRAPH = BuiltInWidgets.kGraph,
+            W_SLIDER = BuiltInWidgets.kNumberSlider,
+            W_BAR = BuiltInWidgets.kNumberBar;
 
     public static final int ROWS = 6, COLUMNS = 10;
     private final boolean[][] board = new boolean[ROWS][COLUMNS];
@@ -34,8 +45,40 @@ public final class TorqueLog {
         keys = new HashMap<String, NetworkTableEntry>();
     }
 
+
     /**
-     * Log a value to the dashboard.
+     * Log a value to the dashboard with properties.
+     * 
+     * @param key The title of the widget.
+     * @param value The value to log in the widget.
+     * @param width The width of the widget in cells.
+     * @param height The height of the widget in cells.
+     * @param type The type of the cell.
+     * @param properties The properties of the widget.
+     */
+    public void log(final String key, final Object value, final int width, final int height, 
+            final WidgetType type, final Map<String, Object> properties) {
+        if (!keys.containsKey(key)) {
+            final Position pos = calculatePosition(width, height);
+            if (pos == Position.INVALID) {
+                System.out.println("Could not fit element " + key + " in log " + title);
+                return;
+            }
+            SimpleWidget widget = tab.add(key, value)
+                    .withWidget(type)
+                    .withSize(width, height)
+                    .withPosition(pos.x, pos.y);
+
+            if (properties != null && !properties.isEmpty())
+                widget = widget.withProperties(properties);
+
+            keys.put(key, widget.getEntry());
+        }
+        keys.get(key).setValue(value);
+    }
+
+    /**
+     * Log a value to the dashboard without properties.
      * 
      * @param key The title of the widget.
      * @param value The value to log in the widget.
@@ -44,22 +87,17 @@ public final class TorqueLog {
      * @param type The type of the cell.
      */
     public void log(final String key, final Object value, final int width, final int height, final WidgetType type) {
-        if (!keys.containsKey(key)) {
-            final Position pos = calculatePosition(width, height);
-            if (pos == Position.INVALID) {
-                System.out.println("Could not fit element " + key + " in log " + title);
-                return;
-            }
-            final NetworkTableEntry entry = tab.add(key, value)
-                    .withWidget(type)
-                    .withSize(width, height)
-                    .withPosition(pos.x, pos.y)
-                    .getEntry();
-            keys.put(key, entry);
-        }
-        keys.get(key).setValue(value);
+        log(key, value, width,  height, type, null);
     }
-    
+
+    public void log(final String key, final boolean value, final int width, final int height) {
+        log(key, value, width, height, BuiltInWidgets.kBooleanBox);
+    }
+
+    public void log(final String key, final String value, final int width, final int height) {
+        log(key, value, width, height, BuiltInWidgets.kTextView);
+    }
+
     /**
      * Find the next coordinate location that a widget of size (width, height) can fit onto the dashboard.
      * 
@@ -73,8 +111,8 @@ public final class TorqueLog {
      * @return The next valid position or INVALID if there isn't a valid position.
      */
     private Position calculatePosition(final int width, final int height) {
-        for (int i = 0; i < board.length; i++)
-            for (int j = 0; j < board[i].length; j++) {
+        for (int i = 0; i < board.length - height; i++)
+            for (int j = 0; j < board[i].length - width; j++) {
                 if (board[i][j]) continue;
                 if (!widgetWillFit(i, j, width, height)) continue;
                 markWidgetTaken(i, j, width, height);
@@ -96,7 +134,9 @@ public final class TorqueLog {
     private boolean widgetWillFit(final int x, final int y, final int width, final int height) {
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
-                if (i + x >= board.length || j + y >= board[i].length || board[i + x][j + y])
+                // if (i + x >= board.length || j + y >= board[i].length)
+                //    return false;
+                if (board[i + x][j + y])
                     return false;
         return true;
     }
