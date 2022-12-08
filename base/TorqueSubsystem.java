@@ -6,7 +6,8 @@
  */
 package org.texastorque.torquelib.base;
 
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import org.texastorque.torquelib.util.TorqueLog;
+
 
 /**
  * Subsystem template.
@@ -15,8 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
  * @author Justus Languell
  */
 public abstract class TorqueSubsystem {
-    // Tab for the subsystem
-    protected ShuffleboardTab tab;
+    protected TorqueLog log; 
 
     @Deprecated
     public void initTeleop() {}
