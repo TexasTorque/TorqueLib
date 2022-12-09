@@ -1,11 +1,14 @@
 package org.texastorque.torquelib.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
@@ -18,15 +21,13 @@ import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
  * @author Justus Languell
  */
 public final class TorqueLog {
-
-   
-
     public static final int ROWS = 6, COLUMNS = 10;
     private final boolean[][] board = new boolean[ROWS][COLUMNS];
 
     public final String title;
     private final ShuffleboardTab tab;
-    private final HashMap<String, NetworkTableEntry> keys; 
+    private final Map<String, NetworkTableEntry> keys; 
+    private final List<ShuffleboardComponent<?>> initialEntries;
 
     /**
      * Create a new logging table.
@@ -36,6 +37,7 @@ public final class TorqueLog {
     public TorqueLog(final String title) {
         this.title = title;
         tab = Shuffleboard.getTab(title);
+        initialEntries = tab.getComponents();
         keys = new HashMap<String, NetworkTableEntry>();
     }
 
@@ -52,6 +54,7 @@ public final class TorqueLog {
     public void log(final String key, final Object value, final int width, final int height, 
             final WidgetType type, final Map<String, Object> properties) {
         if (!keys.containsKey(key)) {
+          
             final Position pos = calculatePosition(width, height);
             if (pos == Position.INVALID) {
                 System.out.println("Could not fit element " + key + " in log " + title);
@@ -66,6 +69,7 @@ public final class TorqueLog {
                 widget = widget.withProperties(properties);
 
             keys.put(key, widget.getEntry());
+            return;
         }
         keys.get(key).setValue(value);
     }
@@ -120,8 +124,10 @@ public final class TorqueLog {
      * @return The next valid position or INVALID if there isn't a valid position.
      */
     private Position calculatePosition(final int width, final int height) {
-        for (int i = 0; i < board.length - height; i++)
-            for (int j = 0; j < board[i].length - width; j++) {
+        // for (int i = 0; i < board.length - height; i++)
+        //     for (int j = 0; j < board[i].length - width; j++) {
+        for (int i = 0; i < board.length; i++)
+            for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j]) continue;
                 if (!widgetWillFit(i, j, width, height)) continue;
                 markWidgetTaken(i, j, width, height);
@@ -142,11 +148,12 @@ public final class TorqueLog {
      */
     private boolean widgetWillFit(final int x, final int y, final int width, final int height) {
         for (int i = 0; i < height; i++)
-            for (int j = 0; j < width; j++)
-                // if (i + x >= board.length || j + y >= board[i].length)
-                //    return false;
+            for (int j = 0; j < width; j++) {
+                if (i + x >= board.length || j + y >= board[i].length)
+                    return false;
                 if (board[i + x][j + y])
                     return false;
+            }
         return true;
     }
 
