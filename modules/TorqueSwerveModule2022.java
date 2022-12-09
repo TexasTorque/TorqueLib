@@ -20,6 +20,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -65,9 +66,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     // The name of the module that we can use for SmartDashboard outputs
     public final String name;
 
+    public final boolean useSmartDrive;
+
     public TorqueSwerveModule2022(final String name, final int driveID, final int turnID, final int encoderID, 
-            final double staticOffset, final TorqueSwerveModuleConfiguration config) {
+            final double staticOffset, final boolean useSmartDrive, final TorqueSwerveModuleConfiguration config) {
         super(driveID);
+        this.useSmartDrive = useSmartDrive;
         this.name = name.replaceAll(" ", "_").toLowerCase();
         this.staticOffset = staticOffset;
         this.config = config;
@@ -92,7 +96,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         cancoderConfig.sensorCoefficient = 2 * Math.PI / 4096.0;
         cancoderConfig.unitString = "rad";
         cancoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
-        //cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+        cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
+        // cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         cancoder.configAllSettings(cancoderConfig);
         
 
@@ -108,10 +113,14 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
         // Calculate drive output
-        final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
-        final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
-        log("Drive PID Output", drivePIDOutput + driveFFOutput);
-        drive.setPercent(drivePIDOutput + driveFFOutput);
+        if (useSmartDrive) {
+            final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
+            final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
+            log("Drive PID Output", drivePIDOutput + driveFFOutput);
+            drive.setPercent(drivePIDOutput + driveFFOutput);
+        } else {
+            drive.setPercent(optimized.speedMetersPerSecond / config.maxVelocity);
+        }
 
         // Calculate turn output
         final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
@@ -135,7 +144,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
     private double getTurnCancoder() {
         // Should not need to use Coterminal
-        return log("cancoder", cancoder.getPosition() - staticOffset);
+        // return log("cancoder", coterminal(cancoder.getPosition()) - staticOffset);
+        return log("cancoder", coterminal(cancoder.getPosition()));
     }
 
     public void stop() {
