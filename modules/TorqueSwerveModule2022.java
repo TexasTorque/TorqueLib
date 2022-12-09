@@ -66,10 +66,10 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     // The name of the module that we can use for SmartDashboard outputs
     public final String name;
 
-    public final boolean useSmartDrive;
+    public boolean useSmartDrive = false;
 
     public TorqueSwerveModule2022(final String name, final int driveID, final int turnID, final int encoderID, 
-            final double staticOffset, final boolean useSmartDrive, final TorqueSwerveModuleConfiguration config) {
+            final double staticOffset, final TorqueSwerveModuleConfiguration config) {
         super(driveID);
         this.useSmartDrive = useSmartDrive;
         this.name = name.replaceAll(" ", "_").toLowerCase();
@@ -96,11 +96,10 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         cancoderConfig.sensorCoefficient = 2 * Math.PI / 4096.0;
         cancoderConfig.unitString = "rad";
         cancoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
-        cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
-        // cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+        // cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
+        cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         cancoder.configAllSettings(cancoderConfig);
         
-
         // Configure the controllers
         drivePID = new PIDController(config.drivePGain, config.driveIGain, config.driveDGain);
         turnPID = new PIDController(config.turnPGain, config.turnIGain, config.turnDGain);
