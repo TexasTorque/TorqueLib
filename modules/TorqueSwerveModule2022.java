@@ -18,6 +18,7 @@ import com.ctre.phoenix.sensors.SensorTimeBase;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -207,6 +208,22 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
                 turnIGain = 0.0,
                 turnDGain = 0.0,
                 turnGearRatio = 12.41; // Rotation motor to wheel
+    }
+
+    /**
+     * Normalizes drive speeds to never exceed a specified max. 
+     *
+     * @param states The swerve module states, this is mutated!
+     * @param max Maximum translational speed.
+     */
+    public static void normalize(SwerveModuleState[] states, final double max) {
+        double top = 0, buff;
+        for (final SwerveModuleState state : states)
+            if ((buff = (state.speedMetersPerSecond / max)) > top)
+                top = buff;
+        if (top != 0)
+            for (SwerveModuleState state : states)
+                state.speedMetersPerSecond /= top;
     }
 
 }
