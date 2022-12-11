@@ -9,7 +9,6 @@ package org.texastorque.torquelib.base;
 import edu.wpi.first.wpilibj.TimedRobot;
 import java.util.ArrayList;
 import org.texastorque.torquelib.auto.TorqueAutoManager;
-import io.github.oblarg.oblog.Logger;
 
 /**
  * A replacment for TorqueIterative.
@@ -50,14 +49,9 @@ public class TorqueRobotBase extends TimedRobot {
 
     @Override
     public final void robotInit() {
-        Logger.setCycleWarningsEnabled(true);
-        for (final TorqueSubsystem subsystem : subsystems)
-            Logger.configureLoggingAndConfig(subsystem, false);
-    }
-
-    @Override
-    public final void robotPeriodic() {
-        Logger.updateEntries();
+        // Logger.setCycleWarningsEnabled(true);
+        // for (final TorqueSubsystem subsystem : subsystems)
+            // Logger.configureLoggingAndConfig(subsystem, false);
     }
 
     @Override

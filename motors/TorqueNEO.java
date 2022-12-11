@@ -291,7 +291,7 @@ public final class TorqueNEO {
                 + "\tField = %s\n"
                 + "\tMethod = %s\n" 
                 + "\tError = %s\n",
-                motor.getDeviceId(), parent.getMethodName(), error.toString());
+                motor.getDeviceId(), field, parent.getMethodName(), error.toString());
     }
 
 }

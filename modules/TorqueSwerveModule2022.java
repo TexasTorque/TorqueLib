@@ -145,7 +145,9 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     private double getTurnCancoder() {
         // Should not need to use Coterminal
         // return log("cancoder", coterminal(cancoder.getPosition()) - staticOffset);
-        return log("cancoder", coterminal(cancoder.getPosition()));
+        //return log("cancoder", coterminal(cancoder.getPosition()));
+        //return log("cancoder", coterminal(cancoder.getPosition()) - staticOffset);
+        return log("cancoder", coterminal(cancoder.getPosition() - staticOffset));
     }
 
     public void stop() {
@@ -157,13 +159,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         turn.setPercent(log("zero pid", turnPID.calculate(getTurnEncoder(), 0)));
     }
 
-    private static double coterminal(final double rotation) {
-        double coterminal = rotation;
-        final double full = Math.signum(rotation) * 2 * Math.PI;
-        while (coterminal > Math.PI || coterminal < -Math.PI)
-            coterminal -= full;
-        return coterminal; 
-    }
 
     private double log(final String item, final double value) {
         final String key = name + "." + item.replaceAll(" ", "_").toLowerCase();
@@ -226,4 +221,15 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
                 state.speedMetersPerSecond /= top;
     }
 
+    // public static double coterminal(final double rotation) {
+    //     return rotation % (2 * Math.PI);
+    // }
+
+    private static double coterminal(final double rotation) {
+        double coterminal = rotation;
+        final double full = Math.signum(rotation) * 2 * Math.PI;
+        while (coterminal > Math.PI || coterminal < -Math.PI)
+            coterminal -= full;
+        return coterminal; 
+    }
 }
