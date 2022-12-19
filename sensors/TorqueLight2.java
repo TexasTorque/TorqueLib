@@ -48,7 +48,7 @@ public final class TorqueLight2 {
     private PhotonPipelineResult result;
     private PhotonTrackedTarget target;
 
-    public static String DEFAULT_TABLE_NAME = "torquecam";
+    private Transform3d centerToCamera;
 
     /**
      * Creates a new TorqueLight object with desired table name. 
@@ -56,15 +56,21 @@ public final class TorqueLight2 {
      * @param name Table name.
      */
     public TorqueLight2(final String name) {
-        this.cam = new PhotonCamera(NetworkTableInstance.getDefault(), name);
-        this.result = new PhotonPipelineResult();
-        this.target = new PhotonTrackedTarget();
+        this(name, new Transform3d());
     }
 
     /**
-     * Creates a new TorqueLight object with the default table name.
+     * Creates a new TorqueLight object with desired table name. 
+     * 
+     * @param name Table name.
+     * @param centerToCamera The transformation from the center to the camera.
      */
-    public TorqueLight2() { this(DEFAULT_TABLE_NAME); }
+    public TorqueLight2(final String name, final Transform3d centerToCamera) {
+        this.cam = new PhotonCamera(NetworkTableInstance.getDefault(), name);
+        this.result = new PhotonPipelineResult();
+        this.target = new PhotonTrackedTarget();
+        setCenterToCamera(centerToCamera);
+    }
 
     /**
      * Call this periodically to update the vision state.
@@ -72,6 +78,15 @@ public final class TorqueLight2 {
     public final void update() {
         result = cam.getLatestResult();
         if (result.hasTargets()) target = result.getBestTarget();
+    }
+
+    /**
+     * Sets the transform to the camera from the center.
+     * 
+     * @param centerToCamera
+     */
+    public final void setCenterToCamera(final Transform3d centerToCamera) {
+        this.centerToCamera = centerToCamera;
     }
 
     /**
@@ -108,10 +123,22 @@ public final class TorqueLight2 {
      * @return The position estimate of the robot as a Pose3d.
      */
     public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags) {
+        return getRobotPoseAprilTag3d(knownTags, Double.MAX_VALUE);
+    }
+
+  /**
+     * An estimate of the robot's position as a Pose3d based on a map of known April Tags
+     * and the camera stream.
+     * 
+     * @param knownTags The map of known April Tags.
+     * @return The position estimate of the robot as a Pose3d.
+     */
+    public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags, final double max) {
         final Pose3d aprilTagLocation = knownTags.getOrDefault(target.getFiducialId(), null);
         if (aprilTagLocation == null) return Optional.empty();
         final Optional<Transform3d> transform = getTransformToAprilTag3d();
         if (transform.isEmpty()) return Optional.empty();
+        if (transform.get().getX() > max) return Optional.empty();
         final Pose3d robotLocation = aprilTagLocation.transformBy(transform.get());
         return Optional.of(robotLocation);
     }
@@ -136,11 +163,9 @@ public final class TorqueLight2 {
      */
     public final Optional<Transform3d> getTransformToAprilTag3d() {
         if (target == null) return Optional.empty();
-        // Below may cause inteliseense errors, but not compiler errors.
-        // - getCameraToTarget for Beta-3
-        // - getBestCameraToTarget for Beta-6
         final Transform3d transform = target.getBestCameraToTarget().inverse(); 
-        return Optional.of(transform);
+        final Transform3d adjusted = transform.plus(centerToCamera);
+        return Optional.of(adjusted);
     }
 
     /**

@@ -73,7 +73,7 @@ public final class TorqueAprilTagMap extends HashMap<Integer, Pose3d> {
         final double roll = Double.parseDouble("" + array.get(0));
         final double pitch = Double.parseDouble("" + array.get(1));
         final double yaw = Double.parseDouble("" + array.get(2));
-        return new Rotation3d(roll, pitch, yaw);
+        return new Rotation3d(Math.toRadians(roll), Math.toRadians(pitch), Math.toRadians(yaw));
     }
 
     private static final JSONObject readJson(final String path) {
