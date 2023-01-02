@@ -123,7 +123,7 @@ public final class TorqueLight2 {
      * @return The position estimate of the robot as a Pose3d.
      */
     public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags) {
-        return getRobotPoseAprilTag3d(knownTags, Double.MAX_VALUE);
+        return getRobotPoseAprilTag3d(knownTags, Double.MIN_VALUE, Double.MAX_VALUE);
     }
 
   /**
@@ -133,13 +133,18 @@ public final class TorqueLight2 {
      * @param knownTags The map of known April Tags.
      * @return The position estimate of the robot as a Pose3d.
      */
-    public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags, final double max) {
+    public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags, final double minDistance, final double maxDistance) {
         final Pose3d aprilTagLocation = knownTags.getOrDefault(target.getFiducialId(), null);
         if (aprilTagLocation == null) return Optional.empty();
-        final Optional<Transform3d> transform = getTransformToAprilTag3d();
-        if (transform.isEmpty()) return Optional.empty();
-        if (transform.get().getX() > max) return Optional.empty();
-        final Pose3d robotLocation = aprilTagLocation.transformBy(transform.get());
+        final Optional<Transform3d> transformWrapper = getTransformToAprilTag3d();
+        if (transformWrapper.isEmpty()) return Optional.empty();
+        final Transform3d transform = transformWrapper.get();
+        final double distance = Math.sqrt(transform.getX() * transform.getX() 
+                + transform.getY() * transform.getY()
+                + transform.getZ() * transform.getZ());
+        if (distance > maxDistance || distance < minDistance)
+            return Optional.empty();
+        final Pose3d robotLocation = aprilTagLocation.transformBy(transform);
         return Optional.of(robotLocation);
     }
 
