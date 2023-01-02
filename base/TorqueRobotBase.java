@@ -8,6 +8,8 @@ package org.texastorque.torquelib.base;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import io.github.oblarg.oblog.Logger;
+import io.github.oblarg.oblog.annotations.Log;
+
 // If you do not have oblog make sure your build.gradle is as follows:
 // https://raw.githubusercontent.com/TexasTorque/Swerve-2023/9df7698cb69a6655d90583ae314c6a44a94c2045/build.gradle
 import java.util.ArrayList;
@@ -55,6 +57,11 @@ public class TorqueRobotBase extends TimedRobot {
         Logger.setCycleWarningsEnabled(true);
         for (final TorqueSubsystem subsystem : subsystems)
             Logger.configureLoggingAndConfig(subsystem, false);
+    }
+
+    @Override
+    public final void robotPeriodic() {
+        Logger.updateEntries();
     }
 
     @Override
