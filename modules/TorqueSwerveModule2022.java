@@ -19,6 +19,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -72,7 +73,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     public TorqueSwerveModule2022(final String name, final int driveID, final int turnID, final int encoderID, 
             final double staticOffset, final TorqueSwerveModuleConfiguration config) {
         super(driveID);
-        this.useSmartDrive = useSmartDrive;
         this.name = name.replaceAll(" ", "_").toLowerCase();
         this.staticOffset = staticOffset;
         this.config = config;
@@ -82,7 +82,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         drive.setCurrentLimit(config.driveMaxCurrent);
         drive.setVoltageCompensation(config.voltageCompensation);
         drive.setBreakMode(true);
-        drive.setConversionFactors(1.0, config.driveVelocityFactor);
+        drive.setConversionFactors(config.drivePoseFactor, config.driveVelocityFactor);
         drive.burnFlash();
 
         // Configure the turn motor.
@@ -132,6 +132,10 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     public SwerveModuleState getState() {
         return new SwerveModuleState(drive.getVelocity(), getRotation());
     }
+
+    public SwerveModulePosition getPosition() {
+        return new SwerveModulePosition(drive.getPosition(), getRotation());
+    }
     
     @Override 
     public Rotation2d getRotation() {
@@ -158,7 +162,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     public void zero() { 
         turn.setPercent(log("zero pid", turnPID.calculate(getTurnEncoder(), 0)));
     }
-
 
     private double log(final String item, final double value) {
         final String key = name + "." + item.replaceAll(" ", "_").toLowerCase();
@@ -199,6 +202,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
                 driveGearRatio = 6.57, // Translation motor to wheel
                 wheelDiameter = 4.0 * 0.0254, // m
                 driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI), // m/s
+                drivePoseFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI), // m
                 turnPGain = 0.6,
                 turnIGain = 0.0,
                 turnDGain = 0.0,

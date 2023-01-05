@@ -80,6 +80,8 @@ public final class TorqueLight2 {
         if (result.hasTargets()) target = result.getBestTarget();
     }
 
+    
+
     /**
      * Sets the transform to the camera from the center.
      * 
@@ -122,8 +124,8 @@ public final class TorqueLight2 {
      * @param knownTags The map of known April Tags.
      * @return The position estimate of the robot as a Pose3d.
      */
-    public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags) {
-        return getRobotPoseAprilTag3d(knownTags, Double.MIN_VALUE, Double.MAX_VALUE);
+    public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags, final double poseAmbiguity) {
+        return getRobotPoseAprilTag3d(knownTags, poseAmbiguity, Double.MIN_VALUE, Double.MAX_VALUE);
     }
 
   /**
@@ -133,56 +135,39 @@ public final class TorqueLight2 {
      * @param knownTags The map of known April Tags.
      * @return The position estimate of the robot as a Pose3d.
      */
-    public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags, final double minDistance, final double maxDistance) {
+    public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags, final double poseAmbiguity, final double minDistance, final double maxDistance) {
         final Pose3d aprilTagLocation = knownTags.getOrDefault(target.getFiducialId(), null);
         if (aprilTagLocation == null) return Optional.empty();
-        final Optional<Transform3d> transformWrapper = getTransformToAprilTag3d();
+
+        final Optional<Transform3d> transformWrapper = getTransformToAprilTag3d(poseAmbiguity);
         if (transformWrapper.isEmpty()) return Optional.empty();
+
         final Transform3d transform = transformWrapper.get();
-        final double distance = Math.sqrt(transform.getX() * transform.getX() 
-                + transform.getY() * transform.getY()
-                + transform.getZ() * transform.getZ());
-        if (distance > maxDistance || distance < minDistance)
-            return Optional.empty();
+
+        // final double distance = Math.sqrt(transform.getX() * transform.getX() 
+        //         + transform.getY() * transform.getY()
+        //         + transform.getZ() * transform.getZ());
+        // if (distance > maxDistance || distance < minDistance)
+        //     return Optional.empty();
+
         final Pose3d robotLocation = aprilTagLocation.transformBy(transform);
         return Optional.of(robotLocation);
     }
 
-    /**
-     * An estimate of the robot's position as a Pose2d based on a map of known April Tags
-     * and the camera stream.
-     * 
-     * @param knownTags The map of known April Tags.
-     * @return The position estimate of the robot as a Pose2d.
-     */
-    public final Optional<Pose2d> getRobotPoseAprilTag2d(final Map<Integer, Pose3d> knownTags) {
-        final Optional<Pose3d> pose3d = getRobotPoseAprilTag3d(knownTags);
-        if (pose3d.isEmpty()) return Optional.empty();
-        return Optional.of(pose3d.get().toPose2d());
-    }
 
     /**
      * The estimated transformation between the camera and the identified AprilTag as a Transform3d.
      * 
+     * @param poseAmbiguity The maximum pose ambiguity to return a result.
      * @return The estimated transformation as a Transform3d.
      */
-    public final Optional<Transform3d> getTransformToAprilTag3d() {
+    public final Optional<Transform3d> getTransformToAprilTag3d(final double poseAmbiguity) {
         if (target == null) return Optional.empty();
         final Transform3d transform = target.getBestCameraToTarget().inverse(); 
         final Transform3d adjusted = transform.plus(centerToCamera);
+        if (!(target.getPoseAmbiguity() <= poseAmbiguity && target.getPoseAmbiguity() != -1 && target.getFiducialId() >= 0))
+            return Optional.empty();
         return Optional.of(adjusted);
-    }
-
-    /**
-     * The estimated transformation between the camera and the identified AprilTag as a Transform2d.
-     * 
-     * @return The estimated transformation as a Transform2d.
-     */
-    public final Optional<Transform2d> getTransformToKnownTag2d() {
-        final Optional<Transform3d> transform3d = getTransformToAprilTag3d();
-        if (transform3d.isEmpty()) return Optional.empty();
-        final Transform2d transform2d = transform3dTo2d(transform3d.get());
-        return Optional.of(transform2d);
     }
 
     /**
@@ -200,5 +185,16 @@ public final class TorqueLight2 {
      *
      * @return The camera latency in milliseconds
      */
+    @Deprecated
     public final double getLatency() { return result.getLatencyMillis(); }
+
+     /**
+     * Reads the result timestamp in seconds.
+     * More accruate than getLatency.
+     *
+     * @return The result timestamp in seconds.
+     */
+    public final double getTimestamp() {
+        return result.getTimestampSeconds();
+    }
 }
