@@ -204,11 +204,6 @@ public final class TorqueLight {
         return target.getBestCameraToTarget().inverse();
     }
 
-    public final Transform2d getTransformToKnownTag2d() {
-        final Pose2d pose = (new Pose3d(getTransformToAprilTag3d())).toPose2d();
-        return new Transform2d(pose.getTranslation(), pose.getRotation());
-    }
-
 
     /**
      * Reads the camera latency in milliseconds.

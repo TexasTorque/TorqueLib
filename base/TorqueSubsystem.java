@@ -6,9 +6,6 @@
  */
 package org.texastorque.torquelib.base;
 
-import org.texastorque.torquelib.util.TorqueLog;
-
-
 /**
  * Subsystem template.
  * Extend this class for each subsystem class and override the methods.
@@ -16,8 +13,6 @@ import org.texastorque.torquelib.util.TorqueLog;
  * @author Justus Languell
  */
 public abstract class TorqueSubsystem {
-    protected TorqueLog log; 
-
     @Deprecated
     public void initTeleop() {}
     // public abstract void initTeleop();

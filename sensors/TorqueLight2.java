@@ -191,7 +191,7 @@ public final class TorqueLight2 {
      * @return The converted Transform2d. 
      */
     public static final Transform2d transform3dTo2d(final Transform3d transform) {
-        final Pose2d pose = (new Pose3d(transform)).toPose2d();
+        final Pose2d pose = new Pose3d(transform.getTranslation(), transform.getRotation()).toPose2d();
         return new Transform2d(pose.getTranslation(), pose.getRotation());
     }
 
