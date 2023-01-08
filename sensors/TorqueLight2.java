@@ -49,6 +49,7 @@ public final class TorqueLight2 {
     private PhotonTrackedTarget target;
 
     private Transform3d centerToCamera;
+    private int lastGoodAprilTagID = -1;
 
     /**
      * Creates a new TorqueLight object with desired table name. 
@@ -170,6 +171,8 @@ public final class TorqueLight2 {
         return Optional.of(adjusted);
     }
 
+ 
+
     /**
      * Get position of best April Tag.
      * 
@@ -177,9 +180,13 @@ public final class TorqueLight2 {
      * @return The position estimate of the robot as a Pose3d. 
      */
     public final Optional<Pose3d> getPositionOfBestAprilTag(final Map<Integer, Pose3d> knownTags, final double poseAmbiguity) {
-        if (!(target.getPoseAmbiguity() <= poseAmbiguity && target.getPoseAmbiguity() != -1 && target.getFiducialId() >= 0))
+        if (!(target.getPoseAmbiguity() <= poseAmbiguity && target.getPoseAmbiguity() != -1 && target.getFiducialId() >= 0)) {
+            lastGoodAprilTagID = -1; 
             return Optional.empty();
-        final Pose3d aprilTagLocation = knownTags.getOrDefault(target.getFiducialId(), null);
+        }
+        
+        lastGoodAprilTagID = target.getFiducialId();
+        final Pose3d aprilTagLocation = knownTags.getOrDefault(lastGoodAprilTagID, null);
         if (aprilTagLocation == null) return Optional.empty();
         return Optional.of(aprilTagLocation);
     }
@@ -210,5 +217,9 @@ public final class TorqueLight2 {
      */
     public final double getTimestamp() {
         return result.getTimestampSeconds();
+    }
+
+    public int getLastGoodAprilTagID() {
+        return lastGoodAprilTagID;
     }
 }
