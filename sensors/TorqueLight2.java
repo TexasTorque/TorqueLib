@@ -136,8 +136,8 @@ public final class TorqueLight2 {
      * @return The position estimate of the robot as a Pose3d.
      */
     public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags, final double poseAmbiguity, final double minDistance, final double maxDistance) {
-        final Pose3d aprilTagLocation = knownTags.getOrDefault(target.getFiducialId(), null);
-        if (aprilTagLocation == null) return Optional.empty();
+        final Optional<Pose3d> aprilTagLocation = getPositionOfBestAprilTag(knownTags, poseAmbiguity);
+        if (aprilTagLocation.isEmpty()) return Optional.empty();
 
         final Optional<Transform3d> transformWrapper = getTransformToAprilTag3d(poseAmbiguity);
         if (transformWrapper.isEmpty()) return Optional.empty();
@@ -150,7 +150,7 @@ public final class TorqueLight2 {
         // if (distance > maxDistance || distance < minDistance)
         //     return Optional.empty();
 
-        final Pose3d robotLocation = aprilTagLocation.transformBy(transform);
+        final Pose3d robotLocation = aprilTagLocation.get().transformBy(transform);
         return Optional.of(robotLocation);
     }
 
@@ -168,6 +168,20 @@ public final class TorqueLight2 {
         if (!(target.getPoseAmbiguity() <= poseAmbiguity && target.getPoseAmbiguity() != -1 && target.getFiducialId() >= 0))
             return Optional.empty();
         return Optional.of(adjusted);
+    }
+
+    /**
+     * Get position of best April Tag.
+     * 
+     * @param knownTags The map of known April Tags.
+     * @return The position estimate of the robot as a Pose3d. 
+     */
+    public final Optional<Pose3d> getPositionOfBestAprilTag(final Map<Integer, Pose3d> knownTags, final double poseAmbiguity) {
+        if (!(target.getPoseAmbiguity() <= poseAmbiguity && target.getPoseAmbiguity() != -1 && target.getFiducialId() >= 0))
+            return Optional.empty();
+        final Pose3d aprilTagLocation = knownTags.getOrDefault(target.getFiducialId(), null);
+        if (aprilTagLocation == null) return Optional.empty();
+        return Optional.of(aprilTagLocation);
     }
 
     /**
