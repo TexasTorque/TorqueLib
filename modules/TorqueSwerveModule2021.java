@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -193,6 +194,10 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     @Override
     public final SwerveModuleState getState() {
         return new SwerveModuleState(encoderPerMinuteToMetersPerSecond(drive.getVelocityRPM()), getRotation());
+    }
+
+    public SwerveModulePosition getPosition() {
+        return new SwerveModulePosition(drive.getPosition(), getRotation());
     }
 
     /**
