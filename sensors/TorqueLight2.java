@@ -28,21 +28,21 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 /**
- * Client interface for the TorqueLight2.
+ * Client interface for the TorqueVision.
  * 
- * TorqueLight and TorqueLight2 are vision cameras developed by 
+ * TorqueLight and TorqueVision are vision cameras developed by 
  * Jack Pittenger at Texas Torque that runs PhotonVision.
  * 
- * TorqueLight2 was the updated version for the 2023 season that
+ * TorqueVision was the updated version for the 2023 season that
  * was designed to specialize in April Tag detection.
  * 
- * The TorqueLight2 class is updated to specialize in AprilTags 
+ * The TorqueVision class is updated to specialize in AprilTags 
  * and to use the Optional class to avoid null pointer exceptions.
  *
  * @author Jack Pittenger
  * @author Justus Languell
  */
-public final class TorqueLight2 {
+public final class TorqueVision {
     private final PhotonCamera cam;
 
     private PhotonPipelineResult result;
@@ -56,7 +56,7 @@ public final class TorqueLight2 {
      * 
      * @param name Table name.
      */
-    public TorqueLight2(final String name) {
+    public TorqueVision(final String name) {
         this(name, new Transform3d());
     }
 
@@ -66,7 +66,7 @@ public final class TorqueLight2 {
      * @param name Table name.
      * @param centerToCamera The transformation from the center to the camera.
      */
-    public TorqueLight2(final String name, final Transform3d centerToCamera) {
+    public TorqueVision(final String name, final Transform3d centerToCamera) {
         this.cam = new PhotonCamera(NetworkTableInstance.getDefault(), name);
         this.result = new PhotonPipelineResult();
         this.target = new PhotonTrackedTarget();
