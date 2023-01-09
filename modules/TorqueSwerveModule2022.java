@@ -6,22 +6,16 @@
  */
 package org.texastorque.torquelib.modules;
 
-import org.opencv.core.RotatedRect;
 import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
 import org.texastorque.torquelib.motors.TorqueNEO;
-
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -69,7 +63,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
     public boolean useSmartDrive = false;
 
-    public TorqueSwerveModule2022(final String name, final int driveID, final int turnID, final int encoderID, 
+    public TorqueSwerveModule2022(final String name, final int driveID, final int turnID, final int encoderID,
             final double staticOffset, final TorqueSwerveModuleConfiguration config) {
         super(driveID);
         this.useSmartDrive = useSmartDrive;
@@ -100,7 +94,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         // cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
         cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         cancoder.configAllSettings(cancoderConfig);
-        
+
         // Configure the controllers
         drivePID = new PIDController(config.drivePGain, config.driveIGain, config.driveDGain);
         turnPID = new PIDController(config.turnPGain, config.turnIGain, config.turnDGain);
@@ -132,8 +126,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     public SwerveModuleState getState() {
         return new SwerveModuleState(drive.getVelocity(), getRotation());
     }
-    
-    @Override 
+
+    @Override
     public Rotation2d getRotation() {
         return new Rotation2d(getTurnEncoder());
     }
@@ -155,10 +149,9 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         turn.setPercent(0.0);
     }
 
-    public void zero() { 
+    public void zero() {
         turn.setPercent(log("zero pid", turnPID.calculate(getTurnEncoder(), 0)));
     }
-
 
     private double log(final String item, final double value) {
         final String key = name + "." + item.replaceAll(" ", "_").toLowerCase();
@@ -177,11 +170,9 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
         public double magic = 6.57 / (8.0 + 1.0 / 3.0);
 
-        public int 
-                driveMaxCurrent = 35, // amps
+        public int driveMaxCurrent = 35, // amps
                 turnMaxCurrent = 25; // amps
-        public double 
-                voltageCompensation = 12.6, // volts
+        public double voltageCompensation = 12.6, // volts
                 maxVelocity = 3.25, // m/s
                 maxAcceleration = 3.0, // m/s^2
                 maxAngularVelocity = Math.PI, // radians/s
@@ -189,9 +180,9 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
                 // The following will most likely need to be overriden
                 // depending on the weight of each robot
-                driveStaticGain = 0.015, 
-                driveFeedForward = 0.212, 
-                drivePGain = 0.2, 
+                driveStaticGain = 0.015,
+                driveFeedForward = 0.212,
+                drivePGain = 0.2,
                 driveIGain = 0.0,
                 driveDGain = 0.0,
 
@@ -230,6 +221,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         final double full = Math.signum(rotation) * 2 * Math.PI;
         while (coterminal > Math.PI || coterminal < -Math.PI)
             coterminal -= full;
-        return coterminal; 
+        return coterminal;
     }
 }

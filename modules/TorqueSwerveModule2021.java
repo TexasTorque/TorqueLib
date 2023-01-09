@@ -7,7 +7,6 @@
 package org.texastorque.torquelib.modules;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -15,7 +14,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.legacy.KPID;
 import org.texastorque.torquelib.legacy.TorqueSparkMax;
@@ -198,6 +196,11 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
 
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(drive.getPosition(), getRotation());
+    }
+
+    public void setDriveConversionFactor(double posFactor, double veloFactor) {
+        drive.setPositionConversionFactor(posFactor);
+        drive.setVelocityConversionFactor(veloFactor);
     }
 
     /**
