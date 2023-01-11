@@ -192,8 +192,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
                 // The following will most likely need to be overriden
                 // depending on the weight of each robot
-                driveStaticGain = 0.015, 
-                driveFeedForward = 0.212, 
+                driveStaticGain = 0.025, 
+                driveFeedForward = 0.25, 
                 drivePGain = 0.2, 
                 driveIGain = 0.0,
                 driveDGain = 0.0,
