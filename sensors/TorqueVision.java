@@ -222,4 +222,11 @@ public final class TorqueVision {
     public int getLastGoodAprilTagID() {
         return lastGoodAprilTagID;
     }
+
+    /**
+     * @return The internal PhotonCamera
+     */
+    public PhotonCamera getPhotonCamera() {
+        return this.cam;
+    }
 }
