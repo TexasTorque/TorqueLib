@@ -6,6 +6,7 @@
  */
 package org.texastorque.torquelib.sensors;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,9 +22,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonUtils;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -47,6 +52,7 @@ public final class TorqueVision {
 
     private PhotonPipelineResult result;
     private PhotonTrackedTarget target;
+    public final PhotonPoseEstimator photonPoseEstimator;
 
     private Transform3d centerToCamera;
     private int lastGoodAprilTagID = -1;
@@ -55,22 +61,14 @@ public final class TorqueVision {
      * Creates a new TorqueLight object with desired table name. 
      * 
      * @param name Table name.
-     */
-    public TorqueVision(final String name) {
-        this(name, new Transform3d());
-    }
-
-    /**
-     * Creates a new TorqueLight object with desired table name. 
-     * 
-     * @param name Table name.
      * @param centerToCamera The transformation from the center to the camera.
      */
-    public TorqueVision(final String name, final Transform3d centerToCamera) {
+    public TorqueVision(final String name, final AprilTagFieldLayout layout, final Transform3d centerToCamera) {
         this.cam = new PhotonCamera(NetworkTableInstance.getDefault(), name);
         this.result = new PhotonPipelineResult();
         this.target = new PhotonTrackedTarget();
         setCenterToCamera(centerToCamera);
+        photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, cam, centerToCamera);
     }
 
     /**
@@ -226,7 +224,21 @@ public final class TorqueVision {
     /**
      * @return The internal PhotonCamera
      */
-    public PhotonCamera getPhotonCamera() {
+    public final PhotonCamera getPhotonCamera() {
         return this.cam;
+    }
+
+    /**
+     * Add vision measurements to the pose estimator.
+     * 
+     * @param addVisionMeasurement The PoseEstimator::addVisionMeasurement method.
+     */
+    public final void updateVisionMeasurement(final BiConsumer<Pose2d, Double> addVisionMeasurement) {
+        update();
+        final Optional<EstimatedRobotPose> optionalEstimatedPose = photonPoseEstimator.update();
+        if (optionalEstimatedPose.isPresent()) {
+            final EstimatedRobotPose estimatedPose = optionalEstimatedPose.get();
+            addVisionMeasurement.accept(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
+        }
     }
 }
