@@ -2,21 +2,6 @@
 
 Code library created by and used within [FRC 1477, Texas Torque](https://texastorque.org/).
 
-## Planned Changes
-
-An updated list of planned changes will be kept here.
-
-- [ ] TorqueIterative replacement.
-- [ ] GenericController replacement.
-- [x] KPID replacement.
-- [x] TorqueGearBox removal.
-- [x] TorqueMathUtil renamed to TorqueMath.
-- [x] TorqueMiscUtil renamed to TorqueUtil.
-- [ ] TorqueLogging finished
-- [ ] Complete TorqueFalcon
-- [ ] Complete TorqueSparkMax
-- [ ] Complete TorqueTalon
-
 ## Documentation
 
 TorqueLib documentation can be found at [www.torquelib.com](http://torquelib.com/).
@@ -30,11 +15,6 @@ Well the easiest way is to make your new project using [TorqueTemplate](https://
 But if you so insist, you can add it to an existing project using:
 
 `git submodule add https://github.com/TexasTorque/TorqueLib src/main/java/org/texastorque/torquelib`
-
-## 2023 Refactor
-
-This library, along with the Texas Torque project structure,
-is being overhauled for the 2023 season. These are breaking changes.
 
 ## Authors
 
