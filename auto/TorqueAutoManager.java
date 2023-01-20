@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.HashMap;
 import org.texastorque.torquelib.auto.sequences.TorqueEmpty;
+import org.texastorque.torquelib.util.TorqueUtil;
 
 /**
  * AutoManager base class. Handles backend methods
@@ -31,10 +32,21 @@ public abstract class TorqueAutoManager {
 
     private final String autoSelectorKey = "Auto List";
 
+    private double autoStartTimestamp = -1;
+
+    public final double getAutoElapsed() {
+        return TorqueUtil.time() - autoStartTimestamp;
+    }
+
+    public final void logAutoElapsed(final double elapsed) {
+        SmartDashboard.putNumber("AUTO ELAPSED", elapsed);
+    }
+
     protected TorqueAutoManager() {
         autoSequences = new HashMap<String, TorqueSequence>();
 
         addSequence("Empty", new TorqueEmpty()); // default
+        logAutoElapsed(0);
 
         init();
         displayChoices();
@@ -58,12 +70,17 @@ public abstract class TorqueAutoManager {
         if (currentSequence != null) {
             currentSequence.run();
             sequenceEnded = currentSequence.hasEnded(); // manage state of sequence
+
+            if (sequenceEnded && autoStartTimestamp != -1) {
+                logAutoElapsed(getAutoElapsed());
+                autoStartTimestamp = -1;
+            }
         } else
             DriverStation.reportError("No auto selected!", false);
     }
 
     public final void chooseCurrentSequence() {
-        String autoChoice = NetworkTableInstance.getDefault()
+        final String autoChoice = NetworkTableInstance.getDefault()
                                     .getTable("SmartDashboard")
                                     .getSubTable(autoSelectorKey)
                                     .getEntry("selected")
@@ -73,6 +90,8 @@ public abstract class TorqueAutoManager {
 
         resetCurrentSequence();
         sequenceEnded = false;
+
+        autoStartTimestamp = TorqueUtil.time();
     }
 
     /**
