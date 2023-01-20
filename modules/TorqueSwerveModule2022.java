@@ -50,7 +50,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
-    private final TorqueSwerveModuleConfiguration config;
+    private final SwerveConfig config;
 
     // The NEO motors for turn and drive.
     private final TorqueNEO drive, turn;
@@ -70,8 +70,13 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
     public boolean useSmartDrive = false;
 
+    public TorqueSwerveModule2022(final String name, final SwervePorts ports, 
+            final double staticOffset, final SwerveConfig config) {
+        this(name, ports.drive, ports.turn, ports.encoder, staticOffset, config);
+    }
+
     public TorqueSwerveModule2022(final String name, final int driveID, final int turnID, final int encoderID, 
-            final double staticOffset, final TorqueSwerveModuleConfiguration config) {
+            final double staticOffset, final SwerveConfig config) {
         super(driveID);
         this.name = name.replaceAll(" ", "_").toLowerCase();
         this.staticOffset = staticOffset;
@@ -175,8 +180,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
      * Has default values that can be overriden before written to
      * the module.
      */
-    public static final class TorqueSwerveModuleConfiguration {
-        public static final TorqueSwerveModuleConfiguration defaultConfig = new TorqueSwerveModuleConfiguration();
+    public static final class SwerveConfig {
+        public static final SwerveConfig defaultConfig = new SwerveConfig();
 
         public double magic = 6.57 / (8.0 + 1.0 / 3.0);
 
@@ -235,5 +240,15 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         while (coterminal > Math.PI || coterminal < -Math.PI)
             coterminal -= full;
         return coterminal; 
+    }
+
+    public static final class SwervePorts {
+        public final int drive, turn, encoder;
+
+        public SwervePorts(final int drive, final int turn, final int encoder) {
+            this.drive = drive;
+            this.turn = turn;
+            this.encoder = encoder;
+        }
     }
 }
