@@ -68,7 +68,7 @@ public final class TorqueVision {
         this.result = new PhotonPipelineResult();
         this.target = new PhotonTrackedTarget();
         setCenterToCamera(centerToCamera);
-        photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, cam, centerToCamera);
+        photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, cam, centerToCamera);
     }
 
     /**
@@ -235,6 +235,8 @@ public final class TorqueVision {
      */
     public final void updateVisionMeasurement(final BiConsumer<Pose2d, Double> addVisionMeasurement) {
         update();
+        if (!(target.getPoseAmbiguity() <= 0.1 && target.getPoseAmbiguity() != -1 && target.getFiducialId() >= 0))
+            return;
         final Optional<EstimatedRobotPose> optionalEstimatedPose = photonPoseEstimator.update();
         if (optionalEstimatedPose.isPresent()) {
             final EstimatedRobotPose estimatedPose = optionalEstimatedPose.get();
