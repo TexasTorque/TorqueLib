@@ -92,6 +92,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
         // Configure the turn motor.
         turn = new TorqueNEO(turnID);
+        turn.setConversionFactors(config.turnGearRatio * 2 * Math.PI, 1);
         turn.setCurrentLimit(config.turnMaxCurrent);
         turn.setVoltageCompensation(config.voltageCompensation);
         turn.setBreakMode(true);
@@ -148,7 +149,11 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     }
 
     private double getTurnEncoder() {
-        return getTurnCancoder();
+        return useCancoder ? getTurnCancoder() : getTurnNEOEncoder();
+    }
+
+    private double getTurnNEOEncoder() {
+        return coterminal(turn.getPosition());
     }
 
     private double getTurnCancoder() {
@@ -173,6 +178,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         SmartDashboard.putNumber(String.format("%s::%s", name, key), value);
         return value;
     }
+
+    public boolean useCancoder = true;
 
     /**
      * A structure to define the constants for the swerve module.
@@ -208,7 +215,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
                 wheelDiameter = 4.0 * 0.0254, // m
                 driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI), // m/s
                 drivePoseFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI), // m
-                turnPGain = 0.6,
+                turnPGain = 0.5,
                 turnIGain = 0.0,
                 turnDGain = 0.0,
                 turnGearRatio = 12.41; // Rotation motor to wheel

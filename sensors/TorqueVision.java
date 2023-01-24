@@ -237,6 +237,8 @@ public final class TorqueVision {
         update();
         if (!(target.getPoseAmbiguity() <= 0.1 && target.getPoseAmbiguity() != -1 && target.getFiducialId() >= 0))
             return;
+        if (target.getBestCameraToTarget().getTranslation().getDistance(new Translation3d()) >= 3)
+            return;
         final Optional<EstimatedRobotPose> optionalEstimatedPose = photonPoseEstimator.update();
         if (optionalEstimatedPose.isPresent()) {
             final EstimatedRobotPose estimatedPose = optionalEstimatedPose.get();
