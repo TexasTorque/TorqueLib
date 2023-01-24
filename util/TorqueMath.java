@@ -40,16 +40,48 @@ public final class TorqueMath {
         return Math.max(Math.min(n, b), a);
     }
 
-    //  /**
-    //  * Return deadbanded value n between a and b
-    //  *
-    //  * @param n Value to be deadbanded
-    //  * @param a Value to deadband the value over, the minimum value
-    //  * @param b Value to deadband the value under, the maximum value
-    //  * @return The deadband output
-    //  */
-    public static final double scaledDeadband(final double value, final double scale) {
+    /**
+     * Power with sign the sign of a.
+     * 
+     * @param a The base
+     * @param b The exponent
+     * @return power with the sign of a.
+     */
+    public static final double powPreserveSign(final double a, final double b) {
+        return a >= 0 ? Math.abs(Math.pow(a, b)) * Math.signum(a) : -powPreserveSign(-a, b);
+    }
+
+    /**
+     * Scaled linear deadband
+     *
+     * @param value Value to be deadbanded
+     * @param scale The minimum value
+     */
+    public static final double scaledLinearDeadband(final double value, final double scale) {
         return Math.abs(value) < scale ? 0 : (value - (Math.abs(value) / value) * scale) / (1. - scale);
+    }
+
+    /**
+     * Scaled linear deadband
+     *
+     * @param value Value to be deadbanded
+     * @param roundness The roundness (exponent) of the deadband 
+     * @param scale The minimum value
+     * @par
+     */
+    public static final double scaledPowerDeadband(final double value, final double roundness, final double scale) {
+        return scaledLinearDeadband(powPreserveSign(value, roundness), powPreserveSign(scale, roundness));
+    }
+
+
+     /**
+     * Scaled linear deadband
+     *
+     * @param valye Value to be deadbanded
+     * @param scale The minimum value
+     */
+    public static final double scaledQuadraticDeadband(final double value, final double scale) {
+        return scaledPowerDeadband(value, 2, scale);
     }
 
     /**
