@@ -10,6 +10,8 @@ package org.texastorque.torquelib.control;
  * This is the cool TorqueToggle.
  *
  * Use this one instead.
+ * 
+ * @author Justus Languell
  */
 public final class TorqueToggle {
 
@@ -30,4 +32,5 @@ public final class TorqueToggle {
     public final void set(final boolean value) { this.value = value; }
 
     public final boolean get() { return value; }
+
 }
