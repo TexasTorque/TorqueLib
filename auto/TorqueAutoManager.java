@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.HashMap;
 import org.texastorque.torquelib.auto.sequences.TorqueEmpty;
+import org.texastorque.torquelib.util.TorqueUtil;
 
 /**
  * AutoManager base class. Handles backend methods
@@ -44,6 +45,10 @@ public abstract class TorqueAutoManager {
      * This is where we add sequenes
      */
     protected abstract void init();
+
+    protected final void addSequence(final TorqueSequence seq) {
+        addSequence(TorqueUtil.camelCaseToTitleCase(seq.getClass().getSimpleName()), seq);
+    }
 
     protected final void addSequence(final String name, final TorqueSequence seq) {
         autoSequences.put(name, seq);

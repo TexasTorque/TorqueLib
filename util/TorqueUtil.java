@@ -212,4 +212,20 @@ public final class TorqueUtil {
             sb.append(String.format(format, value));
         return "( " + sb.toString().substring(0, sb.length() - 2) + " )";
     }
+
+    /**
+     * Splits a camel case string into title case.
+     * @param s Camel case string.
+     * @return Title case string.
+     */
+    public static final String camelCaseToTitleCase(final String s) {
+        return s.replaceAll(
+           String.format("%s|%s|%s",
+              "(?<=[A-Z])(?=[A-Z][a-z])",
+              "(?<=[^A-Z])(?=[A-Z])",
+              "(?<=[A-Za-z])(?=[^A-Za-z])"
+           ),
+           " "
+        );
+     }
 }
