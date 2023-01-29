@@ -245,4 +245,13 @@ public final class TorqueVision {
             addVisionMeasurement.accept(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
         }
     }
+
+    /**
+     * 
+     */
+    public final void setFieldLayout(final AprilTagFieldLayout layout) {
+        photonPoseEstimator.setFieldTags(layout);
+    }
+
+
 }
