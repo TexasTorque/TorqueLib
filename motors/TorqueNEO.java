@@ -63,9 +63,17 @@ public final class TorqueNEO {
         motor.setIdleMode(isBreak ? CANSparkMax.IdleMode.kBrake : CANSparkMax.IdleMode.kCoast);
     }
 
+    public void setPositionConversionFactor(final double factor) {
+        encoder.setPositionConversionFactor(factor);
+    }
+
+    public void setVelocityConversionFactor(final double factor) {
+        encoder.setVelocityConversionFactor(factor);
+    }
+
     public void setConversionFactors(final double posFactor, final double veloFactor) {
-        encoder.setPositionConversionFactor(posFactor);
-        encoder.setVelocityConversionFactor(veloFactor);
+        setPositionConversionFactor(posFactor);
+        setVelocityConversionFactor(veloFactor);
     }
 
     /**

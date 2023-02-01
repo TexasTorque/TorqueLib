@@ -22,12 +22,7 @@ public final class TorqueUtil {
     private TorqueUtil() { TorqueUtil.staticConstructor(); }
 
     public static final String osName = System.getProperty("os.name");
-    // public static final boolean onRobot = RobotBase.isReal();
-    //public static final boolean onRobot = !osName.equals("Mac OS X");
     public static final boolean onRobot = osName.equals("Linux");
-    static {
-        if (onRobot) SmartDashboard.putString("OSNAME", osName);
-    }
 
     /**
      * A time method that can be used on the robot and
@@ -197,7 +192,6 @@ public final class TorqueUtil {
     public static final <T> T conditionalApply(final boolean use, final T value, final Function<T, T> function) {
         return use ? function.apply(value) : value;
     }
-
 
     /**
      * Appends doubles like an ordered pair in parenthesis.
