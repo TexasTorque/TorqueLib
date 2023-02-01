@@ -1,7 +1,11 @@
 package org.texastorque.torquelib.control;
 
+/**
+ * A logistic regression model that can be used to calculate speed from error.
+ * 
+ * @author Jack Pittenger
+ */
 public final class TorqueLogisticRegression {
-   
     private final double MAX_SPEED;
     private final double MAX_DISTANCE;
     private final double GROWTH;
