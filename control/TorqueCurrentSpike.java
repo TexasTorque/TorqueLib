@@ -1,5 +1,10 @@
 package org.texastorque.torquelib.control;
 
+/**
+ * A class that can be used to detect current spikes.
+ * 
+ * @author Omar Afzal
+ */
 public final class TorqueCurrentSpike {
 
     private CurrentSpikes status = CurrentSpikes.NONE;
