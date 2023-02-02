@@ -1,7 +1,7 @@
 /**
- * Copyright 2023 Texas Torque.
+ * Copyright 2011-2023 Texas Torque.
  * 
- * This file is part of Swerve-2023, which is not licensed for distribution.
+ * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
 package org.texastorque.torquelib.auto.commands;
