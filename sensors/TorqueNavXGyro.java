@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2023 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.SPI;
  * An extended class for the NavX gyro that adds better
  * support for fused headings, a more accurate heading
  * reading.
- * 
+ *
  * Why is it in degrees... I dont know... I guess because
  * fused heading does... sorry?
  *
@@ -47,7 +47,7 @@ public final class TorqueNavXGyro extends AHRS {
     }
 
     public final Rotation2d getAngleOffsetCW() { return Rotation2d.fromDegrees(angleOffset); }
-    
+
     public final Rotation2d getAngleOffsetCCW() { return Rotation2d.fromDegrees(angleOffset).times(-1); }
 
     private final double getDegreesClockwise() { return (getFusedHeading() + angleOffset) % 360; }
@@ -56,9 +56,7 @@ public final class TorqueNavXGyro extends AHRS {
 
     public final Rotation2d getHeadingCW() { return Rotation2d.fromDegrees(getDegreesClockwise()); }
 
-    public final Rotation2d getHeadingCCW() {
-        return Rotation2d.fromDegrees(getDegreesCounterClockwise());
-    }
+    public final Rotation2d getHeadingCCW() { return Rotation2d.fromDegrees(getDegreesCounterClockwise()); }
 
     public static final synchronized TorqueNavXGyro getInstance() {
         return instance == null ? instance = new TorqueNavXGyro() : instance;

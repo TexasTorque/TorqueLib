@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2023 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
@@ -8,7 +8,7 @@ package org.texastorque.torquelib.control;
 
 /**
  * A logistic regression model that can be used to calculate speed from error.
- * 
+ *
  * @author Jack Pittenger
  */
 public final class TorqueLogisticRegression {
@@ -29,8 +29,5 @@ public final class TorqueLogisticRegression {
     public double calculate(final double current, final double requested) {
         final double error = current - requested;
         return (z(error) - z(0)) * Math.signum(error);
-
     }
-
- 
 }

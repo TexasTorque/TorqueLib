@@ -1,29 +1,27 @@
 /**
  * Copyright 2011-2023 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
 package org.texastorque.torquelib.sensors.util;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.Filesystem;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Iterator;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.wpilibj.Filesystem;
-
 /**
  * Encapsulates a map of AprilTags and their positions by ID. Encorporates deserializing from JSON.
- * 
+ *
  * @author Justus Languell
  */
 public final class TorqueAprilTagMap extends HashMap<Integer, Pose3d> {
@@ -34,16 +32,14 @@ public final class TorqueAprilTagMap extends HashMap<Integer, Pose3d> {
 
     /**
      * Deserializes a TorqueAprilTagMap from a JSON file from default filename "AprilTags.json".
-     * 
+     *
      * @return The deserialized TorqueAprilTagMap.
      */
-    public static final TorqueAprilTagMap fromJSON() {
-        return fromJSON(DEFAULT_FILENAME);
-    }
+    public static final TorqueAprilTagMap fromJSON() { return fromJSON(DEFAULT_FILENAME); }
 
     /**
      * Deserializes a TorqueAprilTagMap from a JSON file from a filename.
-     * 
+     *
      * @return The deserialized TorqueAprilTagMap.
      */
     public static final TorqueAprilTagMap fromJSON(final String path) {
@@ -52,10 +48,10 @@ public final class TorqueAprilTagMap extends HashMap<Integer, Pose3d> {
         final Iterator<?> keys = json.keySet().iterator();
 
         while (keys.hasNext()) {
-            final String key = (String) keys.next();
-            final JSONObject tag = (JSONObject) json.get(key);
-            final Translation3d translation = deserializeTranslation((JSONArray) tag.get("t"));
-            final Rotation3d rotation = deserializeRotation((JSONArray) tag.get("r"));
+            final String key = (String)keys.next();
+            final JSONObject tag = (JSONObject)json.get(key);
+            final Translation3d translation = deserializeTranslation((JSONArray)tag.get("t"));
+            final Rotation3d rotation = deserializeRotation((JSONArray)tag.get("r"));
             map.put(Integer.parseInt(key), new Pose3d(translation, rotation));
         }
 
@@ -81,8 +77,7 @@ public final class TorqueAprilTagMap extends HashMap<Integer, Pose3d> {
         try (final BufferedReader br = new BufferedReader(new FileReader(fileToRead))) {
             final StringBuilder fileContentBuilder = new StringBuilder();
             String line;
-            while ((line = br.readLine()) != null)
-                fileContentBuilder.append(line);
+            while ((line = br.readLine()) != null) fileContentBuilder.append(line);
             String fileContent = fileContentBuilder.toString();
             return (JSONObject) new JSONParser().parse(fileContent);
         } catch (Exception e) {

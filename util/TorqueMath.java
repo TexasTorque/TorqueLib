@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2023 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
@@ -42,7 +42,7 @@ public final class TorqueMath {
 
     /**
      * Power with sign the sign of a.
-     * 
+     *
      * @param a The base
      * @param b The exponent
      * @return power with the sign of a.
@@ -65,7 +65,7 @@ public final class TorqueMath {
      * Scaled linear deadband
      *
      * @param value Value to be deadbanded
-     * @param roundness The roundness (exponent) of the deadband 
+     * @param roundness The roundness (exponent) of the deadband
      * @param scale The minimum value
      * @par
      */
@@ -73,8 +73,7 @@ public final class TorqueMath {
         return scaledLinearDeadband(powPreserveSign(value, roundness), powPreserveSign(scale, roundness));
     }
 
-
-     /**
+    /**
      * Scaled linear deadband
      *
      * @param valye Value to be deadbanded

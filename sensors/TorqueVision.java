@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2023 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
@@ -19,29 +19,27 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
-
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonUtils;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 /**
  * Client interface for the TorqueVision.
- * 
- * TorqueLight and TorqueVision are vision cameras developed by 
+ *
+ * TorqueLight and TorqueVision are vision cameras developed by
  * Jack Pittenger at Texas Torque that runs PhotonVision.
- * 
+ *
  * TorqueVision was the updated version for the 2023 season that
  * was designed to specialize in April Tag detection.
- * 
- * The TorqueVision class is updated to specialize in AprilTags 
+ *
+ * The TorqueVision class is updated to specialize in AprilTags
  * and to use the Optional class to avoid null pointer exceptions.
  *
  * @author Jack Pittenger
@@ -58,8 +56,8 @@ public final class TorqueVision {
     private int lastGoodAprilTagID = -1;
 
     /**
-     * Creates a new TorqueLight object with desired table name. 
-     * 
+     * Creates a new TorqueLight object with desired table name.
+     *
      * @param name Table name.
      * @param centerToCamera The transformation from the center to the camera.
      */
@@ -79,16 +77,12 @@ public final class TorqueVision {
         if (result.hasTargets()) target = result.getBestTarget();
     }
 
-    
-
     /**
      * Sets the transform to the camera from the center.
-     * 
+     *
      * @param centerToCamera
      */
-    public final void setCenterToCamera(final Transform3d centerToCamera) {
-        this.centerToCamera = centerToCamera;
-    }
+    public final void setCenterToCamera(final Transform3d centerToCamera) { this.centerToCamera = centerToCamera; }
 
     /**
      * Get the current result.
@@ -111,7 +105,7 @@ public final class TorqueVision {
 
     /**
      * How many targets do we see?
-     * 
+     *
      * @return The number of targets that the camera detects.
      */
     public final int getNumberOfTargets() { return result.getTargets().size(); }
@@ -119,22 +113,25 @@ public final class TorqueVision {
     /**
      * An estimate of the robot's position as a Pose3d based on a map of known April Tags
      * and the camera stream.
-     * 
+     *
      * @param knownTags The map of known April Tags.
      * @return The position estimate of the robot as a Pose3d.
      */
-    public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags, final double poseAmbiguity) {
+    public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags,
+                                                         final double poseAmbiguity) {
         return getRobotPoseAprilTag3d(knownTags, poseAmbiguity, Double.MIN_VALUE, Double.MAX_VALUE);
     }
 
-  /**
+    /**
      * An estimate of the robot's position as a Pose3d based on a map of known April Tags
      * and the camera stream.
-     * 
+     *
      * @param knownTags The map of known April Tags.
      * @return The position estimate of the robot as a Pose3d.
      */
-    public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags, final double poseAmbiguity, final double minDistance, final double maxDistance) {
+    public final Optional<Pose3d> getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags,
+                                                         final double poseAmbiguity, final double minDistance,
+                                                         final double maxDistance) {
         final Optional<Pose3d> aprilTagLocation = getPositionOfBestAprilTag(knownTags, poseAmbiguity);
         if (aprilTagLocation.isEmpty()) return Optional.empty();
 
@@ -143,7 +140,7 @@ public final class TorqueVision {
 
         final Transform3d transform = transformWrapper.get();
 
-        // final double distance = Math.sqrt(transform.getX() * transform.getX() 
+        // final double distance = Math.sqrt(transform.getX() * transform.getX()
         //         + transform.getY() * transform.getY()
         //         + transform.getZ() * transform.getZ());
         // if (distance > maxDistance || distance < minDistance)
@@ -153,36 +150,36 @@ public final class TorqueVision {
         return Optional.of(robotLocation);
     }
 
-
     /**
      * The estimated transformation between the camera and the identified AprilTag as a Transform3d.
-     * 
+     *
      * @param poseAmbiguity The maximum pose ambiguity to return a result.
      * @return The estimated transformation as a Transform3d.
      */
     public final Optional<Transform3d> getTransformToAprilTag3d(final double poseAmbiguity) {
         if (target == null) return Optional.empty();
-        final Transform3d transform = target.getBestCameraToTarget().inverse(); 
+        final Transform3d transform = target.getBestCameraToTarget().inverse();
         final Transform3d adjusted = transform.plus(centerToCamera);
-        if (!(target.getPoseAmbiguity() <= poseAmbiguity && target.getPoseAmbiguity() != -1 && target.getFiducialId() >= 0))
+        if (!(target.getPoseAmbiguity() <= poseAmbiguity && target.getPoseAmbiguity() != -1 &&
+              target.getFiducialId() >= 0))
             return Optional.empty();
         return Optional.of(adjusted);
     }
 
- 
-
     /**
      * Get position of best April Tag.
-     * 
+     *
      * @param knownTags The map of known April Tags.
-     * @return The position estimate of the robot as a Pose3d. 
+     * @return The position estimate of the robot as a Pose3d.
      */
-    public final Optional<Pose3d> getPositionOfBestAprilTag(final Map<Integer, Pose3d> knownTags, final double poseAmbiguity) {
-        if (!(target.getPoseAmbiguity() <= poseAmbiguity && target.getPoseAmbiguity() != -1 && target.getFiducialId() >= 0)) {
-            lastGoodAprilTagID = -1; 
+    public final Optional<Pose3d> getPositionOfBestAprilTag(final Map<Integer, Pose3d> knownTags,
+                                                            final double poseAmbiguity) {
+        if (!(target.getPoseAmbiguity() <= poseAmbiguity && target.getPoseAmbiguity() != -1 &&
+              target.getFiducialId() >= 0)) {
+            lastGoodAprilTagID = -1;
             return Optional.empty();
         }
-        
+
         lastGoodAprilTagID = target.getFiducialId();
         final Pose3d aprilTagLocation = knownTags.getOrDefault(lastGoodAprilTagID, null);
         if (aprilTagLocation == null) return Optional.empty();
@@ -191,8 +188,8 @@ public final class TorqueVision {
 
     /**
      * Converts a Transform3d to a Transform2d.
-     * 
-     * @return The converted Transform2d. 
+     *
+     * @return The converted Transform2d.
      */
     public static final Transform2d transform3dTo2d(final Transform3d transform) {
         final Pose2d pose = new Pose3d(transform.getTranslation(), transform.getRotation()).toPose2d();
@@ -205,40 +202,35 @@ public final class TorqueVision {
      * @return The camera latency in milliseconds
      */
     @Deprecated
-    public final double getLatency() { return result.getLatencyMillis(); }
+    public final double getLatency() {
+        return result.getLatencyMillis();
+    }
 
-     /**
+    /**
      * Reads the result timestamp in seconds.
      * More accruate than getLatency.
      *
      * @return The result timestamp in seconds.
      */
-    public final double getTimestamp() {
-        return result.getTimestampSeconds();
-    }
+    public final double getTimestamp() { return result.getTimestampSeconds(); }
 
-    public int getLastGoodAprilTagID() {
-        return lastGoodAprilTagID;
-    }
+    public int getLastGoodAprilTagID() { return lastGoodAprilTagID; }
 
     /**
      * @return The internal PhotonCamera
      */
-    public final PhotonCamera getPhotonCamera() {
-        return this.cam;
-    }
+    public final PhotonCamera getPhotonCamera() { return this.cam; }
 
     /**
      * Add vision measurements to the pose estimator.
-     * 
+     *
      * @param addVisionMeasurement The PoseEstimator::addVisionMeasurement method.
      */
     public final void updateVisionMeasurement(final BiConsumer<Pose2d, Double> addVisionMeasurement) {
         update();
         if (!(target.getPoseAmbiguity() <= 0.1 && target.getPoseAmbiguity() != -1 && target.getFiducialId() >= 0))
             return;
-        if (target.getBestCameraToTarget().getTranslation().getDistance(new Translation3d()) >= 3)
-            return;
+        if (target.getBestCameraToTarget().getTranslation().getDistance(new Translation3d()) >= 3) return;
         final Optional<EstimatedRobotPose> optionalEstimatedPose = photonPoseEstimator.update();
         if (optionalEstimatedPose.isPresent()) {
             final EstimatedRobotPose estimatedPose = optionalEstimatedPose.get();
@@ -247,11 +239,7 @@ public final class TorqueVision {
     }
 
     /**
-     * 
+     *
      */
-    public final void setFieldLayout(final AprilTagFieldLayout layout) {
-        photonPoseEstimator.setFieldTags(layout);
-    }
-
-
+    public final void setFieldLayout(final AprilTagFieldLayout layout) { photonPoseEstimator.setFieldTags(layout); }
 }

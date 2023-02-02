@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2023 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
@@ -16,13 +16,9 @@ import java.util.function.BooleanSupplier;
 public class TorqueBoolSupplier {
     protected final BooleanSupplier input;
 
-    public TorqueBoolSupplier(final BooleanSupplier input) {
-        this.input = input;
-    }
+    public TorqueBoolSupplier(final BooleanSupplier input) { this.input = input; }
 
-    public boolean get() {
-        return input.getAsBoolean();
-    }
+    public boolean get() { return input.getAsBoolean(); }
 
     public final void onTrue(final Runnable callback) {
         if (get()) callback.run();
@@ -34,6 +30,5 @@ public class TorqueBoolSupplier {
 
         // Forgot you could use this?
         (get() ? trueCallback : falseCallback).run();
-
     }
 }

@@ -1,6 +1,6 @@
 /**
  * Copyright 2011-2023 Texas Torque.
- * 
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
@@ -18,9 +18,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import java.util.Map;
-
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -179,8 +177,7 @@ public final class TorqueLight {
     public static final Pose2d getRobotPose(final Rotation2d theta_r, final Rotation2d theta_dp,
                                             final Rotation2d theta_dy, final double H_h, final double H_c,
                                             final Rotation2d theta_cp, final double r_tc, final double theta_t,
-            final double r_H, final double x_h, final double y_h) {
-
+                                            final double r_H, final double x_h, final double y_h) {
 
         final double d = (H_h - H_c) / Math.tan(theta_dp.getRadians() + theta_cp.getRadians()) + r_H - r_tc;
         final double theta_f = theta_r.getRadians() + Math.toRadians(theta_t) - theta_dy.getRadians();
@@ -188,7 +185,7 @@ public final class TorqueLight {
         final double y_r = y_h - (Math.sin(theta_f) * d);
         return new Pose2d(x_r, y_r, theta_r);
     }
-    
+
     public final Pose3d getRobotPoseAprilTag3d(final Map<Integer, Pose3d> knownTags) {
         final Pose3d aprilTag = knownTags.getOrDefault(target.getFiducialId(), null);
         if (aprilTag == null) return new Pose3d();
@@ -203,7 +200,6 @@ public final class TorqueLight {
         if (target == null) return new Transform3d();
         return target.getBestCameraToTarget().inverse();
     }
-
 
     /**
      * Reads the camera latency in milliseconds.
