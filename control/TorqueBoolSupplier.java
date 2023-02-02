@@ -29,7 +29,16 @@ public class TorqueBoolSupplier {
     }
 
     public final void onTrueOrFalse(final Runnable trueCallback, final Runnable falseCallback) {
+<<<<<<< HEAD
         if (get()) trueCallback.run();
         else falseCallback.run();
+=======
+        // if (get()) trueCallback.run();
+        // else falseCallback.run();
+
+        // Forgot you could use this?
+        (get() ? trueCallback : falseCallback).run();
+
+>>>>>>> 63ba4fe8ed948a789a20bc71cbf00febd6205e1a
     }
 }
