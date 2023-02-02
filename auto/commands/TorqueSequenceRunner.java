@@ -7,13 +7,11 @@
 package org.texastorque.torquelib.auto.commands;
 
 import edu.wpi.first.wpilibj.util.Color;
-import org.texastorque.Subsystems;
-import org.texastorque.subsystems.Lights;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.auto.TorqueSequence;
 import org.texastorque.torquelib.util.TorqueUtil;
 
-public final class TorqueSequenceRunner extends TorqueCommand implements Subsystems {
+public final class TorqueSequenceRunner extends TorqueCommand {
     private final TorqueSequence sequence;
 
     public TorqueSequenceRunner(final TorqueSequence sequence) { this.sequence = sequence; }
