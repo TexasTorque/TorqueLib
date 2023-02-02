@@ -1,6 +1,6 @@
 /**
- * Copyright 2011-2022 Texas Torque.
- * 
+ * Copyright 2011-2023 Texas Torque.
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
@@ -28,52 +28,36 @@ public class TorqueLogiPro extends Joystick {
         this.deadband = deadband;
     }
 
-    public boolean getTrigger() {
-        return getRawButton(1);
-    }
+    public boolean getTrigger() { return getRawButton(1); }
 
-    private double deadbanded(double value) {
-        return (value < deadband && value > -deadband) ? 0 : value;
-    }
+    private double deadbanded(double value) { return (value < deadband && value > -deadband) ? 0 : value; }
 
-    public boolean getButtonByIndex(int index) {
-        return getRawButton(index);
-    }
+    public boolean getButtonByIndex(int index) { return getRawButton(index); }
 
-    public PovState getPovState() { 
+    public PovState getPovState() {
         switch (getPOV()) {
-            case -1: return PovState.CENTER;
-            case 0: return PovState.NORTH;
-            case 45: return PovState.NORTH_EAST;
-            case 90: return PovState.EAST;
-            case 135: return PovState.SOUTH_EAST;
-            case 180: return PovState.SOUTH;
-            case 225: return PovState.SOUTH_WEST;
-            case 270: return PovState.WEST;
-            case 315: return PovState.NORTH_WEST;
-            default: return PovState.CENTER;
+        case -1: return PovState.CENTER;
+        case 0: return PovState.NORTH;
+        case 45: return PovState.NORTH_EAST;
+        case 90: return PovState.EAST;
+        case 135: return PovState.SOUTH_EAST;
+        case 180: return PovState.SOUTH;
+        case 225: return PovState.SOUTH_WEST;
+        case 270: return PovState.WEST;
+        case 315: return PovState.NORTH_WEST;
+        default: return PovState.CENTER;
         }
     }
 
-    public boolean atPovState(PovState state) {
-        return getPovState() == state;
-    }
+    public boolean atPovState(PovState state) { return getPovState() == state; }
 
-    public boolean atPovState(int angle) {
-        return getPOV() == angle;
-    }
+    public boolean atPovState(int angle) { return getPOV() == angle; }
 
-    public double getRoll() { 
-        return deadbanded(getX());
-    }
+    public double getRoll() { return deadbanded(getX()); }
 
-    public double getPitch() { 
-        return deadbanded(-getY());
-    }
+    public double getPitch() { return deadbanded(-getY()); }
 
-    public double getYaw() { 
-        return deadbanded(getZ());
-    }
+    public double getYaw() { return deadbanded(getZ()); }
 
     @Override
     public double getThrottle() {
@@ -82,17 +66,19 @@ public class TorqueLogiPro extends Joystick {
 
     public static enum PovState {
         CENTER("CENTER"),
-        NORTH("NORTH"), NORTH_EAST("NORTH EAST"), EAST("EAST"), SOUTH_EAST("SOUTH EAST"), 
-        SOUTH("SOUTH"), SOUTH_WEST("SOUTH WEST"), WEST("WEST"), NORTH_WEST("SOUTH WEST"); 
+        NORTH("NORTH"),
+        NORTH_EAST("NORTH EAST"),
+        EAST("EAST"),
+        SOUTH_EAST("SOUTH EAST"),
+        SOUTH("SOUTH"),
+        SOUTH_WEST("SOUTH WEST"),
+        WEST("WEST"),
+        NORTH_WEST("SOUTH WEST");
 
         private String value;
 
-        PovState(String value) {
-            this.value = value;
-        }
+        PovState(String value) { this.value = value; }
 
-        public String asString() { 
-            return value; 
-        }
+        public String asString() { return value; }
     }
 }

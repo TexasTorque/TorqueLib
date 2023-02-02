@@ -1,6 +1,6 @@
 /**
- * Copyright 2011-2022 Texas Torque.
- * 
+ * Copyright 2011-2023 Texas Torque.
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
@@ -9,7 +9,6 @@ package org.texastorque.torquelib.base;
 import edu.wpi.first.wpilibj.TimedRobot;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
-
 // If you do not have oblog make sure your build.gradle is as follows:
 // https://raw.githubusercontent.com/TexasTorque/Swerve-2023/9df7698cb69a6655d90583ae314c6a44a94c2045/build.gradle
 import java.util.ArrayList;
@@ -55,8 +54,7 @@ public class TorqueRobotBase extends TimedRobot {
     @Override
     public final void robotInit() {
         Logger.setCycleWarningsEnabled(true);
-        for (final TorqueSubsystem subsystem : subsystems)
-            Logger.configureLoggingAndConfig(subsystem, false);
+        for (final TorqueSubsystem subsystem : subsystems) Logger.configureLoggingAndConfig(subsystem, false);
     }
 
     @Override

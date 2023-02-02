@@ -1,8 +1,14 @@
+/**
+ * Copyright 2011-2023 Texas Torque.
+ *
+ * This file is part of TorqueLib, which is licensed under the MIT license.
+ * For more details, see ./license.txt or write <jus@justusl.com>.
+ */
 package org.texastorque.torquelib.control;
 
 /**
  * A class that can be used to detect current spikes.
- * 
+ *
  * @author Omar Afzal
  */
 public final class TorqueCurrentSpike {
@@ -11,33 +17,24 @@ public final class TorqueCurrentSpike {
     private final TorqueClick currentClick = new TorqueClick();
 
     public static enum CurrentSpikes {
-        NONE, STARTUP, SPIKE;
+        NONE,
+        STARTUP,
+        SPIKE;
 
-        public CurrentSpikes next() {
-            return values()[Math.min(ordinal() + 1, values().length - 1)];
-        }
-
+        public CurrentSpikes next() { return values()[Math.min(ordinal() + 1, values().length - 1)]; }
     }
 
     private final double currentLimit;
 
-    public TorqueCurrentSpike(final double currentLimit) {
-        this.currentLimit = currentLimit;
-    }
+    public TorqueCurrentSpike(final double currentLimit) { this.currentLimit = currentLimit; }
 
     public boolean calculate(final double currentCurrent) {
-        if (currentClick.calculate(currentCurrent >= currentLimit)) 
-            status = status.next();
+        if (currentClick.calculate(currentCurrent >= currentLimit)) status = status.next();
 
         return status == CurrentSpikes.SPIKE;
     }
 
-    public void reset() {
-        status = CurrentSpikes.NONE;
-    }
+    public void reset() { status = CurrentSpikes.NONE; }
 
-    public CurrentSpikes getStatus() {
-        return status;
-    }
-
+    public CurrentSpikes getStatus() { return status; }
 }

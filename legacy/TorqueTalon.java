@@ -1,6 +1,6 @@
 /**
- * Copyright 2011-2022 Texas Torque.
- * 
+ * Copyright 2011-2023 Texas Torque.
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import java.util.ArrayList;
-
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.legacy.base.TorqueMotor;
 import org.texastorque.torquelib.legacy.base.TorqueSmartMotor;
@@ -21,8 +20,8 @@ import org.texastorque.torquelib.legacy.base.TorqueSmartMotor;
  *
  * @author Justus Languell
  * @author Jack Pittenger
- * 
- * 
+ *
+ *
  * @deprecated NOT SUITABLE FOR 2023
  */
 @Deprecated

@@ -1,6 +1,6 @@
 /**
- * Copyright 2011-2022 Texas Torque.
- * 
+ * Copyright 2011-2023 Texas Torque.
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
@@ -195,15 +195,14 @@ public final class TorqueUtil {
 
     /**
      * Appends doubles like an ordered pair in parenthesis.
-     * 
+     *
      * @param values Doubles to append.
      * @return The resulting string.
      */
     public static final String group(int leading, int trailing, final double... values) {
         final StringBuilder sb = new StringBuilder();
         final String format = "%0" + String.format("%d.%d", leading, trailing) + "f, ";
-        for (final double value : values)
-            sb.append(String.format(format, value));
+        for (final double value : values) sb.append(String.format(format, value));
         return "( " + sb.toString().substring(0, sb.length() - 2) + " )";
     }
 
@@ -213,13 +212,8 @@ public final class TorqueUtil {
      * @return Title case string.
      */
     public static final String camelCaseToTitleCase(final String s) {
-        return s.replaceAll(
-           String.format("%s|%s|%s",
-              "(?<=[A-Z])(?=[A-Z][a-z])",
-              "(?<=[^A-Z])(?=[A-Z])",
-              "(?<=[A-Za-z])(?=[^A-Za-z])"
-           ),
-           " "
-        );
-     }
+        return s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
+                                          "(?<=[A-Za-z])(?=[^A-Za-z])"),
+                            " ");
+    }
 }

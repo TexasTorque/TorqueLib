@@ -1,6 +1,6 @@
 /**
- * Copyright 2011-2022 Texas Torque.
- * 
+ * Copyright 2011-2023 Texas Torque.
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
@@ -10,7 +10,7 @@ package org.texastorque.torquelib.control;
  * This is the cool TorqueToggle.
  *
  * Use this one instead.
- * 
+ *
  * @author Justus Languell
  */
 public final class TorqueToggle {
@@ -32,5 +32,4 @@ public final class TorqueToggle {
     public final void set(final boolean value) { this.value = value; }
 
     public final boolean get() { return value; }
-
 }

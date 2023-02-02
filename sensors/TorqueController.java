@@ -1,6 +1,6 @@
 /**
- * Copyright 2011-2022 Texas Torque.
- * 
+ * Copyright 2011-2023 Texas Torque.
+ *
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
@@ -70,9 +70,7 @@ public final class TorqueController {
      *
      * @return The scaled input value.
      */
-    private final double scale(final double raw) {
-        return TorqueMath.scaledLinearDeadband(raw, deadband);
-    }
+    private final double scale(final double raw) { return TorqueMath.scaledLinearDeadband(raw, deadband); }
 
     // * Low level Joystick calls
 
