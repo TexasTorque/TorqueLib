@@ -9,10 +9,11 @@ package org.texastorque.torquelib.auto.commands;
 import edu.wpi.first.wpilibj.Timer;
 import org.texastorque.torquelib.auto.TorqueCommand;
 
-public final class TorqueWait extends TorqueCommand {
-    private double time, start;
+public final class TorqueWaitForSeconds extends TorqueCommand {
+    private final double time;
+    private double start;
 
-    public TorqueWait(final double time) { this.time = time; }
+    public TorqueWaitForSeconds(final double time) { this.time = time; }
 
     @Override
     protected final void init() {
