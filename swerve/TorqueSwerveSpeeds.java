@@ -19,6 +19,11 @@ public final class TorqueSwerveSpeeds extends ChassisSpeeds {
         super(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond);
     }
 
+
+    public static TorqueSwerveSpeeds fromChassisSpeeds(final ChassisSpeeds speeds) {
+        return new TorqueSwerveSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+    }
+
     public static TorqueSwerveSpeeds fromFieldRelativeSpeeds(
             final double vxMetersPerSecond, final double vyMetersPerSecond, final double omegaRadiansPerSecond,
             final Rotation2d robotRotation) {
@@ -35,8 +40,24 @@ public final class TorqueSwerveSpeeds extends ChassisSpeeds {
             robotRotation);
     }
 
-    public TorqueSwerveSpeeds toFieldRelativeSpeeds(final Rotation2d robotRotation) {
+    public final TorqueSwerveSpeeds toFieldRelativeSpeeds(final Rotation2d robotRotation) {
         return fromFieldRelativeSpeeds(this, robotRotation);
+    }
+
+    public final TorqueSwerveSpeeds times(final double vxCoef, final double vyCoef, final double omegaCoef) {
+        return new TorqueSwerveSpeeds(vxMetersPerSecond * vxCoef, vyMetersPerSecond * vyCoef, omegaRadiansPerSecond * omegaCoef);
+    }
+
+    public final boolean hasZeroVelocity() {
+        return vxMetersPerSecond == 0 && vyMetersPerSecond == 0 && omegaRadiansPerSecond == 0;
+    }
+
+    public final boolean hasRotationalVelocity() {
+        return omegaRadiansPerSecond != 0;
+    }
+
+    public final boolean hasTranslationalVelocity() {
+        return vxMetersPerSecond != 0 || vyMetersPerSecond != 0;
     }
 
     public final double getVelocityMagnitude() {

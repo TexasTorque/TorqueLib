@@ -242,4 +242,8 @@ public final class TorqueVision {
      *
      */
     public final void setFieldLayout(final AprilTagFieldLayout layout) { photonPoseEstimator.setFieldTags(layout); }
+
+    public final String getName() {
+        return cam.getName();
+    }
 }

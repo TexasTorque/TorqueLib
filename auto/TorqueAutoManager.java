@@ -27,6 +27,10 @@ public abstract class TorqueAutoManager {
     private final HashMap<String, TorqueSequence> autoSequences;
     private final SendableChooser<String> autoSelector = new SendableChooser<String>();
 
+    public final SendableChooser<String> getAutoSelector() {
+        return autoSelector;
+    }
+
     private TorqueSequence currentSequence;
     private boolean sequenceEnded;
 
