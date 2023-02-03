@@ -4,7 +4,7 @@
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
-package org.texastorque.torquelib.modules;
+package org.texastorque.torquelib.swerve;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
@@ -18,7 +18,7 @@ import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.legacy.KPID;
 import org.texastorque.torquelib.legacy.TorqueSparkMax;
 import org.texastorque.torquelib.legacy.TorqueTalon;
-import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
+import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
 
 /**
  * A representation of the 2021 Texas Torque custom swervedrive module.

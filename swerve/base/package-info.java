@@ -3,4 +3,4 @@
  *
  * @author Justus Languell
  */
-package org.texastorque.torquelib.modules.base;
+package org.texastorque.torquelib.swerve.base;
