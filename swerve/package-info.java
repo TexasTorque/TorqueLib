@@ -5,4 +5,4 @@
  * @author Justus Languell
  * @author Jack Pittenger
  */
-package org.texastorque.torquelib.modules;
+package org.texastorque.torquelib.swerve;

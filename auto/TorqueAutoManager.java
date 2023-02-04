@@ -27,18 +27,27 @@ public abstract class TorqueAutoManager {
     private final HashMap<String, TorqueSequence> autoSequences;
     private final SendableChooser<String> autoSelector = new SendableChooser<String>();
 
+    public final SendableChooser<String> getAutoSelector() {
+        return autoSelector;
+    }
+
     private TorqueSequence currentSequence;
     private boolean sequenceEnded;
 
     private final String autoSelectorKey = "Auto List";
 
     protected TorqueAutoManager() {
+        this(true);
+    }
+
+    protected TorqueAutoManager(final boolean displayChoicesSmartDashboard) {
         autoSequences = new HashMap<String, TorqueSequence>();
 
         addSequence("Empty", new TorqueEmpty()); // default
 
         init();
-        displayChoices();
+        if (displayChoicesSmartDashboard)
+            displayChoices();
     }
 
     /**

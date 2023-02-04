@@ -4,7 +4,7 @@
  * This file is part of TorqueLib, which is licensed under the MIT license.
  * For more details, see ./license.txt or write <jus@justusl.com>.
  */
-package org.texastorque.torquelib.modules;
+package org.texastorque.torquelib.swerve;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.opencv.core.RotatedRect;
-import org.texastorque.torquelib.modules.base.TorqueSwerveModule;
 import org.texastorque.torquelib.motors.TorqueNEO;
+import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
 
 /**
  * Super cool flipped swerve module built in 2023 by Abishek.
