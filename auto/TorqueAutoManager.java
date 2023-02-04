@@ -37,12 +37,17 @@ public abstract class TorqueAutoManager {
     private final String autoSelectorKey = "Auto List";
 
     protected TorqueAutoManager() {
+        this(true);
+    }
+
+    protected TorqueAutoManager(final boolean displayChoicesSmartDashboard) {
         autoSequences = new HashMap<String, TorqueSequence>();
 
         addSequence("Empty", new TorqueEmpty()); // default
 
         init();
-        displayChoices();
+        if (displayChoicesSmartDashboard)
+            displayChoices();
     }
 
     /**

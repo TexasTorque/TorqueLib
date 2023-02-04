@@ -7,6 +7,7 @@
 package org.texastorque.torquelib.base;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Log;
 // If you do not have oblog make sure your build.gradle is as follows:
@@ -59,6 +60,7 @@ public class TorqueRobotBase extends TimedRobot {
 
     @Override
     public final void robotPeriodic() {
+        Shuffleboard.update();
         Logger.updateEntries();
     }
 
