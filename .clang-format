@@ -28,7 +28,7 @@ AlignTrailingComments: true
 Language: Java     
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
-ColumnLimit: 120
+ColumnLimit: 160
 ContinuationIndentWidth: 8    
 AllowShortBlocksOnASingleLine: true    
 AllowShortCaseLabelsOnASingleLine: true    
