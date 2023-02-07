@@ -12,7 +12,7 @@ import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.texastorque.torquelib.control.TorqueRamp;
+
 import org.texastorque.torquelib.control.TorqueSlewLimiter;
 
 public final class Test {
@@ -35,6 +35,12 @@ public final class Test {
 
     private final Scanner scanner = new Scanner(System.in);
 
+    // private final TorqueTimeout t = new TorqueTimeout(5);
+    private final TorqueSlewLimiter limiter = new TorqueSlewLimiter(1);
+
+    private long counter = 0;
+
+    private boolean state = false;
     private Test() {
         init();
 
@@ -46,12 +52,6 @@ public final class Test {
         //     state = !state;
         // }, 0, 3000, TimeUnit.MILLISECONDS);
     }
-
-    // private final TorqueTimeout t = new TorqueTimeout(5);
-    private final TorqueSlewLimiter limiter = new TorqueSlewLimiter(1);
-
-    private long counter = 0;
-    private boolean state = false;
 
     private final void init() {}
 

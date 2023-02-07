@@ -28,12 +28,12 @@ public abstract class TorqueInputModule {
 
     public abstract void update();
 
-    protected void reset(){};
-
     public void smartDashboard(){};
 
     public final void run() {
         if (!blocked) update();
         unblock();
-    }
+    };
+
+    protected void reset(){}
 }

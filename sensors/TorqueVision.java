@@ -6,29 +6,24 @@
  */
 package org.texastorque.torquelib.sensors;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
  * Client interface for the TorqueVision.
@@ -46,13 +41,23 @@ import org.photonvision.targeting.PhotonTrackedTarget;
  * @author Justus Languell
  */
 public final class TorqueVision {
-    private final PhotonCamera cam;
+    /**
+     * Converts a Transform3d to a Transform2d.
+     *
+     * @return The converted Transform2d.
+     */
+    public static final Transform2d transform3dTo2d(final Transform3d transform) {
+        final Pose2d pose = new Pose3d(transform.getTranslation(), transform.getRotation()).toPose2d();
+        return new Transform2d(pose.getTranslation(), pose.getRotation());
+    }
 
+    private final PhotonCamera cam;
     private PhotonPipelineResult result;
     private PhotonTrackedTarget target;
-    public final PhotonPoseEstimator photonPoseEstimator;
 
+    public final PhotonPoseEstimator photonPoseEstimator;
     private Transform3d centerToCamera;
+
     private int lastGoodAprilTagID = -1;
 
     /**
@@ -187,16 +192,6 @@ public final class TorqueVision {
     }
 
     /**
-     * Converts a Transform3d to a Transform2d.
-     *
-     * @return The converted Transform2d.
-     */
-    public static final Transform2d transform3dTo2d(final Transform3d transform) {
-        final Pose2d pose = new Pose3d(transform.getTranslation(), transform.getRotation()).toPose2d();
-        return new Transform2d(pose.getTranslation(), pose.getRotation());
-    }
-
-    /**
      * Reads the camera latency in milliseconds.
      *
      * @return The camera latency in milliseconds
@@ -243,7 +238,5 @@ public final class TorqueVision {
      */
     public final void setFieldLayout(final AprilTagFieldLayout layout) { photonPoseEstimator.setFieldTags(layout); }
 
-    public final String getName() {
-        return cam.getName();
-    }
+    public final String getName() { return cam.getName(); }
 }

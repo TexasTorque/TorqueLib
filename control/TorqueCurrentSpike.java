@@ -13,9 +13,6 @@ package org.texastorque.torquelib.control;
  */
 public final class TorqueCurrentSpike {
 
-    private CurrentSpikes status = CurrentSpikes.NONE;
-    private final TorqueClick currentClick = new TorqueClick();
-
     public static enum CurrentSpikes {
         NONE,
         STARTUP,
@@ -23,6 +20,9 @@ public final class TorqueCurrentSpike {
 
         public CurrentSpikes next() { return values()[Math.min(ordinal() + 1, values().length - 1)]; }
     }
+    private CurrentSpikes status = CurrentSpikes.NONE;
+
+    private final TorqueClick currentClick = new TorqueClick();
 
     private final double currentLimit;
 

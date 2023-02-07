@@ -7,41 +7,10 @@
 package org.texastorque.torquelib.auto.commands;
 
 import java.util.function.Supplier;
+
 import org.texastorque.torquelib.auto.TorqueCommand;
 
 public final class TorqueGeneric extends TorqueCommand {
-    private final Runnable onInit, onContinuous, onEnd;
-    private final Supplier<Boolean> condition;
-
-    public TorqueGeneric(final Builder builder) {
-        this.onInit = builder.init;
-        this.onContinuous = builder.continuous;
-        this.onEnd = builder.end;
-        this.condition = builder.condition;
-    }
-
-    @Override
-    protected final void init() {
-        if (onInit != null) onInit.run();
-    }
-
-    @Override
-    protected final void continuous() {
-        if (onContinuous != null) onContinuous.run();
-    }
-
-    @Override
-    protected final boolean endCondition() {
-        return condition == null ? true : condition.get();
-    }
-
-    @Override
-    protected final void end() {
-        if (onEnd != null) onEnd.run();
-    }
-
-    public static final Builder useBuilder() { return new Builder(); }
-
     public static final class Builder {
         private Runnable init, continuous, end;
         private Supplier<Boolean> condition;
@@ -69,5 +38,37 @@ public final class TorqueGeneric extends TorqueCommand {
         }
 
         public final TorqueGeneric build() { return new TorqueGeneric(this); }
+    }
+    public static final Builder useBuilder() { return new Builder(); }
+
+    private final Runnable onInit, onContinuous, onEnd;
+
+    private final Supplier<Boolean> condition;
+
+    public TorqueGeneric(final Builder builder) {
+        this.onInit = builder.init;
+        this.onContinuous = builder.continuous;
+        this.onEnd = builder.end;
+        this.condition = builder.condition;
+    }
+
+    @Override
+    protected final void init() {
+        if (onInit != null) onInit.run();
+    }
+
+    @Override
+    protected final void continuous() {
+        if (onContinuous != null) onContinuous.run();
+    }
+
+    @Override
+    protected final boolean endCondition() {
+        return condition == null ? true : condition.get();
+    }
+
+    @Override
+    protected final void end() {
+        if (onEnd != null) onEnd.run();
     }
 }

@@ -45,27 +45,6 @@ public final class GenericController extends Joystick {
     }
 
     /**
-     * Scale the input value 0 to 1 so that inputs less than the deadband are
-     * possible. We need this for terrible controller with huge deadzones.
-     *
-     * @param input
-     *              The raw joystick value.
-     * @return The scaled joystick value.
-     */
-    private double scaleInput(double input) {
-        if (deadband >= 1) { deadband = .99; }
-        if (Math.abs(input) > deadband) {
-            if (input > 0) {
-                return (input - deadband) / (1 - deadband);
-            } else {
-                return (input + deadband) / (1 - deadband);
-            }
-        } else {
-            return 0.0;
-        }
-    }
-
-    /**
      * Set the deadband of the controller.
      *
      * @param dband
@@ -206,5 +185,26 @@ public final class GenericController extends Joystick {
     public synchronized void setRumble(boolean on) {
         setLeftRumble(on);
         setRightRumble(on);
+    }
+
+    /**
+     * Scale the input value 0 to 1 so that inputs less than the deadband are
+     * possible. We need this for terrible controller with huge deadzones.
+     *
+     * @param input
+     *              The raw joystick value.
+     * @return The scaled joystick value.
+     */
+    private double scaleInput(double input) {
+        if (deadband >= 1) { deadband = .99; }
+        if (Math.abs(input) > deadband) {
+            if (input > 0) {
+                return (input - deadband) / (1 - deadband);
+            } else {
+                return (input + deadband) / (1 - deadband);
+            }
+        } else {
+            return 0.0;
+        }
     }
 }

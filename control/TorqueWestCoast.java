@@ -6,8 +6,6 @@
  */
 package org.texastorque.torquelib.control;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /**
  * Improvments to the algorithm used to drive a West Coast Drivetrain
  * durring teleop. Encapsulated in a class.

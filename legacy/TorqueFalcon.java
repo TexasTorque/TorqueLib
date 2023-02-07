@@ -6,6 +6,12 @@
  */
 package org.texastorque.torquelib.legacy;
 
+import java.util.ArrayList;
+
+import org.texastorque.torquelib.control.TorquePID;
+import org.texastorque.torquelib.legacy.base.TorqueMotor;
+import org.texastorque.torquelib.legacy.base.TorqueSmartMotor;
+
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -14,10 +20,6 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import java.util.ArrayList;
-import org.texastorque.torquelib.control.TorquePID;
-import org.texastorque.torquelib.legacy.base.TorqueMotor;
-import org.texastorque.torquelib.legacy.base.TorqueSmartMotor;
 
 // TODO Peep this: https://github.com/Team364/BaseFalconSwerve/blob/main/src/main/java/frc/lib/math/Conversions.java
 

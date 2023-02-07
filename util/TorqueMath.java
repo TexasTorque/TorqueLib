@@ -6,7 +6,6 @@
  */
 package org.texastorque.torquelib.util;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.ToDoubleFunction;
@@ -17,8 +16,6 @@ import java.util.function.ToDoubleFunction;
  * @author Justus Languell
  */
 public final class TorqueMath {
-    private TorqueMath() { TorqueUtil.staticConstructor(); }
-
     /**
      * Return contrained value n between a and -a
      *
@@ -262,4 +259,6 @@ public final class TorqueMath {
     }
 
     public static final void main(String[] args) throws Exception {}
+
+    private TorqueMath() { TorqueUtil.staticConstructor(); }
 }

@@ -7,6 +7,7 @@
 package org.texastorque.torquelib.control;
 
 import java.util.function.Consumer;
+
 import org.texastorque.torquelib.util.TorqueMath;
 
 /**
@@ -19,8 +20,6 @@ import org.texastorque.torquelib.util.TorqueMath;
  * @author Justus Languell
  */
 public final class TorqueCondition<T> {
-    private T value = null;
-
     /**
      * Creates a new chainable instance of the condition.
      *
@@ -29,6 +28,33 @@ public final class TorqueCondition<T> {
      * @return A new conditional chain.
      */
     public static final <T> TorqueCondition<T> start() { return new TorqueCondition<>(); }
+
+    /**
+     * Creates a new chainable instance of the condition and checks a condition
+     * to determine if it should set the value.
+     *
+     * @param <T> The type of the determined value.
+     * @param condition The condition.
+     * @param value The value.
+     *
+     * @return The conditional chain.
+     */
+    public static final <T> TorqueCondition<T> start(final boolean condition, final T value) {
+        return TorqueCondition.<T>start().check(condition, value);
+    }
+
+    public static final void main(final String[] arguments) throws Exception {
+        final long r = TorqueMath.random(0, 3);
+
+        TorqueCondition.<String>start()
+                .check(r == 0, "a")
+                .check(r == 1, "b")
+                .check(r == 2, "c")
+                .check(r == 3, "d")
+                .and(System.out::println);
+    }
+
+    private T value = null;
 
     /**
      * Resets the conditional chain.
@@ -52,20 +78,6 @@ public final class TorqueCondition<T> {
     public final TorqueCondition<T> check(final boolean condition, final T value) {
         if (condition && this.value == null) this.value = value;
         return this;
-    }
-
-    /**
-     * Creates a new chainable instance of the condition and checks a condition
-     * to determine if it should set the value.
-     *
-     * @param <T> The type of the determined value.
-     * @param condition The condition.
-     * @param value The value.
-     *
-     * @return The conditional chain.
-     */
-    public static final <T> TorqueCondition<T> start(final boolean condition, final T value) {
-        return TorqueCondition.<T>start().check(condition, value);
     }
 
     /**
@@ -121,16 +133,5 @@ public final class TorqueCondition<T> {
      */
     public final void and(final Consumer<T> consumer) {
         if (this.value != null) consumer.accept(this.value);
-    }
-
-    public static final void main(final String[] arguments) throws Exception {
-        final long r = TorqueMath.random(0, 3);
-
-        TorqueCondition.<String>start()
-                .check(r == 0, "a")
-                .check(r == 1, "b")
-                .check(r == 2, "c")
-                .check(r == 3, "d")
-                .and(System.out::println);
     }
 }
