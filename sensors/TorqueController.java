@@ -6,11 +6,13 @@
  */
 package org.texastorque.torquelib.sensors;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+
 import org.texastorque.torquelib.util.TorqueMath;
+
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * A class representation of a controller, used for gathering
@@ -22,14 +24,29 @@ import org.texastorque.torquelib.util.TorqueMath;
  * @author Justus Languell
  */
 public final class TorqueController {
-    private static final double DEFAULT_DEADBAND = 0.1, TRIGGER_DOWN_POSITION = 0.2;
-
     public static enum ControllerPort {
         DRIVER,
         OPERATOR;
     }
 
+    public static enum DPADState {
+        UP,
+        UP_RIGHT,
+        RIGHT,
+        DOWN_RIGHT,
+        DOWN,
+        DOWN_LEFT,
+        LEFT,
+        UP_LEFT;
+
+        public static final DPADState fromAngle(final int angle) { return values()[angle]; }
+
+        public final int getAngle() { return this.ordinal() * 45; }
+    }
+
+    private static final double DEFAULT_DEADBAND = 0.1, TRIGGER_DOWN_POSITION = 0.2;
     private final double deadband;
+
     private final Joystick stick;
 
     /**
@@ -65,24 +82,7 @@ public final class TorqueController {
      */
     public TorqueController(final ControllerPort port, final double deadband) { this(port.ordinal(), deadband); }
 
-    /**
-     * @param raw The raw joystick input value.
-     *
-     * @return The scaled input value.
-     */
-    private final double scale(final double raw) { return TorqueMath.scaledLinearDeadband(raw, deadband); }
-
     // * Low level Joystick calls
-
-    private final double axis(final int channel) { return stick.getRawAxis(channel); }
-
-    private final boolean down(final int channel) { return stick.getRawButton(channel); }
-
-    private final boolean pressed(final int channel) { return stick.getRawButtonPressed(channel); }
-
-    private final boolean released(final int channel) { return stick.getRawButtonReleased(channel); }
-
-    // * Axis interface functions
 
     /**
      * Get the value of the left Y axis.
@@ -112,7 +112,7 @@ public final class TorqueController {
      */
     public final double getRightXAxis() { return scale(axis(4)); }
 
-    // * Trigger interface functions
+    // * Axis interface functions
 
     /**
      * Get the value of the left trigger axis.
@@ -158,6 +158,8 @@ public final class TorqueController {
         return isRightTriggerDown();
     }
 
+    // * Trigger interface functions
+
     /**
      * Check if the left trigger is currently down.
      *
@@ -171,8 +173,6 @@ public final class TorqueController {
      * @return Is the right trigger currently down?
      */
     public final boolean isRightTriggerDown() { return getRightTriggerAxis() >= TRIGGER_DOWN_POSITION; }
-
-    // * DEPRECATED Button interface functions
 
     /**
      * Check if the left stick is currently down.
@@ -225,6 +225,8 @@ public final class TorqueController {
     public final boolean getRightBumper() {
         return down(6);
     }
+
+    // * DEPRECATED Button interface functions
 
     /**
      * Check if the left center button is currently down.
@@ -304,8 +306,6 @@ public final class TorqueController {
         return down(1);
     }
 
-    // * Button down interface functions
-
     /**
      * Check if the left stick  is currently down.
      *
@@ -333,6 +333,8 @@ public final class TorqueController {
      * @return Is the right bumper currently down?
      */
     public final boolean isRightBumperDown() { return down(6); }
+
+    // * Button down interface functions
 
     /**
      * Check if the left center button is currently down.
@@ -376,8 +378,6 @@ public final class TorqueController {
      */
     public final boolean isAButtonDown() { return down(1); }
 
-    // * Button pressed interface functions
-
     /**
      * Check if the left stick  is being pressed.
      *
@@ -405,6 +405,8 @@ public final class TorqueController {
      * @return Is the right bumper being pressed?
      */
     public final boolean isRightBumperPressed() { return pressed(6); }
+
+    // * Button pressed interface functions
 
     /**
      * Check if the left center button is being pressed.
@@ -448,8 +450,6 @@ public final class TorqueController {
      */
     public final boolean isAButtonPressed() { return pressed(1); }
 
-    // * Button released interface functions
-
     /**
      * Check if the left stick  is being released.
      *
@@ -477,6 +477,8 @@ public final class TorqueController {
      * @return Is the right bumper being released?
      */
     public final boolean isRightBumperReleased() { return released(6); }
+
+    // * Button released interface functions
 
     /**
      * Check if the left center button is being released.
@@ -520,23 +522,6 @@ public final class TorqueController {
      */
     public final boolean isAButtonReleased() { return released(1); }
 
-    // * DPAD interface
-
-    public static enum DPADState {
-        UP,
-        UP_RIGHT,
-        RIGHT,
-        DOWN_RIGHT,
-        DOWN,
-        DOWN_LEFT,
-        LEFT,
-        UP_LEFT;
-
-        public final int getAngle() { return this.ordinal() * 45; }
-
-        public static final DPADState fromAngle(final int angle) { return values()[angle]; }
-    }
-
     /**
      * Get the state of the DPAD.
      *
@@ -574,6 +559,8 @@ public final class TorqueController {
     public final boolean getDPADUp() {
         return isDPADUpDown();
     }
+
+    // * DPAD interface
 
     /**
      * Check if the DPAD up right button is being held down.
@@ -722,8 +709,6 @@ public final class TorqueController {
      */
     public final boolean isDPADUpLeftDown() { return stick.getPOV() == 315; }
 
-    // * Rumble interface
-
     /**
      * Set weather or not to rumble the left side.
      *
@@ -766,4 +751,21 @@ public final class TorqueController {
         for (final Method method : getActiveBooleanMethods()) sb.append(method.getName()).append(" ");
         SmartDashboard.putString("Active Booleans", sb.toString());
     }
+
+    // * Rumble interface
+
+    /**
+     * @param raw The raw joystick input value.
+     *
+     * @return The scaled input value.
+     */
+    private final double scale(final double raw) { return TorqueMath.scaledLinearDeadband(raw, deadband); }
+
+    private final double axis(final int channel) { return stick.getRawAxis(channel); }
+
+    private final boolean down(final int channel) { return stick.getRawButton(channel); }
+
+    private final boolean pressed(final int channel) { return stick.getRawButtonPressed(channel); }
+
+    private final boolean released(final int channel) { return stick.getRawButtonReleased(channel); }
 }

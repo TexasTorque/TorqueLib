@@ -4,8 +4,8 @@
 #
 # (c) Justus Languell 2022
 
-import os
 import datetime
+import os
 
 license_email = 'jus@justusl.com'
 

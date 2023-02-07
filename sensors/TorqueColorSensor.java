@@ -8,9 +8,9 @@ package org.texastorque.torquelib.sensors;
 
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorSensorV3;
+
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
-import org.texastorque.torquelib.util.TorqueUtil;
 
 /**
  * @author Omar Afzal

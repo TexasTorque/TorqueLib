@@ -6,18 +6,20 @@
  */
 package org.texastorque.torquelib.sensors.util;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.wpilibj.Filesystem;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.Filesystem;
 
 /**
  * Encapsulates a map of AprilTags and their positions by ID. Encorporates deserializing from JSON.
@@ -27,8 +29,6 @@ import org.json.simple.parser.JSONParser;
 public final class TorqueAprilTagMap extends HashMap<Integer, Pose3d> {
 
     public static final String DEFAULT_FILENAME = "AprilTags.json";
-
-    private TorqueAprilTagMap() { super(); }
 
     /**
      * Deserializes a TorqueAprilTagMap from a JSON file from default filename "AprilTags.json".
@@ -85,4 +85,6 @@ public final class TorqueAprilTagMap extends HashMap<Integer, Pose3d> {
             return null;
         }
     }
+
+    private TorqueAprilTagMap() { super(); }
 }

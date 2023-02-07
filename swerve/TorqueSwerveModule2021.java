@@ -6,19 +6,20 @@
  */
 package org.texastorque.torquelib.swerve;
 
+import org.texastorque.torquelib.control.TorquePID;
+import org.texastorque.torquelib.legacy.KPID;
+import org.texastorque.torquelib.legacy.TorqueSparkMax;
+import org.texastorque.torquelib.legacy.TorqueTalon;
+import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
+
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.texastorque.torquelib.control.TorquePID;
-import org.texastorque.torquelib.legacy.KPID;
-import org.texastorque.torquelib.legacy.TorqueSparkMax;
-import org.texastorque.torquelib.legacy.TorqueTalon;
-import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
 
 /**
  * A representation of the 2021 Texas Torque custom swervedrive module.
@@ -32,16 +33,32 @@ import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
  * @author Justus Languell
  */
 public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
+    /**
+     * Equalizes drive speeds to never exceed full power on the Neo.
+     *
+     * @param states The swerve module states, this is mutated!
+     * @param max Maximum translational speed.
+     */
+    public static void equalizedDriveRatio(SwerveModuleState[] states, final double max) {
+        double top = 0, buff;
+        for (final SwerveModuleState state : states)
+            if ((buff = (state.speedMetersPerSecond / max)) > top) top = buff;
+        if (top != 0)
+            for (SwerveModuleState state : states) state.speedMetersPerSecond /= top;
+    }
     private final TorqueSparkMax drive;
+
     private final TorqueTalon rotate;
-
     private double lastSpeed = 0, lastTime = Timer.getFPGATimestamp(), maxVelocity;
-    private final double driveGearing, wheelRadiusMeters;
 
+    private final double driveGearing, wheelRadiusMeters;
     private final SimpleMotorFeedforward driveFeedForward;
+
     private final int invCoef;
 
     private boolean logging = false;
+
+    private boolean currentLimited = true;
 
     /**
      * Construct a new TorqueSwerveModule2021.
@@ -133,8 +150,6 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         this.maxVelocity = maxVelocity;
     }
 
-    private boolean currentLimited = true;
-
     /**
      * Set the state of the swerve module.
      *
@@ -200,25 +215,6 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     }
 
     /**
-     * Convert encoder units from the Talon to degrees on the swerve module.
-     *
-     * @return The value in degrees [-180, 180]
-     *
-     * @author Jack Pittenger
-     * @author Justus Languell
-     */
-    private final double getRotationDegrees() {
-        double val = rotate.getPosition();
-        if (val % rotate.CLICKS_PER_ROTATION == 0) val += Double.MIN_VALUE;
-        double ret = val % rotate.CLICKS_PER_ROTATION * 180 / (rotate.CLICKS_PER_ROTATION);
-        if (Math.signum(val) == -1 && Math.floor(val / rotate.CLICKS_PER_ROTATION) % 2 == -0)
-            ret += 180;
-        else if (Math.signum(val) == 1 && Math.floor(val / rotate.CLICKS_PER_ROTATION) % 2 == 1)
-            ret -= 180;
-        return ret * invCoef;
-    }
-
-    /**
      * Converts wheel speed in meters per second to rotations per minute.
      *
      * @param metersPerSecond Speed wheel in meters per second.
@@ -241,25 +237,41 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
     }
 
     /**
-     * Equalizes drive speeds to never exceed full power on the Neo.
-     *
-     * @param states The swerve module states, this is mutated!
-     * @param max Maximum translational speed.
-     */
-    public static void equalizedDriveRatio(SwerveModuleState[] states, final double max) {
-        double top = 0, buff;
-        for (final SwerveModuleState state : states)
-            if ((buff = (state.speedMetersPerSecond / max)) > top) top = buff;
-        if (top != 0)
-            for (SwerveModuleState state : states) state.speedMetersPerSecond /= top;
-    }
-
-    /**
      * Set the logging status of the module.
      *
      * @param logging To log or not to log.
      */
     public final void setLogging(final boolean logging) { this.logging = logging; }
+
+    public final double getDisplacement() { return drive.getPosition(); }
+
+    public final void spin(final double speed) {
+        drive.setPercent(0);
+        rotate.setPercent(speed);
+    }
+
+    public double getRotatePosition() { return rotate.getPosition(); }
+
+    public void setRotatePosition(double pos) { rotate.setPosition(pos); }
+
+    /**
+     * Convert encoder units from the Talon to degrees on the swerve module.
+     *
+     * @return The value in degrees [-180, 180]
+     *
+     * @author Jack Pittenger
+     * @author Justus Languell
+     */
+    private final double getRotationDegrees() {
+        double val = rotate.getPosition();
+        if (val % rotate.CLICKS_PER_ROTATION == 0) val += Double.MIN_VALUE;
+        double ret = val % rotate.CLICKS_PER_ROTATION * 180 / (rotate.CLICKS_PER_ROTATION);
+        if (Math.signum(val) == -1 && Math.floor(val / rotate.CLICKS_PER_ROTATION) % 2 == -0)
+            ret += 180;
+        else if (Math.signum(val) == 1 && Math.floor(val / rotate.CLICKS_PER_ROTATION) % 2 == 1)
+            ret -= 180;
+        return ret * invCoef;
+    }
 
     /**
      * Put number if this module is logging.
@@ -273,15 +285,4 @@ public final class TorqueSwerveModule2021 extends TorqueSwerveModule {
         if (!logging) return;
         SmartDashboard.putString(String.format("[SM] %s (%d)", key, id), String.format("%.3f", value));
     }
-
-    public final double getDisplacement() { return drive.getPosition(); }
-
-    public final void spin(final double speed) {
-        drive.setPercent(0);
-        rotate.setPercent(speed);
-    }
-
-    public double getRotatePosition() { return rotate.getPosition(); }
-
-    public void setRotatePosition(double pos) { rotate.setPosition(pos); }
 }

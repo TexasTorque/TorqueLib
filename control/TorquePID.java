@@ -6,8 +6,9 @@
  */
 package org.texastorque.torquelib.control;
 
-import edu.wpi.first.math.controller.PIDController;
 import java.util.function.Function;
+
+import edu.wpi.first.math.controller.PIDController;
 
 /**
  * A class representation of a PID controller that extends
@@ -21,30 +22,6 @@ import java.util.function.Function;
 public final class TorquePID extends PIDController {
 
     // * Variable fields
-
-    private final double proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone, period;
-    private final boolean hasIntegralZone;
-
-    // * Construction and builder
-
-    private TorquePID(final Builder b) {
-        super(b.proportional, b.integral, b.derivative, b.period);
-        if (b.hasContinuousRange) enableContinuousInput(b.minInput, b.maxInput);
-        if (b.tolerance != -1) setTolerance(b.tolerance);
-        proportional = b.proportional;
-        integral = b.integral;
-        derivative = b.derivative;
-        feedForward = b.feedForward;
-        minOutput = b.minOutput;
-        maxOutput = b.maxOutput;
-        integralZone = b.integralZone;
-        hasIntegralZone = b.hasIntegralZone;
-        period = b.period;
-    }
-
-    public static final Builder create() { return new Builder(1); }
-
-    public static final Builder create(final double p) { return new Builder(p); }
 
     public static final class Builder {
         private double proportional, integral = 0, derivative = 0, feedForward = 0, minOutput = -1, maxOutput = 1,
@@ -120,6 +97,30 @@ public final class TorquePID extends PIDController {
         }
 
         public final TorquePID build() { return new TorquePID(this); }
+    }
+    public static final Builder create() { return new Builder(1); }
+
+    // * Construction and builder
+
+    public static final Builder create(final double p) { return new Builder(p); }
+
+    private final double proportional, integral, derivative, feedForward, minOutput, maxOutput, integralZone, period;
+
+    private final boolean hasIntegralZone;
+
+    private TorquePID(final Builder b) {
+        super(b.proportional, b.integral, b.derivative, b.period);
+        if (b.hasContinuousRange) enableContinuousInput(b.minInput, b.maxInput);
+        if (b.tolerance != -1) setTolerance(b.tolerance);
+        proportional = b.proportional;
+        integral = b.integral;
+        derivative = b.derivative;
+        feedForward = b.feedForward;
+        minOutput = b.minOutput;
+        maxOutput = b.maxOutput;
+        integralZone = b.integralZone;
+        hasIntegralZone = b.hasIntegralZone;
+        period = b.period;
     }
 
     // * Getters

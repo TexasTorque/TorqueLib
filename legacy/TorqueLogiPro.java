@@ -12,9 +12,27 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author TexasTorque 2021
  */
 public class TorqueLogiPro extends Joystick {
-    protected final int port;
-    private double deadband;
+    public static enum PovState {
+        CENTER("CENTER"),
+        NORTH("NORTH"),
+        NORTH_EAST("NORTH EAST"),
+        EAST("EAST"),
+        SOUTH_EAST("SOUTH EAST"),
+        SOUTH("SOUTH"),
+        SOUTH_WEST("SOUTH WEST"),
+        WEST("WEST"),
+        NORTH_WEST("SOUTH WEST");
+
+        private String value;
+
+        PovState(String value) { this.value = value; }
+
+        public String asString() { return value; }
+    }
     private static final double DEADBAND_DEF = .01;
+    protected final int port;
+
+    private double deadband;
 
     public TorqueLogiPro(int port) {
         super(port);
@@ -29,8 +47,6 @@ public class TorqueLogiPro extends Joystick {
     }
 
     public boolean getTrigger() { return getRawButton(1); }
-
-    private double deadbanded(double value) { return (value < deadband && value > -deadband) ? 0 : value; }
 
     public boolean getButtonByIndex(int index) { return getRawButton(index); }
 
@@ -64,21 +80,5 @@ public class TorqueLogiPro extends Joystick {
         return (-super.getThrottle() + 1) / 2;
     }
 
-    public static enum PovState {
-        CENTER("CENTER"),
-        NORTH("NORTH"),
-        NORTH_EAST("NORTH EAST"),
-        EAST("EAST"),
-        SOUTH_EAST("SOUTH EAST"),
-        SOUTH("SOUTH"),
-        SOUTH_WEST("SOUTH WEST"),
-        WEST("WEST"),
-        NORTH_WEST("SOUTH WEST");
-
-        private String value;
-
-        PovState(String value) { this.value = value; }
-
-        public String asString() { return value; }
-    }
+    private double deadbanded(double value) { return (value < deadband && value > -deadband) ? 0 : value; }
 }

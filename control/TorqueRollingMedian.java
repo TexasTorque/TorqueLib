@@ -19,7 +19,21 @@ import java.util.Queue;
  * @author Justus Languell
  */
 public final class TorqueRollingMedian {
+    public static final void main(final String[] args) {
+        final TorqueRollingMedian rm = new TorqueRollingMedian(3);
+        System.out.println(rm.calculate(7));   // 7
+        System.out.println(rm.calculate(8));   // 7.5
+        System.out.println(rm.calculate(9));   // 8
+        System.out.println(rm.calculate(555)); // 9
+        System.out.println(rm.calculate(3));   // 9
+        System.out.println(rm.calculate(15));  // 15
+        System.out.println(rm.calculate(17));  // 15
+        System.out.println(rm.calculate(19));  // 17
+        System.out.println(rm.calculate(21));  // 19
+        System.out.println(rm.calculate(23));  // 21
+    }
     private final int window;
+
     private final Queue<Double> med;
 
     /**
@@ -50,19 +64,5 @@ public final class TorqueRollingMedian {
             return (vals[vals.length / 2] + vals[vals.length / 2 - 1]) / 2.;
         else
             return vals[vals.length / 2];
-    }
-
-    public static final void main(final String[] args) {
-        final TorqueRollingMedian rm = new TorqueRollingMedian(3);
-        System.out.println(rm.calculate(7));   // 7
-        System.out.println(rm.calculate(8));   // 7.5
-        System.out.println(rm.calculate(9));   // 8
-        System.out.println(rm.calculate(555)); // 9
-        System.out.println(rm.calculate(3));   // 9
-        System.out.println(rm.calculate(15));  // 15
-        System.out.println(rm.calculate(17));  // 15
-        System.out.println(rm.calculate(19));  // 17
-        System.out.println(rm.calculate(21));  // 19
-        System.out.println(rm.calculate(23));  // 21
     }
 }

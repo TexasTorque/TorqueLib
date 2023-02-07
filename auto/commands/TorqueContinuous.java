@@ -14,12 +14,10 @@ public final class TorqueContinuous extends TorqueCommand {
     private final Runnable command;
     private final BooleanSupplier end;
 
-    public TorqueContinuous(final Runnable command) { 
-        this(command, () -> false);
-    }
+    public TorqueContinuous(final Runnable command) { this(command, () -> false); }
 
-    public TorqueContinuous(final Runnable command, final BooleanSupplier end) { 
-        this.command = command; 
+    public TorqueContinuous(final Runnable command, final BooleanSupplier end) {
+        this.command = command;
         this.end = end;
     }
 

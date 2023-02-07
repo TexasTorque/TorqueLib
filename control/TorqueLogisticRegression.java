@@ -22,12 +22,12 @@ public final class TorqueLogisticRegression {
         this.GROWTH = growth;
     }
 
-    private double z(final double error) {
-        return MAX_SPEED / (Math.pow(1 + Math.E, -GROWTH * (error - MAX_DISTANCE / 2.0)));
-    }
-
     public double calculate(final double current, final double requested) {
         final double error = current - requested;
         return (z(error) - z(0)) * Math.signum(error);
+    }
+
+    private double z(final double error) {
+        return MAX_SPEED / (Math.pow(1 + Math.E, -GROWTH * (error - MAX_DISTANCE / 2.0)));
     }
 }

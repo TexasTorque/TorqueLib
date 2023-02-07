@@ -6,13 +6,15 @@
  */
 package org.texastorque.torquelib.auto;
 
+import java.util.HashMap;
+
+import org.texastorque.torquelib.auto.sequences.TorqueEmpty;
+import org.texastorque.torquelib.util.TorqueUtil;
+
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.util.HashMap;
-import org.texastorque.torquelib.auto.sequences.TorqueEmpty;
-import org.texastorque.torquelib.util.TorqueUtil;
 
 /**
  * AutoManager base class. Handles backend methods
@@ -24,21 +26,23 @@ import org.texastorque.torquelib.util.TorqueUtil;
  * @author Jack Pittenger
  */
 public abstract class TorqueAutoManager {
-    private final HashMap<String, TorqueSequence> autoSequences;
-    private final SendableChooser<String> autoSelector = new SendableChooser<String>();
-
-    public final SendableChooser<String> getAutoSelector() {
-        return autoSelector;
+    /**
+     * A preconstructed blank automanager.
+     */
+    public static final class TorqueBlankAutoManager extends TorqueAutoManager {
+        @Override
+        protected void init() {}
     }
+    private final HashMap<String, TorqueSequence> autoSequences;
+
+    private final SendableChooser<String> autoSelector = new SendableChooser<String>();
 
     private TorqueSequence currentSequence;
     private boolean sequenceEnded;
 
     private final String autoSelectorKey = "Auto List";
 
-    protected TorqueAutoManager() {
-        this(true);
-    }
+    protected TorqueAutoManager() { this(true); }
 
     protected TorqueAutoManager(final boolean displayChoicesSmartDashboard) {
         autoSequences = new HashMap<String, TorqueSequence>();
@@ -46,27 +50,10 @@ public abstract class TorqueAutoManager {
         addSequence("Empty", new TorqueEmpty()); // default
 
         init();
-        if (displayChoicesSmartDashboard)
-            displayChoices();
+        if (displayChoicesSmartDashboard) displayChoices();
     }
 
-    /**
-     * This is where we add sequenes
-     */
-    protected abstract void init();
-
-    protected final void addSequence(final TorqueSequence seq) {
-        addSequence(TorqueUtil.camelCaseToTitleCase(seq.getClass().getSimpleName()), seq);
-    }
-
-    protected final void addSequence(final String name, final TorqueSequence seq) {
-        autoSequences.put(name, seq);
-
-        if (autoSequences.size() == 0)
-            autoSelector.setDefaultOption(name, name);
-        else
-            autoSelector.addOption(name, name);
-    }
+    public final SendableChooser<String> getAutoSelector() { return autoSelector; }
 
     public final void runCurrentSequence() {
         if (currentSequence != null) {
@@ -112,10 +99,20 @@ public abstract class TorqueAutoManager {
     public final boolean getSequenceEnded() { return sequenceEnded; }
 
     /**
-     * A preconstructed blank automanager.
+     * This is where we add sequenes
      */
-    public static final class TorqueBlankAutoManager extends TorqueAutoManager {
-        @Override
-        protected void init() {}
+    protected abstract void init();
+
+    protected final void addSequence(final TorqueSequence seq) {
+        addSequence(TorqueUtil.camelCaseToTitleCase(seq.getClass().getSimpleName()), seq);
+    }
+
+    protected final void addSequence(final String name, final TorqueSequence seq) {
+        autoSequences.put(name, seq);
+
+        if (autoSequences.size() == 0)
+            autoSelector.setDefaultOption(name, name);
+        else
+            autoSelector.addOption(name, name);
     }
 }

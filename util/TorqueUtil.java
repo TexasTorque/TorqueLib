@@ -6,12 +6,12 @@
  */
 package org.texastorque.torquelib.util;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Miscellaneous and uncatagorized static functions used throughout the codebase.
@@ -19,9 +19,39 @@ import java.util.function.Supplier;
  * @author Justus Languell
  */
 public final class TorqueUtil {
-    private TorqueUtil() { TorqueUtil.staticConstructor(); }
+    public static final class Pair<T, U> {
+        public final T first;
+        public final U second;
+
+        public Pair(final T first, final U second) {
+            this.first = first;
+            this.second = second;
+        }
+    }
+
+    public static final class Triple<T, U, V> {
+        public final T first;
+        public final U second;
+        public final V third;
+
+        public Triple(final T first, final U second, final V third) {
+            this.first = first;
+            this.second = second;
+            this.third = third;
+        }
+    }
+    public final static class TimeResult<T> {
+        public final T result;
+        public final double time;
+
+        public TimeResult(final T result, final double time) {
+            this.result = result;
+            this.time = time;
+        }
+    }
 
     public static final String osName = System.getProperty("os.name");
+
     public static final boolean onRobot = osName.equals("Linux");
 
     /**
@@ -142,38 +172,6 @@ public final class TorqueUtil {
         enumeratedFor(Arrays.asList(array), f);
     }
 
-    public static final class Pair<T, U> {
-        public final T first;
-        public final U second;
-
-        public Pair(final T first, final U second) {
-            this.first = first;
-            this.second = second;
-        }
-    }
-
-    public static final class Triple<T, U, V> {
-        public final T first;
-        public final U second;
-        public final V third;
-
-        public Triple(final T first, final U second, final V third) {
-            this.first = first;
-            this.second = second;
-            this.third = third;
-        }
-    }
-
-    public final static class TimeResult<T> {
-        public final T result;
-        public final double time;
-
-        public TimeResult(final T result, final double time) {
-            this.result = result;
-            this.time = time;
-        }
-    }
-
     public static final <T> TimeResult<T> time(final Supplier<T> f) throws Exception {
         final double start = time();
         final T result = f.get();
@@ -216,4 +214,6 @@ public final class TorqueUtil {
                                           "(?<=[A-Za-z])(?=[^A-Za-z])"),
                             " ");
     }
+
+    private TorqueUtil() { TorqueUtil.staticConstructor(); }
 }

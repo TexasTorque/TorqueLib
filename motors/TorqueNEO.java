@@ -6,15 +6,17 @@
  */
 package org.texastorque.torquelib.motors;
 
+import java.util.ArrayList;
+
+import org.texastorque.torquelib.control.TorquePID;
+import org.texastorque.torquelib.util.TorqueUtil;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import java.util.ArrayList;
-import org.texastorque.torquelib.control.TorquePID;
-import org.texastorque.torquelib.util.TorqueUtil;
 
 /**
  * Designed to be the one and only motor wrapper for 2023.
@@ -29,6 +31,29 @@ import org.texastorque.torquelib.util.TorqueUtil;
 public final class TorqueNEO {
 
     /**
+     * Collected representation of the SmartMotionProfile parameters.
+     *
+     * @author Justus Languell
+     */
+    public static final class SmartMotionProfile {
+        public final double maxVelocity, minVelocity, maxAcceleration, allowedError;
+        public final int slot;
+
+        public SmartMotionProfile(final double maxVelocity, final double minVelocity, final double maxAcceleration,
+                                  final double allowedError) {
+            this(maxVelocity, minVelocity, maxAcceleration, allowedError, 0);
+        }
+
+        public SmartMotionProfile(final double maxVelocity, final double minVelocity, final double maxAcceleration,
+                                  final double allowedError, final int slot) {
+            this.maxVelocity = maxVelocity;
+            this.minVelocity = minVelocity;
+            this.maxAcceleration = maxAcceleration;
+            this.allowedError = allowedError;
+            this.slot = slot;
+        }
+    }
+    /**
      * The internal components to the motor wrapper.
      * These are marked public for a reason. Since
      * they are marked final their reference cannot
@@ -38,11 +63,12 @@ public final class TorqueNEO {
     public final CANSparkMax motor;
     public final RelativeEncoder encoder;
     public final SparkMaxPIDController controller;
-    public final ArrayList<CANSparkMax> followers;
 
     // ****************
     // * DEVICE SETUP *
     // ****************
+
+    public final ArrayList<CANSparkMax> followers;
 
     /**
      * Build a new TorqueNEO.
@@ -83,11 +109,11 @@ public final class TorqueNEO {
         followers.get(followers.size() - 1).follow(motor, invert);
     }
 
-    public void burnFlash() { motor.burnFlash(); }
-
     // ********************************
     // * VOLTAGE AND CURRENT CONTROLS *
     // ********************************
+
+    public void burnFlash() { motor.burnFlash(); }
 
     /**
      * Set the motor to a percent output from a decimal.
@@ -128,16 +154,16 @@ public final class TorqueNEO {
 
     public double getCurrent() { return motor.getOutputCurrent(); }
 
+    // **********************************
+    // * POSITION AND VELOCITY CONTROLS *
+    // **********************************
+
     /**
      * Set the maximum current the motor can draw.
      *
      * @param amps Maximum amperage.
      */
     public void setCurrentLimit(final int amps) { checkError(motor.setSmartCurrentLimit(amps)); }
-
-    // **********************************
-    // * POSITION AND VELOCITY CONTROLS *
-    // **********************************
 
     /**
      * Configure the PID parameters.
@@ -175,40 +201,16 @@ public final class TorqueNEO {
      */
     public void setVelocity(final double velo) { checkError(controller.setReference(velo, ControlType.kVelocity)); }
 
+    // *************************
+    // * SMART MOTION CONTROLS *
+    // *************************
+
     /**
      * Default unit is RPM, changed with setConversionFactors method.
      *
      * @return The velocity.
      */
     public double getVelocity() { return encoder.getVelocity(); }
-
-    // *************************
-    // * SMART MOTION CONTROLS *
-    // *************************
-
-    /**
-     * Collected representation of the SmartMotionProfile parameters.
-     *
-     * @author Justus Languell
-     */
-    public static final class SmartMotionProfile {
-        public final double maxVelocity, minVelocity, maxAcceleration, allowedError;
-        public final int slot;
-
-        public SmartMotionProfile(final double maxVelocity, final double minVelocity, final double maxAcceleration,
-                                  final double allowedError) {
-            this(maxVelocity, minVelocity, maxAcceleration, allowedError, 0);
-        }
-
-        public SmartMotionProfile(final double maxVelocity, final double minVelocity, final double maxAcceleration,
-                                  final double allowedError, final int slot) {
-            this.maxVelocity = maxVelocity;
-            this.minVelocity = minVelocity;
-            this.maxAcceleration = maxAcceleration;
-            this.allowedError = allowedError;
-            this.slot = slot;
-        }
-    }
 
     /**
      * Configure the SmartMotionProfile parameters.

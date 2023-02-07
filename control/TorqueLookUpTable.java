@@ -15,13 +15,65 @@ import java.util.TreeSet;
  */
 public class TorqueLookUpTable {
 
+    public class TorqueDisjointData {
+        public double distance;
+        private double lowestPoint;
+        private double highestPoint;
+        private double hood;
+        private double rpm;
+
+        /**
+         *
+         * @param distance
+         * @param hood
+         * @param rpm
+         */
+        public TorqueDisjointData(double distance, double hood, double rpm) {
+            this.distance = distance;
+            this.hood = hood;
+            this.rpm = rpm;
+        }
+
+        /**
+         *
+         * @param lowestPoint
+         * @param highestPoint
+         * @param hood
+         * @param rpm
+         */
+        public TorqueDisjointData(double lowestPoint, double highestPoint, double hood, double rpm) {
+            this.lowestPoint = lowestPoint;
+            this.highestPoint = highestPoint;
+            this.hood = hood;
+            this.rpm = rpm;
+        }
+
+        public double getHood() { return hood; }
+
+        public double getRPM() { return rpm; }
+
+        public double getDistance() { return distance; }
+
+        public double getLowestPoint() { return lowestPoint; }
+
+        public double getHighestPoint() { return highestPoint; }
+    }
+
+    class TorqueDisjointDataComparator implements Comparator<TorqueDisjointData> {
+
+        @Override
+        public int compare(TorqueDisjointData o1, TorqueDisjointData o2) {
+            return o1.distance > o2.distance ? 1 : o1.distance < o2.distance ? -1 : 0;
+        }
+    }
+
     private TreeSet<TorqueDisjointData> baseData;
+
+    TorqueDisjointData cache = new TorqueDisjointData(0, 0, 0);
 
     public TorqueLookUpTable() { baseData = new TreeSet<TorqueDisjointData>(new TorqueDisjointDataComparator()); }
 
     public void addDisjointData(TorqueDisjointData data) { baseData.add(data); }
-
-    TorqueDisjointData cache = new TorqueDisjointData(0, 0, 0);
 
     /**
         Returns the closest disjoint data based on the distance provided.
@@ -77,57 +129,5 @@ public class TorqueLookUpTable {
         TorqueDisjointData lerpData =
                 new TorqueDisjointData(lowestPoint.getDistance(), highestPoint.getDistance(), hoodLerp, rpmLerp);
         return lerpData;
-    }
-
-    public class TorqueDisjointData {
-        public double distance;
-        private double lowestPoint;
-        private double highestPoint;
-        private double hood;
-        private double rpm;
-
-        /**
-         *
-         * @param distance
-         * @param hood
-         * @param rpm
-         */
-        public TorqueDisjointData(double distance, double hood, double rpm) {
-            this.distance = distance;
-            this.hood = hood;
-            this.rpm = rpm;
-        }
-
-        /**
-         *
-         * @param lowestPoint
-         * @param highestPoint
-         * @param hood
-         * @param rpm
-         */
-        public TorqueDisjointData(double lowestPoint, double highestPoint, double hood, double rpm) {
-            this.lowestPoint = lowestPoint;
-            this.highestPoint = highestPoint;
-            this.hood = hood;
-            this.rpm = rpm;
-        }
-
-        public double getHood() { return hood; }
-
-        public double getRPM() { return rpm; }
-
-        public double getDistance() { return distance; }
-
-        public double getLowestPoint() { return lowestPoint; }
-
-        public double getHighestPoint() { return highestPoint; }
-    }
-
-    class TorqueDisjointDataComparator implements Comparator<TorqueDisjointData> {
-
-        @Override
-        public int compare(TorqueDisjointData o1, TorqueDisjointData o2) {
-            return o1.distance > o2.distance ? 1 : o1.distance < o2.distance ? -1 : 0;
-        }
     }
 }

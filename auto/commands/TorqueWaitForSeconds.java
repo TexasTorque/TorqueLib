@@ -6,8 +6,9 @@
  */
 package org.texastorque.torquelib.auto.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import org.texastorque.torquelib.auto.TorqueCommand;
+
+import edu.wpi.first.wpilibj.Timer;
 
 public final class TorqueWaitForSeconds extends TorqueCommand {
     private final double time;

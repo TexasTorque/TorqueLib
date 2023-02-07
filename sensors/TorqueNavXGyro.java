@@ -7,6 +7,7 @@
 package org.texastorque.torquelib.sensors;
 
 import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -26,16 +27,15 @@ import edu.wpi.first.wpilibj.SPI;
 public final class TorqueNavXGyro extends AHRS {
     private static volatile TorqueNavXGyro instance;
 
+    public static final synchronized TorqueNavXGyro getInstance() {
+        return instance == null ? instance = new TorqueNavXGyro() : instance;
+    }
+
     private double angleOffset = 0;
 
     private TorqueNavXGyro() {
         super(SPI.Port.kMXP);
         getFusedHeading();
-    }
-
-    private final double calculateOffsetCW(final double offset) {
-        // Why is the +360 here bruh?
-        return (offset - getFusedHeading() + 360) % 360;
     }
 
     public final void setOffsetCW(final Rotation2d offset) {
@@ -50,15 +50,16 @@ public final class TorqueNavXGyro extends AHRS {
 
     public final Rotation2d getAngleOffsetCCW() { return Rotation2d.fromDegrees(angleOffset).times(-1); }
 
-    private final double getDegreesClockwise() { return (getFusedHeading() + angleOffset) % 360; }
-
-    private final double getDegreesCounterClockwise() { return 360 - getDegreesClockwise(); }
-
     public final Rotation2d getHeadingCW() { return Rotation2d.fromDegrees(getDegreesClockwise()); }
 
     public final Rotation2d getHeadingCCW() { return Rotation2d.fromDegrees(getDegreesCounterClockwise()); }
 
-    public static final synchronized TorqueNavXGyro getInstance() {
-        return instance == null ? instance = new TorqueNavXGyro() : instance;
+    private final double calculateOffsetCW(final double offset) {
+        // Why is the +360 here bruh?
+        return (offset - getFusedHeading() + 360) % 360;
     }
+
+    private final double getDegreesClockwise() { return (getFusedHeading() + angleOffset) % 360; }
+
+    private final double getDegreesCounterClockwise() { return 360 - getDegreesClockwise(); }
 }

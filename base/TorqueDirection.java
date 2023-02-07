@@ -20,7 +20,7 @@ public enum TorqueDirection {
     NEUTRAL,
     FORWARD;
 
-    public final double get() { return ordinal() - 1.; }
-
     public static final TorqueDirection OFF = NEUTRAL;
+
+    public final double get() { return ordinal() - 1.; }
 }
