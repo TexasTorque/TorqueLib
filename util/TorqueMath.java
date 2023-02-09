@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.ToDoubleFunction;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 /**
  * A static class of useful math utilities.
  *
@@ -258,7 +260,76 @@ public final class TorqueMath {
         return list.stream().mapToDouble(function).average().getAsDouble();
     }
 
-    public static final void main(String[] args) throws Exception {}
+    /**
+     * Constrains an angular Rotation2d to be within the range [0, 2π).
+     * 
+     * @param theta The angle to constrain.
+     * @return Constrained angle.
+     */
+    public static final Rotation2d constrain0to2PI(final Rotation2d theta) {
+        return Rotation2d.fromRadians(constrain0to2PI(theta.getRadians()));
+    }
+
+    /**
+     * Constrains an angular Rotation2d to be within the range [-π, π).
+     * 
+     * @param theta The angle to constrain.
+     * @return Constrained angle.
+     */
+    public static final Rotation2d constrainPItoPI(final Rotation2d theta) {
+        return Rotation2d.fromRadians(constrainPItoPI(theta.getRadians()));
+    }
+
+    /**
+     * Constrains an angular value in radians to be within the range [0, 2π).
+     * 
+     * @param theta The angle to constrain in radians.
+     * @return Constrained angle in radians.
+     */
+    public static final double constrain0to2PI(final double theta) {
+        return constrain0to(theta, 2 * Math.PI);
+    }
+
+    /**
+     * Constrains an angular value in radians to be within the range [-π, π).
+     * 
+     * @param theta The angle to constrain in radians.
+     * @return Constrained angle in radians.
+     */
+    public static final double constrainPItoPI(final double theta) {
+        return constrain0to2PI(theta) - Math.PI;
+    }
+
+    /**
+     * Constrains an angular value in degrees to be within the range [0, 360).
+     * 
+     * @param theta The angle to constrain in degrees.
+     * @return Constrained angle in degrees.
+     */
+    public static final double constrain0to360(final double theta) {
+        return constrain0to(theta, 360);
+    }
+
+    /**
+     * Constrains an angular value in degrees to be within the range [-180, 180).
+     * 
+     * @param theta The angle to constrain in degrees.
+     * @return Constrained angle in degrees.
+     */
+    public static final double constrain180to180(final double theta) {
+        return constrain0to360(theta) - 180;
+    }
+
+    /**
+     * Constrains an angular value to be within the range [0, max).
+     * 
+     * @param theta The angle to constrain.
+     * @param max The maximum angle.
+     * @return Constrained angle.
+     */
+    private static final double constrain0to(final double theta, final double max) {
+        return (theta + max) % max;
+    }
 
     private TorqueMath() { TorqueUtil.staticConstructor(); }
 }
