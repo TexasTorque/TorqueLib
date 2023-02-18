@@ -42,6 +42,10 @@ public final class TorqueSwerveSpeeds extends ChassisSpeeds {
         return fromFieldRelativeSpeeds(this, robotRotation);
     }
 
+    public final TorqueSwerveSpeeds times(final double coef) {
+        return times(coef, coef, coef);
+    }
+
     public final TorqueSwerveSpeeds times(final double vxCoef, final double vyCoef, final double omegaCoef) {
         return new TorqueSwerveSpeeds(vxMetersPerSecond * vxCoef, vyMetersPerSecond * vyCoef,
                                       omegaRadiansPerSecond * omegaCoef);
