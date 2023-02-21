@@ -36,7 +36,7 @@ public final class TorqueRequestableTimeout {
      *
      * @return If the timeout has yet to elapse or not.
      */
-    public final boolean calculate() {
+    public final boolean get() {
         if (requested <= 0 || last <= 0) return false;
         final double current = TorqueUtil.time();
         requested -= current - last;
