@@ -27,9 +27,12 @@ public final class TorqueTraversableSelection<T> {
         this.values = values;
     }
 
+    public final T calculateClick(final boolean decrement, final boolean increment) {
+        return calculate(this.decrement.calculate(decrement), this.increment.calculate(increment));
+    }
     public final T calculate(final boolean decrement, final boolean increment) {
-        if (this.decrement.calculate(decrement)) index = Math.max(index - 1, 0);
-        if (this.increment.calculate(increment)) index = Math.min(index + 1, values.length - 1);
+        if (decrement) index = Math.max(index - 1, 0);
+        if (increment) index = Math.min(index + 1, values.length - 1);
         return values[index];
     }
 
@@ -47,4 +50,6 @@ public final class TorqueTraversableSelection<T> {
     public final T get(final int index) { return values[index]; }
 
     public final void set(final int index) { this.index = index; }
+
+    public final boolean isLast() { return index == values.length - 1; }
 }
