@@ -11,7 +11,6 @@ import java.util.HashMap;
 import org.texastorque.torquelib.auto.sequences.TorqueEmpty;
 import org.texastorque.torquelib.util.TorqueUtil;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -64,11 +63,13 @@ public abstract class TorqueAutoManager {
     }
 
     public final void chooseCurrentSequence() {
-        String autoChoice = NetworkTableInstance.getDefault()
-                                    .getTable("SmartDashboard")
-                                    .getSubTable(autoSelectorKey)
-                                    .getEntry("selected")
-                                    .getString("N/A");
+        // final String autoChoice = NetworkTableInstance.getDefault()
+        //                             .getTable("SmartDashboard")
+        //                             .getSubTable(autoSelectorKey)
+        //                             .getEntry("selected")
+        //                             .getString("N/A");
+
+        final String autoChoice = autoSelector.getSelected();
 
         if (autoSequences.containsKey(autoChoice)) currentSequence = autoSequences.get(autoChoice);
 
