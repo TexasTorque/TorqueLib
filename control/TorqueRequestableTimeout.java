@@ -19,6 +19,9 @@ import org.texastorque.torquelib.util.TorqueUtil;
  */
 public final class TorqueRequestableTimeout {
     public double requested = 0, last = 0;
+
+    private final TorqueClick zeroClick = new TorqueClick();
+
     public TorqueRequestableTimeout() {}
 
     /**
@@ -42,6 +45,10 @@ public final class TorqueRequestableTimeout {
         requested -= current - last;
         last = current;
         return requested > 0;
+    }
+
+    public final boolean isJustDone() {
+        return zeroClick.calculate(get());
     }
 }
 

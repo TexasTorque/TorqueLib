@@ -69,7 +69,7 @@ public final class TorqueSwerveSpeeds extends ChassisSpeeds {
 
     public final Transform2d getTransformAtTime(final double seconds) {
         return new Transform2d(new Translation2d(vxMetersPerSecond * seconds, vyMetersPerSecond * seconds),
-                               new Rotation2d(omegaRadiansPerSecond * seconds));
+                               Rotation2d.fromRadians(omegaRadiansPerSecond * seconds));
     }
 
     public final String toString() {
