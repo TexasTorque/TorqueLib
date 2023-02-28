@@ -148,6 +148,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         drive.setCurrentLimit(config.driveMaxCurrent);
         drive.setVoltageCompensation(config.voltageCompensation);
         drive.setBreakMode(true);
+        drive.invertMotor(false);
         drive.setConversionFactors(config.drivePoseFactor, config.driveVelocityFactor);
         drive.burnFlash();
 
@@ -204,7 +205,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
     @Override
     public Rotation2d getRotation() {
-        return new Rotation2d(getTurnEncoder());
+        return Rotation2d.fromRadians(getTurnEncoder());
     }
 
     public void stop() {
