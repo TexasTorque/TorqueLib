@@ -83,6 +83,7 @@ public final class TorqueNEO {
         encoder = motor.getEncoder();
         controller = motor.getPIDController();
         followers = new ArrayList<>();
+        invertMotor(false);
     }
 
     public void setBreakMode(final boolean isBreak) {
