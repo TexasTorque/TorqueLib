@@ -86,6 +86,10 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
             this.turn = turn;
             this.encoder = encoder;
         }
+
+        public final String toString() {
+            return String.format("\n  DRIVE: %d\n  TURN: %d\n  ENCODER: %d", drive, turn, encoder);
+        }
     }
 
     /**
