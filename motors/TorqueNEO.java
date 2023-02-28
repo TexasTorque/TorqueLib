@@ -87,6 +87,9 @@ public final class TorqueNEO {
 
     public void setBreakMode(final boolean isBreak) {
         motor.setIdleMode(isBreak ? CANSparkMax.IdleMode.kBrake : CANSparkMax.IdleMode.kCoast);
+        for (final var follower : followers) {
+            follower.setIdleMode(isBreak ? CANSparkMax.IdleMode.kBrake : CANSparkMax.IdleMode.kCoast);
+        }
     }
 
     public void setPositionConversionFactor(final double factor) { encoder.setPositionConversionFactor(factor); }
