@@ -41,12 +41,19 @@ public class TorqueRobotBase extends TimedRobot {
 
     private final ArrayList<TorqueSubsystem> subsystems = new ArrayList<TorqueSubsystem>();
 
+    private boolean doLogging = false;
+
     public TorqueRobotBase(final TorqueInput input, final TorqueAutoManager autoManager) {
-        this(input, autoManager, PERIOD);
+        this(true, input, autoManager, PERIOD);
     }
 
-    public TorqueRobotBase(final TorqueInput input, final TorqueAutoManager autoManager, final double period) {
+    public TorqueRobotBase(final boolean doLogging, final TorqueInput input, final TorqueAutoManager autoManager) {
+        this(doLogging, input, autoManager, PERIOD);
+    }
+
+    public TorqueRobotBase(final boolean doLogging, final TorqueInput input, final TorqueAutoManager autoManager, final double period) {
         super(PERIOD);
+        this.doLogging = doLogging;
         this.input = input;
         this.autoManager = autoManager;
     }
@@ -56,25 +63,27 @@ public class TorqueRobotBase extends TimedRobot {
     @Override
     public final void robotInit() {
         Logger.setCycleWarningsEnabled(true);
-        for (final TorqueSubsystem subsystem : subsystems) Logger.configureLoggingAndConfig(subsystem, false);
+        if (doLogging)
+            for (final TorqueSubsystem subsystem : subsystems) 
+                Logger.configureLoggingAndConfig(subsystem, false);
     }
 
     @Override
     public final void robotPeriodic() {
         Shuffleboard.update();
-        Logger.updateEntries();
+        if (doLogging)
+            Logger.updateEntries();
     }
 
     @Override
     public final void disabledInit() {
-        // This makes no sense
-        // subsystems.forEach(subsystem -> subsystem.initialize(TorqueMode.DISABLED));
+        // This makes no sense        // subsystems.forEach(subsystem -> subsystem.initialize(TorqueMode.DISABLED));
     }
 
     @Override
     public final void disabledPeriodic() {
         // This makes no sense
-        // subsystems.forEach(subsystem -> subsystem.update(TorqueMode.DISABLED));
+        subsystems.forEach(subsystem -> subsystem.update(TorqueMode.DISABLED));
     }
 
     @Override
