@@ -19,6 +19,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -127,8 +128,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     // The name of the module that we can use for SmartDashboard outputs
     public final String name;
 
-    public boolean useSmartDrive = false;
-
     public boolean useCancoder = true;
 
     public TorqueSwerveModule2022(final String name, final SwervePorts ports, final double staticOffset,
@@ -178,6 +177,10 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
     @Override
     public void setDesiredState(final SwerveModuleState state) {
+        setDesiredState(state, DriverStation.isAutonomous());
+    }
+
+    public void setDesiredState(final SwerveModuleState state, final boolean useSmartDrive) {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
         // Calculate drive output
