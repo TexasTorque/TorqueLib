@@ -28,5 +28,7 @@ public final class TorqueSequenceRunner extends TorqueCommand {
     }
 
     @Override
-    protected final void end() {}
+    protected final void end() {
+        sequence.reset();
+    }
 }
