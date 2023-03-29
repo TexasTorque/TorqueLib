@@ -26,7 +26,7 @@ public final class TorqueWaitForSeconds extends TorqueCommand {
 
     @Override
     protected final boolean endCondition() {
-        return (Timer.getFPGATimestamp() - start) > time;
+        return (Timer.getFPGATimestamp() - start) >= time;
     }
 
     @Override

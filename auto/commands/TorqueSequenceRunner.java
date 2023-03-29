@@ -12,10 +12,13 @@ import org.texastorque.torquelib.auto.TorqueSequence;
 public final class TorqueSequenceRunner extends TorqueCommand {
     private final TorqueSequence sequence;
 
-    public TorqueSequenceRunner(final TorqueSequence sequence) { this.sequence = sequence; }
+    public TorqueSequenceRunner(final TorqueSequence sequence) {
+        this.sequence = sequence;
+    }
 
     @Override
-    protected final void init() {}
+    protected final void init() {
+    }
 
     @Override
     protected final void continuous() {
@@ -28,5 +31,7 @@ public final class TorqueSequenceRunner extends TorqueCommand {
     }
 
     @Override
-    protected final void end() {}
+    protected final void end() {
+        sequence.reset();
+    }
 }
