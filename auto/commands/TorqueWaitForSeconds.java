@@ -13,8 +13,16 @@ import edu.wpi.first.wpilibj.Timer;
 public final class TorqueWaitForSeconds extends TorqueCommand {
     private final double time;
     private double start;
+    private Runnable command;
 
-    public TorqueWaitForSeconds(final double time) { this.time = time; }
+    public TorqueWaitForSeconds(final double time) {
+        this(time, null);
+    }
+
+    public TorqueWaitForSeconds(final double time, final Runnable command) {
+        this.time = time;
+        this.command = command;
+    }
 
     @Override
     protected final void init() {
@@ -22,7 +30,10 @@ public final class TorqueWaitForSeconds extends TorqueCommand {
     }
 
     @Override
-    protected final void continuous() {}
+    protected final void continuous() {
+        if (command != null)
+            command.run();
+    }
 
     @Override
     protected final boolean endCondition() {
@@ -30,5 +41,6 @@ public final class TorqueWaitForSeconds extends TorqueCommand {
     }
 
     @Override
-    protected final void end() {}
+    protected final void end() {
+    }
 }
