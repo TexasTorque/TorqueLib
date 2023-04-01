@@ -83,6 +83,7 @@ public final class TorqueNEO {
         encoder = motor.getEncoder();
         controller = motor.getPIDController();
         followers = new ArrayList<>();
+        setConversionFactors(1, 1);
         invertMotor(false);
     }
 
