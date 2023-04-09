@@ -77,12 +77,11 @@ public class TorqueRobotBase extends TimedRobot {
 
     @Override
     public final void disabledInit() {
-        // This makes no sense        // subsystems.forEach(subsystem -> subsystem.initialize(TorqueMode.DISABLED));
+        subsystems.forEach(subsystem -> subsystem.initialize(TorqueMode.DISABLED));
     }
 
     @Override
     public final void disabledPeriodic() {
-        // This makes no sense
         subsystems.forEach(subsystem -> subsystem.update(TorqueMode.DISABLED));
     }
 

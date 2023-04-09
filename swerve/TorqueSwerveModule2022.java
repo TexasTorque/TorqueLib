@@ -204,7 +204,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         return new SwerveModuleState(drive.getVelocity(), getRotation());
     }
 
-    public SwerveModulePosition getPosition() { return new SwerveModulePosition(drive.getPosition(), getRotation()); }
+    public SwerveModulePosition getPosition() { return new SwerveModulePosition(log("drive", drive.getPosition()), getRotation()); }
 
     @Override
     public Rotation2d getRotation() {

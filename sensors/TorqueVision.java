@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Client interface for the TorqueVision.
@@ -54,6 +55,7 @@ public final class TorqueVision {
     private final PhotonCamera cam;
     private PhotonPipelineResult result;
     private PhotonTrackedTarget target;
+    private String name;
 
     public final PhotonPoseEstimator photonPoseEstimator;
     private Transform3d centerToCamera;
@@ -70,6 +72,7 @@ public final class TorqueVision {
         this.cam = new PhotonCamera(NetworkTableInstance.getDefault(), name);
         this.result = new PhotonPipelineResult();
         this.target = new PhotonTrackedTarget();
+        this.name = name;
         setCenterToCamera(centerToCamera);
         photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP, cam, centerToCamera);
         photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
@@ -230,6 +233,7 @@ public final class TorqueVision {
         final Optional<EstimatedRobotPose> optionalEstimatedPose = photonPoseEstimator.update();
         if (optionalEstimatedPose.isPresent()) {
             final EstimatedRobotPose estimatedPose = optionalEstimatedPose.get();
+            SmartDashboard.putString("camera "+name+" position" , estimatedPose.estimatedPose.toPose2d().toString());
             addVisionMeasurement.accept(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
         }
     }
