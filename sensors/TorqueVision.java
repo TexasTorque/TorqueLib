@@ -84,6 +84,15 @@ public final class TorqueVision {
     }
 
     /**
+     * Is the camera connected?
+     * 
+     * @return Is the camera connected?
+     */
+    public final boolean isCameraConnected() {
+        return cam.isConnected();
+    }
+
+    /**
      * Sets the transform to the camera from the center.
      *
      * @param centerToCamera
