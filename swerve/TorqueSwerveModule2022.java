@@ -197,6 +197,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
         log("Turn PID Output", turnPIDOutput);
         turn.setPercent(turnPIDOutput);
+
+        SmartDashboard.putNumber(name + " cancoder", cancoder.getPosition());
     }
 
     @Override
