@@ -187,7 +187,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         if (useSmartDrive) {
             final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
             final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
-            log("Drive PID Output", drivePIDOutput + driveFFOutput);
+            // log("Drive PID Output", drivePIDOutput + driveFFOutput);
             drive.setPercent(drivePIDOutput + driveFFOutput);
         } else {
             drive.setPercent(optimized.speedMetersPerSecond / config.maxVelocity);
@@ -195,7 +195,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
         // Calculate turn output
         final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
-        log("Turn PID Output", turnPIDOutput);
+        // log("Turn PID Output", turnPIDOutput);
         turn.setPercent(turnPIDOutput);
     }
 
@@ -231,7 +231,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         // return log("cancoder", coterminal(cancoder.getPosition()) - staticOffset);
         // return log("cancoder", coterminal(cancoder.getPosition()));
         // return log("cancoder", coterminal(cancoder.getPosition()) - staticOffset);
-        return log("cancoder", coterminal(cancoder.getPosition() - staticOffset));
+        return coterminal(cancoder.getPosition() - staticOffset);
     }
 
     private double log(final String item, final double value) {

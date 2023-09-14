@@ -10,10 +10,11 @@ import java.util.ArrayList;
 
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.util.TorqueUtil;
-
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -201,6 +202,12 @@ public final class TorqueNEO {
      * @return The position.
      */
     public double getPosition() { return encoder.getPosition(); }
+
+    /**
+     * 
+     * @return The Absolute Encoder object attatched to the SparkMax through a breakout board.
+     */
+    public AbsoluteEncoder getAbsoluteEncoder(Type type) { return motor.getAbsoluteEncoder(type); }
 
     /**
      * Default unit is RPM, changed with setConversionFactors method.
