@@ -152,6 +152,12 @@ public final class TorqueNEO {
      */
     public void setVoltageCompensation(final double volts) { checkError(motor.enableVoltageCompensation(volts)); }
 
+     /**
+     * Disable the voltage compensation for the motor.
+     *
+     */
+    public void disableVoltageCompensation() { checkError(motor.disableVoltageCompensation()); }
+
     /**
      * Set the motor to a amperage output.
      * Domain is [-40, 40] where 0 is off and negative values are reversed
@@ -208,6 +214,7 @@ public final class TorqueNEO {
      * @return The Absolute Encoder object attatched to the SparkMax through a breakout board.
      */
     public AbsoluteEncoder getAbsoluteEncoder(Type type) { return motor.getAbsoluteEncoder(type); }
+
 
     /**
      * Default unit is RPM, changed with setConversionFactors method.
