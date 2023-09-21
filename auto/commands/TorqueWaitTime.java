@@ -10,16 +10,16 @@ import org.texastorque.torquelib.auto.TorqueCommand;
 
 import edu.wpi.first.wpilibj.Timer;
 
-public final class TorqueWaitForSeconds extends TorqueCommand {
+public final class TorqueWaitTime extends TorqueCommand {
     private final double time;
     private double start;
     private Runnable command;
 
-    public TorqueWaitForSeconds(final double time) {
+    public TorqueWaitTime(final double time) {
         this(time, null);
     }
 
-    public TorqueWaitForSeconds(final double time, final Runnable command) {
+    public TorqueWaitTime(final double time, final Runnable command) {
         this.time = time;
         this.command = command;
     }

@@ -9,10 +9,10 @@ package org.texastorque.torquelib.auto.commands;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.auto.TorqueSequence;
 
-public final class TorqueSequenceRunner extends TorqueCommand {
+public final class TorqueRunSequence extends TorqueCommand {
     private final TorqueSequence sequence;
 
-    public TorqueSequenceRunner(final TorqueSequence sequence) { this.sequence = sequence; }
+    public TorqueRunSequence(final TorqueSequence sequence) { this.sequence = sequence; }
 
     @Override
     protected final void init() {}

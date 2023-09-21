@@ -7,15 +7,17 @@
 package org.texastorque.torquelib.base;
 
 /**
- * Common subsystem interface for TorqueRobotBase.
- * 
+ * Template for non-state-based subsystems.
+ *
  * @author Justus Languell
  */
-public interface TorqueSubsystem {
+public abstract class TorqueStatelessSubsystem implements TorqueSubsystem {
+
     public abstract void initialize(final TorqueMode mode);
 
     public abstract void update(final TorqueMode mode);
 
-    // Overridable by the TorqueSubsystem baseclass
-    public abstract void run(final TorqueMode mode);
+    public final void run(final TorqueMode mode) {
+        update(mode);
+    }
 }
