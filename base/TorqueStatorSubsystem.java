@@ -6,7 +6,7 @@
  */
 package org.texastorque.torquelib.base;
 
-import org.texastorque.torquelib.auto.commands.TorqueExecute;
+import org.texastorque.torquelib.auto.commands.TorqueRun;
 
 /**
  * State based subsystem template.
@@ -31,8 +31,8 @@ public abstract class TorqueStatorSubsystem<T extends TorqueState> implements To
         onStateChange();
     }
 
-    public final TorqueExecute yieldState(final T state) {
-        return new TorqueExecute(() -> setState(state));
+    public final TorqueRun yieldState(final T state) {
+        return new TorqueRun(() -> setState(state));
     }
 
     public final T getState() {

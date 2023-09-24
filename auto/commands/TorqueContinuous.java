@@ -10,11 +10,14 @@ import java.util.function.BooleanSupplier;
 
 import org.texastorque.torquelib.auto.TorqueCommand;
 
+@Deprecated
 public final class TorqueContinuous extends TorqueCommand {
     private final Runnable command;
     private final BooleanSupplier end;
 
-    public TorqueContinuous(final Runnable command) { this(command, () -> false); }
+    public TorqueContinuous(final Runnable command) {
+        this(command, () -> false);
+    }
 
     public TorqueContinuous(final Runnable command, final BooleanSupplier end) {
         this.command = command;
@@ -37,5 +40,6 @@ public final class TorqueContinuous extends TorqueCommand {
     }
 
     @Override
-    protected final void end() {}
+    protected final void end() {
+    }
 }
