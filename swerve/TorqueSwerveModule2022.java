@@ -13,6 +13,8 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -61,8 +63,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         public int driveMaxCurrent = 35,          // amps
                 turnMaxCurrent = 25;              // amps
         public double voltageCompensation = 12.6, // volts
-                maxVelocity = 3.25,               // m/s
-                maxAcceleration = 3.0,            // m/s^2
+                maxVelocity = 3.5,               // m/s
+                maxAcceleration = 3.5,            // m/s^2
                 maxAngularVelocity = Math.PI,     // radians/s
                 maxAngularAcceleration = Math.PI, // radians/s
 
@@ -119,6 +121,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
     // Velocity controllers.
     private final PIDController drivePID, turnPID;
+    private final SparkMaxPIDController m_drivingPIDController;
 
     private final SimpleMotorFeedforward driveFeedForward;
 
@@ -131,12 +134,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     public boolean useCancoder = true;
 
     public TorqueSwerveModule2022(final String name, final SwervePorts ports, final double staticOffset,
-                                  final SwerveConfig config) {
-        this(name, ports.drive, ports.turn, ports.encoder, staticOffset, config);
+                                  final SwerveConfig config, final double ff, final double turnP) {
+        this(name, ports.drive, ports.turn, ports.encoder, staticOffset, config, ff, turnP);
     }
 
     public TorqueSwerveModule2022(final String name, final int driveID, final int turnID, final int encoderID,
-                                  final double staticOffset, final SwerveConfig config) {
+                                  final double staticOffset, final SwerveConfig config, final double ff, final double turnP) {
         super(driveID);
         this.name = name.replaceAll(" ", "_").toLowerCase();
         this.staticOffset = staticOffset;
@@ -170,7 +173,14 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
         // Configure the controllers
         drivePID = new PIDController(config.drivePGain, config.driveIGain, config.driveDGain);
-        turnPID = new PIDController(config.turnPGain, config.turnIGain, config.turnDGain);
+        turnPID = new PIDController(turnP, config.turnIGain, config.turnDGain);
+        m_drivingPIDController = drive.getPIDController();
+        m_drivingPIDController.setFeedbackDevice(drive.encoder);
+        m_drivingPIDController.setP(.2);
+        m_drivingPIDController.setI(0);
+        m_drivingPIDController.setD(0);
+        m_drivingPIDController.setFF(ff);
+      
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
         driveFeedForward = new SimpleMotorFeedforward(config.driveStaticGain, config.driveFeedForward);
     }
@@ -183,6 +193,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     public void setDesiredState(final SwerveModuleState state, final boolean useSmartDrive) {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
+        turnPID.setP(SmartDashboard.getNumber(name + " turn p", -1));
+
         // Calculate drive output
         if (useSmartDrive) {
             final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
@@ -190,7 +202,10 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
             // log("Drive PID Output", drivePIDOutput + driveFFOutput);
             drive.setPercent(drivePIDOutput + driveFFOutput);
         } else {
-            drive.setPercent(optimized.speedMetersPerSecond / config.maxVelocity);
+            m_drivingPIDController.setReference(optimized.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
+            // final double teleopDrivePIDOutput = m_drivingPIDController.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
+            // drive.setPercent(teleopDrivePIDOutput);
+            SmartDashboard.putNumber(name + " desired turn", optimized.angle.getRadians());
         }
 
         // Calculate turn output
@@ -227,6 +242,10 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     // }
 
     private double getTurnCancoder() {
+
+        // SmartDashboard.putNumber(name + " velocity", drive.getVelocity());
+        SmartDashboard.putNumber(name + " turn current position", coterminal(cancoder.getPosition() - staticOffset));
+
         // Should not need to use Coterminal
         // return log("cancoder", coterminal(cancoder.getPosition()) - staticOffset);
         // return log("cancoder", coterminal(cancoder.getPosition()));

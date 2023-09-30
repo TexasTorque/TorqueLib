@@ -10,13 +10,14 @@ import java.util.ArrayList;
 
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.util.TorqueUtil;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxPIDController;
 
 /**
@@ -269,6 +270,10 @@ public final class TorqueNEO {
     // *********************
     // * UTILITY FUNCTIONS *
     // *********************
+
+    public SparkMaxPIDController getPIDController() {
+        return controller;
+    }
 
     /**
      * Check error with non–applicable field name.
