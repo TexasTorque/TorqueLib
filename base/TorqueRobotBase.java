@@ -83,7 +83,7 @@ public class TorqueRobotBase extends TimedRobot {
     @Override
     public final void disabledPeriodic() {
         // This makes no sense
-        subsystems.forEach(subsystem -> subsystem.update(TorqueMode.DISABLED));
+        subsystems.forEach(subsystem -> subsystem.run(TorqueMode.DISABLED));
     }
 
     @Override
@@ -94,7 +94,7 @@ public class TorqueRobotBase extends TimedRobot {
     @Override
     public final void teleopPeriodic() {
         input.update();
-        subsystems.forEach(subsystem -> subsystem.update(TorqueMode.TELEOP));
+        subsystems.forEach(subsystem -> subsystem.run(TorqueMode.TELEOP));
     }
 
     @Override
@@ -106,7 +106,7 @@ public class TorqueRobotBase extends TimedRobot {
     @Override
     public final void autonomousPeriodic() {
         autoManager.runCurrentSequence();
-        subsystems.forEach(subsystem -> subsystem.update(TorqueMode.AUTO));
+        subsystems.forEach(subsystem -> subsystem.run(TorqueMode.AUTO));
     }
 
     @Override
@@ -117,7 +117,7 @@ public class TorqueRobotBase extends TimedRobot {
     @Override
     public final void testPeriodic() {
         input.update();
-        subsystems.forEach(subsystem -> subsystem.update(TorqueMode.TEST));
+        subsystems.forEach(subsystem -> subsystem.run(TorqueMode.TEST));
     }
 
     @Override

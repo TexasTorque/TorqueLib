@@ -8,6 +8,8 @@ package org.texastorque.torquelib.auto;
 
 import java.util.ArrayList;
 
+import org.texastorque.torquelib.auto.commands.TorqueRunSequence;
+
 /**
  * Texas Torque autonomous sequence base class.
  *
@@ -20,7 +22,8 @@ public abstract class TorqueSequence {
     private boolean ended = false;
     private int blockIndex = 0;
 
-    public TorqueSequence() {}
+    public TorqueSequence() {
+    }
 
     // loops might be able to have local variable marked final
     public final void run() {
@@ -45,6 +48,10 @@ public abstract class TorqueSequence {
     public final void resetBlock() {
         ended = false;
         for (TorqueCommand command : commands.get(blockIndex)) command.reset();
+    }
+
+    public final TorqueCommand command() {
+        return new TorqueRunSequence(this);
     }
 
     protected final void addBlock(final TorqueBlock block) { commands.add(block); }

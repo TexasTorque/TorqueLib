@@ -11,11 +11,11 @@ import java.util.function.BooleanSupplier;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.auto.TorqueSequence;
 
-public final class TorqueRunSequenceWhile extends TorqueCommand {
+public final class TorqueWhile extends TorqueCommand {
     private final TorqueSequence sequence;
     private final BooleanSupplier condition;
 
-    public TorqueRunSequenceWhile(final TorqueSequence sequence, final BooleanSupplier condition) { 
+    public TorqueWhile(final TorqueSequence sequence, final BooleanSupplier condition) { 
         this.sequence = sequence; 
         this.condition = condition;
     }

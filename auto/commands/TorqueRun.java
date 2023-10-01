@@ -8,10 +8,10 @@ package org.texastorque.torquelib.auto.commands;
 
 import org.texastorque.torquelib.auto.TorqueCommand;
 
-public final class TorqueExecute extends TorqueCommand {
+public final class TorqueRun extends TorqueCommand {
     private final Runnable command;
 
-    public TorqueExecute(final Runnable command) { this.command = command; }
+    public TorqueRun(final Runnable command) { this.command = command; }
 
     @Override
     protected final void init() {

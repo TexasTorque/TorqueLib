@@ -36,6 +36,10 @@ public abstract class TorqueCommand {
         started = false;
     }
 
+    public final TorqueCommand command() {
+        return this;
+    }
+
     protected abstract void init();
 
     protected abstract void continuous();
