@@ -120,8 +120,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     private final CANCoder cancoder;
 
     // Velocity controllers.
-    private final PIDController drivePID, turnPID;
-    private final SparkMaxPIDController m_drivingPIDController;
+    private final PIDController autoDrivePID, turnPID;
+    private final SparkMaxPIDController teleopDrivingPID;
 
     private final SimpleMotorFeedforward driveFeedForward;
 
@@ -172,14 +172,14 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         cancoder.configAllSettings(cancoderConfig);
 
         // Configure the controllers
-        drivePID = new PIDController(config.drivePGain, config.driveIGain, config.driveDGain);
+        autoDrivePID = new PIDController(config.drivePGain, config.driveIGain, config.driveDGain);
         turnPID = new PIDController(turnP, config.turnIGain, config.turnDGain);
-        m_drivingPIDController = drive.getPIDController();
-        m_drivingPIDController.setFeedbackDevice(drive.encoder);
-        m_drivingPIDController.setP(.2);
-        m_drivingPIDController.setI(0);
-        m_drivingPIDController.setD(0);
-        m_drivingPIDController.setFF(ff);
+        teleopDrivingPID = drive.getPIDController();
+        teleopDrivingPID.setFeedbackDevice(drive.encoder);
+        teleopDrivingPID.setP(.2);
+        teleopDrivingPID.setI(0);
+        teleopDrivingPID.setD(0);
+        teleopDrivingPID.setFF(ff);
       
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
         driveFeedForward = new SimpleMotorFeedforward(config.driveStaticGain, config.driveFeedForward);
@@ -197,12 +197,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
         // Calculate drive output
         if (useSmartDrive) {
-            final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
+            final double drivePIDOutput = autoDrivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
             final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
             // log("Drive PID Output", drivePIDOutput + driveFFOutput);
             drive.setPercent(drivePIDOutput + driveFFOutput);
         } else {
-            m_drivingPIDController.setReference(optimized.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
+            teleopDrivingPID.setReference(optimized.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
             // final double teleopDrivePIDOutput = m_drivingPIDController.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
             // drive.setPercent(teleopDrivePIDOutput);
             SmartDashboard.putNumber(name + " desired turn", optimized.angle.getRadians());
