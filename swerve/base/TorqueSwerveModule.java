@@ -22,4 +22,14 @@ public abstract class TorqueSwerveModule {
     public abstract void setDesiredState(final SwerveModuleState state);
     public abstract SwerveModuleState getState();
     public abstract Rotation2d getRotation();
+
+    public static final class SwervePorts {
+        public final int drive, turn, encoder;
+    
+        public SwervePorts(final int drive, final int turn, final int encoder) {
+            this.drive = drive;
+            this.turn = turn;
+            this.encoder = encoder;
+        }
+    }
 }

@@ -25,41 +25,17 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @author Justus Languell - Omar Afzal
  */
 public final class TorqueSwerveX extends TorqueSwerveModule {
+    public int driveMaxCurrent = 35, turnMaxCurrent = 25;
 
-    /**
-     * A structure to define the constants for the swerve module. It has default values that can be
-     * overriden before written to the module.
-     */
-    public static final class SwerveConfig {
-        public static final SwerveConfig defaultConfig = new SwerveConfig();
+    public double voltageCompensation = 12.6, drivePGain = 0.2, driveIGain = 0.0, driveDGain = 0.0,
+            driveStaticGain = 0.015, driveFF = 0.212,
 
-        public int driveMaxCurrent = 35, turnMaxCurrent = 25;
+            driveGearRatio = 6.75, wheelDiameter = 0.1016,
+            driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI),
+            drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI),
 
-        public double voltageCompensation = 12.6,
+            turnPGain = 0.5, turnIGain = 0.0, turnDGain = 0.0, turnGearRatio = 13.71;
 
-                maxVelocity = 5, maxAcceleration = 9.6, maxAngularVelocity = 2 * Math.PI,
-                maxAngularAcceleration = 2 * Math.PI,
-
-                drivePGain = 0.2, driveIGain = 0.0, driveDGain = 0.0, driveStaticGain = 0.015,
-                driveFeedForward = 0.212,
-
-                driveGearRatio = 6.57, wheelDiameter = 0.1016,
-                driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI),
-                drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI),
-
-                turnPGain = 0.5, turnIGain = 0.0, turnDGain = 0.0, turnGearRatio = 12.41;
-
-    }
-
-    public static final class SwervePorts {
-        public final int drive, turn, encoder;
-
-        public SwervePorts(final int drive, final int turn, final int encoder) {
-            this.drive = drive;
-            this.turn = turn;
-            this.encoder = encoder;
-        }
-    }
 
     /**
      * Normalizes drive speeds to never exceed a specified max.
@@ -85,8 +61,6 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         return coterminal;
     }
 
-    private final SwerveConfig config;
-
     private final TorqueNEO drive, turn;
 
     private final CANCoder cancoder;
@@ -99,25 +73,23 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
 
     public final String name;
 
-    public TorqueSwerveX(final String name, final SwervePorts ports, final double staticOffset,
-            final SwerveConfig config) {
+    public TorqueSwerveX(final String name, final SwervePorts ports, final double staticOffset) {
         super(ports.drive);
         this.name = name.replaceAll(" ", "_").toLowerCase();
         this.staticOffset = staticOffset;
-        this.config = config;
 
         drive = new TorqueNEO(ports.drive);
-        drive.setCurrentLimit(config.driveMaxCurrent);
-        drive.setVoltageCompensation(config.voltageCompensation);
+        drive.setCurrentLimit(driveMaxCurrent);
+        drive.setVoltageCompensation(voltageCompensation);
         drive.setBreakMode(true);
         drive.invertMotor(false);
-        drive.setConversionFactors(config.drivePosFactor, config.driveVelocityFactor);
+        drive.setConversionFactors(drivePosFactor, driveVelocityFactor);
         drive.burnFlash();
 
         turn = new TorqueNEO(ports.turn);
-        turn.setConversionFactors(config.turnGearRatio * 2 * Math.PI, 1);
-        turn.setCurrentLimit(config.turnMaxCurrent);
-        turn.setVoltageCompensation(config.voltageCompensation);
+        turn.setConversionFactors(turnGearRatio * 2 * Math.PI, 1);
+        turn.setCurrentLimit(turnMaxCurrent);
+        turn.setVoltageCompensation(voltageCompensation);
         turn.setBreakMode(true);
         turn.burnFlash();
 
@@ -129,29 +101,22 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         cancoder.configAllSettings(cancoderConfig);
 
-        drivePID = new PIDController(config.drivePGain, config.driveIGain, config.driveDGain);
-        turnPID = new PIDController(config.turnPGain, config.turnIGain, config.turnDGain);
+        drivePID = new PIDController(drivePGain, driveIGain, driveDGain);
+        turnPID = new PIDController(turnPGain, turnIGain, turnDGain);
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
-        driveFeedForward =
-                new SimpleMotorFeedforward(config.driveStaticGain, config.driveFeedForward);
+        driveFeedForward = new SimpleMotorFeedforward(driveStaticGain, driveFF);
     }
 
-    @Override
+
     public void setDesiredState(final SwerveModuleState state) {
-        setDesiredState(state, DriverStation.isAutonomous());
-    }
-
-    public void setDesiredState(final SwerveModuleState state, final boolean useSmartDrive) {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
-        if (useSmartDrive) {
-            final double drivePIDOutput =
-                    drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
-            final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
-            drive.setPercent(drivePIDOutput + driveFFOutput);
-        } else {
-            drive.setPercent(optimized.speedMetersPerSecond / config.maxVelocity);
-        }
+        final double drivePIDOutput =
+                drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
+        final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
+
+        drive.setVolts(drivePIDOutput + (DriverStation.isAutonomous() ? driveFFOutput : 0));
+
 
         final double turnPIDOutput =
                 turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
@@ -170,11 +135,6 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
     @Override
     public Rotation2d getRotation() {
         return Rotation2d.fromRadians(getTurnEncoder());
-    }
-
-    public void stop() {
-        drive.setPercent(0.0);
-        turn.setPercent(0.0);
     }
 
     private double getTurnEncoder() {
