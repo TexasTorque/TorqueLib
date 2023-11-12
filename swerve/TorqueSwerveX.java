@@ -31,7 +31,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
     public double voltageCompensation = 12.6, drivePGain = .2, driveIGain = 0.0, driveDGain = 0.0,
             driveStaticGain = 0.015, driveFF = 0.212, driveGearRatio = 6.75, wheelDiameter = 0.1016,
             driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI),
-            drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI), turnPGain = 0.1,
+            drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI), turnPGain = 4,
             turnIGain = 0.0, turnDGain = 0.0, turnGearRatio = 13.71;
 
 
@@ -48,7 +48,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
     public final String name;
 
     public TorqueSwerveX(final String name, final SwervePorts ports, final double staticOffset,
-            final double driveP, final double turnP) {
+            final double driveP) {
         super(ports.drive);
         this.name = name.replaceAll(" ", "_").toLowerCase();
         this.staticOffset = staticOffset;
@@ -77,7 +77,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         cancoder.configAllSettings(cancoderConfig);
 
         drivePID = new PIDController(driveP, driveIGain, driveDGain);
-        turnPID = new PIDController(turnP, turnIGain, turnDGain);
+        turnPID = new PIDController(turnPGain, turnIGain, turnDGain);
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
         driveFeedForward = new SimpleMotorFeedforward(driveStaticGain, driveFF);
     }
@@ -89,9 +89,12 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
 
     public void setDesiredState(final SwerveModuleState state) {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
+        SmartDashboard.putNumber(name + " Turn Position", getRotation().getRadians());
 
-        final double drivePIDOutput =drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
-        final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
+
+        final double drivePIDOutput =
+                drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
+        // final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
 
         SmartDashboard.putNumber(name + " Req Speed", optimized.speedMetersPerSecond);
         SmartDashboard.putNumber(name + " Drive Speed", drive.getVelocity());
@@ -100,10 +103,8 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
 
         drive.setVolts(drivePIDOutput);
 
-
-        final double turnPIDOutput =
-                turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
-        turn.setVolts(-turnPIDOutput);
+        final double turnPIDOutput = -turnPID.calculate(getRotation().getRadians(), optimized.angle.getRadians());
+        turn.setVolts(turnPIDOutput);
     }
 
     @Override
@@ -117,12 +118,10 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
 
     @Override
     public Rotation2d getRotation() {
-        return Rotation2d.fromRadians(getTurnEncoder());
+        return Rotation2d.fromRadians(MathUtil
+                .angleModulus(new Rotation2d(cancoder.getPosition() - staticOffset).getRadians()));
     }
 
-    private double getTurnEncoder() {
-        return MathUtil
-                .angleModulus(new Rotation2d(cancoder.getPosition() - staticOffset).getRadians());
-    }
+
 
 }
