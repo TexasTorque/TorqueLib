@@ -12,12 +12,13 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * West Coast Products Swerve X Module.
@@ -27,39 +28,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 public final class TorqueSwerveX extends TorqueSwerveModule {
     public int driveMaxCurrent = 35, turnMaxCurrent = 25;
 
-    public double voltageCompensation = 12.6, drivePGain = 0.2, driveIGain = 0.0, driveDGain = 0.0,
-            driveStaticGain = 0.015, driveFF = 0.212,
-
-            driveGearRatio = 6.75, wheelDiameter = 0.1016,
+    public double voltageCompensation = 12.6, drivePGain = .2, driveIGain = 0.0, driveDGain = 0.0,
+            driveStaticGain = 0.015, driveFF = 0.212, driveGearRatio = 6.75, wheelDiameter = 0.1016,
             driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI),
-            drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI),
+            drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI), turnPGain = 0.1,
+            turnIGain = 0.0, turnDGain = 0.0, turnGearRatio = 13.71;
 
-            turnPGain = 0.5, turnIGain = 0.0, turnDGain = 0.0, turnGearRatio = 13.71;
-
-
-    /**
-     * Normalizes drive speeds to never exceed a specified max.
-     *
-     * @param states The swerve module states
-     * @param max Maximum translational speed.
-     */
-    public static void normalize(SwerveModuleState[] states, final double max) {
-        double top = 0, buff;
-        for (final SwerveModuleState state : states)
-            if ((buff = (state.speedMetersPerSecond / max)) > top)
-                top = buff;
-        if (top != 0)
-            for (SwerveModuleState state : states)
-                state.speedMetersPerSecond /= top;
-    }
-
-    private static double coterminal(final double rotation) {
-        double coterminal = rotation;
-        final double full = Math.signum(rotation) * 2 * Math.PI;
-        while (coterminal > Math.PI || coterminal < -Math.PI)
-            coterminal -= full;
-        return coterminal;
-    }
 
     private final TorqueNEO drive, turn;
 
@@ -73,7 +47,8 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
 
     public final String name;
 
-    public TorqueSwerveX(final String name, final SwervePorts ports, final double staticOffset) {
+    public TorqueSwerveX(final String name, final SwervePorts ports, final double staticOffset,
+            final double driveP, final double turnP) {
         super(ports.drive);
         this.name = name.replaceAll(" ", "_").toLowerCase();
         this.staticOffset = staticOffset;
@@ -90,7 +65,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         turn.setConversionFactors(turnGearRatio * 2 * Math.PI, 1);
         turn.setCurrentLimit(turnMaxCurrent);
         turn.setVoltageCompensation(voltageCompensation);
-        turn.setBreakMode(true);
+        turn.setBreakMode(false);
         turn.burnFlash();
 
         cancoder = new CANCoder(ports.encoder);
@@ -101,26 +76,34 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         cancoder.configAllSettings(cancoderConfig);
 
-        drivePID = new PIDController(drivePGain, driveIGain, driveDGain);
-        turnPID = new PIDController(turnPGain, turnIGain, turnDGain);
+        drivePID = new PIDController(driveP, driveIGain, driveDGain);
+        turnPID = new PIDController(turnP, turnIGain, turnDGain);
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
         driveFeedForward = new SimpleMotorFeedforward(driveStaticGain, driveFF);
+    }
+
+    public void setDrivePID(final double p) {
+        drivePID.setP(p);
     }
 
 
     public void setDesiredState(final SwerveModuleState state) {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
-        final double drivePIDOutput =
-                drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
+        final double drivePIDOutput =drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
         final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
 
-        drive.setVolts(drivePIDOutput + (DriverStation.isAutonomous() ? driveFFOutput : 0));
+        SmartDashboard.putNumber(name + " Req Speed", optimized.speedMetersPerSecond);
+        SmartDashboard.putNumber(name + " Drive Speed", drive.getVelocity());
+
+        SmartDashboard.putNumber(name + " Drive PID Volts", drivePIDOutput);
+
+        drive.setVolts(drivePIDOutput);
 
 
         final double turnPIDOutput =
                 turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
-        turn.setPercent(turnPIDOutput);
+        turn.setVolts(-turnPIDOutput);
     }
 
     @Override
@@ -138,7 +121,8 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
     }
 
     private double getTurnEncoder() {
-        return coterminal(cancoder.getPosition() - staticOffset);
+        return MathUtil
+                .angleModulus(new Rotation2d(cancoder.getPosition() - staticOffset).getRadians());
     }
 
 }
