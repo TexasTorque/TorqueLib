@@ -134,6 +134,8 @@ public final class TorqueNEO {
 
     public double getPercent() { return motor.getAppliedOutput(); }
 
+    public SparkMaxPIDController getPIDController() { return controller; }
+
     /**
      * Set the motor to a voltage output.
      * Domain is [-12, 12] where 0 is off and negative values are reversed
