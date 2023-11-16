@@ -54,6 +54,8 @@ public final class TorqueNavXGyro extends AHRS {
 
     public final Rotation2d getHeadingCCW() { return Rotation2d.fromDegrees(getDegreesCounterClockwise()); }
 
+    public final Rotation2d getAngularVelocity() { return Rotation2d.fromDegrees(getRate()); }
+
     private final double calculateOffsetCW(final double offset) {
         // Why is the +360 here bruh?
         return (offset - getFusedHeading() + 360) % 360;
