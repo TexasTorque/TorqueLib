@@ -12,6 +12,7 @@ import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.util.TorqueUtil;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.MotorFeedbackSensor;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
@@ -195,7 +196,39 @@ public final class TorqueNEO {
         if (pid.hasIntegralZone()) checkError(controller.setIZone(pid.getIntegralZone()), "i zone");
         checkError(controller.setFF(pid.getFeedForward()), "ff term");
         checkError(controller.setOutputRange(pid.getMinOutput(), pid.getMaxOutput()), "output range");
+    } 
+
+    /**
+     * Configure the PID parameters.
+     * Necessary to use position and velocity control.
+     *
+     */
+    public void configurePID(final double p, final double i, final double d, final double iZone, final double ff, final double minOutput, final double maxOutput) {
+        checkError(controller.setP(p), "p term");
+        checkError(controller.setI(i), "i term");
+        checkError(controller.setD(d), "d term");
+        checkError(controller.setIZone(iZone), "i zone");
+        checkError(controller.setFF(ff), "ff term");
+        checkError(controller.setOutputRange(minOutput, maxOutput), "output range");
     }
+
+    /**
+     * Configure the PID parameters.
+     * Necessary to use position and velocity control.
+     *
+     */
+    public void configurePIDF(final double p, final double i, final double d, final double ff) {
+        checkError(controller.setP(p), "p term");
+        checkError(controller.setI(i), "i term");
+        checkError(controller.setD(d), "d term");
+        checkError(controller.setFF(ff), "ff term");
+    }
+
+    public void setPIDVoltageLimits(final double min, final double max) { checkError(controller.setOutputRange(min, max)); }
+
+    public void setPIDFeedbackDevice(final MotorFeedbackSensor device) { checkError(controller.setFeedbackDevice(device)); }
+
+    public void setPIDReference(final double goal, final ControlType control) { checkError(controller.setReference(goal, control)); }
 
     /**
      * Default unit is rotations, changed with setConversionFactors method.

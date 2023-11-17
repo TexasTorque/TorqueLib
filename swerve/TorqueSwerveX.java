@@ -13,7 +13,6 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -31,11 +30,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public final class TorqueSwerveX extends TorqueSwerveModule {
     public int driveMaxCurrent = 35, turnMaxCurrent = 25;
 
-    public double drivePGain = .2, driveFF = 0.2, driveGearRatio = 6.75, wheelDiameter = 0.1016,
+    public final double drivePGain = .1, driveIGain = 0, driveDGain = .01, driveFF = 0.2, driveGearRatio = 6.75,
+            wheelDiameter = 0.1016,
             driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI),
-            drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI), turnPGain = 4,
-            turnIGain = 0.0, turnDGain = 0.0, turnGearRatio = 13.71, staticOffset;
-
+            drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI),
+            NEOFreeSpeedRPS = 5676 * 0.9 / 60,
+            driveWheelFreeSpeedRps = (NEOFreeSpeedRPS * wheelDiameter * Math.PI) / driveGearRatio, driveMaxSpeed = 4.6,
+            turnPGain = 4, turnIGain = 0.0, turnDGain = 0.0, turnGearRatio = 13.71;
 
     private final TorqueNEO drive, turn;
 
@@ -43,13 +44,11 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
 
     private final PIDController turnPID;
 
-    private final SparkMaxPIDController drivePID;
-
     private final CANCoderConfiguration cancoderConfig;
 
     public final String name;
 
-    public double lastTimestamp = 0, lastVelocity = 0;
+    public double staticOffset, lastTimestamp = 0, lastVelocity = 0;
 
 
     public TorqueSwerveX(final String name, final SwervePorts ports, final double staticOffset) {
@@ -65,12 +64,8 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         drive.invertMotor(false);
         drive.setConversionFactors(drivePosFactor, driveVelocityFactor);
 
-        drivePID = drive.getPIDController();
-        drivePID.setFeedbackDevice(drive.encoder);
-        drivePID.setP(drivePGain);
-        drivePID.setI(0);
-        drivePID.setD(0);
-        drivePID.setFF(driveFF);
+        drive.setPIDFeedbackDevice(drive.encoder);
+        drive.configurePIDF(drivePGain, driveIGain, driveDGain, 1 / driveWheelFreeSpeedRps);
         drive.burnFlash();
 
         turn = new TorqueNEO(ports.turn);
@@ -96,10 +91,10 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
         if (DriverStation.isAutonomous())
-            drivePID.setReference(optimized.speedMetersPerSecond,
+            drive.setPIDReference(optimized.speedMetersPerSecond,
                     CANSparkMax.ControlType.kVelocity);
         else
-            drive.setPercent(optimized.speedMetersPerSecond / 4.6);
+            drive.setPercent(optimized.speedMetersPerSecond / driveMaxSpeed);
 
 
         SmartDashboard.putNumber(name + " Req Speed", optimized.speedMetersPerSecond);
