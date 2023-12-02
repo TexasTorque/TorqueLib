@@ -9,35 +9,32 @@ package org.texastorque.torquelib.auto.commands;
 import java.util.function.BooleanSupplier;
 import org.texastorque.torquelib.auto.TorqueCommand;
 
-public final class TorqueContinuous extends TorqueCommand {
-    private final Runnable command;
-    private final BooleanSupplier end;
+public final class TorqueRunWhile extends TorqueCommand {
+    private final TorqueRun command;
+    private final BooleanSupplier condition;
 
-    public TorqueContinuous(final Runnable command) {
-        this(command, () -> false);
-    }
-
-    public TorqueContinuous(final Runnable command, final BooleanSupplier end) {
-        this.command = command;
-        this.end = end;
+    public TorqueRunWhile(final TorqueRun command, final BooleanSupplier condition) { 
+        this.command = command; 
+        this.condition = condition;
     }
 
     @Override
-    protected final void init() {
-        command.run();
-    }
+    protected final void init() {}
 
     @Override
     protected final void continuous() {
+        if (condition.getAsBoolean()) 
+            command.reset();
         command.run();
     }
 
     @Override
     protected final boolean endCondition() {
-        return end.getAsBoolean();
+        return !condition.getAsBoolean();
     }
 
     @Override
     protected final void end() {
+        command.reset();
     }
 }
