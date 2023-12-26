@@ -40,7 +40,7 @@ public abstract class TorqueStatorSubsystem<T extends TorqueState> implements To
         return this.desiredState;
     }
 
-    public final boolean isAtState(final T state) {
+    public boolean isAtState(final T state) {
         return getState() == state;
     }
 
