@@ -7,7 +7,6 @@
 package org.texastorque.torquelib.motors;
 
 import java.util.ArrayList;
-
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.util.TorqueUtil;
 import com.revrobotics.AbsoluteEncoder;

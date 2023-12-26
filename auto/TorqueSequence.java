@@ -19,7 +19,7 @@ import org.texastorque.torquelib.auto.commands.TorqueRunSequence;
  */
 public abstract class TorqueSequence {
     private final ArrayList<TorqueBlock> commands = new ArrayList<TorqueBlock>();
-    private boolean ended = false;
+    public boolean ended = false;
     private int blockIndex = 0;
 
     public TorqueSequence() {

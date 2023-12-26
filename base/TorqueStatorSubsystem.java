@@ -1,8 +1,8 @@
 /**
  * Copyright 2011-2023 Texas Torque.
  *
- * This file is part of TorqueLib, which is licensed under the MIT license.
- * For more details, see ./license.txt or write <jus@justusl.com>.
+ * This file is part of TorqueLib, which is licensed under the MIT license. For more details, see
+ * ./license.txt or write <jus@justusl.com>.
  */
 package org.texastorque.torquelib.base;
 
@@ -53,6 +53,5 @@ public abstract class TorqueStatorSubsystem<T extends TorqueState> implements To
         lastState = desiredState;
     }
 
-    protected void onStateChange() {
-    }
+    protected void onStateChange() {}
 }

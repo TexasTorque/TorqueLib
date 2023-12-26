@@ -68,7 +68,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
                 // The following will most likely need to be overriden
                 // depending on the weight of each robot
-                driveStaticGain = 0.015, driveFeedForward = 0.212, drivePGain = 0.2, driveIGain = 0.0, driveDGain = 0.0,
+                driveStaticGain = 0.015, driveFeedForward = 0.212, drivePGain = 0.3, driveIGain = 0.0, driveDGain = 0.0,
 
                       driveRampRate = 3.0,    // %power/s
                 driveGearRatio = 6.57,        // Translation motor to wheel
@@ -131,12 +131,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     public boolean useCancoder = true;
 
     public TorqueSwerveModule2022(final String name, final SwervePorts ports, final double staticOffset,
-                                  final SwerveConfig config) {
-        this(name, ports.drive, ports.turn, ports.encoder, staticOffset, config);
+                                  final SwerveConfig config, final double driveFF) {
+        this(name, ports.drive, ports.turn, ports.encoder, staticOffset, config, driveFF);
     }
 
     public TorqueSwerveModule2022(final String name, final int driveID, final int turnID, final int encoderID,
-                                  final double staticOffset, final SwerveConfig config) {
+                                  final double staticOffset, final SwerveConfig config, final double driveFF) {
         super(driveID);
         this.name = name.replaceAll(" ", "_").toLowerCase();
         this.staticOffset = staticOffset;
@@ -172,7 +172,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         drivePID = new PIDController(config.drivePGain, config.driveIGain, config.driveDGain);
         turnPID = new PIDController(config.turnPGain, config.turnIGain, config.turnDGain);
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
-        driveFeedForward = new SimpleMotorFeedforward(config.driveStaticGain, config.driveFeedForward);
+        driveFeedForward = new SimpleMotorFeedforward(config.driveStaticGain, driveFF);
     }
 
     @Override
