@@ -1,8 +1,8 @@
 /**
  * Copyright 2011-2023 Texas Torque.
  *
- * This file is part of TorqueLib, which is licensed under the MIT license.
- * For more details, see ./license.txt or write <jus@justusl.com>.
+ * This file is part of TorqueLib, which is licensed under the MIT license. For more details, see
+ * ./license.txt or write <jus@justusl.com>.
  */
 package org.texastorque.torquelib.auto.commands;
 
@@ -10,11 +10,11 @@ import java.util.function.BooleanSupplier;
 import org.texastorque.torquelib.auto.TorqueCommand;
 
 public final class TorqueRunWhile extends TorqueCommand {
-    private final TorqueRun command;
+    private final TorqueCommand command;
     private final BooleanSupplier condition;
 
-    public TorqueRunWhile(final TorqueRun command, final BooleanSupplier condition) { 
-        this.command = command; 
+    public TorqueRunWhile(final TorqueCommand command, final BooleanSupplier condition) {
+        this.command = command;
         this.condition = condition;
     }
 
@@ -23,9 +23,10 @@ public final class TorqueRunWhile extends TorqueCommand {
 
     @Override
     protected final void continuous() {
-        if (condition.getAsBoolean()) 
+        if (!condition.getAsBoolean())
             command.reset();
-        command.run();
+        else
+            command.run();
     }
 
     @Override
