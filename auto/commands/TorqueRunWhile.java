@@ -23,10 +23,9 @@ public final class TorqueRunWhile extends TorqueCommand {
 
     @Override
     protected final void continuous() {
-        if (!condition.getAsBoolean())
+        if (command.hasEnded())
             command.reset();
-        else
-            command.run();
+        command.run();
     }
 
     @Override

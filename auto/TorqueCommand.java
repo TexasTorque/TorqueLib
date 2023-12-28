@@ -1,10 +1,12 @@
 /**
  * Copyright 2011-2023 Texas Torque.
  *
- * This file is part of TorqueLib, which is licensed under the MIT license.
- * For more details, see ./license.txt or write <jus@justusl.com>.
+ * This file is part of TorqueLib, which is licensed under the MIT license. For more details, see
+ * ./license.txt or write <jus@justusl.com>.
  */
 package org.texastorque.torquelib.auto;
+
+import org.texastorque.torquelib.auto.sequences.TorqueRunCommand;
 
 /**
  * Texas Torque autonomous command base class.
@@ -17,7 +19,8 @@ public abstract class TorqueCommand {
     private boolean ended = false, started = false;
 
     public final boolean run() {
-        if (ended) return ended;
+        if (ended)
+            return ended;
         if (!started) {
             init();
             started = true;
@@ -40,6 +43,10 @@ public abstract class TorqueCommand {
         return this;
     }
 
+    public boolean hasEnded() {
+        return ended;
+    }
+
     protected abstract void init();
 
     protected abstract void continuous();
@@ -47,4 +54,8 @@ public abstract class TorqueCommand {
     protected abstract boolean endCondition();
 
     protected abstract void end();
+
+    public TorqueSequence sequence() {
+        return new TorqueRunCommand(this);
+    }
 }
