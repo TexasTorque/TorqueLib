@@ -15,7 +15,7 @@ public final class TorqueWhile extends TorqueCommand {
     private final TorqueSequence sequence;
     private final BooleanSupplier condition;
 
-    public TorqueWhile(final TorqueSequence sequence, final BooleanSupplier condition) { 
+    public TorqueWhile(final BooleanSupplier condition, final TorqueSequence sequence) { 
         this.sequence = sequence; 
         this.condition = condition;
     }

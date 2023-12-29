@@ -15,25 +15,25 @@ import org.texastorque.torquelib.auto.TorqueSequence;
 /**
  * TorqueSwitch
  */
-public final class TorqueSequenceSwitch extends TorqueCommand {
+public final class TorqueSwitch extends TorqueCommand {
     // PLAYING WITH NULL... THIS *CAN* BE DANGEROUS, BUT SINCE THE APPLICATION
     // IS PRETTY SIMPLE IT IS FINE.
     private TorqueSequence todo = null, onElse = null;
     private final Map<BooleanSupplier, TorqueSequence> options;
 
-    public TorqueSequenceSwitch(final BooleanSupplier condition, final TorqueSequence option) {
+    public TorqueSwitch(final BooleanSupplier condition, final TorqueSequence option) {
         this(Map.of(condition, option), null);
     }
 
-    public TorqueSequenceSwitch(final BooleanSupplier condition, final TorqueSequence option, final TorqueSequence onElse) {
+    public TorqueSwitch(final BooleanSupplier condition, final TorqueSequence option, final TorqueSequence onElse) {
         this(Map.of(condition, option), onElse);
     }
 
-    public TorqueSequenceSwitch(final Map<BooleanSupplier, TorqueSequence> options) {
+    public TorqueSwitch(final Map<BooleanSupplier, TorqueSequence> options) {
         this(options, null);
     }
 
-    public TorqueSequenceSwitch(final Map<BooleanSupplier, TorqueSequence> options, final TorqueSequence onElse) {
+    public TorqueSwitch(final Map<BooleanSupplier, TorqueSequence> options, final TorqueSequence onElse) {
         this.options = options;
         this.onElse = onElse;
     }
@@ -66,5 +66,10 @@ public final class TorqueSequenceSwitch extends TorqueCommand {
     protected final void end() {
         if (todo != null)
             todo.reset();
+        if (onElse != null)
+            onElse.reset();
+        for (final Map.Entry<BooleanSupplier, TorqueSequence> entry : options.entrySet()) {
+            entry.getValue().reset();
+        }
     }
 }

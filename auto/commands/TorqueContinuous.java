@@ -9,6 +9,7 @@ package org.texastorque.torquelib.auto.commands;
 import java.util.function.BooleanSupplier;
 import org.texastorque.torquelib.auto.TorqueCommand;
 
+@Deprecated // this is a bullshit class
 public final class TorqueContinuous extends TorqueCommand {
     private final Runnable command;
     private final BooleanSupplier end;
