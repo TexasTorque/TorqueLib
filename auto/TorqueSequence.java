@@ -7,8 +7,12 @@
 package org.texastorque.torquelib.auto;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.texastorque.torquelib.auto.commands.TorqueRun;
 import org.texastorque.torquelib.auto.commands.TorqueRunSequence;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Texas Torque autonomous sequence base class.
@@ -69,5 +73,15 @@ public abstract class TorqueSequence {
 
     protected final void addBlock(final TorqueCommand... commands) {
         addBlock(new TorqueBlock(commands));
+    }
+
+    public static String autoLog = "";
+
+    protected final void addLog(final String msg) {
+        addBlock(new TorqueRun(() -> {
+            autoLog += msg + "\n";
+            SmartDashboard.putString("Auto Msg", msg);
+            SmartDashboard.putString("Auto Log", autoLog);
+        }));
     }
 }

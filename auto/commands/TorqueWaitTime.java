@@ -6,26 +6,41 @@
  */
 package org.texastorque.torquelib.auto.commands;
 
+import java.util.function.DoubleSupplier;
+
 import org.texastorque.torquelib.auto.TorqueCommand;
 
 import edu.wpi.first.wpilibj.Timer;
 
 public final class TorqueWaitTime extends TorqueCommand {
-    private final double time;
+    private final DoubleSupplier timeSupplier;
+    private double time;
+
     private double start;
     private Runnable command;
 
     public TorqueWaitTime(final double time) {
-        this(time, null);
+        this(() -> time);
     }
 
+    public TorqueWaitTime(final DoubleSupplier timeSupplier) {
+        this(timeSupplier, null);
+    }
+
+
     public TorqueWaitTime(final double time, final Runnable command) {
-        this.time = time;
+        this(() -> time, command);
+    }
+
+    public TorqueWaitTime(final DoubleSupplier timeSupplier, final Runnable command) {
+        this.timeSupplier = timeSupplier;
         this.command = command;
+        this.time = 0;
     }
 
     @Override
     protected final void init() {
+        time = timeSupplier.getAsDouble();
         start = Timer.getFPGATimestamp();
     }
 
