@@ -19,7 +19,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -30,13 +29,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public final class TorqueSwerveX extends TorqueSwerveModule {
     public int driveMaxCurrent = 35, turnMaxCurrent = 25;
 
-    public final double drivePGain = .1, driveIGain = 0, driveDGain = .01, driveFF = 0.2, driveGearRatio = 6.75,
-            wheelDiameter = 0.1016,
+    public final double drivePGain = .1, driveIGain = 0, driveDGain = .01, driveFF = 0.2,
+            driveGearRatio = 6.75, wheelDiameter = 0.1016,
             driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI),
             drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI),
             NEOFreeSpeedRPS = 5676 * 0.9 / 60,
-            driveWheelFreeSpeedRps = (NEOFreeSpeedRPS * wheelDiameter * Math.PI) / driveGearRatio, driveMaxSpeed = 4.6,
-            turnPGain = 4, turnIGain = 0.0, turnDGain = 0.0, turnGearRatio = 13.71;
+            driveWheelFreeSpeedRps = (NEOFreeSpeedRPS * wheelDiameter * Math.PI) / driveGearRatio,
+            driveMaxSpeed = 4.6, turnPGain = 4, turnIGain = 0.0, turnDGain = 0.0,
+            turnGearRatio = 13.71;
 
     private final TorqueNEO drive, turn;
 
@@ -48,7 +48,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
 
     public final String name;
 
-    public double staticOffset, lastTimestamp = 0, lastVelocity = 0;
+    public final double staticOffset;
 
 
     public TorqueSwerveX(final String name, final SwervePorts ports, final double staticOffset) {
@@ -96,25 +96,10 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         else
             drive.setPercent(optimized.speedMetersPerSecond / driveMaxSpeed);
 
-
-        SmartDashboard.putNumber(name + " Req Speed", optimized.speedMetersPerSecond);
-        SmartDashboard.putNumber(name + " Drive Speed", drive.getVelocity());
-        SmartDashboard.putNumber(name + " Drive Amps", drive.getCurrent());
-        SmartDashboard.putNumber(name + " Drive Volts", drive.getVolts());
-        SmartDashboard.putNumber(name + " Drive Percent", optimized.speedMetersPerSecond / 4.6);
-        SmartDashboard.putNumber(name + " Drive Acceleration", drive.getVelocity() - lastVelocity);
-
-
-
         final double turnPIDOutput =
                 -turnPID.calculate(getRotation().getRadians(), optimized.angle.getRadians());
+        SmartDashboard.putNumber(name + " Angle", getRotation().getRadians());
         turn.setVolts(turnPIDOutput);
-
-        if (Timer.getFPGATimestamp() - lastTimestamp >= 1) {
-            lastTimestamp = Timer.getFPGATimestamp();
-            lastVelocity = drive.getVelocity();
-        }
-
     }
 
     @Override
