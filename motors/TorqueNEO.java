@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.util.TorqueUtil;
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.MotorFeedbackSensor;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.REVLibError;
@@ -167,7 +167,7 @@ public final class TorqueNEO {
      *
      * @param percent The amperage output.
      */
-    public void setCurrent(final double current) { checkError(controller.setReference(current, ControlType.kCurrent)); }
+    public void setCurrent(final double current) { checkError(controller.setReference(current, CANSparkBase.ControlType.kCurrent)); }
 
     public double getCurrent() { return motor.getOutputCurrent(); }
 
@@ -227,14 +227,14 @@ public final class TorqueNEO {
 
     public void setPIDFeedbackDevice(final MotorFeedbackSensor device) { checkError(controller.setFeedbackDevice(device)); }
 
-    public void setPIDReference(final double goal, final ControlType control) { checkError(controller.setReference(goal, control)); }
+    public void setPIDReference(final double goal, final CANSparkBase.ControlType control) { checkError(controller.setReference(goal, control)); }
 
     /**
      * Default unit is rotations, changed with setConversionFactors method.
      *
      * @param pos The position to set.
      */
-    public void setPosition(final double pos) { checkError(controller.setReference(pos, ControlType.kPosition)); }
+    public void setPosition(final double pos) { checkError(controller.setReference(pos, CANSparkBase.ControlType.kPosition)); }
 
     /**
      * Default unit is rotations, changed with setConversionFactors method.
@@ -255,7 +255,7 @@ public final class TorqueNEO {
      *
      * @param velo The velocity to set.
      */
-    public void setVelocity(final double velo) { checkError(controller.setReference(velo, ControlType.kVelocity)); }
+    public void setVelocity(final double velo) { checkError(controller.setReference(velo, CANSparkBase.ControlType.kVelocity)); }
 
     // *************************
     // * SMART MOTION CONTROLS *
@@ -288,7 +288,7 @@ public final class TorqueNEO {
      * @param pos The position to set.
      */
     public void setSmartPosition(final double pos) {
-        checkError(controller.setReference(pos, ControlType.kSmartMotion));
+        checkError(controller.setReference(pos, CANSparkBase.ControlType.kSmartMotion));
     }
 
     /**
@@ -297,7 +297,7 @@ public final class TorqueNEO {
      * @param velo The velocity to set.
      */
     public void setSmartVelocity(final double velo) {
-        checkError(controller.setReference(velo, ControlType.kSmartVelocity));
+        checkError(controller.setReference(velo, CANSparkBase.ControlType.kSmartVelocity));
     }
 
     // *********************

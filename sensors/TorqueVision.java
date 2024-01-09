@@ -71,7 +71,7 @@ public final class TorqueVision {
         this.result = new PhotonPipelineResult();
         this.target = new PhotonTrackedTarget();
         setCenterToCamera(centerToCamera);
-        photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP, cam, centerToCamera);
+        photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_RIO, cam, centerToCamera);
         photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     }
 

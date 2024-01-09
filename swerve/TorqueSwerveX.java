@@ -12,7 +12,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -91,8 +91,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
         if (DriverStation.isAutonomous())
-            drive.setPIDReference(optimized.speedMetersPerSecond,
-                    CANSparkMax.ControlType.kVelocity);
+            drive.setPIDReference(optimized.speedMetersPerSecond, CANSparkBase.ControlType.kVelocity);
         else
             drive.setPercent(optimized.speedMetersPerSecond / driveMaxSpeed);
 

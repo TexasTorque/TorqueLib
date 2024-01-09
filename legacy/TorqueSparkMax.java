@@ -14,10 +14,10 @@ import org.texastorque.torquelib.legacy.base.TorqueSmartMotor;
 import org.texastorque.torquelib.util.TorqueUtil;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.REVLibError;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
@@ -107,7 +107,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     @Override
     public final void setPosition(final double setpoint) {
         try {
-            pidController.setReference(setpoint, ControlType.kPosition);
+            pidController.setReference(setpoint, CANSparkBase.ControlType.kPosition);
             for (TorqueSparkMax follower : followers) follower.setPosition(setpoint);
         } catch (Exception e) { System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port); }
         encoder.setPosition(0);
@@ -216,7 +216,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
     @Override
     public final void setVelocityRPM(final double setpoint) {
         try {
-            pidController.setReference(setpoint, ControlType.kVelocity);
+            pidController.setReference(setpoint, CANSparkBase.ControlType.kVelocity);
             for (TorqueSparkMax follower : followers) follower.setVelocityRPM(setpoint);
         } catch (Exception e) { System.out.printf("TorqueSparkMax port %d: You need to configure the PID\n", port); }
     }
@@ -385,7 +385,7 @@ public final class TorqueSparkMax extends TorqueMotor implements TorqueSmartMoto
      * @param setpoint The current to output.
      */
     public final void setCurrent(final double setpoint) {
-        pidController.setReference(setpoint, ControlType.kCurrent);
+        pidController.setReference(setpoint, CANSparkBase.ControlType.kCurrent);
         for (TorqueSparkMax follower : followers) follower.setCurrent(setpoint);
     }
 

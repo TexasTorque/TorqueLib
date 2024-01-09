@@ -75,10 +75,5 @@ public class TorqueLogiPro extends Joystick {
 
     public double getYaw() { return deadbanded(getZ()); }
 
-    @Override
-    public double getThrottle() {
-        return (-super.getThrottle() + 1) / 2;
-    }
-
     private double deadbanded(double value) { return (value < deadband && value > -deadband) ? 0 : value; }
 }
