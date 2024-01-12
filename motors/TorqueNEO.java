@@ -13,11 +13,11 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.MotorFeedbackSensor;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkPIDController;
 
 /**
  * Designed to be the one and only motor wrapper for 2023.
@@ -63,7 +63,7 @@ public final class TorqueNEO {
      */
     public final CANSparkMax motor;
     public final RelativeEncoder encoder;
-    public final SparkMaxPIDController controller;
+    public final SparkPIDController controller;
 
     // ****************
     // * DEVICE SETUP *
@@ -134,7 +134,7 @@ public final class TorqueNEO {
 
     public double getPercent() { return motor.getAppliedOutput(); }
 
-    public SparkMaxPIDController getPIDController() { return controller; }
+    public SparkPIDController getPIDController() { return controller; }
 
     /**
      * Set the motor to a voltage output.
