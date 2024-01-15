@@ -45,13 +45,10 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
 
     public final String name;
 
-    public final double staticOffset;
-
-    public TorqueSwerveX(final String name, final SwervePorts ports, final double staticOffset) {
+    public TorqueSwerveX(final String name, final SwervePorts ports) {
 
         super(ports.drive);
         this.name = name.replaceAll(" ", "_").toLowerCase();
-        this.staticOffset = staticOffset;
 
         drive = new TorqueNEO(ports.drive);
         drive.setCurrentLimit(driveMaxCurrent);
