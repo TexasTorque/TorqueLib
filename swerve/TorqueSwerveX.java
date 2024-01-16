@@ -7,11 +7,8 @@
 package org.texastorque.torquelib.swerve;
 
 import org.texastorque.torquelib.motors.TorqueNEO;
+import com.ctre.phoenix6.hardware.CANcoder;
 import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.revrobotics.CANSparkBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -35,27 +32,23 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
             drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI),
             NEOFreeSpeedRPS = 5676 * 0.9 / 60,
             driveWheelFreeSpeedRps = (NEOFreeSpeedRPS * wheelDiameter * Math.PI) / driveGearRatio,
-            driveMaxSpeed = 4.6, turnPGain = 4, turnIGain = 0.0, turnDGain = 0.0,
+            // driveMaxSpeed = 4.6, turnPGain = 1.5, turnIGain = 0.5, turnDGain = 0,
+            driveMaxSpeed = 4.6, turnPGain = 1.25, turnIGain = 0, turnDGain = 0,
+
             turnGearRatio = 13.71;
 
     private final TorqueNEO drive, turn;
 
-    private final CANCoder cancoder;
+    private final CANcoder cancoder;
 
     private final PIDController turnPID;
 
-    private final CANCoderConfiguration cancoderConfig;
-
     public final String name;
 
-    public final double staticOffset;
-
-
-    public TorqueSwerveX(final String name, final SwervePorts ports, final double staticOffset) {
+    public TorqueSwerveX(final String name, final SwervePorts ports) {
 
         super(ports.drive);
         this.name = name.replaceAll(" ", "_").toLowerCase();
-        this.staticOffset = staticOffset;
 
         drive = new TorqueNEO(ports.drive);
         drive.setCurrentLimit(driveMaxCurrent);
@@ -75,13 +68,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         turn.setBreakMode(true);
         turn.burnFlash();
 
-        cancoder = new CANCoder(ports.encoder);
-        cancoderConfig = new CANCoderConfiguration();
-        cancoderConfig.sensorCoefficient = 2 * Math.PI / 4096.0;
-        cancoderConfig.unitString = "rad";
-        cancoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
-        cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-        cancoder.configAllSettings(cancoderConfig);
+        cancoder = new CANcoder(ports.encoder);
 
         turnPID = new PIDController(turnPGain, turnIGain, turnDGain);
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
@@ -95,8 +82,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         else
             drive.setPercent(optimized.speedMetersPerSecond / driveMaxSpeed);
 
-        final double turnPIDOutput =
-                -turnPID.calculate(getRotation().getRadians(), optimized.angle.getRadians());
+        final double turnPIDOutput = -turnPID.calculate(getRotation().getRadians(), optimized.angle.getRadians());
         SmartDashboard.putNumber(name + " Angle", getRotation().getRadians());
         turn.setVolts(turnPIDOutput);
     }
@@ -112,7 +98,12 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
 
     @Override
     public Rotation2d getRotation() {
-        return Rotation2d.fromRadians(MathUtil
-                .angleModulus(new Rotation2d(cancoder.getPosition() - staticOffset).getRadians()));
+        double absAngle = Math.toRadians(cancoder.getAbsolutePosition().getValue() * 360);
+        absAngle %= 2.0 * Math.PI;
+        if (absAngle < 0.0) {
+            absAngle += 2.0 * Math.PI;
+        }
+
+        return Rotation2d.fromRadians(MathUtil.angleModulus(absAngle));
     }
 }
