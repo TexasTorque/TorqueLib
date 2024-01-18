@@ -10,11 +10,14 @@ package org.texastorque.torquelib.base;
 // https://raw.githubusercontent.com/TexasTorque/Swerve-2023/9df7698cb69a6655d90583ae314c6a44a94c2045/build.gradle
 import java.util.ArrayList;
 
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.texastorque.torquelib.auto.TorqueAutoManager;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import io.github.oblarg.oblog.Logger;
+// import io.github.oblarg.oblog.Logger;
 
 /**
  * A replacment for TorqueIterative.
@@ -32,7 +35,7 @@ import io.github.oblarg.oblog.Logger;
  *
  * @author Justus Languell
  */
-public class TorqueRobotBase extends TimedRobot {
+public class TorqueRobotBase extends LoggedRobot {
     private static final double HERTZ = 50;
     public static final double PERIOD = 1. / HERTZ;
 
@@ -41,38 +44,38 @@ public class TorqueRobotBase extends TimedRobot {
 
     private final ArrayList<TorqueSubsystem> subsystems = new ArrayList<TorqueSubsystem>();
 
-    private boolean doLogging = false;
-
     public TorqueRobotBase(final TorqueInput input, final TorqueAutoManager autoManager) {
-        this(true, input, autoManager, PERIOD);
-    }
-
-    public TorqueRobotBase(final boolean doLogging, final TorqueInput input, final TorqueAutoManager autoManager) {
-        this(doLogging, input, autoManager, PERIOD);
-    }
-
-    public TorqueRobotBase(final boolean doLogging, final TorqueInput input, final TorqueAutoManager autoManager, final double period) {
         super(PERIOD);
-        this.doLogging = doLogging;
         this.input = input;
         this.autoManager = autoManager;
     }
 
-    public final void addSubsystem(final TorqueSubsystem subsystem) { subsystems.add(subsystem); }
+    public final void addSubsystem(final TorqueSubsystem subsystem) { 
+        subsystems.add(subsystem); 
+    }
 
     @Override
     public final void robotInit() {
-        Logger.setCycleWarningsEnabled(true);
-        if (doLogging)
-            for (final TorqueSubsystem subsystem : subsystems) 
-                Logger.configureLoggingAndConfig(subsystem, false);
+
+        Logger.recordMetadata("Team", "Texas Torque");
+
+        Logger.addDataReceiver(new NT4Publisher());
+
+        Logger.start();
+
+        // (for oblog)
+        // Logger.setCycleWarningsEnabled(true);
+        // if (doLogging)
+        //     for (final TorqueSubsystem subsystem : subsystems) 
+        //         Logger.configureLoggingAndConfig(subsystem, false);
     }
 
     @Override
     public final void robotPeriodic() {
         Shuffleboard.update();
-        if (doLogging)
-            Logger.updateEntries();
+
+        // (for oblog)
+        // Logger.updateEntries(); 
     }
 
     @Override
