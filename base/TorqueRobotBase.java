@@ -9,10 +9,6 @@ package org.texastorque.torquelib.base;
 // If you do not have oblog make sure your build.gradle is as follows:
 // https://raw.githubusercontent.com/TexasTorque/Swerve-2023/9df7698cb69a6655d90583ae314c6a44a94c2045/build.gradle
 import java.util.ArrayList;
-
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.texastorque.torquelib.auto.TorqueAutoManager;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -35,7 +31,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
  *
  * @author Justus Languell
  */
-public class TorqueRobotBase extends LoggedRobot {
+public class TorqueRobotBase extends TimedRobot {
     private static final double HERTZ = 50;
     public static final double PERIOD = 1. / HERTZ;
 
@@ -57,11 +53,7 @@ public class TorqueRobotBase extends LoggedRobot {
     @Override
     public final void robotInit() {
 
-        Logger.recordMetadata("Team", "Texas Torque");
-
-        Logger.addDataReceiver(new NT4Publisher());
-
-        Logger.start();
+    
 
         // (for oblog)
         // Logger.setCycleWarningsEnabled(true);
