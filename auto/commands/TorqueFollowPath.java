@@ -6,21 +6,14 @@
  */
 package org.texastorque.torquelib.auto.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
-
-import com.pathplanner.lib.path.EventMarker;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PPLibTelemetry;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -37,7 +30,7 @@ public final class TorqueFollowPath extends TorqueCommand {
     }
 
     private final PIDConstants translationConstants = new PIDConstants(1, 0, 0);
-    private final PIDConstants rotationConstants = new PIDConstants(Math.PI * 3, 0, 0);
+    private final PIDConstants rotationConstants = new PIDConstants(Math.PI * 2.5, 0, 0);
 
     private final PPHolonomicDriveController controller;
 
@@ -45,25 +38,18 @@ public final class TorqueFollowPath extends TorqueCommand {
     private PathPlannerTrajectory trajectory;
     private final Timer timer = new Timer();
 
-    private List<EventMarker> events;
-    private final Map<String, TorqueCommand> commands;
-    private final List<TorqueCommand> running;
-
     private final TorquePathingDrivebase drivebase;
 
     public TorqueFollowPath(final TorquePathingDrivebase drivebase, final String pathName,
-            final Map<String, TorqueCommand> commands, final double maxModuleSpeed, final double drivebaseRadius) {
+            final ChassisSpeeds initalSpeeds,
+            final Rotation2d initialHeading, final double maxModuleSpeed, final double drivebaseRadius) {
         this.drivebase = drivebase;
 
         controller = new PPHolonomicDriveController(translationConstants, rotationConstants, maxModuleSpeed,
                 drivebaseRadius);
 
         path = PathPlannerPath.fromPathFile(pathName);
-        trajectory = new PathPlannerTrajectory(path, new ChassisSpeeds(), new Rotation2d()); // FIX
-        events = new ArrayList<EventMarker>();
-        running = new ArrayList<TorqueCommand>();
-        this.commands = commands;
-
+        trajectory = new PathPlannerTrajectory(path, initalSpeeds, initialHeading);
     }
 
     @Override
@@ -71,8 +57,6 @@ public final class TorqueFollowPath extends TorqueCommand {
         timer.reset();
         timer.start();
         PPLibTelemetry.setCurrentPath(path);
-        events = path.getEventMarkers();
-        running.clear();
 
         final Pose2d startingPose = trajectory.getInitialTargetHolonomicPose();
         drivebase.setPose(startingPose);
@@ -87,23 +71,10 @@ public final class TorqueFollowPath extends TorqueCommand {
         final TorqueSwerveSpeeds speeds = TorqueSwerveSpeeds
                 .fromChassisSpeeds(controller.calculateRobotRelativeSpeeds(drivebase.getPose(), desired));
 
-        drivebase.setInputSpeeds(speeds.times(-1, -1, -1));
+        drivebase.setInputSpeeds(speeds.times(-1, -1, 1));
 
-        for (EventMarker marker : events) {
-            if (marker.shouldTrigger(drivebase.getPose())) {
-                final TorqueCommand command = commands.getOrDefault(marker, null);
-                if (command != null)
-                    running.add(command);
-            }
-        }
-
-        for (int i = running.size() - 1; i >= 0; i--) {
-            if (running.get(i).run()) {
-                System.out.println("flag1 ran");
-                running.remove(i);
-            }
-        }
         PPLibTelemetry.setCurrentPose(drivebase.getPose());
+        PPLibTelemetry.setTargetPose(desired.getTargetHolonomicPose());
     }
 
     @Override
@@ -114,12 +85,6 @@ public final class TorqueFollowPath extends TorqueCommand {
     @Override
     protected final void end() {
         timer.stop();
-
-        for (final TorqueCommand command : running)
-            command.reset();
-        for (final TorqueCommand command : commands.values())
-            command.reset();
-
         drivebase.setInputSpeeds(new TorqueSwerveSpeeds());
     }
 

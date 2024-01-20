@@ -16,7 +16,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * West Coast Products Swerve X Module.
@@ -83,7 +82,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
             drive.setPercent(optimized.speedMetersPerSecond / driveMaxSpeed);
 
         final double turnPIDOutput = -turnPID.calculate(getRotation().getRadians(), optimized.angle.getRadians());
-        SmartDashboard.putNumber(name + " Angle", getRotation().getRadians());
+
         turn.setVolts(turnPIDOutput);
     }
 
