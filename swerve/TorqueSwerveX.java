@@ -93,7 +93,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
     }
 
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(drive.getPosition(), getRotation());
+        return new SwerveModulePosition(-drive.getPosition(), getRotation());
     }
 
     @Override
