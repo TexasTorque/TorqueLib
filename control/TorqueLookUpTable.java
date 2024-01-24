@@ -2,49 +2,53 @@ package org.texastorque.torquelib.control;
 
 import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
-public class TorqueLookUpTable {
+/**
+ * Generic lookup table. Use by giving a type and constructing with
+ * interpolate and equals functions. Then add your options. 
+ * 
+ */
+public class TorqueLookUpTable<T> {
 
-    public TreeMap<Double, ShotParameter> table;
-
-    public TorqueLookUpTable(TreeMap<Double, ShotParameter> table) {
-        this.table = table;
+    @FunctionalInterface
+    public static interface TriFunction<A,B,C,R> {
+        R apply(A a, B b, C c);
+        default <V> TriFunction<A, B, C, V> andThen(Function<? super R, ? extends V> after) {
+            Objects.requireNonNull(after);
+            return (A a, B b, C c) -> after.apply(apply(a, b, c));
+        }
     }
 
-    public ShotParameter get(double distanceToTarget) {
-        Entry<Double, ShotParameter> ceil = table.ceilingEntry(distanceToTarget);
-        Entry<Double, ShotParameter> floor = table.floorEntry(distanceToTarget);
+    public TreeMap<Double, T> table;
+
+    private BiFunction<T, T, Boolean> equals;
+    private TriFunction<T, T, Double, T> interpolate;
+
+    public TorqueLookUpTable(BiFunction<T, T, Boolean> equals, TriFunction<T, T, Double, T> interpolate) {
+        this.table = new TreeMap<Double, T>();
+
+        this.equals = equals;
+        this.interpolate = interpolate;
+    }
+
+    public void add(final double key, final T value) {
+        table.put(key, value);
+    }
+
+    public T get(final double key) {
+        Entry<Double, T> ceil = table.ceilingEntry(key);
+        Entry<Double, T> floor = table.floorEntry(key);
+
         if (ceil == null) return floor.getValue();
         if (floor == null) return ceil.getValue();
-        if (ceil.getValue().equals(floor.getValue())) return ceil.getValue();
-        return floor.getValue().interpolate(
-            ceil.getValue(), 
-            (distanceToTarget - floor.getKey()) / (ceil.getKey() - floor.getKey())
-        );
+
+        if (equals.apply(ceil.getValue(), floor.getValue()))
+            return ceil.getValue();
+
+        return interpolate.apply(floor.getValue(), ceil.getValue(),  (key - floor.getKey()) / (ceil.getKey() - floor.getKey()) );
     }
 
-    public static class ShotParameter {
-        public final double hoodAngle;
-        public final double flywheelRPM;
-
-        public ShotParameter( double flywheelRPM, double hoodAngle) {
-            this.flywheelRPM = flywheelRPM;
-            this.hoodAngle = hoodAngle;
-        }
-
-        public boolean equals(ShotParameter other) {
-            return Math.abs(other.hoodAngle - hoodAngle) < 0.1 &&
-                    Math.abs(other.flywheelRPM - flywheelRPM) < 0.1;
-        }
-
-        public ShotParameter interpolate(ShotParameter end, double t) {
-            return new ShotParameter(
-                    lerp(hoodAngle, end.hoodAngle, t),
-                    lerp(flywheelRPM, end.flywheelRPM, t));
-        }
-
-        private double lerp(double y1, double y2, double t) {
-            return y1 + (t * (y2 - y1));
-        }
-    }
 }
