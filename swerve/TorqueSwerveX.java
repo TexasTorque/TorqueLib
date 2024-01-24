@@ -6,6 +6,7 @@
  */
 package org.texastorque.torquelib.swerve;
 
+import org.texastorque.Debug;
 import org.texastorque.torquelib.motors.TorqueNEO;
 import com.ctre.phoenix6.hardware.CANcoder;
 import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
@@ -32,7 +33,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
             NEOFreeSpeedRPS = 5676 * 0.9 / 60,
             driveWheelFreeSpeedRps = (NEOFreeSpeedRPS * wheelDiameter * Math.PI) / driveGearRatio,
             // driveMaxSpeed = 4.6, turnPGain = 1.5, turnIGain = 0.5, turnDGain = 0,
-            driveMaxSpeed = 4.6, turnPGain = 1.25, turnIGain = 0, turnDGain = 0,
+            driveMaxSpeed = 4.6, turnPGain = 1.5, turnIGain = 0, turnDGain = 0,
 
             turnGearRatio = 13.71;
 
@@ -80,6 +81,9 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
             drive.setPIDReference(optimized.speedMetersPerSecond, CANSparkBase.ControlType.kVelocity);
         else
             drive.setPercent(optimized.speedMetersPerSecond / driveMaxSpeed);
+
+        Debug.log(name + " req angle", optimized.angle.getRadians());
+        Debug.log(name + " actual angle", getRotation().getRadians());
 
         final double turnPIDOutput = -turnPID.calculate(getRotation().getRadians(), optimized.angle.getRadians());
 
