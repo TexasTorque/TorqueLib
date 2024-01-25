@@ -54,7 +54,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         drive.setCurrentLimit(driveMaxCurrent);
         drive.setVoltageCompensation(12.6);
         drive.setBreakMode(true);
-        drive.invertMotor(false);
+        drive.invertMotor(true);
         drive.setConversionFactors(drivePosFactor, driveVelocityFactor);
 
         drive.setPIDFeedbackDevice(drive.encoder);
@@ -81,7 +81,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
             drive.setPIDReference(optimized.speedMetersPerSecond, CANSparkBase.ControlType.kVelocity);
         else
             drive.setPercent(optimized.speedMetersPerSecond / driveMaxSpeed);
-
+            
         Debug.log(name + " req angle", optimized.angle.getRadians());
         Debug.log(name + " actual angle", getRotation().getRadians());
 

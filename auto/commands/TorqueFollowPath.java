@@ -46,7 +46,7 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     private final TorqueHolonomicDriveController driveController = new TorqueHolonomicDriveController(
             new PIDConstants(1, 0, 0),
-            new PIDConstants(2, 0, 0),
+            new PIDConstants(4, 0, 0),
             4,
             Drivebase.WIDTH / 2 * Math.sqrt(2));
 
@@ -89,8 +89,8 @@ public final class TorqueFollowPath extends TorqueCommand {
         speeds.vxMetersPerSecond -= desired.accelerationMpsSq * desiredHeading.getCos() * ACCELERATION_COEFFICIENT;
         speeds.vyMetersPerSecond -= desired.accelerationMpsSq * desiredHeading.getSin() * ACCELERATION_COEFFICIENT;
 
-        drivebase.setInputSpeeds(new TorqueSwerveSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond,
-                -speeds.omegaRadiansPerSecond));
+        drivebase.setInputSpeeds(new TorqueSwerveSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond,
+                speeds.omegaRadiansPerSecond));
 
         Debug.log("Output Rotational Speed", speeds.omegaRadiansPerSecond);
 
