@@ -23,19 +23,27 @@ import edu.wpi.first.wpilibj.DriverStation;
  *
  * @author Omar Afzal
  */
-public final class TorqueSwerveX extends TorqueSwerveModule {
-    public int driveMaxCurrent = 35, turnMaxCurrent = 25;
+public final class TorqueSwerveModuleX extends TorqueSwerveModule {
+     /**
+     * A structure to define the constants for the swerve module.
+     *
+     * Has default values that can be overriden before written to
+     * the module.
+     */
+    public static final class SwerveConfig {
+        public static final SwerveConfig defaultConfig = new SwerveConfig();
 
-    public final double drivePGain = .1, driveIGain = 0, driveDGain = .01, driveFF = 0.2,
-            driveGearRatio = 6.75, wheelDiameter = 0.1016,
-            driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI),
-            drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI),
-            NEOFreeSpeedRPS = 5676 * 0.9 / 60,
-            driveWheelFreeSpeedRps = (NEOFreeSpeedRPS * wheelDiameter * Math.PI) / driveGearRatio,
-            // driveMaxSpeed = 4.6, turnPGain = 1.5, turnIGain = 0.5, turnDGain = 0,
-            driveMaxSpeed = 4.6, turnPGain = 1.5, turnIGain = 0, turnDGain = 0,
+        public int driveMaxCurrent = 35, turnMaxCurrent = 25;
 
-            turnGearRatio = 13.71;
+        public final double drivePGain = .1, driveIGain = 0, driveDGain = .01, driveFF = 0.2,
+                driveGearRatio = 6.75, wheelDiameter = 0.1016,
+                driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI),
+                drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI),
+                NEOFreeSpeedRPS = 5676 * 0.9 / 60,
+                driveWheelFreeSpeedRps = (NEOFreeSpeedRPS * wheelDiameter * Math.PI) / driveGearRatio,
+                driveMaxSpeed = 4.6, turnPGain = 1.5, turnIGain = 0, turnDGain = 0,
+                turnGearRatio = 13.71;
+    }
 
     private final TorqueNEO drive, turn;
 
@@ -45,8 +53,7 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
 
     public final String name;
 
-    public TorqueSwerveX(final String name, final SwervePorts ports) {
-
+    public TorqueSwerveModuleX(final String name, final SwervePorts ports, final SwerveConfig config) {
         super(ports.drive);
         this.name = name.replaceAll(" ", "_").toLowerCase();
 
@@ -82,9 +89,6 @@ public final class TorqueSwerveX extends TorqueSwerveModule {
         else
             drive.setPercent(optimized.speedMetersPerSecond / driveMaxSpeed);
             
-        Debug.log(name + " req angle", optimized.angle.getRadians());
-        Debug.log(name + " actual angle", getRotation().getRadians());
-
         final double turnPIDOutput = -turnPID.calculate(getRotation().getRadians(), optimized.angle.getRadians());
 
         turn.setVolts(turnPIDOutput);
