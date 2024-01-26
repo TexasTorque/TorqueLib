@@ -42,8 +42,6 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     private final TorquePathingDrivebase drivebase;
 
-    private final Field2d field = new Field2d();
-
     private final TorqueHolonomicDriveController driveController = new TorqueHolonomicDriveController(
             new PIDConstants(1, 0, 0),
             new PIDConstants(4, 0, 0),
@@ -57,7 +55,6 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         path = PathPlannerPath.fromPathFile(pathName);
         trajectory = new PathPlannerTrajectory(path, initalSpeeds, initialHeading);
-        Debug.field("PATH FIELD", field);
     }
 
     @Override
@@ -79,20 +76,13 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         final Rotation2d desiredHeading = desired.heading;
 
-        field.setRobotPose(desired.getTargetHolonomicPose());
-
-        Debug.log("Requested Heading", desiredHeading.getDegrees());
-
         final TorqueSwerveSpeeds speeds = TorqueSwerveSpeeds
                 .fromChassisSpeeds(driveController.calculateFieldRelativeSpeeds(drivebase.getPose(), desired));
 
         speeds.vxMetersPerSecond -= desired.accelerationMpsSq * desiredHeading.getCos() * ACCELERATION_COEFFICIENT;
         speeds.vyMetersPerSecond -= desired.accelerationMpsSq * desiredHeading.getSin() * ACCELERATION_COEFFICIENT;
 
-        drivebase.setInputSpeeds(new TorqueSwerveSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond,
-                speeds.omegaRadiansPerSecond));
-
-        Debug.log("Output Rotational Speed", speeds.omegaRadiansPerSecond);
+        drivebase.setInputSpeeds(speeds);
 
         prevTranslation = desired.positionMeters;
 
