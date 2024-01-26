@@ -48,12 +48,29 @@ public final class TorqueFollowPath extends TorqueCommand {
             4,
             Drivebase.WIDTH / 2 * Math.sqrt(2));
 
-    public TorqueFollowPath(final TorquePathingDrivebase drivebase, final String pathName,
+    public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase,
             final ChassisSpeeds initalSpeeds,
-            final Rotation2d initialHeading, final double maxModuleSpeed, final double drivebaseRadius) {
-        this.drivebase = drivebase;
+            final Rotation2d initialHeading, 
+            final double maxModuleSpeed, 
+            final double drivebaseRadius) {
+                this(
+                    PathPlannerPath.fromPathFile(pathName), 
+                    drivebase, 
+                    initalSpeeds, 
+                    initialHeading, 
+                    maxModuleSpeed, 
+                    drivebaseRadius
+                );
+            }
 
-        path = PathPlannerPath.fromPathFile(pathName);
+    public TorqueFollowPath(final PathPlannerPath path, final TorquePathingDrivebase drivebase,
+            final ChassisSpeeds initalSpeeds,
+            final Rotation2d initialHeading, 
+            final double maxModuleSpeed, 
+            final double drivebaseRadius) {
+
+        this.drivebase = drivebase;
+        this.path = path;
         trajectory = new PathPlannerTrajectory(path, initalSpeeds, initialHeading);
     }
 
@@ -79,8 +96,8 @@ public final class TorqueFollowPath extends TorqueCommand {
         final TorqueSwerveSpeeds speeds = TorqueSwerveSpeeds
                 .fromChassisSpeeds(driveController.calculateFieldRelativeSpeeds(drivebase.getPose(), desired));
 
-        speeds.vxMetersPerSecond -= desired.accelerationMpsSq * desiredHeading.getCos() * ACCELERATION_COEFFICIENT;
-        speeds.vyMetersPerSecond -= desired.accelerationMpsSq * desiredHeading.getSin() * ACCELERATION_COEFFICIENT;
+        // speeds.vxMetersPerSecond -= desired.accelerationMpsSq * desiredHeading.getCos() * ACCELERATION_COEFFICIENT;
+        // speeds.vyMetersPerSecond -= desired.accelerationMpsSq * desiredHeading.getSin() * ACCELERATION_COEFFICIENT;
 
         drivebase.setInputSpeeds(speeds);
 
