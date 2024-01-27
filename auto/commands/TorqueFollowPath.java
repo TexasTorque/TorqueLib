@@ -6,88 +6,79 @@
  */
 package org.texastorque.torquelib.auto.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
+import org.texastorque.Debug;
+import org.texastorque.subsystems.Drivebase;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
-
-import com.pathplanner.lib.path.EventMarker;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
-import edu.wpi.first.math.controller.PIDController;
+import com.pathplanner.lib.util.PPLibTelemetry;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 public final class TorqueFollowPath extends TorqueCommand {
 
     public static interface TorquePathingDrivebase {
         public Pose2d getPose();
+
         public void setPose(final Pose2d pose);
 
         public void setInputSpeeds(final TorqueSwerveSpeeds speeds);
     }
 
-    public static final double MAX_VELOCITY_PATH = 4, MAX_ACCELERATION_PATH = 2;
+    private final double ACCELERATION_COEFFICIENT = .2;
 
-    private final PIDController xController = new PIDController(1, 0, 0);
-    private final PIDController yController = new PIDController(1, 0, 0);
-
-    private final PIDConstants translationConstants = new PIDConstants(1, 0, 0);
-    private final PIDConstants rotationConstants = new PIDConstants(Math.PI * 0.5, 0, 0);
-
-    private final PIDController omegaController;
-    private final PPHolonomicDriveController controller;
-
-    final Supplier<PathPlannerTrajectory> path;
+    private final PathPlannerPath path;
     private PathPlannerTrajectory trajectory;
     private final Timer timer = new Timer();
-
-    private List<EventMarker> unpassed, events;
-    private final Map<String, TorqueCommand> commands;
-    private final List<TorqueCommand> running;
+    private Translation2d prevTranslation = new Translation2d();
 
     private final TorquePathingDrivebase drivebase;
 
-    public TorqueFollowPath(final TorquePathingDrivebase drivebase, final Supplier<PathPlannerTrajectory> path,
-                final Map<String, TorqueCommand> commands, final double maxModuleSpeed, final double drivebaseRadius) {
+    private final TorqueHolonomicDriveController driveController = new TorqueHolonomicDriveController(
+            new PIDConstants(1, 0, 0),
+            new PIDConstants(4, 0, 0),
+            4,
+            Drivebase.WIDTH / 2 * Math.sqrt(2));
+
+    public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase,
+            final ChassisSpeeds initalSpeeds,
+            final Rotation2d initialHeading, 
+            final double maxModuleSpeed, 
+            final double drivebaseRadius) {
+                this(
+                    PathPlannerPath.fromPathFile(pathName), 
+                    drivebase, 
+                    initalSpeeds, 
+                    initialHeading, 
+                    maxModuleSpeed, 
+                    drivebaseRadius
+                );
+            }
+
+    public TorqueFollowPath(final PathPlannerPath path, final TorquePathingDrivebase drivebase,
+            final ChassisSpeeds initalSpeeds,
+            final Rotation2d initialHeading, 
+            final double maxModuleSpeed, 
+            final double drivebaseRadius) {
+
         this.drivebase = drivebase;
-
-        omegaController = new PIDController(Math.PI * .5, 0, .0);
-
-        xController.setTolerance(0.01);
-        yController.setTolerance(0.01);
-        omegaController.setTolerance(Units.degreesToRadians(2));
-        omegaController.enableContinuousInput(-Math.PI, Math.PI);
-
-        controller = new PPHolonomicDriveController(translationConstants, rotationConstants, maxModuleSpeed, drivebaseRadius);
-
         this.path = path;
-        events = new ArrayList<EventMarker>();
-        unpassed = new ArrayList<EventMarker>();
-        this.commands = commands;
-        running = new ArrayList<TorqueCommand>();
+        trajectory = new PathPlannerTrajectory(path, initalSpeeds, initialHeading);
     }
 
     @Override
     protected final void init() {
         timer.reset();
         timer.start();
-
-        trajectory = path.get();
-        // PathPlannerServer.sendActivePath(this.trajectory.getStates());
-        // events = trajectory.getMarkers();
-        unpassed.clear();
-        unpassed.addAll(events);
-        running.clear();
+        PPLibTelemetry.setCurrentPath(path);
 
         final Pose2d startingPose = trajectory.getInitialTargetHolonomicPose();
         drivebase.setPose(startingPose);
@@ -97,29 +88,24 @@ public final class TorqueFollowPath extends TorqueCommand {
     protected final void continuous() {
         final double elapsed = timer.get();
 
-        final State desired = trajectory.sample(elapsed);
+        State desired = trajectory.sample(elapsed);
+        // desired = TorqueHolonomicDriveController.transformStateForAlliance(desired);
+
+        final Rotation2d desiredHeading = desired.heading;
 
         final TorqueSwerveSpeeds speeds = TorqueSwerveSpeeds
-                .fromChassisSpeeds(controller.calculateRobotRelativeSpeeds(drivebase.getPose(), desired));
+                .fromChassisSpeeds(driveController.calculateFieldRelativeSpeeds(drivebase.getPose(), desired));
 
-        drivebase.setInputSpeeds(speeds.times(1, 1, 1));
+        // speeds.vxMetersPerSecond -= desired.accelerationMpsSq * desiredHeading.getCos() * ACCELERATION_COEFFICIENT;
+        // speeds.vyMetersPerSecond -= desired.accelerationMpsSq * desiredHeading.getSin() * ACCELERATION_COEFFICIENT;
 
-        // if (unpassed.size() > 0 && elapsed >= unpassed.get(0).timeSeconds) {
-        //     final EventMarker marker = unpassed.remove(0);
-        //     for (final String name : marker.names) {
-        //         final TorqueCommand command = commands.getOrDefault(name, null);
-        //         if (command != null)
-        //             running.add(command);
-        //     }
-        // }
+        drivebase.setInputSpeeds(speeds);
 
-        // for (int i = running.size() - 1; i >= 0; i--)
-        //     if (running.get(i).run())
-        //         running.remove(i);
+        prevTranslation = desired.positionMeters;
 
-        // PathPlannerServer.sendPathFollowingData(
-                // new Pose2d(desired.poseMeters.getTranslation(), desired.holonomicRotation), drivebase.getPose());
-
+        PPLibTelemetry.setCurrentPose(drivebase.getPose());
+        PPLibTelemetry.setTargetPose(desired.getTargetHolonomicPose());
+        PPLibTelemetry.setPathInaccuracy(prevTranslation.getDistance(drivebase.getPose().getTranslation()));
     }
 
     @Override
@@ -130,12 +116,6 @@ public final class TorqueFollowPath extends TorqueCommand {
     @Override
     protected final void end() {
         timer.stop();
-
-        for (final TorqueCommand command : running)
-            command.reset();
-        for (final TorqueCommand command : commands.values())
-            command.reset();
-
         drivebase.setInputSpeeds(new TorqueSwerveSpeeds());
     }
 

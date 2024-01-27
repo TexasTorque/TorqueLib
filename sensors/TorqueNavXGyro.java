@@ -65,4 +65,5 @@ public final class TorqueNavXGyro extends AHRS {
 
 
     private final double getDegreesCounterClockwise() { return 360 - getDegreesClockwise(); }
+
 }
