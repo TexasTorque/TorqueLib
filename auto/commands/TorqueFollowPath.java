@@ -51,23 +51,20 @@ public final class TorqueFollowPath extends TorqueCommand {
     public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase,
             final ChassisSpeeds initalSpeeds,
             final Rotation2d initialHeading, 
-            final double maxModuleSpeed, 
-            final double drivebaseRadius) {
+            final double maxModuleSpeed) {
                 this(
                     PathPlannerPath.fromPathFile(pathName), 
                     drivebase, 
                     initalSpeeds, 
                     initialHeading, 
-                    maxModuleSpeed, 
-                    drivebaseRadius
+                    maxModuleSpeed
                 );
             }
 
     public TorqueFollowPath(final PathPlannerPath path, final TorquePathingDrivebase drivebase,
             final ChassisSpeeds initalSpeeds,
             final Rotation2d initialHeading, 
-            final double maxModuleSpeed, 
-            final double drivebaseRadius) {
+            final double maxModuleSpeed) {
 
         this.drivebase = drivebase;
         this.path = path;
