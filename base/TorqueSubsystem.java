@@ -18,4 +18,6 @@ public interface TorqueSubsystem {
 
     // Overridable by the TorqueSubsystem baseclass
     public abstract void run(final TorqueMode mode);
+
+    public abstract void clean(final TorqueMode mode);
 }

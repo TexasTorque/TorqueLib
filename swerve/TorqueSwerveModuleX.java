@@ -112,6 +112,8 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
         final double turnPIDOutput = -turnPID.calculate(getRotation().getRadians(), optimized.angle.getRadians());
 
         turn.setVolts(turnPIDOutput);
+
+        Debug.log(name + " Rotation", getRotation().getRadians());
     }
 
     @Override

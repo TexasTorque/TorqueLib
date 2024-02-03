@@ -54,4 +54,6 @@ public abstract class TorqueStatorSubsystem<T extends TorqueState> implements To
     }
 
     protected void onStateChange() {}
+
+    public abstract void clean(final TorqueMode mode);
 }
