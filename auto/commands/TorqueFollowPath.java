@@ -6,6 +6,8 @@
  */
 package org.texastorque.torquelib.auto.commands;
 
+import java.util.function.Supplier;
+
 import org.texastorque.Debug;
 import org.texastorque.subsystems.Drivebase;
 import org.texastorque.torquelib.auto.TorqueCommand;
@@ -50,24 +52,23 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase,
             final ChassisSpeeds initalSpeeds,
-            final Rotation2d initialHeading, 
+            final Rotation2d initialHeading,
             final double maxModuleSpeed) {
-                this(
-                    PathPlannerPath.fromPathFile(pathName), 
-                    drivebase, 
-                    initalSpeeds, 
-                    initialHeading, 
-                    maxModuleSpeed
-                );
-            }
+        this(
+                () -> PathPlannerPath.fromPathFile(pathName),
+                drivebase,
+                initalSpeeds,
+                initialHeading,
+                maxModuleSpeed);
+    }
 
-    public TorqueFollowPath(final PathPlannerPath path, final TorquePathingDrivebase drivebase,
+    public TorqueFollowPath(final Supplier<PathPlannerPath> pathSup, final TorquePathingDrivebase drivebase,
             final ChassisSpeeds initalSpeeds,
-            final Rotation2d initialHeading, 
+            final Rotation2d initialHeading,
             final double maxModuleSpeed) {
 
         this.drivebase = drivebase;
-        this.path = path;
+        this.path = pathSup.get();
         trajectory = new PathPlannerTrajectory(path, initalSpeeds, initialHeading);
     }
 
@@ -90,12 +91,18 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         final Rotation2d desiredHeading = desired.heading;
 
-        final TorqueSwerveSpeeds speeds = TorqueSwerveSpeeds
-                .fromChassisSpeeds(driveController.calculateFieldRelativeSpeeds(drivebase.getPose(), desired));
+        Debug.log("Req State", desired.getTargetHolonomicPose().toString());
 
-        // speeds.vxMetersPerSecond -= desired.accelerationMpsSq * desiredHeading.getCos() * ACCELERATION_COEFFICIENT;
-        // speeds.vyMetersPerSecond -= desired.accelerationMpsSq * desiredHeading.getSin() * ACCELERATION_COEFFICIENT;
+        TorqueSwerveSpeeds speeds = TorqueSwerveSpeeds
+                .fromChassisSpeeds(PathPlanner.calculateFieldRelativeSpeeds(drivebase.getPose(), desired));
 
+        // speeds.vxMetersPerSecond -= desired.accelerationMpsSq *
+        // desiredHeading.getCos() * ACCELERATION_COEFFICIENT;
+        // speeds.vyMetersPerSecond -= desired.accelerationMpsSq *
+        // desiredHeading.getSin() * ACCELERATION_COEFFICIENT;
+
+        speeds = new TorqueSwerveSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond,
+                -speeds.omegaRadiansPerSecond);
         drivebase.setInputSpeeds(speeds);
 
         prevTranslation = desired.positionMeters;
