@@ -85,16 +85,17 @@ public final class TorqueFollowPath extends TorqueCommand {
     @Override
     protected final void init() {
         timer.reset();
-        timer.start();
 
         final PathPlannerPath path = pathSupplier.get();
 
-        this.trajectory = new PathPlannerTrajectory(path, new ChassisSpeeds(), drivebase.getPose().getRotation());
+        this.trajectory = path.getTrajectory(new ChassisSpeeds(), drivebase.getPose().getRotation());
 
         PPLibTelemetry.setCurrentPath(path);
 
         final Pose2d startingPose = trajectory.getInitialTargetHolonomicPose();
         drivebase.setPose(startingPose);
+
+        timer.start();
     }
 
     @Override
@@ -102,13 +103,11 @@ public final class TorqueFollowPath extends TorqueCommand {
         final double elapsed = timer.get();
 
         final PathPlannerTrajectory.State desired = trajectory.sample(elapsed);
-
+        
         final ChassisSpeeds outputSpeeds = driveController.calculate(
             drivebase.getPose(), desired.getTargetHolonomicPose(), desired.velocityMps, desired.heading);
 
         final TorqueSwerveSpeeds realSpeeds = TorqueSwerveSpeeds.fromChassisSpeeds(outputSpeeds);
-
-        System.out.println(realSpeeds);
 
         drivebase.setInputSpeeds(realSpeeds);
 
