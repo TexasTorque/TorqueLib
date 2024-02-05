@@ -88,7 +88,6 @@ public abstract class TorqueAutoManager {
      * Set sequence with sequence object
      */
     public final void setCurrentSequence(final TorqueSequence seq) {
-        currentSequence = constAuto.isPresent() ? constAuto.get() : seq;
         resetCurrentSequence();
     }
 
@@ -98,6 +97,8 @@ public abstract class TorqueAutoManager {
     public final void displayChoices() { SmartDashboard.putData(autoSelectorKey, autoSelector); }
 
     public final void resetCurrentSequence() {
+        if (constAuto.isPresent())
+            currentSequence = constAuto.get();
         if (currentSequence != null) currentSequence.reset();
     }
 

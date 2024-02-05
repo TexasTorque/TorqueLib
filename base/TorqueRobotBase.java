@@ -10,10 +10,12 @@ package org.texastorque.torquelib.base;
 // https://raw.githubusercontent.com/TexasTorque/Swerve-2023/9df7698cb69a6655d90583ae314c6a44a94c2045/build.gradle
 import java.util.ArrayList;
 
+
+import org.texastorque.torquelib.auto.TorqueAutoManager;
+
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.texastorque.torquelib.auto.TorqueAutoManager;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
