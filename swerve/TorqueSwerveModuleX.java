@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * West Coast Products Swerve X Module.
@@ -108,8 +109,6 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
     }
 
-    private SwerveModuleState prevState = new SwerveModuleState();
-
     public void setDesiredState(final SwerveModuleState state) {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
@@ -127,6 +126,10 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
         prevState = optimized;
     }
 
+    // THIS IS SIMULATION STUFF
+    private SwerveModuleState prevState = new SwerveModuleState();
+    private double prevTime = -1, sum = 0;
+
     @Override
     public SwerveModuleState getState() {
         return new SwerveModuleState(drive.getVelocity(), getRotation());
@@ -134,7 +137,10 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
 
     public SwerveModulePosition getPosition() {
         if (!RobotBase.isReal()) {
-            return new SwerveModulePosition(prevState.speedMetersPerSecond, prevState.angle);
+            final double time = Timer.getFPGATimestamp();
+            sum += prevTime == -1 ? prevState.speedMetersPerSecond * (time - prevTime) : 0;
+            prevTime = time;
+            return new SwerveModulePosition(sum, prevState.angle);
         }
         return new SwerveModulePosition(-drive.getPosition(), getRotation());
     }

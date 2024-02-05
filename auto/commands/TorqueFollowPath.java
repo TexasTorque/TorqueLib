@@ -63,10 +63,10 @@ public final class TorqueFollowPath extends TorqueCommand {
             final double maxModuleSpeed) {
         
         xController = new PIDController(2, 0, 0);
-        xController.setTolerance(0.01);
+        // xController.setTolerance(0.01);
          
         yController = new PIDController(2, 0, 0);
-        yController.setTolerance(0.01);
+        // yController.setTolerance(0.01);
 
         final Constraints omegaConstraints = new Constraints(Math.PI, Math.PI);
 
@@ -104,9 +104,11 @@ public final class TorqueFollowPath extends TorqueCommand {
         final PathPlannerTrajectory.State desired = trajectory.sample(elapsed);
 
         final ChassisSpeeds outputSpeeds = driveController.calculate(
-            drivebase.getPose(), desired.getTargetHolonomicPose(),desired.velocityMps, desired.heading);
+            drivebase.getPose(), desired.getTargetHolonomicPose(), desired.velocityMps, desired.heading);
 
         final TorqueSwerveSpeeds realSpeeds = TorqueSwerveSpeeds.fromChassisSpeeds(outputSpeeds);
+
+        System.out.println(realSpeeds);
 
         drivebase.setInputSpeeds(realSpeeds);
 
