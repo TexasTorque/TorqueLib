@@ -81,15 +81,13 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
 
         this.config = config;
 
-        Debug.log(name + " posfactor", config.getPosFactor());
-
         this.name = name.replaceAll(" ", "_").toLowerCase();
 
         drive = new TorqueNEO(ports.drive);
         drive.setCurrentLimit(config.maxDriveCurrent);
         drive.setVoltageCompensation(12.6);
         drive.setBreakMode(true);
-        drive.invertMotor(true);
+        drive.invertMotor(false);
         drive.setConversionFactors(config.getPosFactor(), config.getVeloFactor());
 
         drive.setPIDFeedbackDevice(drive.encoder);
@@ -112,7 +110,10 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
     public void setDesiredState(final SwerveModuleState state) {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
-        if (DriverStation.isAutonomous())
+        Debug.log(name + " req speed", optimized.speedMetersPerSecond);
+        Debug.log(name + " actual speed", drive.getVelocity());
+
+        if (DriverStation.isAutonomous() || true)
             drive.setPIDReference(optimized.speedMetersPerSecond, CANSparkBase.ControlType.kVelocity);
         else
             drive.setPercent(optimized.speedMetersPerSecond / config.maxDriveSpeed);
@@ -120,8 +121,6 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
         final double turnPIDOutput = -turnPID.calculate(getRotation().getRadians(), optimized.angle.getRadians());
 
         turn.setVolts(turnPIDOutput);
-
-        Debug.log(name + " Distance", getPosition().distanceMeters);
 
         prevState = optimized;
     }
