@@ -6,6 +6,7 @@
  */
 package org.texastorque.torquelib.swerve;
 
+import org.texastorque.Debug;
 import org.texastorque.torquelib.motors.TorqueNEO;
 import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
 
@@ -174,10 +175,11 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         // cancoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
         // // cancoderConfig.initializationStrategy =
         // // SensorInitializationStrategy.BootToZero;
-        // cancoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+        // cancoderConfig.initializationStrategy =
+        // SensorInitializationStrategy.BootToAbsolutePosition;
         // cancoder.configAllSettings(cancoderConfig);
 
-        cancoder = new CANcoder(ports.encoder);
+        cancoder = new CANcoder(encoderID);
 
         // Configure the controllers
         drivePID = new PIDController(config.drivePGain, config.driveIGain, config.driveDGain);
@@ -205,9 +207,11 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         }
 
         // Calculate turn output
-        final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
+        final double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
         // log("Turn PID Output", turnPIDOutput);
         turn.setPercent(turnPIDOutput);
+
+        Debug.log(name + " turn angle", getTurnEncoder());
     }
 
     @Override
@@ -250,7 +254,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         // return log("cancoder", coterminal(cancoder.getPosition()) - staticOffset);
         // return log("cancoder", coterminal(cancoder.getPosition()));
         // return log("cancoder", coterminal(cancoder.getPosition()) - staticOffset);
-        return coterminal(cancoder.getPosition() - staticOffset);
+        double absAngle = Math.toRadians(cancoder.getAbsolutePosition().getValue() * 360);
+        absAngle %= 2.0 * Math.PI;
+        if (absAngle < 0.0) {
+            absAngle += 2.0 * Math.PI;
+        }
+        return absAngle;
     }
 
     private double log(final String item, final double value) {

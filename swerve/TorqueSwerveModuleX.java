@@ -113,7 +113,7 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
         Debug.log(name + " req speed", optimized.speedMetersPerSecond);
         Debug.log(name + " actual speed", drive.getVelocity());
 
-        if (DriverStation.isAutonomous() || true)
+        if (DriverStation.isAutonomous())
             drive.setPIDReference(optimized.speedMetersPerSecond, CANSparkBase.ControlType.kVelocity);
         else
             drive.setPercent(optimized.speedMetersPerSecond / config.maxDriveSpeed);
