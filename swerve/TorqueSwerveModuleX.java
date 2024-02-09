@@ -22,10 +22,13 @@ import edu.wpi.first.wpilibj.Timer;
 
 /**
  * West Coast Products Swerve X Module.
+ * 
+ * @deprecated This doesnt work and we dont know why -Jus
  *
  * @author Omar Afzal
  * @author Davis Jenney
  */
+@Deprecated
 public final class TorqueSwerveModuleX extends TorqueSwerveModule {
 
     public static record PIDConfig(double p, double i, double d, double ff) {

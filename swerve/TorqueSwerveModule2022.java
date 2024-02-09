@@ -26,21 +26,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Super cool flipped swerve module built in 2023 by Abishek.
- *
- * https://drive.google.com/file/d/1bvgo75gqLzoerBIEtEObXep_6gpac6mZ/view?usp=sharing
- * https://drive.google.com/file/d/1q4cmx3Ntscfynn_1Tc8W9VAqR9Tgn0NT/view?usp=sharing
- *
+ * Updated to work with WCP Swerve X modules for 2024.
+ * 
  * The module uses a Rev NEO for drive and rotation control. It uses a CTRE
  * Cancoder
  * positioned 1:1 with the wheel rotation.
+ 
+ * Abishek Swerve:
+ * https://drive.google.com/file/d/1bvgo75gqLzoerBIEtEObXep_6gpac6mZ/view?usp=sharing
+ * https://drive.google.com/file/d/1q4cmx3Ntscfynn_1Tc8W9VAqR9Tgn0NT/view?usp=sharing
  *
- * The code is kinda based off the FRC 1706 swerve module.
+ * The code is loosely based off the FRC 1706 swerve module.
  *
  * Cancoder docs:
  * https://api.ctr-electronics.com/phoenix/release/java/com/ctre/phoenix/sensors/CANCoder.html
  *
- * The rotation of the modules is [0, 2π) radians, with 0 being straight ahead
- * (I think).
+ * The rotation of the modules is [0, 2π) radians, with 0 being straight ahead.
  *
  * 0 or 2π
  * ↑
@@ -83,16 +84,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
                 turnPGain = 0.5, turnIGain = 0.0, turnDGain = 0.0,
                 turnGearRatio = 12.41; // Rotation motor to wheel
     }
-
-    // public static final class SwervePorts {
-    // public final int drive, turn, encoder;
-
-    // public SwervePorts(final int drive, final int turn, final int encoder) {
-    // this.drive = drive;
-    // this.turn = turn;
-    // this.encoder = encoder;
-    // }
-    // }
 
     /**
      * Normalizes drive speeds to never exceed a specified max.
@@ -245,15 +236,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         return coterminal(turn.getPosition());
     }
 
-    // public static double coterminal(final double rotation) {
-    // return rotation % (2 * Math.PI);
-    // }
-
     private double getTurnCancoder() {
-        // Should not need to use Coterminal
-        // return log("cancoder", coterminal(cancoder.getPosition()) - staticOffset);
-        // return log("cancoder", coterminal(cancoder.getPosition()));
-        // return log("cancoder", coterminal(cancoder.getPosition()) - staticOffset);
+        // Should not need to use Coterminal -- doing so anyways?
         double absAngle = Math.toRadians(cancoder.getAbsolutePosition().getValue() * 360);
         absAngle %= 2.0 * Math.PI;
         if (absAngle < 0.0) {
