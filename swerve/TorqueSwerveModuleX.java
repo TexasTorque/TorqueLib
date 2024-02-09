@@ -17,6 +17,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * West Coast Products Swerve X Module.
@@ -26,9 +28,10 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public final class TorqueSwerveModuleX extends TorqueSwerveModule {
 
-    public static record PIDConfig(double p, double i, double d, double ff) {}
+    public static record PIDConfig(double p, double i, double d, double ff) {
+    }
 
-     /**
+    /**
      * A structure to define the constants for the swerve module.
      *
      * Has default values that can be overriden before written to
@@ -42,21 +45,24 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
         public PIDConfig drivePID = new PIDConfig(.1, 0, .01, 0.2);
         public PIDConfig turnPID = new PIDConfig(1.5, 0, 0, 0);
 
-        public double wheelDiameter = 0.1016;
+        public double wheelDiameter = 4.0 * 0.0254;
 
         public double maxDriveSpeed = 4.6;
 
         public double driveGearRatio = 6.75, turnGearRatio = 13.71;
 
-        private double driveVelocityFactor, drivePosFactor, driveWheelFreeSpeedRps;
-
         private final double neoFreeSpeedRPS = 5676 * 0.9 / 60;
 
-        private SwerveConfig configure() {
-            driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI);
-            drivePosFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI);
-            driveWheelFreeSpeedRps = (neoFreeSpeedRPS * wheelDiameter * Math.PI) / driveGearRatio;
-            return this;
+        private double getVeloFactor() {
+            return (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI);
+        }
+
+        private double getPosFactor() {
+            return (1.0 / driveGearRatio) * (wheelDiameter * Math.PI);
+        }
+
+        private double getWheelFreeSpeed() {
+            return (neoFreeSpeedRPS * wheelDiameter * Math.PI) / driveGearRatio;
         }
     }
 
@@ -73,7 +79,7 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
     public TorqueSwerveModuleX(final String name, final SwervePorts ports, final SwerveConfig config) {
         super(ports.drive);
 
-        this.config = config.configure();
+        this.config = config;
 
         this.name = name.replaceAll(" ", "_").toLowerCase();
 
@@ -81,11 +87,11 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
         drive.setCurrentLimit(config.maxDriveCurrent);
         drive.setVoltageCompensation(12.6);
         drive.setBreakMode(true);
-        drive.invertMotor(true);
-        drive.setConversionFactors(config.drivePosFactor, config.driveVelocityFactor);
+        drive.invertMotor(false);
+        drive.setConversionFactors(config.getPosFactor(), config.getVeloFactor());
 
         drive.setPIDFeedbackDevice(drive.encoder);
-        drive.configurePIDF(config.drivePID.p, config.drivePID.i, config.drivePID.d, 1 / config.driveWheelFreeSpeedRps);
+        drive.configurePIDF(config.drivePID.p, config.drivePID.i, config.drivePID.d, 1 / config.getWheelFreeSpeed());
         drive.burnFlash();
 
         turn = new TorqueNEO(ports.turn);
@@ -104,15 +110,24 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
     public void setDesiredState(final SwerveModuleState state) {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
+        Debug.log(name + " req speed", optimized.speedMetersPerSecond);
+        Debug.log(name + " actual speed", drive.getVelocity());
+
         if (DriverStation.isAutonomous())
             drive.setPIDReference(optimized.speedMetersPerSecond, CANSparkBase.ControlType.kVelocity);
         else
             drive.setPercent(optimized.speedMetersPerSecond / config.maxDriveSpeed);
-            
+
         final double turnPIDOutput = -turnPID.calculate(getRotation().getRadians(), optimized.angle.getRadians());
 
         turn.setVolts(turnPIDOutput);
+
+        prevState = optimized;
     }
+
+    // THIS IS SIMULATION STUFF
+    private SwerveModuleState prevState = new SwerveModuleState();
+    private double prevTime = -1, sum = 0;
 
     @Override
     public SwerveModuleState getState() {
@@ -120,6 +135,12 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
     }
 
     public SwerveModulePosition getPosition() {
+        if (!RobotBase.isReal()) {
+            final double time = Timer.getFPGATimestamp();
+            sum += prevTime == -1 ? prevState.speedMetersPerSecond * (time - prevTime) : 0;
+            prevTime = time;
+            return new SwerveModulePosition(sum, prevState.angle);
+        }
         return new SwerveModulePosition(-drive.getPosition(), getRotation());
     }
 

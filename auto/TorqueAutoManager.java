@@ -7,6 +7,7 @@
 package org.texastorque.torquelib.auto;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.texastorque.torquelib.auto.sequences.TorqueEmpty;
 import org.texastorque.torquelib.util.TorqueUtil;
@@ -77,11 +78,16 @@ public abstract class TorqueAutoManager {
         sequenceEnded = false;
     }
 
+    private Optional<TorqueSequence> constAuto = Optional.empty();
+
+    protected void setConstAuto(final TorqueSequence seq) {
+        constAuto = Optional.of(seq);
+    }
+
     /**
      * Set sequence with sequence object
      */
     public final void setCurrentSequence(final TorqueSequence seq) {
-        currentSequence = seq;
         resetCurrentSequence();
     }
 
@@ -91,6 +97,8 @@ public abstract class TorqueAutoManager {
     public final void displayChoices() { SmartDashboard.putData(autoSelectorKey, autoSelector); }
 
     public final void resetCurrentSequence() {
+        if (constAuto.isPresent())
+            currentSequence = constAuto.get();
         if (currentSequence != null) currentSequence.reset();
     }
 

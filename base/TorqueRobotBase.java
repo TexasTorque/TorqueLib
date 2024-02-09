@@ -10,10 +10,12 @@ package org.texastorque.torquelib.base;
 // https://raw.githubusercontent.com/TexasTorque/Swerve-2023/9df7698cb69a6655d90583ae314c6a44a94c2045/build.gradle
 import java.util.ArrayList;
 
+
+import org.texastorque.torquelib.auto.TorqueAutoManager;
+
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.texastorque.torquelib.auto.TorqueAutoManager;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -22,15 +24,22 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 /**
  * A replacment for TorqueIterative.
  *
- * TorqueIterative was a modified version of the WPILIBJ IterativeRobot template.
- * It was created to improve upon the performance by utalizing two threads on the RoboRio.
- * However, it has neither been maintained nor updated since it's inception, and has
- * fallen out of date with the TimedRobot, IterativeRobotBase, and RobotBase standard.
+ * TorqueIterative was a modified version of the WPILIBJ IterativeRobot
+ * template.
+ * It was created to improve upon the performance by utalizing two threads on
+ * the RoboRio.
+ * However, it has neither been maintained nor updated since it's inception, and
+ * has
+ * fallen out of date with the TimedRobot, IterativeRobotBase, and RobotBase
+ * standard.
  *
- * Because of this, I (Justus) am working on a replacement class called TorqueRobotBase.
+ * Because of this, I (Justus) am working on a replacement class called
+ * TorqueRobotBase.
  *
- * Although I may start working on drafts, I cannot start serious work unitl after our
- * next competition, the Texas Robotics Invitational, which we have but only 8 meetings
+ * Although I may start working on drafts, I cannot start serious work unitl
+ * after our
+ * next competition, the Texas Robotics Invitational, which we have but only 8
+ * meetings
  * at 3 hours a piece to do way too much.
  *
  * @author Justus Languell
@@ -50,8 +59,8 @@ public class TorqueRobotBase extends LoggedRobot {
         this.autoManager = autoManager;
     }
 
-    public final void addSubsystem(final TorqueSubsystem subsystem) { 
-        subsystems.add(subsystem); 
+    public final void addSubsystem(final TorqueSubsystem subsystem) {
+        subsystems.add(subsystem);
     }
 
     @Override
@@ -66,8 +75,8 @@ public class TorqueRobotBase extends LoggedRobot {
         // (for oblog)
         // Logger.setCycleWarningsEnabled(true);
         // if (doLogging)
-        //     for (final TorqueSubsystem subsystem : subsystems) 
-        //         Logger.configureLoggingAndConfig(subsystem, false);
+        // for (final TorqueSubsystem subsystem : subsystems)
+        // Logger.configureLoggingAndConfig(subsystem, false);
     }
 
     @Override
@@ -75,12 +84,13 @@ public class TorqueRobotBase extends LoggedRobot {
         Shuffleboard.update();
 
         // (for oblog)
-        // Logger.updateEntries(); 
+        // Logger.updateEntries();
     }
 
     @Override
     public final void disabledInit() {
-        // This makes no sense        // subsystems.forEach(subsystem -> subsystem.initialize(TorqueMode.DISABLED));
+        // This makes no sense // subsystems.forEach(subsystem ->
+        // subsystem.initialize(TorqueMode.DISABLED));
     }
 
     @Override
@@ -98,6 +108,7 @@ public class TorqueRobotBase extends LoggedRobot {
     public final void teleopPeriodic() {
         input.update();
         subsystems.forEach(subsystem -> subsystem.run(TorqueMode.TELEOP));
+        subsystems.forEach(subsystem -> subsystem.clean(TorqueMode.TELEOP));
     }
 
     @Override
@@ -110,6 +121,7 @@ public class TorqueRobotBase extends LoggedRobot {
     public final void autonomousPeriodic() {
         autoManager.runCurrentSequence();
         subsystems.forEach(subsystem -> subsystem.run(TorqueMode.AUTO));
+        subsystems.forEach(subsystem -> subsystem.clean(TorqueMode.AUTO));
     }
 
     @Override
@@ -121,8 +133,11 @@ public class TorqueRobotBase extends LoggedRobot {
     public final void testPeriodic() {
         input.update();
         subsystems.forEach(subsystem -> subsystem.run(TorqueMode.TEST));
+        subsystems.forEach(subsystem -> subsystem.clean(TorqueMode.TEST));
+
     }
 
     @Override
-    public final void endCompetition() {}
+    public final void endCompetition() {
+    }
 }

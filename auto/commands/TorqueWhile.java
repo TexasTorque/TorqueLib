@@ -11,30 +11,31 @@ import java.util.function.BooleanSupplier;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.auto.TorqueSequence;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 public final class TorqueWhile extends TorqueCommand {
     private final TorqueSequence sequence;
     private final BooleanSupplier condition;
+    private boolean endNow = false;
 
-    public TorqueWhile(final BooleanSupplier condition, final TorqueSequence sequence) { 
-        this.sequence = sequence; 
+    public TorqueWhile(final BooleanSupplier condition, final TorqueSequence sequence) {
+        this.sequence = sequence;
         this.condition = condition;
     }
 
     @Override
-    protected final void init() {}
+    protected final void init() {
+        endNow = !condition.getAsBoolean();
+    }
 
     @Override
     protected final void continuous() {
-        if (sequence.hasEnded() || !condition.getAsBoolean()) 
+        if (sequence.hasEnded())
             sequence.reset();
         sequence.run();
     }
 
     @Override
     protected final boolean endCondition() {
-        return !condition.getAsBoolean();
+        return sequence.hasEnded() && !condition.getAsBoolean() || endNow;
     }
 
     @Override

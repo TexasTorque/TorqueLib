@@ -27,6 +27,7 @@ public abstract class TorqueStatorSubsystem<T extends TorqueState> implements To
     }
 
     public final void setState(final T state) {
+        // lastState = this.desiredState;
         this.desiredState = state;
         if (desiredState != lastState)
             onStateChange();
@@ -50,8 +51,11 @@ public abstract class TorqueStatorSubsystem<T extends TorqueState> implements To
 
     public final void run(final TorqueMode mode) {
         update(mode);
-        lastState = desiredState;
+        // lastState = desiredState;
     }
 
-    protected void onStateChange() {}
+    protected void onStateChange() {
+    }
+
+    public abstract void clean(final TorqueMode mode);
 }
