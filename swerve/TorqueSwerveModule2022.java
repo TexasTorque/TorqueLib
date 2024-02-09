@@ -6,6 +6,7 @@
  */
 package org.texastorque.torquelib.swerve;
 
+import org.littletonrobotics.junction.Logger;
 import org.texastorque.Debug;
 import org.texastorque.torquelib.motors.TorqueNEO;
 import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
@@ -22,6 +23,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -198,6 +201,9 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         setDesiredState(state, DriverStation.isAutonomous());
     }
 
+    private SwerveModulePosition aggregatePosition = new SwerveModulePosition(0, Rotation2d.fromRadians(0));
+    private double lastSampledTime = -1;
+
     public void setDesiredState(final SwerveModuleState state, final boolean useSmartDrive) {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
@@ -217,6 +223,17 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         turn.setPercent(turnPIDOutput);
 
         Debug.log(name + " turn angle", getTurnEncoder());
+
+        // Debug:
+        if (!RobotBase.isReal()) {
+            double time = Timer.getFPGATimestamp();
+            if (lastSampledTime == -1)
+                lastSampledTime = time;
+            double deltaTime = time - lastSampledTime;
+            lastSampledTime = time;
+            aggregatePosition.distanceMeters -= optimized.speedMetersPerSecond * deltaTime;
+            aggregatePosition.angle = optimized.angle;
+        }
     }
 
     @Override
@@ -225,6 +242,9 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     }
 
     public SwerveModulePosition getPosition() {
+        if (!RobotBase.isReal()) {
+            return aggregatePosition;
+        }
         return new SwerveModulePosition(drive.getPosition(), getRotation());
     }
 
