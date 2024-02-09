@@ -30,6 +30,9 @@ public final class TorqueFollowPath extends TorqueCommand {
         public void setPose(final Pose2d pose);
 
         public void setInputSpeeds(final TorqueSwerveSpeeds speeds);
+
+        public void onBeginPathing();
+        public void onEndPathing();
     }
 
     private final Supplier<PathPlannerPath> pathSupplier;
@@ -43,16 +46,11 @@ public final class TorqueFollowPath extends TorqueCommand {
     private final ProfiledPIDController omegaController;
     private final HolonomicDriveController driveController;
 
-    public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase,
-            final double maxModuleSpeed) {
-        this(
-                () -> PathPlannerPath.fromPathFile(pathName),
-                drivebase,
-                maxModuleSpeed);
+    public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase) {
+        this(() -> PathPlannerPath.fromPathFile(pathName), drivebase);
     }
 
-    public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase,
-            final double maxModuleSpeed) {
+    public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase) {
 
         xController = new PIDController(1, 0, 0);
         yController = new PIDController(1, 0, 0);
@@ -77,14 +75,12 @@ public final class TorqueFollowPath extends TorqueCommand {
         timer.reset();
 
         final PathPlannerPath path = pathSupplier.get();
-
         this.trajectory = path.getTrajectory(new ChassisSpeeds(), drivebase.getPose().getRotation());
-
         PPLibTelemetry.setCurrentPath(path);
 
-        final Pose2d startingPose = trajectory.getInitialTargetHolonomicPose();
-        drivebase.setPose(startingPose);
-
+        // final Pose2d startingPose = trajectory.getInitialTargetHolonomicPose();
+        // drivebase.setPose(startingPose);
+        drivebase.onBeginPathing();
         timer.start();
     }
 
@@ -115,6 +111,7 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     @Override
     protected final void end() {
+        drivebase.onEndPathing();
         timer.stop();
         drivebase.setInputSpeeds(new TorqueSwerveSpeeds());
     }
