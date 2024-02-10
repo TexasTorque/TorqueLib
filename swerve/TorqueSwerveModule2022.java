@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * The module uses a Rev NEO for drive and rotation control. It uses a CTRE
  * Cancoder
  * positioned 1:1 with the wheel rotation.
- 
+ * 
  * Abishek Swerve:
  * https://drive.google.com/file/d/1bvgo75gqLzoerBIEtEObXep_6gpac6mZ/view?usp=sharing
  * https://drive.google.com/file/d/1q4cmx3Ntscfynn_1Tc8W9VAqR9Tgn0NT/view?usp=sharing
@@ -67,10 +67,12 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         public static final SwerveConfig abishek = new SwerveConfig();
 
         public static final SwerveConfig swervex = new SwerveConfig();
-        
+
         static {
             swervex.driveGearRatio = 6.75;
             swervex.turnGearRatio = 13.71;
+
+            swervex.drivePGain = .1;
         }
 
         public double magic = 6.57 / (8.0 + 1.0 / 3.0);

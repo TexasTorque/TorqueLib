@@ -7,10 +7,15 @@
 package org.texastorque.torquelib.auto.commands;
 
 import java.util.function.Supplier;
+
+import org.texastorque.subsystems.Drivebase;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
+
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PPLibTelemetry;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
@@ -32,6 +37,7 @@ public final class TorqueFollowPath extends TorqueCommand {
         public void setInputSpeeds(final TorqueSwerveSpeeds speeds);
 
         public void onBeginPathing();
+
         public void onEndPathing();
     }
 
@@ -42,9 +48,11 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     private final TorquePathingDrivebase drivebase;
 
-    private final PIDController xController, yController;
+    private final PIDController xController, yController, omegaControllerPP;
     private final ProfiledPIDController omegaController;
+
     private final HolonomicDriveController driveController;
+    private final PPHolonomicDriveController driveControllerPP;
 
     public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase) {
         this(() -> PathPlannerPath.fromPathFile(pathName), drivebase);
@@ -59,12 +67,19 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         omegaController = new ProfiledPIDController(Math.PI * 2, 0, .0, omegaConstraints);
 
+        omegaControllerPP = new PIDController(Math.PI, 0, 0);
+
         // omegaController.setTolerance(Units.degreesToRadians(2));
         // This is a possible problem ... if rotation is geekin change the args to (0,
         // 2*Math.PI)
         omegaController.enableContinuousInput(0, 2 * Math.PI);
 
         driveController = new HolonomicDriveController(xController, yController, omegaController);
+
+        driveControllerPP = new PPHolonomicDriveController(
+                new PIDConstants(1, 0, 0),
+                new PIDConstants(Math.PI, 0, 0),
+                3, Drivebase.WIDTH * Math.sqrt(2));
 
         this.drivebase = drivebase;
         this.pathSupplier = pathSupplier;
@@ -90,8 +105,10 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         final PathPlannerTrajectory.State desired = trajectory.sample(elapsed);
 
-        final ChassisSpeeds outputSpeeds = driveController.calculate(
-                drivebase.getPose(), desired.getTargetHolonomicPose(), desired.velocityMps, new Rotation2d(0));
+        // final ChassisSpeeds outputSpeeds =
+        // driveController.calculate(drivebase.getPose(),
+        // desired.getTargetHolonomicPose(), desired.velocityMps, desired.heading);
+        final ChassisSpeeds outputSpeeds = driveControllerPP.calculateRobotRelativeSpeeds(drivebase.getPose(), desired);
 
         final TorqueSwerveSpeeds realSpeeds = TorqueSwerveSpeeds.fromChassisSpeeds(outputSpeeds);
 
@@ -105,9 +122,10 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     @Override
     protected final boolean endCondition() {
-        return trajectory.getEndState().getTargetHolonomicPose().getTranslation()
-                .getDistance(drivebase.getPose().getTranslation()) <= .1
-                || timer.hasElapsed(trajectory.getTotalTimeSeconds());
+        // return trajectory.getEndState().getTargetHolonomicPose().getTranslation()
+        // .getDistance(drivebase.getPose().getTranslation()) <= .1
+        // ||
+        return timer.hasElapsed(trajectory.getTotalTimeSeconds());
     }
 
     @Override
