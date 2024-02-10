@@ -222,7 +222,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         // log("Turn PID Output", turnPIDOutput);
         turn.setPercent(turnPIDOutput);
 
-        Debug.log(name + " turn angle", getTurnEncoder());
+        Debug.log(name + " Turn Angle", getTurnEncoder());
 
         // Debug:
         if (!RobotBase.isReal()) {

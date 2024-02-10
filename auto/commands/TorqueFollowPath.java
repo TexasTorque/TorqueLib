@@ -95,7 +95,8 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         final TorqueSwerveSpeeds realSpeeds = TorqueSwerveSpeeds.fromChassisSpeeds(outputSpeeds);
 
-        drivebase.setInputSpeeds(realSpeeds.times(-1));
+        // drivebase.setInputSpeeds(realSpeeds.times(-1));
+        drivebase.setInputSpeeds(realSpeeds);
 
         PPLibTelemetry.setCurrentPose(drivebase.getPose());
         PPLibTelemetry.setTargetPose(desired.getTargetHolonomicPose());

@@ -113,8 +113,8 @@ public final class TorqueSwerveModuleX extends TorqueSwerveModule {
     public void setDesiredState(final SwerveModuleState state) {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
-        Debug.log(name + " req speed", optimized.speedMetersPerSecond);
-        Debug.log(name + " actual speed", drive.getVelocity());
+        // Debug.log(name + " req speed", optimized.speedMetersPerSecond);
+        // Debug.log(name + " actual speed", drive.getVelocity());
 
         if (DriverStation.isAutonomous())
             drive.setPIDReference(optimized.speedMetersPerSecond, CANSparkBase.ControlType.kVelocity);
