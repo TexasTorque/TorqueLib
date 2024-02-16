@@ -6,7 +6,7 @@
  */
 package org.texastorque.torquelib.swerve;
 
-import org.texastorque.Debug;
+import org.texastorque.torquelib.Debug;
 import org.texastorque.torquelib.motors.TorqueNEO;
 import com.ctre.phoenix6.hardware.CANcoder;
 import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;

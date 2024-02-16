@@ -7,7 +7,7 @@
 package org.texastorque.torquelib.swerve;
 
 import org.littletonrobotics.junction.Logger;
-import org.texastorque.Debug;
+import org.texastorque.torquelib.Debug;
 import org.texastorque.torquelib.motors.TorqueNEO;
 import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
 
@@ -220,8 +220,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         // log("Turn PID Output", turnPIDOutput);
         turn.setPercent(turnPIDOutput);
 
-
-
         // Debug:
         if (!RobotBase.isReal()) {
             double time = Timer.getFPGATimestamp();
@@ -229,7 +227,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
                 lastSampledTime = time;
             double deltaTime = time - lastSampledTime;
             lastSampledTime = time;
-            aggregatePosition.distanceMeters -= optimized.speedMetersPerSecond * deltaTime;
+            aggregatePosition.distanceMeters += optimized.speedMetersPerSecond * deltaTime;
             aggregatePosition.angle = optimized.angle;
         }
     }
