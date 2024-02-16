@@ -63,6 +63,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
      * the module.
      */
     public static final class SwerveConfig {
+        public static final double WHEEL_FREE_SPEED = 4.6;
+
         public static final SwerveConfig defaultConfig = new SwerveConfig();
         public static final SwerveConfig abishek = new SwerveConfig();
 
@@ -71,8 +73,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         static {
             swervex.driveGearRatio = 6.75;
             swervex.turnGearRatio = 13.71;
-
             swervex.drivePGain = .1;
+            swervex.driveFeedForward = (1. / WHEEL_FREE_SPEED);
         }
 
         public double magic = 6.57 / (8.0 + 1.0 / 3.0);
@@ -80,14 +82,15 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         public int driveMaxCurrent = 35, // amps
                 turnMaxCurrent = 25; // amps
         public double voltageCompensation = 12.6, // volts
-                maxVelocity = 3.25, // m/s
+                maxVelocity = WHEEL_FREE_SPEED, // m/s
                 maxAcceleration = 3.0, // m/s^2
                 maxAngularVelocity = Math.PI, // radians/s
                 maxAngularAcceleration = Math.PI, // radians/s
 
                 // The following will most likely need to be overriden
                 // depending on the weight of each robot
-                driveStaticGain = 0.015, driveFeedForward = 0.212, drivePGain = 0.3, driveIGain = 0.0, driveDGain = 0.0,
+                driveStaticGain = 0.015, driveFeedForward = 0.2485, drivePGain = 0.1, driveIGain = 0.0,
+                driveDGain = 0.0,
 
                 driveRampRate = 3.0, // %power/s
                 driveGearRatio = 6.57, // Translation motor to wheel
@@ -178,17 +181,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         turn.setBreakMode(true);
         turn.burnFlash();
 
-        // cancoder = new CANCoder(encoderID);
-        // final CANCoderConfiguration cancoderConfig = new CANCoderConfiguration();
-        // cancoderConfig.sensorCoefficient = 2 * Math.PI / 4096.0;
-        // cancoderConfig.unitString = "rad";
-        // cancoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
-        // // cancoderConfig.initializationStrategy =
-        // // SensorInitializationStrategy.BootToZero;
-        // cancoderConfig.initializationStrategy =
-        // SensorInitializationStrategy.BootToAbsolutePosition;
-        // cancoder.configAllSettings(cancoderConfig);
-
         cancoder = new CANcoder(encoderID);
 
         // Configure the controllers
@@ -219,12 +211,16 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
             drive.setPercent(optimized.speedMetersPerSecond / config.maxVelocity);
         }
 
+        Debug.log(name + " drive velocity", Math.abs(drive.getVelocity()));
+        Debug.log(name + " req drive velocity", optimized.speedMetersPerSecond);
+        Debug.log("4.6", 4.6);
+
         // Calculate turn output
         final double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
         // log("Turn PID Output", turnPIDOutput);
         turn.setPercent(turnPIDOutput);
 
-        Debug.log(name + " Turn Angle", getTurnEncoder());
+
 
         // Debug:
         if (!RobotBase.isReal()) {

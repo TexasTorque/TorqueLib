@@ -7,11 +7,10 @@
 package org.texastorque.torquelib.auto.commands;
 
 import java.util.function.Supplier;
-
 import org.texastorque.subsystems.Drivebase;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
-
+import org.texastorque.torquelib.swerve.TorqueSwerveModule2022.SwerveConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
@@ -50,18 +49,29 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase) {
         driveController = new PPHolonomicDriveController(
-                new PIDConstants(1, 0, 0),
+                new PIDConstants(8, 0, 0),
                 new PIDConstants(Math.PI, 0, 0),
-                3, Drivebase.WIDTH * Math.sqrt(2));
+                SwerveConfig.WHEEL_FREE_SPEED, Drivebase.WIDTH * Math.sqrt(2));
 
         this.drivebase = drivebase;
         this.pathSupplier = pathSupplier;
     }
 
+    // public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase,
+    //         final Supplier<Optional<Rotation2d>> rotationTargetOverride) {
+    //     driveController = new PPHolonomicDriveController(
+    //             new PIDConstants(1, 0, 0),
+    //             new PIDConstants(Math.PI, 0, 0),
+    //             SwerveConfig.WHEEL_FREE_SPEED, Drivebase.WIDTH * Math.sqrt(2));
+
+    //     PPHolonomicDriveController.setRotationTargetOverride(rotationTargetOverride);
+
+    //     this.drivebase = drivebase;
+    //     this.pathSupplier = pathSupplier;
+    // }
+
     @Override
     protected final void init() {
-        timer.reset();
-
         final PathPlannerPath path = pathSupplier.get();
         this.trajectory = path.getTrajectory(new ChassisSpeeds(), drivebase.getPose().getRotation());
         PPLibTelemetry.setCurrentPath(path);
@@ -69,7 +79,7 @@ public final class TorqueFollowPath extends TorqueCommand {
         final Pose2d startingPose = trajectory.getInitialTargetHolonomicPose();
         drivebase.setPose(startingPose);
         drivebase.onBeginPathing();
-        timer.start();
+        timer.restart();
     }
 
     @Override

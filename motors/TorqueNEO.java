@@ -145,7 +145,9 @@ public final class TorqueNEO {
      */
     public void setVolts(final double volts) { motor.setVoltage(volts); }
 
-    public double getVolts() { return motor.getBusVoltage(); }
+    public double getBusVoltage() { return motor.getBusVoltage(); }
+
+    public double getVolts() { return motor.getBusVoltage() * motor.getAppliedOutput(); }
 
     /**
      * Set the voltage compensation for the motor.
