@@ -18,6 +18,7 @@ import com.pathplanner.lib.util.PPLibTelemetry;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public final class TorqueFollowPath extends TorqueCommand {
@@ -58,22 +59,29 @@ public final class TorqueFollowPath extends TorqueCommand {
         this.pathSupplier = pathSupplier;
     }
 
-    // public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase,
-    //         final Supplier<Optional<Rotation2d>> rotationTargetOverride) {
-    //     driveController = new PPHolonomicDriveController(
-    //             new PIDConstants(1, 0, 0),
-    //             new PIDConstants(Math.PI, 0, 0),
-    //             SwerveConfig.WHEEL_FREE_SPEED, Drivebase.WIDTH * Math.sqrt(2));
+    // public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final
+    // TorquePathingDrivebase drivebase,
+    // final Supplier<Optional<Rotation2d>> rotationTargetOverride) {
+    // driveController = new PPHolonomicDriveController(
+    // new PIDConstants(1, 0, 0),
+    // new PIDConstants(Math.PI, 0, 0),
+    // SwerveConfig.WHEEL_FREE_SPEED, Drivebase.WIDTH * Math.sqrt(2));
 
-    //     PPHolonomicDriveController.setRotationTargetOverride(rotationTargetOverride);
+    // PPHolonomicDriveController.setRotationTargetOverride(rotationTargetOverride);
 
-    //     this.drivebase = drivebase;
-    //     this.pathSupplier = pathSupplier;
+    // this.drivebase = drivebase;
+    // this.pathSupplier = pathSupplier;
     // }
 
     @Override
     protected final void init() {
-        final PathPlannerPath path = pathSupplier.get();
+        PathPlannerPath path = pathSupplier.get();
+        
+        if (DriverStation.getAlliance().isPresent()) {
+            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+                path = path.flipPath();
+        }
+
         this.trajectory = path.getTrajectory(new ChassisSpeeds(), drivebase.getPose().getRotation());
         PPLibTelemetry.setCurrentPath(path);
 
