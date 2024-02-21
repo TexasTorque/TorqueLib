@@ -72,6 +72,8 @@ public class TorqueRobotBase extends LoggedRobot {
 
         Logger.start();
 
+        autoManager.loadPaths();
+
         // (for oblog)
         // Logger.setCycleWarningsEnabled(true);
         // if (doLogging)

@@ -73,6 +73,11 @@ public final class TorqueFollowPath extends TorqueCommand {
     // this.pathSupplier = pathSupplier;
     // }
 
+    private static Pose2d endPosition = new Pose2d();
+    public static Pose2d getEndingPositionForCurrentlyLoadedPath() {
+        return endPosition;
+    }
+
     @Override
     protected final void init() {
         PathPlannerPath path = pathSupplier.get();
@@ -83,6 +88,8 @@ public final class TorqueFollowPath extends TorqueCommand {
         }
 
         this.trajectory = path.getTrajectory(new ChassisSpeeds(), drivebase.getPose().getRotation());
+        endPosition = trajectory.getEndState().getTargetHolonomicPose();
+
         PPLibTelemetry.setCurrentPath(path);
 
         final Pose2d startingPose = trajectory.getInitialTargetHolonomicPose();

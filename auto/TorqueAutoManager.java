@@ -31,7 +31,8 @@ public abstract class TorqueAutoManager {
      */
     public static final class TorqueBlankAutoManager extends TorqueAutoManager {
         @Override
-        protected void init() {}
+        protected void loadSequences() {}
+        public void loadPaths() {}
     }
     private final HashMap<String, TorqueSequence> autoSequences;
 
@@ -42,6 +43,8 @@ public abstract class TorqueAutoManager {
 
     private final String autoSelectorKey = "Auto List";
 
+    protected final TorquePathLoader pathLoader = new TorquePathLoader();
+
     protected TorqueAutoManager() { this(true); }
 
     protected TorqueAutoManager(final boolean displayChoicesSmartDashboard) {
@@ -49,7 +52,7 @@ public abstract class TorqueAutoManager {
 
         addSequence("Empty", new TorqueEmpty()); // default
 
-        init();
+        loadSequences();
         if (displayChoicesSmartDashboard) displayChoices();
     }
 
@@ -110,7 +113,12 @@ public abstract class TorqueAutoManager {
     /**
      * This is where we add sequenes
      */
-    protected abstract void init();
+    protected abstract void loadSequences();
+
+    /**
+     * This is where we preload paths
+     */
+    public abstract void loadPaths();
 
     protected final void addSequence(final TorqueSequence seq) {
         addSequence(TorqueUtil.camelCaseToTitleCase(seq.getClass().getSimpleName()), seq);
