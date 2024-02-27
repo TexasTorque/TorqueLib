@@ -8,7 +8,11 @@ package org.texastorque.torquelib.auto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
+import org.texastorque.torquelib.Debug;
 import org.texastorque.torquelib.auto.commands.TorqueRun;
 import org.texastorque.torquelib.auto.commands.TorqueRunSequence;
 
@@ -75,13 +79,15 @@ public abstract class TorqueSequence {
         addBlock(new TorqueBlock(commands));
     }
 
-    public static String autoLog = "";
+    protected void log(final String key, final DoubleSupplier val) {
+        addBlock(new TorqueRun(() -> Debug.log(key, val.getAsDouble())));
+    }
 
-    protected final void addLog(final String msg) {
-        addBlock(new TorqueRun(() -> {
-            autoLog += msg + "\n";
-            SmartDashboard.putString("Auto Msg", msg);
-            SmartDashboard.putString("Auto Log", autoLog);
-        }));
+    protected void log(final String key, final Supplier<String> val) {
+        addBlock(new TorqueRun(() -> Debug.log(key, val.get())));
+    }
+
+    protected void log(final String key, final BooleanSupplier val) {
+        addBlock(new TorqueRun(() -> Debug.log(key, val.getAsBoolean())));
     }
 }

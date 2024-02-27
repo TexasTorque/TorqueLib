@@ -7,11 +7,9 @@
 package org.texastorque.torquelib.auto.commands;
 
 import java.util.function.Supplier;
-
-import org.texastorque.subsystems.Drivebase;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
-
+import org.texastorque.torquelib.swerve.TorqueSwerveModule2022.SwerveConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
@@ -20,6 +18,7 @@ import com.pathplanner.lib.util.PPLibTelemetry;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public final class TorqueFollowPath extends TorqueCommand {
@@ -34,6 +33,8 @@ public final class TorqueFollowPath extends TorqueCommand {
         public void onBeginPathing();
 
         public void onEndPathing();
+
+        public double getRadius();
     }
 
     private final Supplier<PathPlannerPath> pathSupplier;
@@ -50,26 +51,50 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase) {
         driveController = new PPHolonomicDriveController(
-                new PIDConstants(1, 0, 0),
+                new PIDConstants(8, 0, 0),
                 new PIDConstants(Math.PI, 0, 0),
-                3, Drivebase.WIDTH * Math.sqrt(2));
+                SwerveConfig.WHEEL_FREE_SPEED, drivebase.getRadius());
 
         this.drivebase = drivebase;
         this.pathSupplier = pathSupplier;
     }
 
+    // public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final
+    // TorquePathingDrivebase drivebase,
+    // final Supplier<Optional<Rotation2d>> rotationTargetOverride) {
+    // driveController = new PPHolonomicDriveController(
+    // new PIDConstants(1, 0, 0),
+    // new PIDConstants(Math.PI, 0, 0),
+    // SwerveConfig.WHEEL_FREE_SPEED, Drivebase.WIDTH * Math.sqrt(2));
+
+    // PPHolonomicDriveController.setRotationTargetOverride(rotationTargetOverride);
+
+    // this.drivebase = drivebase;
+    // this.pathSupplier = pathSupplier;
+    // }
+
+    private static Pose2d endPosition = new Pose2d();
+
+    public static Pose2d getEndingPositionForCurrentlyLoadedPath() {
+        return endPosition;
+    }
+
     @Override
     protected final void init() {
-        timer.reset();
+        PathPlannerPath path = pathSupplier.get();
 
-        final PathPlannerPath path = pathSupplier.get();
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+            path = path.flipPath();
+
         this.trajectory = path.getTrajectory(new ChassisSpeeds(), drivebase.getPose().getRotation());
+        endPosition = trajectory.getEndState().getTargetHolonomicPose();
+
         PPLibTelemetry.setCurrentPath(path);
 
         final Pose2d startingPose = trajectory.getInitialTargetHolonomicPose();
         drivebase.setPose(startingPose);
         drivebase.onBeginPathing();
-        timer.start();
+        timer.restart();
     }
 
     @Override
