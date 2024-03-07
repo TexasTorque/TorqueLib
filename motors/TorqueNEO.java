@@ -177,12 +177,32 @@ public final class TorqueNEO {
     // * POSITION AND VELOCITY CONTROLS *
     // **********************************
 
+    // This variable is used to keep track of the last set current limit for
+    // observing when changes need to be made.
+    private double lastSetCurrentLimit = -1;
     /**
      * Set the maximum current the motor can draw.
      *
      * @param amps Maximum amperage.
      */
-    public void setCurrentLimit(final int amps) { checkError(motor.setSmartCurrentLimit(amps)); }
+    public void setCurrentLimit(final int amps) { 
+        boolean didErr = checkError(motor.setSmartCurrentLimit(amps)); 
+        if (!didErr) {
+            lastSetCurrentLimit = amps;
+        }
+    }
+
+    /**
+     * Safely set the maximum current the motor can draw during the update loop.
+     * This can be called repeatly to set the maximum current but not overrun
+     * CAN utalization. This is because it works using an observer.
+     *
+     * @param amps Maximum amperage.
+     */
+    public void setCurrentLimitUpdatable(final int amps) {
+        if (amps == lastSetCurrentLimit) return;
+        setCurrentLimit(amps);
+    }
 
     /**
      * Configure the PID parameters.
@@ -310,17 +330,21 @@ public final class TorqueNEO {
      * Check error with non–applicable field name.
      *
      * @param error REVLibError to check.
+     * 
+     * @return True if there has been an error, false if the function has passed.
      */
-    private void checkError(final REVLibError error) { checkError(error, "N/A"); }
+    private boolean checkError(final REVLibError error) { return checkError(error, "N/A"); }
 
     /**
      * Check error with applicable field name.
      *
      * @param error REVLibError to check.
      * @param field The field name.
+     * 
+     * @return True if there has been an error, false if the function has passed.
      */
-    private void checkError(final REVLibError error, final String field) {
-        if (error == REVLibError.kOk) return;
+    private boolean checkError(final REVLibError error, final String field) {
+        if (error == REVLibError.kOk) return false;
 
         final var parent = TorqueUtil.getStackTraceElement(3);
         System.err.printf("TorqueNEO Error\n"
@@ -329,5 +353,7 @@ public final class TorqueNEO {
                                   + "\tMethod = %s\n"
                                   + "\tError = %s\n",
                           motor.getDeviceId(), field, parent.getMethodName(), error.toString());
+
+        return true;
     }
 }
