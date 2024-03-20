@@ -717,6 +717,24 @@ public final class TorqueController {
     public final void setRumbleLeft(final boolean rumble) {
         stick.setRumble(Joystick.RumbleType.kLeftRumble, rumble ? 1 : 0);
     }
+    
+   /**
+     * Set weather or not to rumble the left side.
+     *
+     * @param rumble To rumble or not to rumble.
+     */
+    public final void setRumbleLeft(final boolean rumble, final double rumbleValue) {
+        stick.setRumble(Joystick.RumbleType.kLeftRumble, rumble ? rumbleValue : 0);
+    }
+
+     /**
+     * Set weather or not to rumble the right side.
+     *
+     * @param rumble To rumble or not to rumble.
+     */
+    public final void setRumbleRight(final boolean rumble, final double rumbleValue) {
+        stick.setRumble(Joystick.RumbleType.kRightRumble, rumble ? rumbleValue : 0);
+    }
 
     /**
      * Set weather or not to rumble the right side.

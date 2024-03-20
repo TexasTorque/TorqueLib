@@ -105,7 +105,7 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         final ChassisSpeeds outputSpeeds = driveController.calculateRobotRelativeSpeeds(drivebase.getPose(), desired);
 
-        final TorqueSwerveSpeeds realSpeeds = TorqueSwerveSpeeds.fromChassisSpeeds(outputSpeeds);
+        final TorqueSwerveSpeeds realSpeeds = TorqueSwerveSpeeds.fromChassisSpeeds(outputSpeeds).times(-1);
 
         drivebase.setInputSpeeds(realSpeeds);
 
