@@ -213,7 +213,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
         Debug.log(name + " drive velocity", Math.abs(drive.getVelocity()));
         Debug.log(name + " req drive velocity", optimized.speedMetersPerSecond);
-        Debug.log("4.6", 4.6);
+        Debug.log("Max Swerve Velocity", config.maxVelocity);
 
         // Calculate turn output
         final double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
