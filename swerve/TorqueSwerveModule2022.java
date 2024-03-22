@@ -79,7 +79,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
         public double magic = 6.57 / (8.0 + 1.0 / 3.0);
 
-        public int driveMaxCurrent = 35, // amps
+        public int driveMaxCurrent = 50, // amps
                 turnMaxCurrent = 25; // amps
         public double voltageCompensation = 12.6, // volts
                 maxVelocity = WHEEL_FREE_SPEED, // m/s

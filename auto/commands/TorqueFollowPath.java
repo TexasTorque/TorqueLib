@@ -7,6 +7,8 @@
 package org.texastorque.torquelib.auto.commands;
 
 import java.util.function.Supplier;
+
+import org.texastorque.torquelib.Debug;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
 import org.texastorque.torquelib.swerve.TorqueSwerveModule2022.SwerveConfig;
@@ -59,20 +61,6 @@ public final class TorqueFollowPath extends TorqueCommand {
         this.pathSupplier = pathSupplier;
     }
 
-    // public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final
-    // TorquePathingDrivebase drivebase,
-    // final Supplier<Optional<Rotation2d>> rotationTargetOverride) {
-    // driveController = new PPHolonomicDriveController(
-    // new PIDConstants(1, 0, 0),
-    // new PIDConstants(Math.PI, 0, 0),
-    // SwerveConfig.WHEEL_FREE_SPEED, Drivebase.WIDTH * Math.sqrt(2));
-
-    // PPHolonomicDriveController.setRotationTargetOverride(rotationTargetOverride);
-
-    // this.drivebase = drivebase;
-    // this.pathSupplier = pathSupplier;
-    // }
-
     private static Pose2d endPosition = new Pose2d();
 
     public static Pose2d getEndingPositionForCurrentlyLoadedPath() {
@@ -85,6 +73,8 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
             path = path.flipPath();
+
+        driveController.reset(drivebase.getPose(), new ChassisSpeeds()); // for now 0 speeds
 
         this.trajectory = path.getTrajectory(new ChassisSpeeds(), drivebase.getPose().getRotation());
         endPosition = trajectory.getEndState().getTargetHolonomicPose();
