@@ -6,17 +6,10 @@
  */
 package org.texastorque.torquelib.swerve;
 
-import org.littletonrobotics.junction.Logger;
 import org.texastorque.torquelib.Debug;
 import org.texastorque.torquelib.motors.TorqueNEO;
 import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
-
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix6.hardware.CANcoder;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -79,7 +72,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
         public double magic = 6.57 / (8.0 + 1.0 / 3.0);
 
-        public int driveMaxCurrent = 50, // amps
+        public int driveMaxCurrent = 35, // amps
                 turnMaxCurrent = 25; // amps
         public double voltageCompensation = 12.6, // volts
                 maxVelocity = WHEEL_FREE_SPEED, // m/s

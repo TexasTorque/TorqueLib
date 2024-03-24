@@ -7,8 +7,6 @@
 package org.texastorque.torquelib.auto.commands;
 
 import java.util.function.Supplier;
-
-import org.texastorque.torquelib.Debug;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
 import org.texastorque.torquelib.swerve.TorqueSwerveModule2022.SwerveConfig;
@@ -31,6 +29,8 @@ public final class TorqueFollowPath extends TorqueCommand {
         public void setPose(final Pose2d pose);
 
         public void setInputSpeeds(final TorqueSwerveSpeeds speeds);
+
+        public ChassisSpeeds getActualChassisSpeeds();
 
         public void onBeginPathing();
 
@@ -74,7 +74,7 @@ public final class TorqueFollowPath extends TorqueCommand {
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
             path = path.flipPath();
 
-        driveController.reset(drivebase.getPose(), new ChassisSpeeds()); // for now 0 speeds
+        driveController.reset(drivebase.getPose(), drivebase.getActualChassisSpeeds());
 
         this.trajectory = path.getTrajectory(new ChassisSpeeds(), drivebase.getPose().getRotation());
         endPosition = trajectory.getEndState().getTargetHolonomicPose();
