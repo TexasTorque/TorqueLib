@@ -83,8 +83,8 @@ public final class TorqueSwerveModule2024 extends TorqueSwerveModule {
         // From 6328
         // (https://github.com/Mechanical-Advantage/RobotCode2024/blob/21bcc3bc1eacbf634cdd0a179c58c4561c8ec1e7/src/main/java/org/littletonrobotics/frc2024/subsystems/drive/ModuleIOKrakenFOC.java#L73)
         drive = new TalonFX(ports.drive);
-        driveCurrentLimitsConfigs = new CurrentLimitsConfigs().withStatorCurrentLimit(id) // I hate this
-                .withStatorCurrentLimitEnable(true).withSupplyCurrentLimit(1).withStatorCurrentLimitEnable(true);
+        driveCurrentLimitsConfigs = new CurrentLimitsConfigs().withStatorCurrentLimit(30)
+                .withStatorCurrentLimitEnable(true).withSupplyCurrentLimit(50).withStatorCurrentLimitEnable(true);
 
         driveConfig = new TalonFXConfiguration();
         // driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = 80.0; // maybe should leave as default? (6328 had it)
