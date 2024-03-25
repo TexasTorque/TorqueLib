@@ -9,7 +9,6 @@ package org.texastorque.torquelib.auto.commands;
 import java.util.function.Supplier;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
-import org.texastorque.torquelib.swerve.TorqueSwerveModule2022.SwerveConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
@@ -37,6 +36,7 @@ public final class TorqueFollowPath extends TorqueCommand {
         public void onEndPathing();
 
         public double getRadius();
+        public double getMaxSpeed();
     }
 
     private final Supplier<PathPlannerPath> pathSupplier;
@@ -55,7 +55,7 @@ public final class TorqueFollowPath extends TorqueCommand {
         driveController = new PPHolonomicDriveController(
                 new PIDConstants(8, 0, 0),
                 new PIDConstants(Math.PI, 0, 0),
-                SwerveConfig.WHEEL_FREE_SPEED, drivebase.getRadius());
+                drivebase.getMaxSpeed(), drivebase.getRadius());
 
         this.drivebase = drivebase;
         this.pathSupplier = pathSupplier;

@@ -29,27 +29,7 @@ import edu.wpi.first.wpilibj.Timer;
  * WCP Swerve X modules with WCP/CRTE Krakens 🐙
  *
  */
-public final class TorqueSwerveModule2024 extends TorqueSwerveModule {
-
-    /**
-     * A structure to define the constants for the swerve module.
-     *
-     * Has default values that can be overriden before written to
-     * the module.
-     */
-    public static final class SwerveConfig {
-        public int turnMaxCurrent = 25; // amps
-        public double WHEEL_FREE_SPEED = 4.6, voltageCompensation = 12.6, // volts
-                maxVelocity = WHEEL_FREE_SPEED, // m/s
-                driveStaticGain = 0.015, driveFeedForward = 1. / WHEEL_FREE_SPEED, drivePGain = 0.1, driveIGain = 0.0,
-                driveDGain = 0.0,
-                driveGearRatio = 6.75, // Translation motor to wheel
-                wheelDiameter = 4.0 * 0.0254, // m
-                turnPGain = 0.1, turnIGain = 0.0, turnDGain = 0.0,
-                turnGearRatio = 13.71; // Rotation motor to wheel
-    }
-
-    private final SwerveConfig config = new SwerveConfig();
+public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
 
     // The NEO motor for turn.
     private final TorqueNEO turn;
@@ -72,19 +52,18 @@ public final class TorqueSwerveModule2024 extends TorqueSwerveModule {
 
     private final SimpleMotorFeedforward driveFeedForward;
 
-    // The name of the module that we can use for SmartDashboard outputs
-    public final String name;
-
-    public TorqueSwerveModule2024(final String name, final SwervePorts ports) {
-        super(ports.drive);
-        this.name = name;
+    public TorqueSwerveModuleKraken(final String name, final SwervePorts ports, final SwerveConfig config) {
+        super(name, config);
 
         // Configure the drive motor.
         // From 6328
         // (https://github.com/Mechanical-Advantage/RobotCode2024/blob/21bcc3bc1eacbf634cdd0a179c58c4561c8ec1e7/src/main/java/org/littletonrobotics/frc2024/subsystems/drive/ModuleIOKrakenFOC.java#L73)
         drive = new TalonFX(ports.drive);
-        driveCurrentLimitsConfigs = new CurrentLimitsConfigs().withStatorCurrentLimit(30)
-                .withStatorCurrentLimitEnable(true).withSupplyCurrentLimit(50).withStatorCurrentLimitEnable(true);
+        driveCurrentLimitsConfigs = new CurrentLimitsConfigs()
+                .withStatorCurrentLimit(config.driveMaxCurrentStator)
+                .withStatorCurrentLimitEnable(true)
+                .withSupplyCurrentLimit(config.driveMaxCurrentSupply)
+                .withStatorCurrentLimitEnable(true);
 
         driveConfig = new TalonFXConfiguration();
         // driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = 80.0; // maybe should leave as default? (6328 had it)
