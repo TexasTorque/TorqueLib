@@ -53,7 +53,7 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase) {
         driveController = new PPHolonomicDriveController(
-                new PIDConstants(10, 0, 0),
+                new PIDConstants(1, 0, 0),
                 new PIDConstants(Math.PI, 0, 0),
                 drivebase.getMaxSpeed(), drivebase.getRadius());
 

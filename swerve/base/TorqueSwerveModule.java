@@ -69,11 +69,11 @@ public abstract class TorqueSwerveModule {
             swervexKraken.turnGearRatio = 13.71;
             swervexKraken.drivePGain = .1;
             swervexKraken.maxVelocity = 4.6;
-            // swervexKraken.driveFeedForward = (1. / swervexKraken.maxVelocity);
-            swervexKraken.driveFeedForward = 1;
+            swervexKraken.driveFeedForward = (1. / swervexKraken.maxVelocity);
+            // swervexKraken.driveFeedForward = 1;
 
-            swervexKraken.driveMaxCurrentStator = 35;
-            swervexKraken.driveMaxCurrentSupply = 50;
+            swervexKraken.driveMaxCurrentStator = 50;
+            swervexKraken.driveMaxCurrentSupply = 30;
 
             swervexKraken.driveVelocityFactor = (1.0 / swervexKraken.driveGearRatio / 60.0) * (swervexKraken.wheelDiameter * Math.PI); // m/s
             swervexKraken.drivePoseFactor = (1.0 / swervexKraken.driveGearRatio) * (swervexKraken.wheelDiameter * Math.PI); // m

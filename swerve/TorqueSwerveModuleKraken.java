@@ -128,6 +128,7 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
         Debug.log(name + "Drive Velocity Actual", -drive.getVelocity().getValueAsDouble());
         Debug.log(name + "Drive Velocity Requested", -optimized.speedMetersPerSecond);
         Debug.log("4.6", 4.6);
+        Debug.log(name + " position m", drive.getPosition().getValueAsDouble());
 
         // drivePID.setP(SmartDashboard.getNumber("Drive P", 0));
         // driveFeedForward = new SimpleMotorFeedforward(config.driveStaticGain,
