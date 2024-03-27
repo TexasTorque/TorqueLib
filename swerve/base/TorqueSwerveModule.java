@@ -6,8 +6,6 @@
  */
 package org.texastorque.torquelib.swerve.base;
 
-import org.texastorque.torquelib.swerve.TorqueSwerveModuleNEO;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -20,21 +18,26 @@ public abstract class TorqueSwerveModule {
     protected final String name;
     protected final SwerveConfig config;
 
-    protected TorqueSwerveModule(final String name, final SwerveConfig config) { 
+    protected TorqueSwerveModule(final String name, final SwerveConfig config) {
         this.name = name.replaceAll(" ", "_").toLowerCase();
         this.config = config;
     }
 
-    public String getPort() { return name; }
+    public String getPort() {
+        return name;
+    }
 
     public abstract void setDesiredState(final SwerveModuleState state);
+
     public abstract SwerveModuleState getState();
+
     public abstract SwerveModulePosition getPosition();
+
     public abstract Rotation2d getRotation();
 
     public static final class SwervePorts {
         public final int drive, turn, encoder;
-    
+
         public SwervePorts(final int drive, final int turn, final int encoder) {
             this.drive = drive;
             this.turn = turn;
@@ -65,11 +68,15 @@ public abstract class TorqueSwerveModule {
             swervexKraken.driveGearRatio = 6.75;
             swervexKraken.turnGearRatio = 13.71;
             swervexKraken.drivePGain = .1;
-            swervexKraken.maxVelocity = 5.0;
-            swervexKraken.driveFeedForward = (1. / swervexKraken.maxVelocity);
+            swervexKraken.maxVelocity = 4.6;
+            // swervexKraken.driveFeedForward = (1. / swervexKraken.maxVelocity);
+            swervexKraken.driveFeedForward = 1;
 
-            swervexKraken.driveMaxCurrentStator = 30;
+            swervexKraken.driveMaxCurrentStator = 35;
             swervexKraken.driveMaxCurrentSupply = 50;
+
+            swervexKraken.driveVelocityFactor = (1.0 / swervexKraken.driveGearRatio / 60.0) * (swervexKraken.wheelDiameter * Math.PI); // m/s
+            swervexKraken.drivePoseFactor = (1.0 / swervexKraken.driveGearRatio) * (swervexKraken.wheelDiameter * Math.PI); // m
         }
 
         public double magic = 6.57 / (8.0 + 1.0 / 3.0);
@@ -89,7 +96,7 @@ public abstract class TorqueSwerveModule {
                 driveDGain = 0.0,
 
                 driveRampRate = 3.0, // %power/s
-                driveGearRatio = 6.57, // Translation motor to wheel
+                driveGearRatio = 6.75, // Translation motor to wheel
                 wheelDiameter = 4.0 * 0.0254, // m
                 driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI), // m/s
                 drivePoseFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI), // m
@@ -97,7 +104,6 @@ public abstract class TorqueSwerveModule {
                 turnGearRatio = 12.41; // Rotation motor to wheel
     }
 
-    
     protected double log(final String item, final double value) {
         final String key = name + "." + item.replaceAll(" ", "_").toLowerCase();
         SmartDashboard.putNumber(String.format("%s::%s", name, key), value);
