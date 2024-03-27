@@ -58,7 +58,7 @@ public abstract class TorqueSwerveModule {
         public static final SwerveConfig swervexKraken = new SwerveConfig();
 
         static {
-            // Neo Swerve X 
+            // Neo Swerve X
             swervexNeo.driveGearRatio = 6.75;
             swervexNeo.turnGearRatio = 13.71;
             swervexNeo.drivePGain = .1;
@@ -69,14 +69,16 @@ public abstract class TorqueSwerveModule {
             swervexKraken.turnGearRatio = 13.71;
             swervexKraken.drivePGain = .1;
             swervexKraken.maxVelocity = 4.6;
-            // swervexKraken.driveFeedForward = (1. / swervexKraken.maxVelocity);
-            swervexKraken.driveFeedForward = 1;
+            swervexKraken.driveFeedForward = (1. / swervexKraken.maxVelocity);
+            // swervexKraken.driveFeedForward = 1;
 
             swervexKraken.driveMaxCurrentStator = 35;
             swervexKraken.driveMaxCurrentSupply = 50;
 
-            swervexKraken.driveVelocityFactor = (1.0 / swervexKraken.driveGearRatio / 60.0) * (swervexKraken.wheelDiameter * Math.PI); // m/s
-            swervexKraken.drivePoseFactor = (1.0 / swervexKraken.driveGearRatio) * (swervexKraken.wheelDiameter * Math.PI); // m
+            swervexKraken.driveVelocityFactor = (1.0 / swervexKraken.driveGearRatio / 60.0)
+                    * (swervexKraken.wheelDiameter * Math.PI); // m/s
+            swervexKraken.drivePoseFactor = (1.0 / swervexKraken.driveGearRatio)
+                    * (swervexKraken.wheelDiameter * Math.PI); // m
         }
 
         public double magic = 6.57 / (8.0 + 1.0 / 3.0);

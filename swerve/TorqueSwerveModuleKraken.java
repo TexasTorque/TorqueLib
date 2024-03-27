@@ -13,6 +13,9 @@ import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -44,7 +47,7 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
 
     private final CurrentLimitsConfigs driveCurrentLimitsConfigs;
 
-    // private final VoltageOut driveVoltageOut = new VoltageOut(0);
+    private final VoltageOut driveVoltageOut = new VoltageOut(0);
     private final DutyCycleOut drivePercentOutput = new DutyCycleOut(0);
 
     // The CANCoder for wheel angle measurement.
@@ -63,12 +66,13 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
         // (https://github.com/Mechanical-Advantage/RobotCode2024/blob/21bcc3bc1eacbf634cdd0a179c58c4561c8ec1e7/src/main/java/org/littletonrobotics/frc2024/subsystems/drive/ModuleIOKrakenFOC.java#L73)
         drive = new TalonFX(ports.drive);
         driveCurrentLimitsConfigs = new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(config.driveMaxCurrentStator)
-                .withStatorCurrentLimitEnable(true)
+                .withStatorCurrentLimit(90)
+                .withStatorCurrentLimitEnable(true) // remove this later
                 .withSupplyCurrentLimit(config.driveMaxCurrentSupply)
                 .withSupplyCurrentLimitEnable(true);
 
         driveConfig = new TalonFXConfiguration();
+
         // driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = 80.0; // maybe should
         // leave as default? (6328 had it)
         // driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -80.0;
@@ -80,8 +84,9 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
         // drive.optimizeBusUtilization(1.0); // this is kinda weird
         drive.getConfigurator().apply(driveConfig.withCurrentLimits(driveCurrentLimitsConfigs));
 
-        drivePID = new PIDController(config.drivePGain, config.driveIGain, config.driveDGain);
-        driveFeedForward = new SimpleMotorFeedforward(config.driveStaticGain, config.driveFeedForward);
+        drivePID = new PIDController(.5, config.driveIGain, config.driveDGain);
+        // driveFeedForward = new SimpleMotorFeedforward(.3, .375);
+        driveFeedForward = new SimpleMotorFeedforward(.15, .35);
 
         // Configure the turn motor.
         turn = new TorqueNEO(ports.turn);
@@ -99,6 +104,8 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
 
         SmartDashboard.putNumber("Drive P", .1);
         SmartDashboard.putNumber("Drive FF", config.driveFeedForward);
+
+        SmartDashboard.putNumber("Drive Voltage Req", 0);
     }
 
     @Override
@@ -118,16 +125,20 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
                     optimized.speedMetersPerSecond);
             final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
 
-            // drive.setControl(drivePercentOutput.withOutput(drivePIDOutput +
-            // driveFFOutput)); // control PID with percent
-            drive.setControl(drivePercentOutput.withOutput(drivePIDOutput + driveFFOutput)); // control PID with percent
+            drive.setControl(drivePercentOutput.withOutput(drivePIDOutput +
+                    driveFFOutput)); // control PID with percent
+
         } else {
-            drive.setControl(drivePercentOutput.withOutput(optimized.speedMetersPerSecond / config.maxVelocity));
+            drive.setControl(drivePercentOutput.withOutput(optimized.speedMetersPerSecond
+                    / config.maxVelocity));
         }
 
-        Debug.log(name + "Drive Velocity Actual", -drive.getVelocity().getValueAsDouble());
-        Debug.log(name + "Drive Velocity Requested", -optimized.speedMetersPerSecond);
+
+        Debug.log(name + "Drive Velocity Actual", Math.abs(drive.getVelocity().getValueAsDouble()));
+        Debug.log(name + "Drive Velocity Requested", Math.abs(optimized.speedMetersPerSecond));
         Debug.log("4.6", 4.6);
+
+        Debug.log(name + " Stator Current", drive.getStatorCurrent().getValueAsDouble());
 
         // drivePID.setP(SmartDashboard.getNumber("Drive P", 0));
         // driveFeedForward = new SimpleMotorFeedforward(config.driveStaticGain,
