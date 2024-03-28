@@ -101,7 +101,7 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
 
     private final DutyCycleOut driveDutyCycle = new DutyCycleOut(0);
 
-    public static final double maxVelocity = 5;
+    public static final double maxVelocity = 5.0;
 
     public TorqueSwerveModuleKraken(final String name, final SwervePorts ports) {
         super(name);
@@ -144,7 +144,8 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
 
 
         // Some turn parameters
-        final double turnPGain = 0.5, turnIGain = 0.0, turnDGain = 0.0, turnGearRatio = 12.41; // Rotation motor to wheel
+        final double turnPGain = 0.5, turnIGain = 0.0, turnDGain = 0.0, 
+                turnGearRatio = 468.0 / 35.0; // Rotation motor to wheel; // Rotation motor to wheel
 
         // Configure the turn motor.
         turn = new TorqueNEO(ports.turn);
@@ -182,22 +183,21 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
             final double drivePIDOutput = drivePID.calculate(driveVelocity, optimized.speedMetersPerSecond);
             final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
             final double driveOutput = drivePIDOutput + driveFFOutput;
-            log("Drive PID Output", drivePIDOutput + driveFFOutput);
             driveDutyCycle.Output = driveOutput;
-            drive.setControl(driveDutyCycle);
-
         } else {
             driveDutyCycle.Output = optimized.speedMetersPerSecond / maxVelocity;
-            drive.setControl(driveDutyCycle);
         }
 
-        Debug.log(name + " drive velocity", Math.abs(driveVelocity));
-        Debug.log(name + " req drive velocity", optimized.speedMetersPerSecond);
-        Debug.log("Max Swerve Velocity", maxVelocity);
+        Debug.log(name + " % Output", driveDutyCycle.Output);
+
+        drive.setControl(driveDutyCycle);
+
+        Debug.log(name + " Real Velocity", Math.abs(driveVelocity));
+        Debug.log(name + " Req Velocity", optimized.speedMetersPerSecond);
+        Debug.log("Max Velocity", maxVelocity);
 
         // Calculate turn output
         final double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
-        // log("Turn PID Output", turnPIDOutput);
         turn.setPercent(turnPIDOutput);
 
         // Debug:
@@ -239,7 +239,7 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
     }
 
     public void zero() {
-        turn.setPercent(log("zero pid", turnPID.calculate(getTurnEncoder(), 0)));
+        turn.setPercent(turnPID.calculate(getTurnEncoder(), 0));
     }
 
     private double getTurnEncoder() {
