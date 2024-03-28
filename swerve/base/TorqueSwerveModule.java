@@ -16,11 +16,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public abstract class TorqueSwerveModule {
     protected final String name;
-    protected final SwerveConfig config;
 
-    protected TorqueSwerveModule(final String name, final SwerveConfig config) {
+    protected TorqueSwerveModule(final String name) {
         this.name = name.replaceAll(" ", "_").toLowerCase();
-        this.config = config;
     }
 
     public String getPort() {

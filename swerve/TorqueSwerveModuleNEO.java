@@ -87,8 +87,10 @@ public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
 
     public boolean useCancoder = true;
 
+    private SwerveConfig config;
+
     public TorqueSwerveModuleNEO(final String name, final SwervePorts ports, final SwerveConfig config) {
-        super(name, config);
+        super(name);
 
         // Configure the drive motor.
         drive = new TorqueNEO(ports.drive);

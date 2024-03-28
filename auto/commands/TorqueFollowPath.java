@@ -36,7 +36,7 @@ public final class TorqueFollowPath extends TorqueCommand {
         public void onEndPathing();
 
         public double getRadius();
-        public double getMaxSpeed();
+        public double getMaxPathingVelocity();
     }
 
     private final Supplier<PathPlannerPath> pathSupplier;
@@ -55,7 +55,7 @@ public final class TorqueFollowPath extends TorqueCommand {
         driveController = new PPHolonomicDriveController(
                 new PIDConstants(10, 0, 0),
                 new PIDConstants(Math.PI, 0, 0),
-                drivebase.getMaxSpeed(), drivebase.getRadius());
+                drivebase.getMaxPathingVelocity(), drivebase.getRadius());
 
         this.drivebase = drivebase;
         this.pathSupplier = pathSupplier;
@@ -95,7 +95,7 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         final ChassisSpeeds outputSpeeds = driveController.calculateRobotRelativeSpeeds(drivebase.getPose(), desired);
 
-        final TorqueSwerveSpeeds realSpeeds = TorqueSwerveSpeeds.fromChassisSpeeds(outputSpeeds).times(-1);
+        final TorqueSwerveSpeeds realSpeeds = TorqueSwerveSpeeds.fromChassisSpeeds(outputSpeeds);
 
         drivebase.setInputSpeeds(realSpeeds);
 
