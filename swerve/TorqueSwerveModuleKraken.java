@@ -30,12 +30,13 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
+ * This is the version of the swerve module that uses a Kraken for driving. 
+ * 
  * Super cool flipped swerve module built in 2023 by Abishek.
  * Updated to work with WCP Swerve X modules for 2024.
  * 
- * The module uses a Rev NEO for drive and rotation control. It uses a CTRE
- * Cancoder
- * positioned 1:1 with the wheel rotation.
+ * The module uses a WCP Kraken for drive and a Rev NEO for rotation control.
+ * It uses a CTRE Cancoder positioned 1:1 with the wheel rotation.
  * 
  * Abishek Swerve:
  * https://drive.google.com/file/d/1bvgo75gqLzoerBIEtEObXep_6gpac6mZ/view?usp=sharing
