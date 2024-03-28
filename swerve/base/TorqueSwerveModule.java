@@ -7,25 +7,35 @@
 package org.texastorque.torquelib.swerve.base;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Swerve module base class
  */
 public abstract class TorqueSwerveModule {
-    protected final int id;
+    protected final String name;
 
-    protected TorqueSwerveModule(final int id) { this.id = id; }
+    protected TorqueSwerveModule(final String name) {
+        this.name = name.replaceAll(" ", "_").toLowerCase();
+    }
 
-    public int getPort() { return id; }
+    public String getPort() {
+        return name;
+    }
 
     public abstract void setDesiredState(final SwerveModuleState state);
+
     public abstract SwerveModuleState getState();
+
+    public abstract SwerveModulePosition getPosition();
+
     public abstract Rotation2d getRotation();
 
     public static final class SwervePorts {
         public final int drive, turn, encoder;
-    
+
         public SwervePorts(final int drive, final int turn, final int encoder) {
             this.drive = drive;
             this.turn = turn;
