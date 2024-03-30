@@ -9,7 +9,6 @@ package org.texastorque.torquelib.auto.commands;
 import java.util.function.Supplier;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
-import org.texastorque.torquelib.swerve.TorqueSwerveModule2022.SwerveConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
@@ -37,6 +36,7 @@ public final class TorqueFollowPath extends TorqueCommand {
         public void onEndPathing();
 
         public double getRadius();
+        public double getMaxPathingVelocity();
     }
 
     private final Supplier<PathPlannerPath> pathSupplier;
@@ -53,9 +53,9 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase) {
         driveController = new PPHolonomicDriveController(
-                new PIDConstants(8, 0, 0),
+                new PIDConstants(10, 0, 0),
                 new PIDConstants(Math.PI, 0, 0),
-                SwerveConfig.WHEEL_FREE_SPEED, drivebase.getRadius());
+                drivebase.getMaxPathingVelocity(), drivebase.getRadius());
 
         this.drivebase = drivebase;
         this.pathSupplier = pathSupplier;
@@ -95,7 +95,7 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         final ChassisSpeeds outputSpeeds = driveController.calculateRobotRelativeSpeeds(drivebase.getPose(), desired);
 
-        final TorqueSwerveSpeeds realSpeeds = TorqueSwerveSpeeds.fromChassisSpeeds(outputSpeeds).times(-1);
+        final TorqueSwerveSpeeds realSpeeds = TorqueSwerveSpeeds.fromChassisSpeeds(outputSpeeds);
 
         drivebase.setInputSpeeds(realSpeeds);
 

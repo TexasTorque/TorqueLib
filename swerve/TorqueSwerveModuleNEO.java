@@ -18,7 +18,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Super cool flipped swerve module built in 2023 by Abishek.
@@ -47,53 +46,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  * @author Justus Languell
  */
-public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
+public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
 
-    /**
-     * A structure to define the constants for the swerve module.
-     *
-     * Has default values that can be overriden before written to
-     * the module.
-     */
-    public static final class SwerveConfig {
-        public static final double WHEEL_FREE_SPEED = 4.6;
-
-        public static final SwerveConfig defaultConfig = new SwerveConfig();
-        public static final SwerveConfig abishek = new SwerveConfig();
-
-        public static final SwerveConfig swervex = new SwerveConfig();
-
-        static {
-            swervex.driveGearRatio = 6.75;
-            swervex.turnGearRatio = 13.71;
-            swervex.drivePGain = .1;
-            swervex.driveFeedForward = (1. / WHEEL_FREE_SPEED);
-        }
-
-        public double magic = 6.57 / (8.0 + 1.0 / 3.0);
-
-        public int driveMaxCurrent = 35, // amps
-                turnMaxCurrent = 25; // amps
-        public double voltageCompensation = 12.6, // volts
-                maxVelocity = WHEEL_FREE_SPEED, // m/s
-                maxAcceleration = 3.0, // m/s^2
-                maxAngularVelocity = Math.PI, // radians/s
-                maxAngularAcceleration = Math.PI, // radians/s
-
-                // The following will most likely need to be overriden
-                // depending on the weight of each robot
-                driveStaticGain = 0.015, driveFeedForward = 0.2485, drivePGain = 0.1, driveIGain = 0.0,
-                driveDGain = 0.0,
-
-                driveRampRate = 3.0, // %power/s
-                driveGearRatio = 6.57, // Translation motor to wheel
-                wheelDiameter = 4.0 * 0.0254, // m
-                driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI), // m/s
-                drivePoseFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI), // m
-                turnPGain = 0.5, turnIGain = 0.0, turnDGain = 0.0,
-                turnGearRatio = 12.41; // Rotation motor to wheel
-    }
-
+   
     /**
      * Normalizes drive speeds to never exceed a specified max.
      *
@@ -118,7 +73,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         return coterminal;
     }
 
-    private final SwerveConfig config;
 
     // The NEO motors for turn and drive.
     private final TorqueNEO drive, turn;
@@ -131,56 +85,52 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
     private final SimpleMotorFeedforward driveFeedForward;
 
-    // Rotation offset for tearing
-    @Deprecated
-    public final double staticOffset;
-
-    // The name of the module that we can use for SmartDashboard outputs
-    public final String name;
-
     public boolean useCancoder = true;
 
-    public TorqueSwerveModule2022(final String name, final SwervePorts ports,
-            final SwerveConfig config, final double driveFF) {
-        this(name, ports.drive, ports.turn, ports.encoder, 0, config, driveFF);
-    }
+    public static final double maxVelocity = 4.2;
 
-    public TorqueSwerveModule2022(final String name, final SwervePorts ports, final double staticOffset,
-            final SwerveConfig config, final double driveFF) {
-        this(name, ports.drive, ports.turn, ports.encoder, staticOffset, config, driveFF);
-    }
+    public TorqueSwerveModuleNEO(final String name, final SwervePorts ports) {
+        super(name);
 
-    public TorqueSwerveModule2022(final String name, final int driveID, final int turnID, final int encoderID,
-            final double staticOffset, final SwerveConfig config, final double driveFF) {
-        super(driveID);
-        this.name = name.replaceAll(" ", "_").toLowerCase();
-        this.staticOffset = staticOffset;
-        this.config = config;
+        final int driveMaxCurrentSupply = 35, // amps
+                turnMaxCurrent = 25; // amps
+        final double voltageCompensation = 12.6, // volts
+                // The following will most likely need to be overriden
+                // depending on the weight of each robot
+                driveStaticGain = 0.015, driveFFGain = 0.2485, drivePGain = 0.1, driveIGain = 0.0,
+                driveDGain = 0.0,
+
+                driveGearRatio = 6.75, // Translation motor to wheel
+                wheelDiameter = 4.0 * 0.0254, // m
+                driveVelocityFactor = (1.0 / driveGearRatio / 60.0) * (wheelDiameter * Math.PI), // m/s
+                drivePoseFactor = (1.0 / driveGearRatio) * (wheelDiameter * Math.PI), // m
+                turnPGain = 0.5, turnIGain = 0.0, turnDGain = 0.0,
+                turnGearRatio = 468.0 / 35.0; // Rotation motor to wheel
 
         // Configure the drive motor.
-        drive = new TorqueNEO(driveID);
-        drive.setCurrentLimit(config.driveMaxCurrent);
-        drive.setVoltageCompensation(config.voltageCompensation);
+        drive = new TorqueNEO(ports.drive);
+        drive.setCurrentLimit(driveMaxCurrentSupply);
+        drive.setVoltageCompensation(voltageCompensation);
         drive.setBreakMode(true);
         drive.invertMotor(false);
-        drive.setConversionFactors(config.drivePoseFactor, config.driveVelocityFactor);
+        drive.setConversionFactors(drivePoseFactor, driveVelocityFactor);
         drive.burnFlash();
 
         // Configure the turn motor.
-        turn = new TorqueNEO(turnID);
-        turn.setConversionFactors(config.turnGearRatio * 2 * Math.PI, 1);
-        turn.setCurrentLimit(config.turnMaxCurrent);
-        turn.setVoltageCompensation(config.voltageCompensation);
+        turn = new TorqueNEO(ports.turn);
+        turn.setConversionFactors(turnGearRatio * 2 * Math.PI, 1);
+        turn.setCurrentLimit(turnMaxCurrent);
+        turn.setVoltageCompensation(voltageCompensation);
         turn.setBreakMode(true);
         turn.burnFlash();
 
-        cancoder = new CANcoder(encoderID);
+        cancoder = new CANcoder(ports.encoder);
 
         // Configure the controllers
-        drivePID = new PIDController(config.drivePGain, config.driveIGain, config.driveDGain);
-        turnPID = new PIDController(config.turnPGain, config.turnIGain, config.turnDGain);
+        drivePID = new PIDController(drivePGain, driveIGain, driveDGain);
+        turnPID = new PIDController(turnPGain, turnIGain, turnDGain);
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
-        driveFeedForward = new SimpleMotorFeedforward(config.driveStaticGain, driveFF);
+        driveFeedForward = new SimpleMotorFeedforward(driveStaticGain, driveFFGain);
     }
 
     @Override
@@ -198,19 +148,17 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         if (useSmartDrive) {
             final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
             final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
-            // log("Drive PID Output", drivePIDOutput + driveFFOutput);
             drive.setPercent(drivePIDOutput + driveFFOutput);
         } else {
-            drive.setPercent(optimized.speedMetersPerSecond / config.maxVelocity);
+            drive.setPercent(optimized.speedMetersPerSecond / maxVelocity);
         }
 
-        Debug.log(name + " drive velocity", Math.abs(drive.getVelocity()));
-        Debug.log(name + " req drive velocity", optimized.speedMetersPerSecond);
-        Debug.log("Max Swerve Velocity", config.maxVelocity);
+        Debug.log(name + " Real Velocity", Math.abs(drive.getVelocity()));
+        Debug.log(name + " Req Velocity", optimized.speedMetersPerSecond);
+        Debug.log("Max Velocity", maxVelocity);
 
         // Calculate turn output
         final double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
-        // log("Turn PID Output", turnPIDOutput);
         turn.setPercent(turnPIDOutput);
 
         // Debug:
@@ -230,6 +178,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         return new SwerveModuleState(drive.getVelocity(), getRotation());
     }
 
+    @Override
     public SwerveModulePosition getPosition() {
         if (!RobotBase.isReal()) {
             return aggregatePosition;
@@ -248,7 +197,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     }
 
     public void zero() {
-        turn.setPercent(log("zero pid", turnPID.calculate(getTurnEncoder(), 0)));
+        turn.setPercent(turnPID.calculate(getTurnEncoder(), 0));
     }
 
     private double getTurnEncoder() {
@@ -269,9 +218,4 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         return absAngle;
     }
 
-    private double log(final String item, final double value) {
-        final String key = name + "." + item.replaceAll(" ", "_").toLowerCase();
-        SmartDashboard.putNumber(String.format("%s::%s", name, key), value);
-        return value;
-    }
 }
