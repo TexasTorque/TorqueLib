@@ -1,5 +1,6 @@
 package org.texastorque.torquelib.auto;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -20,6 +21,18 @@ public final class TorquePathLoader {
             return;
         }
         loadedTrajectories.put(pathName, PathPlannerPath.fromPathFile(pathName));
+    }
+
+     public void preloadPathSafe(final String pathName) {
+        if (loadedTrajectories.containsKey(pathName)) {
+            return;
+        }
+        try {
+            final PathPlannerPath loadedPath = PathPlannerPath.fromPathFile(pathName)
+            loadedTrajectories.put(pathName, loadedPath);
+        } catch (final FileNotFoundException e) {
+            System.out.println("Failed to load path " + pathName);
+        }
     }
 
     public Optional<PathPlannerPath> getPathSafe(final String pathName) {
