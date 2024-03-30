@@ -87,7 +87,7 @@ public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
 
     public boolean useCancoder = true;
 
-    public static final double maxVelocity = 4.6;
+    public static final double maxVelocity = 4.2;
 
     public TorqueSwerveModuleNEO(final String name, final SwervePorts ports) {
         super(name);
