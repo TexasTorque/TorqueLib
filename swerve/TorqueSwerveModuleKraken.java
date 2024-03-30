@@ -145,7 +145,7 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
 
 
         // Some turn parameters
-        final double turnPGain = 0.5, turnIGain = 0.0, turnDGain = 0.0, 
+        final double turnPGain = 0.375, turnIGain = 0.0, turnDGain = 0.0, 
                 turnGearRatio = 468.0 / 35.0; // Rotation motor to wheel; // Rotation motor to wheel
 
         // Configure the turn motor.
@@ -176,7 +176,7 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
     public void setDesiredState(final SwerveModuleState state, final boolean useSmartDrive) {
         final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
 
-        final double driveVelocity = RPSToMPS(drive.getVelocity().getValue());
+        final double driveVelocity = RPSToMPS(drive.getVelocity().getValueAsDouble());
 
         // Calculate drive output
         if (useSmartDrive) {
@@ -215,7 +215,7 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
 
     @Override
     public SwerveModuleState getState() {
-        return new SwerveModuleState(RPSToMPS(drive.getVelocity().getValue()), getRotation());
+        return new SwerveModuleState(RPSToMPS(drive.getVelocity().getValueAsDouble()), getRotation());
     }
 
     @Override
@@ -224,7 +224,7 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
             return aggregatePosition;
         }
         return new SwerveModulePosition(
-            rotationsToMeters(drive.getPosition().getValue()), 
+            rotationsToMeters(drive.getPosition().getValueAsDouble()), 
             getRotation()
         );
     }
@@ -253,7 +253,7 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
 
     private double getTurnCancoder() {
         // Should not need to use Coterminal -- doing so anyways?
-        double absAngle = Math.toRadians(cancoder.getAbsolutePosition().getValue() * 360);
+        double absAngle = Math.toRadians(cancoder.getAbsolutePosition().getValueAsDouble() * 360);
         absAngle %= 2.0 * Math.PI;
         if (absAngle < 0.0) {
             absAngle += 2.0 * Math.PI;
