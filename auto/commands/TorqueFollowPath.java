@@ -6,6 +6,8 @@
  */
 package org.texastorque.torquelib.auto.commands;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
@@ -46,12 +48,21 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     private PathPlannerTrajectory trajectory;
     private Translation2d prevTranslation = new Translation2d();
+    private BooleanSupplier endEarly;
 
     public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase) {
-        this(() -> PathPlannerPath.fromPathFile(pathName), drivebase);
+        this(pathName, drivebase, () -> false);
+    }
+
+    public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase, final BooleanSupplier endEarly) {
+        this(() -> PathPlannerPath.fromPathFile(pathName), drivebase, endEarly);
     }
 
     public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase) {
+        this(pathSupplier, drivebase, () -> false);
+    }
+
+    public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase, final BooleanSupplier endEarly) {
         driveController = new PPHolonomicDriveController(
                 new PIDConstants(10, 0, 0),
                 new PIDConstants(Math.PI, 0, 0),
@@ -59,6 +70,7 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         this.drivebase = drivebase;
         this.pathSupplier = pathSupplier;
+        this.endEarly = endEarly;
     }
 
     private static Pose2d endPosition = new Pose2d();
@@ -82,6 +94,7 @@ public final class TorqueFollowPath extends TorqueCommand {
         PPLibTelemetry.setCurrentPath(path);
 
         final Pose2d startingPose = trajectory.getInitialTargetHolonomicPose();
+
         drivebase.setPose(startingPose);
         drivebase.onBeginPathing();
         timer.restart();
@@ -106,7 +119,7 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     @Override
     protected final boolean endCondition() {
-        return timer.hasElapsed(trajectory.getTotalTimeSeconds());
+        return timer.hasElapsed(trajectory.getTotalTimeSeconds()) || endEarly.getAsBoolean();
     }
 
     @Override
