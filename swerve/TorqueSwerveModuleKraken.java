@@ -6,7 +6,6 @@
  */
 package org.texastorque.torquelib.swerve;
 
-import org.texastorque.Robot;
 import org.texastorque.torquelib.Debug;
 import org.texastorque.torquelib.motors.TorqueNEO;
 import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
@@ -17,7 +16,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.google.flatbuffers.Constants;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
