@@ -167,11 +167,10 @@ public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
             drive.setPercent(driveOutput);
         }
 
-
-
         Debug.log(name + " Real Velocity", Math.abs(drive.getVelocity()));
         Debug.log(name + " Req Velocity", optimized.speedMetersPerSecond);
         Debug.log("Max Velocity", maxVelocity);
+        Debug.log(name + " Turn Encoder", getRotation().getDegrees());
 
         // Calculate turn output
         double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
@@ -216,7 +215,7 @@ public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
         if (!RobotBase.isReal()) {
             return aggregatePosition;
         }
-        return new SwerveModulePosition(drive.getPosition(), getRotation());
+        return new SwerveModulePosition(drive.getPosition() * 2, getRotation());
     }
 
     @Override
