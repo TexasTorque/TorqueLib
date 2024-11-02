@@ -89,8 +89,6 @@ public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
 
     public static final double maxVelocity = 4.2;
 
-    private boolean reverseTurn = false, reverseDrive = false;
-
     public TorqueSwerveModuleNEO(final String name, final SwervePorts ports) {
         super(name);
 
@@ -150,20 +148,10 @@ public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
         if (useSmartDrive) {
             final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
             final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
-            double combinedOutput = drivePIDOutput + driveFFOutput;
-
-            if (reverseDrive) {
-                combinedOutput = -combinedOutput;
-            }
             
-            drive.setPercent(combinedOutput);
+            drive.setPercent(drivePIDOutput + driveFFOutput);
         } else {
-
-            double driveOutput = optimized.speedMetersPerSecond / maxVelocity;
-            if (reverseDrive) {
-                driveOutput = -driveOutput;
-            }
-
+            final double driveOutput = optimized.speedMetersPerSecond / maxVelocity;
             drive.setPercent(driveOutput);
         }
 
@@ -175,11 +163,6 @@ public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
 
         // Calculate turn output
         double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
-
-        if (reverseTurn) {
-            turnPIDOutput = -turnPIDOutput;
-        }
-
         turn.setPercent(turnPIDOutput);
 
         // Debug:
@@ -195,13 +178,13 @@ public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
     }
 
     public TorqueSwerveModuleNEO reverseTurn() {
-        this.reverseTurn = true;
+        turn.invertMotor(true);
 
         return this;
     }
 
     public TorqueSwerveModuleNEO reverseDrive() {
-        this.reverseDrive = true;
+        drive.invertMotor(true);
 
         return this;
     }
