@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 
 import org.texastorque.torquelib.auto.TorqueAutoManager;
-
+import org.texastorque.torquelib.control.TorqueDebug;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -111,6 +111,8 @@ public class TorqueRobotBase extends LoggedRobot {
         input.update();
         subsystems.forEach(subsystem -> subsystem.run(TorqueMode.TELEOP));
         subsystems.forEach(subsystem -> subsystem.clean(TorqueMode.TELEOP));
+        TorqueDebug.debugs.forEach((debug) -> debug.update());
+        System.out.println("teleopPeriodic debug");
     }
 
     @Override
