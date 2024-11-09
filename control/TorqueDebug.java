@@ -32,10 +32,8 @@ public class TorqueDebug {
     public void update() {
         if(!Input.getInstance().isDebugMode()) {
             SmartDashboard.putNumber(name + " debug", 0);
-            System.out.println("not debug");
         } else {
             motor.setVolts(SmartDashboard.getNumber(name + " debug", 0));
-            System.out.println("desired volts: "+SmartDashboard.getNumber(name + " debug", 0));
         }
     }
 }

@@ -91,7 +91,6 @@ public final class TorqueNEO {
 
     public TorqueNEO debug(final String name) {
         new TorqueDebug(this, name);
-        System.out.println("neo debug");
         return this;
     }
 

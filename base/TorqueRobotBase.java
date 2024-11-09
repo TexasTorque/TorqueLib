@@ -112,7 +112,6 @@ public class TorqueRobotBase extends LoggedRobot {
         subsystems.forEach(subsystem -> subsystem.run(TorqueMode.TELEOP));
         subsystems.forEach(subsystem -> subsystem.clean(TorqueMode.TELEOP));
         TorqueDebug.debugs.forEach((debug) -> debug.update());
-        System.out.println("teleopPeriodic debug");
     }
 
     @Override
