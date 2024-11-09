@@ -7,6 +7,8 @@
 package org.texastorque.torquelib.motors;
 
 import java.util.ArrayList;
+
+import org.texastorque.torquelib.control.TorqueDebug;
 import org.texastorque.torquelib.control.TorquePID;
 import org.texastorque.torquelib.util.TorqueUtil;
 import com.revrobotics.AbsoluteEncoder;
@@ -85,6 +87,11 @@ public final class TorqueNEO {
         controller = motor.getPIDController();
         followers = new ArrayList<>();
         invertMotor(false);
+    }
+
+    public TorqueNEO debug(final String name) {
+        new TorqueDebug(this, name);
+        return this;
     }
 
     public void setBreakMode(final boolean isBreak) {
