@@ -22,3 +22,5 @@ But if you so insist, you can add it to an existing project using:
 - [Matthew Webb](https://www.linkedin.com/in/noviv/) (2013-2014)
 - [Jack Pittenger](https://saddy.dev/) (2020-2023)
 - [Justus Languell](https://www.justusl.com/) (2021-2024)
+- [Davey Adams](https://www.github.com/humandavey) (2022-2025)
+- [Tima Gezalov](https://www.github.com/timagez) (2023-2027)
