@@ -5,11 +5,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class TorqueFieldZone {
 
-	private final String name;
 	private final Translation2d start, end;
 
-	public TorqueFieldZone(String name, Translation2d start, Translation2d end) {
-		this.name = name;
+	public TorqueFieldZone(Translation2d start, Translation2d end) {
 		this.start = start;
 		this.end = end;
 	}
@@ -19,9 +17,5 @@ public class TorqueFieldZone {
 		final boolean x = pose.getX() >= start.getX() && pose.getX() < end.getX();
 		final boolean y = pose.getY() >= start.getY() && pose.getY() < end.getY();
 		return x && y;
-	}
-
-	public String getName() {
-	  return name;
 	}
 }
