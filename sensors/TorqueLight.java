@@ -196,11 +196,4 @@ public final class TorqueLight {
         if (target == null) return new Transform3d();
         return target.getBestCameraToTarget().inverse();
     }
-
-    /**
-     * Reads the camera latency in milliseconds.
-     *
-     * @return The camera latency in milliseconds
-     */
-    public final double getLatency() { return result.getLatencyMillis(); }
 }

@@ -7,6 +7,7 @@ import com.ctre.phoenix.sensors.CANCoder;
  * 
  * @author Omar Afzal
  */
+@Deprecated
 public final class TorqueCANCoder extends CANCoder {
     private double lastTimestamp = 0;
 

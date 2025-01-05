@@ -35,7 +35,6 @@ public final class TorqueNavXGyro extends AHRS {
 
     private TorqueNavXGyro() {
         super(SPI.Port.kMXP);
-        getFusedHeading();
     }
 
     public final void setOffsetCW(final Rotation2d offset) {

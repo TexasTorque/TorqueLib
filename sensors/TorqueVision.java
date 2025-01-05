@@ -71,7 +71,7 @@ public final class TorqueVision {
         this.result = new PhotonPipelineResult();
         this.target = new PhotonTrackedTarget();
         setCenterToCamera(centerToCamera);
-        photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_RIO, cam, centerToCamera);
+        photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_RIO, centerToCamera);
         photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     }
 
@@ -202,16 +202,6 @@ public final class TorqueVision {
     }
 
     /**
-     * Reads the camera latency in milliseconds.
-     *
-     * @return The camera latency in milliseconds
-     */
-    @Deprecated
-    public final double getLatency() {
-        return result.getLatencyMillis();
-    }
-
-    /**
      * Reads the result timestamp in seconds.
      * More accruate than getLatency.
      *
@@ -236,7 +226,7 @@ public final class TorqueVision {
         if (!(target.getPoseAmbiguity() <= 0.1 && target.getPoseAmbiguity() != -1 && target.getFiducialId() >= 0))
             return;
         if (target.getBestCameraToTarget().getTranslation().getDistance(new Translation3d()) >= 3) return;
-        final Optional<EstimatedRobotPose> optionalEstimatedPose = photonPoseEstimator.update();
+        final Optional<EstimatedRobotPose> optionalEstimatedPose = photonPoseEstimator.update(result);
         if (optionalEstimatedPose.isPresent()) {
             final EstimatedRobotPose estimatedPose = optionalEstimatedPose.get();
             addVisionMeasurement.accept(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);

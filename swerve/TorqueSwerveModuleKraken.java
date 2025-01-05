@@ -16,6 +16,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -120,8 +121,6 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
         /* Current Limiting */
         driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         driveConfig.CurrentLimits.SupplyCurrentLimit = 35;
-        driveConfig.CurrentLimits.SupplyCurrentThreshold = 60;
-        driveConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         driveConfig.CurrentLimits.StatorCurrentLimit = 50;
 
@@ -147,12 +146,12 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
                 turnGearRatio = 468.0 / 35.0; // Rotation motor to wheel; // Rotation motor to wheel
 
         // Configure the turn motor.
-        turn = new TorqueNEO(ports.turn);
-        turn.setConversionFactors(turnGearRatio * 2 * Math.PI, 1);
-        turn.setCurrentLimit(25);
-        turn.setVoltageCompensation(12.6);
-        turn.setBreakMode(true);
-        turn.burnFlash();
+        turn = new TorqueNEO(ports.turn)
+                .conversionFactors(turnGearRatio * 2 * Math.PI, 1)
+                .currentLimit(25)
+                .voltageCompensation(12.6)
+                .idleMode(IdleMode.kBrake)
+                .apply();
 
         cancoder = new CANcoder(ports.encoder);
 
@@ -172,19 +171,19 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
     private double lastSampledTime = -1;
 
     public void setDesiredState(final SwerveModuleState state, final boolean useSmartDrive) {
-        final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
+        state.optimize(getRotation());
 
         final double driveVelocity = RPSToMPS(drive.getVelocity().getValueAsDouble());
 
         // Calculate drive output
         if (useSmartDrive) {
 
-            final double drivePIDOutput = drivePID.calculate(driveVelocity, optimized.speedMetersPerSecond);
-            final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
+            final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
+            final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
             final double driveOutput = drivePIDOutput + driveFFOutput;
             driveDutyCycle.Output = driveOutput;
         } else {
-            driveDutyCycle.Output = optimized.speedMetersPerSecond / maxVelocity;
+            driveDutyCycle.Output = state.speedMetersPerSecond / maxVelocity;
         }
 
         Debug.log(name + " % Output", driveDutyCycle.Output);
@@ -192,11 +191,11 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
         drive.setControl(driveDutyCycle);
 
         Debug.log(name + " Real Velocity", Math.abs(driveVelocity));
-        Debug.log(name + " Req Velocity", optimized.speedMetersPerSecond);
+        Debug.log(name + " Req Velocity", state.speedMetersPerSecond);
         Debug.log("Max Velocity", maxVelocity);
 
         // Calculate turn output
-        final double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
+        final double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), state.angle.getRadians());
         turn.setPercent(turnPIDOutput);
 
         // Debug:
@@ -206,8 +205,8 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
                 lastSampledTime = time;
             double deltaTime = time - lastSampledTime;
             lastSampledTime = time;
-            aggregatePosition.distanceMeters += optimized.speedMetersPerSecond * deltaTime;
-            aggregatePosition.angle = optimized.angle;
+            aggregatePosition.distanceMeters += state.speedMetersPerSecond * deltaTime;
+            aggregatePosition.angle = state.angle;
         }
     }
 

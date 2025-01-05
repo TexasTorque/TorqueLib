@@ -11,6 +11,7 @@ import org.texastorque.torquelib.motors.TorqueNEO;
 import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
 
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -91,12 +92,6 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
             for (SwerveModuleState state : states) state.speedMetersPerSecond /= top;
     }
 
-    private static double coterminal(final double rotation) {
-        double coterminal = rotation;
-        final double full = Math.signum(rotation) * 2 * Math.PI;
-        while (coterminal > Math.PI || coterminal < -Math.PI) coterminal -= full;
-        return coterminal;
-    }
     private final SwerveConfig config;
 
     // The NEO motors for turn and drive.
@@ -122,21 +117,21 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         config = SwerveConfig.defaultConfig;
 
         // Configure the drive motor.
-        drive = new TorqueNEO(ports.drive);
-        drive.setCurrentLimit(config.driveMaxCurrent);
-        drive.setVoltageCompensation(config.voltageCompensation);
-        drive.setBreakMode(true);
-        drive.invertMotor(false);
-        drive.setConversionFactors(config.drivePoseFactor, config.driveVelocityFactor);
-        drive.burnFlash();
+        drive = new TorqueNEO(ports.drive)
+                .currentLimit(config.driveMaxCurrent)
+                .voltageCompensation(config.voltageCompensation)
+                .idleMode(IdleMode.kBrake)
+                .inverted(false)
+                .conversionFactors(config.drivePoseFactor, config.driveVelocityFactor)
+                .apply();
 
         // Configure the turn motor.
-        turn = new TorqueNEO(ports.turn);
-        turn.setConversionFactors(config.turnGearRatio * 2 * Math.PI, 1);
-        turn.setCurrentLimit(config.turnMaxCurrent);
-        turn.setVoltageCompensation(config.voltageCompensation);
-        turn.setBreakMode(true);
-        turn.burnFlash();
+        turn = new TorqueNEO(ports.turn)
+                .conversionFactors(config.turnGearRatio * 2 * Math.PI, 1)
+                .currentLimit(config.turnMaxCurrent)
+                .voltageCompensation(config.voltageCompensation)
+                .idleMode(IdleMode.kBrake)
+                .apply();
 
         cancoder = new CANcoder(ports.encoder);
 
@@ -153,20 +148,20 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     }
 
     public void setDesiredState(final SwerveModuleState state, final boolean useSmartDrive) {
-        final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
+        state.optimize(getRotation());
 
         // Calculate drive output
         if (useSmartDrive) {
-            final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
-            final double driveFFOutput = driveFF.calculate(optimized.speedMetersPerSecond);
+            final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), state.speedMetersPerSecond);
+            final double driveFFOutput = driveFF.calculate(state.speedMetersPerSecond);
             log("Drive PID Output", drivePIDOutput + driveFFOutput);
             drive.setPercent(drivePIDOutput + driveFFOutput);
         } else {
-            drive.setPercent(optimized.speedMetersPerSecond / 4.6);
+            drive.setPercent(state.speedMetersPerSecond / 4.6);
         }
 
         // Calculate turn output
-        final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
+        final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), state.angle.getRadians());
         log("Turn PID Output", turnPIDOutput);
         turn.setPercent(turnPIDOutput);
     }
@@ -191,7 +186,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     public void zero() { turn.setPercent(log("zero pid", turnPID.calculate(getTurnEncoder(), 0))); }
 
     private double getTurnEncoder() {
-		return (cancoder.getAbsolutePosition().getValue() * 2 * Math.PI) % (2 * Math.PI);
+		return (cancoder.getAbsolutePosition().getValue().magnitude() * 2 * Math.PI) % (2 * Math.PI);
 	}
 
     private double log(final String item, final double value) {

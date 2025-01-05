@@ -13,7 +13,6 @@ import org.texastorque.Subsystems;
 import org.texastorque.torquelib.util.TorqueMath;
 import org.texastorque.torquelib.util.TorqueUtil;
 
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -31,6 +30,7 @@ public final class Debug implements Subsystems {
 
         public Grid(int width) {
             this.width = width;
+            
         }
 
         /** 

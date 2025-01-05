@@ -10,6 +10,7 @@ import org.texastorque.torquelib.Debug;
 import org.texastorque.torquelib.motors.TorqueNEO;
 import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -108,21 +109,21 @@ public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
                 turnGearRatio = 468.0 / 35.0; // Rotation motor to wheel
 
         // Configure the drive motor.
-        drive = new TorqueNEO(ports.drive);
-        drive.setCurrentLimit(driveMaxCurrentSupply);
-        drive.setVoltageCompensation(voltageCompensation);
-        drive.setBreakMode(true);
-        drive.invertMotor(false);
-        drive.setConversionFactors(drivePoseFactor, driveVelocityFactor);
-        drive.burnFlash();
+        drive = new TorqueNEO(ports.drive)
+                .currentLimit(driveMaxCurrentSupply)
+                .voltageCompensation(voltageCompensation)
+                .idleMode(IdleMode.kBrake)
+                .inverted(false)
+                .conversionFactors(drivePoseFactor, driveVelocityFactor)
+                .apply();
 
         // Configure the turn motor.
-        turn = new TorqueNEO(ports.turn);
-        turn.setConversionFactors(turnGearRatio * 2 * Math.PI, 1);
-        turn.setCurrentLimit(turnMaxCurrent);
-        turn.setVoltageCompensation(voltageCompensation);
-        turn.setBreakMode(true);
-        turn.burnFlash();
+        turn = new TorqueNEO(ports.turn)
+                .conversionFactors(turnGearRatio * 2 * Math.PI, 1)
+                .currentLimit(turnMaxCurrent)
+                .voltageCompensation(voltageCompensation)
+                .idleMode(IdleMode.kBrake)
+                .apply();
 
         cancoder = new CANcoder(ports.encoder);
 
@@ -142,27 +143,25 @@ public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
     private double lastSampledTime = -1;
 
     public void setDesiredState(final SwerveModuleState state, final boolean useSmartDrive) {
-        final SwerveModuleState optimized = SwerveModuleState.optimize(state, getRotation());
+        state.optimize(getRotation());
 
         // Calculate drive output
         if (useSmartDrive) {
-            final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), optimized.speedMetersPerSecond);
-            final double driveFFOutput = driveFeedForward.calculate(optimized.speedMetersPerSecond);
+            final double drivePIDOutput = drivePID.calculate(drive.getVelocity(), state.speedMetersPerSecond);
+            final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
             
             drive.setPercent(drivePIDOutput + driveFFOutput);
         } else {
-            final double driveOutput = optimized.speedMetersPerSecond / maxVelocity;
+            final double driveOutput = state.speedMetersPerSecond / maxVelocity;
             drive.setPercent(driveOutput);
         }
 
-
-
         Debug.log(name + " Real Velocity", Math.abs(drive.getVelocity()));
-        Debug.log(name + " Req Velocity", optimized.speedMetersPerSecond);
+        Debug.log(name + " Req Velocity", state.speedMetersPerSecond);
         Debug.log("Max Velocity", maxVelocity);
 
         // Calculate turn output
-        double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), optimized.angle.getRadians());
+        double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), state.angle.getRadians());
         turn.setPercent(turnPIDOutput);
 
         // Debug:
@@ -172,21 +171,9 @@ public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
                 lastSampledTime = time;
             double deltaTime = time - lastSampledTime;
             lastSampledTime = time;
-            aggregatePosition.distanceMeters += optimized.speedMetersPerSecond * deltaTime;
-            aggregatePosition.angle = optimized.angle;
+            aggregatePosition.distanceMeters += state.speedMetersPerSecond * deltaTime;
+            aggregatePosition.angle = state.angle;
         }
-    }
-
-    public TorqueSwerveModuleNEO reverseTurn() {
-        turn.invertMotor(true);
-
-        return this;
-    }
-
-    public TorqueSwerveModuleNEO reverseDrive() {
-        drive.invertMotor(true);
-
-        return this;
     }
 
     @Override
@@ -226,7 +213,7 @@ public final class TorqueSwerveModuleNEO extends TorqueSwerveModule {
 
     private double getTurnCancoder() {
         // Should not need to use Coterminal -- doing so anyways?
-        double absAngle = Math.toRadians(cancoder.getAbsolutePosition().getValue() * 360);
+        double absAngle = Math.toRadians(cancoder.getAbsolutePosition().getValue().magnitude() * 360);
         absAngle %= 2.0 * Math.PI;
         if (absAngle < 0.0) {
             absAngle += 2.0 * Math.PI;
