@@ -19,6 +19,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -105,6 +107,11 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
 
     private final SimpleMotorFeedforward driveFF;
 
+    private double lastSampledTime = -1;
+
+    private SwerveModulePosition aggregatePosition;
+    private SwerveModuleState lastState = new SwerveModuleState();
+
     // The name of the module that we can use for SmartDashboard outputs
     public final String name;
 
@@ -140,6 +147,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         turnPID = new PIDController(config.turnPGain, config.turnIGain, config.turnDGain);
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
         driveFF = new SimpleMotorFeedforward(config.driveStaticGain, config.driveFeedForward);
+
+        aggregatePosition = new SwerveModulePosition();
     }
 
     @Override
@@ -148,6 +157,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
     }
 
     public void setDesiredState(final SwerveModuleState state, final boolean useSmartDrive) {
+        lastState = state;
         state.optimize(getRotation());
 
         // Calculate drive output
@@ -164,17 +174,41 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), state.angle.getRadians());
         log("Turn PID Output", turnPIDOutput);
         turn.setPercent(turnPIDOutput);
+
+        // If running in simulation
+        if (RobotBase.isSimulation()) {
+            final double time = Timer.getFPGATimestamp();
+            if (lastSampledTime == -1) {
+                lastSampledTime = time;
+            }
+
+            final double deltaTime = time - lastSampledTime;
+            lastSampledTime = time;
+            aggregatePosition.distanceMeters += state.speedMetersPerSecond * deltaTime;
+            aggregatePosition.angle = state.angle;
+        }
     }
 
     @Override
     public SwerveModuleState getState() {
+        if (RobotBase.isSimulation()) {
+            return new SwerveModuleState(lastState.speedMetersPerSecond, getRotation());
+        }
         return new SwerveModuleState(drive.getVelocity(), getRotation());
     }
 
-    public SwerveModulePosition getPosition() { return new SwerveModulePosition(drive.getPosition(), getRotation()); }
+    public SwerveModulePosition getPosition() {
+        if (RobotBase.isSimulation()) {
+            return aggregatePosition;
+        }
+        return new SwerveModulePosition(drive.getPosition(), getRotation());
+    }
 
     @Override
     public Rotation2d getRotation() {
+        if (RobotBase.isSimulation()) {
+            return aggregatePosition.angle;
+        }
         return Rotation2d.fromRadians(getTurnEncoder());
     }
 
