@@ -7,7 +7,6 @@
 package org.texastorque.torquelib.auto;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -15,8 +14,6 @@ import java.util.function.Supplier;
 import org.texastorque.torquelib.Debug;
 import org.texastorque.torquelib.auto.commands.TorqueRun;
 import org.texastorque.torquelib.auto.commands.TorqueRunSequence;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Texas Torque autonomous sequence base class.

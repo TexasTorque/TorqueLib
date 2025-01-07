@@ -23,17 +23,16 @@ public final class Test {
 
     public static final boolean action() {
         try {
-            final Scanner s = new Scanner(new File(TEST_FILE_PATH));
-            if (!s.hasNext()) return false;
-            return s.next().equals("true");
+            try (Scanner s = new Scanner(new File(TEST_FILE_PATH))) {
+                if (!s.hasNext()) return false;
+                return s.next().equals("true");
+            }
         } catch (final FileNotFoundException e) {
             e.printStackTrace();
             System.exit(1);
             return false;
         }
     }
-
-    private final Scanner scanner = new Scanner(System.in);
 
     // private final TorqueTimeout t = new TorqueTimeout(5);
     private final TorqueSlewLimiter limiter = new TorqueSlewLimiter(1);

@@ -6,8 +6,9 @@
  */
 package org.texastorque.torquelib.auto.commands;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
+
+import org.texastorque.auto.AutoManager;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -48,13 +49,12 @@ public final class TorqueFollowPath extends TorqueCommand {
     private final RobotConfig config;
 
     private PathPlannerTrajectory trajectory;
-    private BooleanSupplier endEarly;
 
-    public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase, final RobotConfig config) {
-        this(pathName, drivebase, () -> false, config);
+    public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase) {
+        this(pathName, drivebase, AutoManager.getRobotConfig());
     }
 
-    public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase, final BooleanSupplier endEarly, final RobotConfig config) {
+    public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase, final RobotConfig config) {
         this(() -> {
             try {
                 return PathPlannerPath.fromPathFile(pathName);
@@ -62,21 +62,16 @@ public final class TorqueFollowPath extends TorqueCommand {
                 System.out.println("Failed to load path: " + pathName);
             }
             return null;
-        }, drivebase, endEarly, config);
+        }, drivebase, config);
     }
 
     public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase, final RobotConfig config) {
-        this(pathSupplier, drivebase, () -> false, config);
-    }
-
-    public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase, final BooleanSupplier endEarly, final RobotConfig config) {
         driveController = new PPHolonomicDriveController(
                 new PIDConstants(10, 0, 0),
                 new PIDConstants(Math.PI, 0, 0));
         
         this.drivebase = drivebase;
         this.pathSupplier = pathSupplier;
-        this.endEarly = endEarly;
         this.config = config;
     }
 
@@ -125,7 +120,7 @@ public final class TorqueFollowPath extends TorqueCommand {
 
     @Override
     protected final boolean endCondition() {
-        return timer.hasElapsed(trajectory.getTotalTimeSeconds()) || endEarly.getAsBoolean();
+        return timer.hasElapsed(trajectory.getTotalTimeSeconds());
     }
 
     @Override
