@@ -130,6 +130,7 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
                 .idleMode(IdleMode.kBrake)
                 .inverted(false)
                 .conversionFactors(config.drivePoseFactor, config.driveVelocityFactor)
+                .inverted(true)
                 .apply();
 
         // Configure the turn motor.
@@ -169,6 +170,8 @@ public final class TorqueSwerveModule2022 extends TorqueSwerveModule {
         } else {
             drive.setPercent(state.speedMetersPerSecond / 4.6);
         }
+
+        SmartDashboard.putNumber(name + " drive position", drive.getPosition());
 
         // Calculate turn output
         final double turnPIDOutput = turnPID.calculate(getTurnEncoder(), state.angle.getRadians());
