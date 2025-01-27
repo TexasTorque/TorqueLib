@@ -6,10 +6,13 @@
  */
 package org.texastorque.torquelib.auto.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.texastorque.auto.AutoManager;
 import org.texastorque.torquelib.auto.TorqueCommand;
+import org.texastorque.torquelib.auto.marker.Marker;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -47,6 +50,7 @@ public final class TorqueFollowPath extends TorqueCommand {
     private final TorquePathingDrivebase drivebase;
     private final PPHolonomicDriveController driveController;
     private final RobotConfig config;
+    private ArrayList<Marker> markers;
 
     private PathPlannerTrajectory trajectory;
 
@@ -73,6 +77,7 @@ public final class TorqueFollowPath extends TorqueCommand {
         this.drivebase = drivebase;
         this.pathSupplier = pathSupplier;
         this.config = config;
+        this.markers = new ArrayList<>();
     }
 
     private static Pose2d endPosition = new Pose2d();
@@ -106,6 +111,12 @@ public final class TorqueFollowPath extends TorqueCommand {
     protected final void continuous() {
         final double elapsed = timer.get();
 
+        for (Marker marker : markers) {
+            if (timer.hasElapsed(trajectory.getTotalTimeSeconds() * marker.getRelativePosition()) && !marker.hasRan()) {
+                marker.run();
+            }
+        }
+
         final PathPlannerTrajectoryState desired = trajectory.sample(elapsed);
 
         final ChassisSpeeds outputSpeeds = driveController.calculateRobotRelativeSpeeds(drivebase.getPose(), desired);
@@ -130,4 +141,8 @@ public final class TorqueFollowPath extends TorqueCommand {
         drivebase.setInputSpeeds(new TorqueSwerveSpeeds());
     }
 
+    public TorqueFollowPath withMarkers(final Marker... markers) {
+        this.markers = (ArrayList<Marker>) List.of(markers);
+        return this;
+    }
 }
