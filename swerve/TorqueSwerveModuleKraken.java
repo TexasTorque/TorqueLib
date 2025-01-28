@@ -111,7 +111,7 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
         final TalonFXConfiguration driveConfig = new TalonFXConfiguration();
 
 
-        driveConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        driveConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         /* Gear Ratio Config */
