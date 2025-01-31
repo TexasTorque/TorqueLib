@@ -50,7 +50,7 @@ public final class TorqueFollowPath extends TorqueCommand {
     private final TorquePathingDrivebase drivebase;
     private final PPHolonomicDriveController driveController;
     private final RobotConfig config;
-    private ArrayList<Marker> markers;
+    private Marker[] markers;
 
     private PathPlannerTrajectory trajectory;
 
@@ -77,7 +77,6 @@ public final class TorqueFollowPath extends TorqueCommand {
         this.drivebase = drivebase;
         this.pathSupplier = pathSupplier;
         this.config = config;
-        this.markers = new ArrayList<>();
     }
 
     private static Pose2d endPosition = new Pose2d();
@@ -111,9 +110,11 @@ public final class TorqueFollowPath extends TorqueCommand {
     protected final void continuous() {
         final double elapsed = timer.get();
 
-        for (Marker marker : markers) {
-            if (timer.hasElapsed(trajectory.getTotalTimeSeconds() * marker.getRelativePosition()) && !marker.hasRan()) {
-                marker.run();
+        if (markers != null) {
+            for (Marker marker : markers) {
+                if (timer.hasElapsed(trajectory.getTotalTimeSeconds() * marker.getRelativePosition()) && !marker.hasRan()) {
+                    marker.run();
+                }
             }
         }
 
@@ -142,7 +143,7 @@ public final class TorqueFollowPath extends TorqueCommand {
     }
 
     public TorqueFollowPath withMarkers(final Marker... markers) {
-        this.markers = (ArrayList<Marker>) List.of(markers);
+        this.markers = markers;
         return this;
     }
 }
