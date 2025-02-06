@@ -4,31 +4,37 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class TorqueFieldZone {
-	Translation2d[] points;
-	public TorqueFieldZone(Translation2d ...points) {
+
+	private final int id;
+	private Translation2d[] points;
+
+	public TorqueFieldZone(final int id, final Translation2d ...points) {
+		this.id = id;
 		this.points = points;
 	}
 
-	// Returns whether pose is contained between start (inclusive) and end (exclusive)
+	public Translation2d[] getPolygon() {
+		return points;
+	}
+
+	public int getID() {
+		return this.id;
+	}
+
+	// Borders excluded
 	// Utilizes ray-casting algorithm
 	public boolean contains(final Pose2d pose) {
-		double x = pose.getX();
-		double y = pose.getY();
+		final double x = pose.getX();
+		final double y = pose.getY();
 		int count = 0;
-
-		for(int i=0; i<points.length; i++){
-			if(x == points[i].getX() || y == points[i].getY()){
-				return true;
-			}
-		}
 
 		for (int i=0; i<points.length; i++){
 			Translation2d point1 = points[i];
-			Translation2d point2 = points[(i+1)%points.length];
+			Translation2d point2 = points[(i + 1) % points.length];
 
-			if((y > Math.min(point1.getY(), point2.getY())) && (y <= Math.max(point1.getY(), point2.getY())) && (x < Math.max(point1.getX(), point2.getX()))){
-				double xIntersect = (y-point1.getY())*(point2.getX()-point1.getX())/(point2.getY()-point1.getY())+point1.getX();
-				if(point1.getX() == point2.getX() || x <= xIntersect){
+			if ((y > Math.min(point1.getY(), point2.getY())) && (y <= Math.max(point1.getY(), point2.getY())) && (x < Math.max(point1.getX(), point2.getX()))) {
+				double xIntersect = (y - point1.getY()) * (point2.getX()-point1.getX()) / (point2.getY() - point1.getY()) + point1.getX();
+				if (point1.getX() == point2.getX() || x <= xIntersect) {
 					count++;
 				}
 			}
