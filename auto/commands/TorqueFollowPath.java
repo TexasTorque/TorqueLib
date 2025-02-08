@@ -6,8 +6,6 @@
  */
 package org.texastorque.torquelib.auto.commands;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 import org.texastorque.auto.AutoManager;
@@ -67,6 +65,10 @@ public final class TorqueFollowPath extends TorqueCommand {
             }
             return null;
         }, drivebase, config);
+    }
+
+    public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase) {
+        this(pathSupplier, drivebase, AutoManager.getRobotConfig());
     }
 
     public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase, final RobotConfig config) {
