@@ -112,11 +112,10 @@ public final class TorqueFollowPath extends TorqueCommand {
     protected final void continuous() {
         final double elapsed = timer.get();
 
-        if (markers != null) {
-            for (Marker marker : markers) {
-                if (timer.hasElapsed(trajectory.getTotalTimeSeconds() * marker.getRelativePosition()) && !marker.hasRan()) {
-                    marker.run();
-                }
+        if (this.markers == null) this.markers = new Marker[0];
+        for (Marker marker : markers) {
+            if (timer.hasElapsed(trajectory.getTotalTimeSeconds() * marker.getRelativePosition()) && !marker.hasRan()) {
+                marker.run();
             }
         }
 
@@ -130,6 +129,7 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         PPLibTelemetry.setCurrentPose(drivebase.getPose());
         PPLibTelemetry.setTargetPose(desired.pose);
+        drivebase.setPose(desired.pose);
     }
 
     @Override
