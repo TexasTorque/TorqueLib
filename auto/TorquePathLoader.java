@@ -1,14 +1,11 @@
+
 package org.texastorque.torquelib.auto;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.json.simple.parser.ParseException;
-
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.FileVersionException;
 
 /**
  * Preloads paths to avoid calling the expensive PathPlannerPath.loadPathFile 
@@ -23,12 +20,7 @@ public final class TorquePathLoader {
         if (loadedTrajectories.containsKey(pathName)) {
             return;
         }
-        try {
-            final PathPlannerPath loadedPath = PathPlannerPath.fromPathFile(pathName);
-            loadedTrajectories.put(pathName, loadedPath);
-        } catch (final Exception e) {
-            System.out.println("Failed to load path " + pathName);
-        }
+        loadedTrajectories.put(pathName, PathPlannerPath.fromPathFile(pathName));
     }
 
      public void preloadPathSafe(final String pathName) {
@@ -52,11 +44,7 @@ public final class TorquePathLoader {
 
     public PathPlannerPath getPathSlow(final String pathName) {
         if (!loadedTrajectories.containsKey(pathName)) {
-            try {
-                return PathPlannerPath.fromPathFile(pathName);
-            } catch (FileVersionException | IOException | ParseException e) {
-                System.out.println("Failed to load path " + pathName);
-            }
+            return PathPlannerPath.fromPathFile(pathName);
         }
         return getPathUnsafe(pathName);
     }
