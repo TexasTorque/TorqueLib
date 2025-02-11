@@ -16,12 +16,14 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.util.PPLibTelemetry;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 
 public final class TorqueFollowPath extends TorqueCommand {
@@ -129,7 +131,7 @@ public final class TorqueFollowPath extends TorqueCommand {
 
         PPLibTelemetry.setCurrentPose(drivebase.getPose());
         PPLibTelemetry.setTargetPose(desired.pose);
-        drivebase.setPose(desired.pose);
+        if (RobotBase.isSimulation()) drivebase.setPose(desired.pose);
     }
 
     @Override
