@@ -7,8 +7,12 @@
  */
 package org.texastorque.torquelib.auto.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
+
+import org.texastorque.Subsystems;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.auto.marker.Marker;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
@@ -20,10 +24,12 @@ import com.pathplanner.lib.util.PPLibTelemetry;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
-public final class TorqueFollowPath extends TorqueCommand {
+public final class TorqueFollowPath extends TorqueCommand implements Subsystems {
 
     public static interface TorquePathingDrivebase {
         public Pose2d getPose();
@@ -98,6 +104,16 @@ public final class TorqueFollowPath extends TorqueCommand {
         drivebase.setPose(startingPose);
         drivebase.onBeginPathing();
         timer.restart();
+        perception.setCurrentTrajectory(fromPathPlannerTrajectory(trajectory));
+    }
+
+    public Trajectory fromPathPlannerTrajectory(final PathPlannerTrajectory trajectory) {
+        final List<State> states = new ArrayList<>();
+        for (com.pathplanner.lib.path.PathPlannerTrajectory.State state : trajectory.getStates()) {
+            states.add(new State(state.timeSeconds, state.velocityMps, state.accelerationMpsSq, state.getTargetHolonomicPose(), state.curvatureRadPerMeter));
+        }
+
+        return new Trajectory(states);
     }
 
     @Override
