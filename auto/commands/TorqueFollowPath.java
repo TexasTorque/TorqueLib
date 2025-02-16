@@ -45,7 +45,10 @@ public final class TorqueFollowPath extends TorqueCommand implements Subsystems 
         public void onEndPathing();
 
         public double getRadius();
+
         public double getMaxPathingVelocity();
+        
+        public void setCurrentTrajectory(final Trajectory trajectory);
     }
 
     private final Supplier<PathPlannerPath> pathSupplier;
@@ -104,7 +107,7 @@ public final class TorqueFollowPath extends TorqueCommand implements Subsystems 
         drivebase.setPose(startingPose);
         drivebase.onBeginPathing();
         timer.restart();
-        perception.setCurrentTrajectory(fromPathPlannerTrajectory(trajectory));
+        drivebase.setCurrentTrajectory(fromPathPlannerTrajectory(trajectory));
     }
 
     public Trajectory fromPathPlannerTrajectory(final PathPlannerTrajectory trajectory) {
