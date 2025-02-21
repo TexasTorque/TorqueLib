@@ -11,17 +11,17 @@ package org.texastorque.torquelib.control;
 
  * @author Davey Adams
  */
-public final class TorqueHold {
+public final class TorqueControl {
     private boolean lastValue;
 
-    public TorqueHold() { lastValue = false; }
+    public TorqueControl() { lastValue = false; }
 
     /**
      * Has current just changed from false to true or true to false?
      *
      * @param current The current value to check.
      *
-     * @return 1 for false to true, 0 for true to false, -1 for anything else.
+     * @return 1 for false to true, 0 for true to false, -1 if the value is true and was true, -2 if the value is false and was false.
      */
     public final int calculate(final boolean current) {
 		if (lastValue != current) {
@@ -30,6 +30,7 @@ public final class TorqueHold {
 			return 0;
 		}
         lastValue = current;
-        return -1;
+        if (current) return -1;
+        return -2;
     }
 }
