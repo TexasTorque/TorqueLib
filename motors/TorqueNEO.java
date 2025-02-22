@@ -101,4 +101,8 @@ public class TorqueNEO {
 	public double getVelocity() {
 		return motor.getEncoder().getVelocity();
 	}
+
+	public void setPosition(final double position) {
+		motor.getEncoder().setPosition(position);
+	}
 }
