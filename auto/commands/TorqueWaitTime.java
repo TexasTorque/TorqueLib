@@ -16,7 +16,7 @@ public final class TorqueWaitTime extends TorqueCommand {
     private final DoubleSupplier timeSupplier;
     private double time;
 
-    private double start;
+    private Timer timer;
     private Runnable command;
 
     public TorqueWaitTime(final double time) {
@@ -36,12 +36,13 @@ public final class TorqueWaitTime extends TorqueCommand {
         this.timeSupplier = timeSupplier;
         this.command = command;
         this.time = 0;
+        this.timer = new Timer();
     }
 
     @Override
     protected final void init() {
         time = timeSupplier.getAsDouble();
-        start = Timer.getFPGATimestamp();
+        timer.restart();
     }
 
     @Override
@@ -52,7 +53,7 @@ public final class TorqueWaitTime extends TorqueCommand {
 
     @Override
     protected final boolean endCondition() {
-        return (Timer.getFPGATimestamp() - start) >= time;
+        return timer.hasElapsed(time);
     }
 
     @Override
