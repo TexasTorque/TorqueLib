@@ -13,6 +13,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.texastorque.Subsystems;
+import org.texastorque.auto.AutoManager;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.auto.marker.Marker;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
@@ -92,8 +93,10 @@ public final class TorqueFollowPath extends TorqueCommand implements Subsystems 
     protected final void init() {
         PathPlannerPath path = pathSupplier.get();
 
-        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
             path = path.flipPath();
+            path = AutoManager.shift(path);
+        }
 
         driveController.reset(drivebase.getPose(), drivebase.getActualChassisSpeeds());
 
