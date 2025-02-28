@@ -13,7 +13,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.texastorque.Subsystems;
-import org.texastorque.auto.AutoManager;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.auto.marker.Marker;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
@@ -27,7 +26,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.Trajectory.State;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public final class TorqueFollowPath extends TorqueCommand implements Subsystems {
@@ -92,11 +90,6 @@ public final class TorqueFollowPath extends TorqueCommand implements Subsystems 
     @Override
     protected final void init() {
         PathPlannerPath path = pathSupplier.get();
-
-        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-            path = path.flipPath();
-            path = AutoManager.shift(path);
-        }
 
         driveController.reset(drivebase.getPose(), drivebase.getActualChassisSpeeds());
 
