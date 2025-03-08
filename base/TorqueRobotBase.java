@@ -17,6 +17,7 @@ import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -71,6 +72,8 @@ public class TorqueRobotBase extends LoggedRobot {
         Logger.recordMetadata("Team", "Texas Torque");
 
         Logger.addDataReceiver(new NT4Publisher());
+
+        CameraServer.startAutomaticCapture();
 
         Logger.start();
 
