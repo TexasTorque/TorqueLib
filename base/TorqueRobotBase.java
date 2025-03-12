@@ -73,7 +73,7 @@ public class TorqueRobotBase extends LoggedRobot {
 
         Logger.addDataReceiver(new NT4Publisher());
 
-        CameraServer.startAutomaticCapture();
+        CameraServer.startAutomaticCapture("Climb Camera", 0);
 
         Logger.start();
 
