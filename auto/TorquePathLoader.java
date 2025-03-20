@@ -20,7 +20,9 @@ public final class TorquePathLoader {
         if (loadedTrajectories.containsKey(pathName)) {
             return;
         }
-        loadedTrajectories.put(pathName, PathPlannerPath.fromPathFile(pathName));
+        try {
+            loadedTrajectories.put(pathName, PathPlannerPath.fromPathFile(pathName));
+        } catch (Exception e) {}
     }
 
      public void preloadPathSafe(final String pathName) {
@@ -44,7 +46,10 @@ public final class TorquePathLoader {
 
     public PathPlannerPath getPathSlow(final String pathName) {
         if (!loadedTrajectories.containsKey(pathName)) {
-            return PathPlannerPath.fromPathFile(pathName);
+            try {
+                return PathPlannerPath.fromPathFile(pathName);
+            } catch (Exception e) {}
+            return getPathUnsafe(pathName);
         }
         return getPathUnsafe(pathName);
     }

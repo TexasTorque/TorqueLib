@@ -7,28 +7,26 @@
  */
 package org.texastorque.torquelib.auto.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-import org.texastorque.Subsystems;
+import org.texastorque.auto.AutoManager;
 import org.texastorque.torquelib.auto.TorqueCommand;
 import org.texastorque.torquelib.auto.marker.Marker;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
-import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectoryState;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.util.PPLibTelemetry;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.Trajectory.State;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
-public final class TorqueFollowPath extends TorqueCommand implements Subsystems {
+public final class TorqueFollowPath extends TorqueCommand {
 
     public static interface TorquePathingDrivebase {
         public Pose2d getPose();
@@ -46,7 +44,7 @@ public final class TorqueFollowPath extends TorqueCommand implements Subsystems 
         public double getRadius();
 
         public double getMaxPathingVelocity();
-        
+
         public void setCurrentTrajectory(final Trajectory trajectory);
     }
 
@@ -54,31 +52,38 @@ public final class TorqueFollowPath extends TorqueCommand implements Subsystems 
     private final Timer timer = new Timer();
     private final TorquePathingDrivebase drivebase;
     private final PPHolonomicDriveController driveController;
+    private final RobotConfig config;
     private Marker[] markers;
 
     private PathPlannerTrajectory trajectory;
-    private Translation2d prevTranslation = new Translation2d();
 
     public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase) {
-        this(pathName, drivebase, () -> false);
-    }
-
-    public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase, final BooleanSupplier endEarly) {
-        this(() -> PathPlannerPath.fromPathFile(pathName), drivebase, endEarly);
+        this(pathName, drivebase, AutoManager.getRobotConfig());
     }
 
     public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase) {
-        this(pathSupplier, drivebase, () -> false);
+        this(pathSupplier, drivebase, AutoManager.getRobotConfig());
     }
 
-    public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase, final BooleanSupplier endEarly) {
+    public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase, final RobotConfig config) {
+        this(() -> {
+            try {
+                return PathPlannerPath.fromPathFile(pathName);
+            } catch (Exception e) {
+                System.out.println("Failed to load path: " + pathName);
+            }
+            return null;
+        }, drivebase, config);
+    }
+
+    public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase, final RobotConfig config) {
         driveController = new PPHolonomicDriveController(
                 new PIDConstants(10, 0, 0),
-                new PIDConstants(Math.PI, 0, 0),
-                drivebase.getMaxPathingVelocity(), drivebase.getRadius());
-
+                new PIDConstants(Math.PI, 0, 0));
+        
         this.drivebase = drivebase;
         this.pathSupplier = pathSupplier;
+        this.config = config;
     }
 
     private static Pose2d endPosition = new Pose2d();
@@ -91,28 +96,21 @@ public final class TorqueFollowPath extends TorqueCommand implements Subsystems 
     protected final void init() {
         PathPlannerPath path = pathSupplier.get();
 
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+            path = path.flipPath();
+
         driveController.reset(drivebase.getPose(), drivebase.getActualChassisSpeeds());
 
-        this.trajectory = path.getTrajectory(new ChassisSpeeds(), drivebase.getPose().getRotation());
-        endPosition = trajectory.getEndState().getTargetHolonomicPose();
+        this.trajectory = path.generateTrajectory(new ChassisSpeeds(), drivebase.getPose().getRotation(), config);
+        endPosition = trajectory.getEndState().pose;
 
         PPLibTelemetry.setCurrentPath(path);
 
-        final Pose2d startingPose = trajectory.getInitialTargetHolonomicPose();
+        final Pose2d startingPose = trajectory.getInitialPose();
 
         drivebase.setPose(startingPose);
         drivebase.onBeginPathing();
         timer.restart();
-        drivebase.setCurrentTrajectory(fromPathPlannerTrajectory(trajectory));
-    }
-
-    public Trajectory fromPathPlannerTrajectory(final PathPlannerTrajectory trajectory) {
-        final List<State> states = new ArrayList<>();
-        for (com.pathplanner.lib.path.PathPlannerTrajectory.State state : trajectory.getStates()) {
-            states.add(new State(state.timeSeconds, state.velocityMps, state.accelerationMpsSq, state.getTargetHolonomicPose(), state.curvatureRadPerMeter));
-        }
-
-        return new Trajectory(states);
     }
 
     @Override
@@ -125,7 +123,8 @@ public final class TorqueFollowPath extends TorqueCommand implements Subsystems 
                 marker.run();
             }
         }
-        final PathPlannerTrajectory.State desired = trajectory.sample(elapsed);
+
+        final PathPlannerTrajectoryState desired = trajectory.sample(elapsed);
 
         final ChassisSpeeds outputSpeeds = driveController.calculateRobotRelativeSpeeds(drivebase.getPose(), desired);
 
@@ -134,8 +133,7 @@ public final class TorqueFollowPath extends TorqueCommand implements Subsystems 
         drivebase.setInputSpeeds(realSpeeds);
 
         PPLibTelemetry.setCurrentPose(drivebase.getPose());
-        PPLibTelemetry.setTargetPose(desired.getTargetHolonomicPose());
-        PPLibTelemetry.setPathInaccuracy(prevTranslation.getDistance(drivebase.getPose().getTranslation()));
+        PPLibTelemetry.setTargetPose(desired.pose);
     }
 
     @Override
