@@ -120,9 +120,9 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
 
         /* Current Limiting */
         driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-        driveConfig.CurrentLimits.SupplyCurrentLimit = 35;
+        driveConfig.CurrentLimits.SupplyCurrentLimit = 40;
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        driveConfig.CurrentLimits.StatorCurrentLimit = 50;
+        driveConfig.CurrentLimits.StatorCurrentLimit = 80;
 
         /* Open and Closed Loop Ramping */
         driveConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.0; // 0.25?
