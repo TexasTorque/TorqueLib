@@ -25,10 +25,6 @@ public class TorqueDriveController {
 	}
 
 	public TorqueSwerveSpeeds calculate(final Pose2d currentPose, final Pose2d targetPose) {
-		if (!targetPose.equals(lastTargetPose)) {
-			reset();
-		}
-
 		double xPower = xController.calculate(currentPose.getX(), targetPose.getX());
 		double yPower = yController.calculate(currentPose.getY(), targetPose.getY());
 		double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
