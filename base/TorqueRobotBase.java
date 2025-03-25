@@ -88,7 +88,9 @@ public class TorqueRobotBase extends LoggedRobot {
 
         autoManager.loadPaths();
 
-        lights.initialize(TorqueMode.DISABLED);
+        if (lights != null) {
+            lights.initialize(TorqueMode.DISABLED);
+        }
 
         // (for oblog)
         // Logger.setCycleWarningsEnabled(true);
@@ -101,7 +103,9 @@ public class TorqueRobotBase extends LoggedRobot {
     public final void robotPeriodic() {
         Shuffleboard.update();
 
-        lights.update(TorqueMode.DISABLED);
+        if (lights != null) {
+            lights.update(TorqueMode.DISABLED);
+        }
 
         // (for oblog)
         // Logger.updateEntries();
@@ -112,27 +116,35 @@ public class TorqueRobotBase extends LoggedRobot {
         // This makes no sense // subsystems.forEach(subsystem ->
         // subsystem.initialize(TorqueMode.DISABLED));
 
-        lights.initialize(TorqueMode.DISABLED);
+        if (lights != null) {
+            lights.initialize(TorqueMode.DISABLED);
+        }
     }
 
     @Override
     public final void disabledPeriodic() {
         // This makes no sense
         subsystems.forEach(subsystem -> subsystem.run(TorqueMode.DISABLED));
-        lights.update(TorqueMode.DISABLED);
+        if (lights != null) {
+            lights.update(TorqueMode.DISABLED);
+        }
     }
 
     @Override
     public final void teleopInit() {
         subsystems.forEach(subsystem -> subsystem.initialize(TorqueMode.TELEOP));
-        lights.initialize(TorqueMode.TELEOP);
+        if (lights != null) {
+            lights.initialize(TorqueMode.TELEOP);
+        }
     }
 
     @Override
     public final void teleopPeriodic() {
         input.update();
         subsystems.forEach(subsystem -> subsystem.run(TorqueMode.TELEOP));
-        lights.update(TorqueMode.TELEOP);
+        if (lights != null) {
+            lights.update(TorqueMode.TELEOP);
+        }
         subsystems.forEach(subsystem -> subsystem.clean(TorqueMode.TELEOP));
         TorqueDebug.debugs.forEach((debug) -> debug.update());
     }
@@ -141,28 +153,36 @@ public class TorqueRobotBase extends LoggedRobot {
     public final void autonomousInit() {
         autoManager.chooseCurrentSequence();
         subsystems.forEach(subsystem -> subsystem.initialize(TorqueMode.AUTO));
-        lights.initialize(TorqueMode.AUTO);
+        if (lights != null) {
+            lights.initialize(TorqueMode.AUTO);
+        }
     }
 
     @Override
     public final void autonomousPeriodic() {
         autoManager.runCurrentSequence();
         subsystems.forEach(subsystem -> subsystem.run(TorqueMode.AUTO));
-        lights.update(TorqueMode.AUTO);
+        if (lights != null) {
+            lights.update(TorqueMode.AUTO);
+        }
         subsystems.forEach(subsystem -> subsystem.clean(TorqueMode.AUTO));
     }
 
     @Override
     public final void testInit() {
         subsystems.forEach(subsystem -> subsystem.initialize(TorqueMode.TEST));
-        lights.initialize(TorqueMode.TEST);
+        if (lights != null) {
+            lights.initialize(TorqueMode.TEST);
+        }
     }
 
     @Override
     public final void testPeriodic() {
         input.update();
         subsystems.forEach(subsystem -> subsystem.run(TorqueMode.TEST));
-        lights.update(TorqueMode.TEST);
+        if (lights != null) {
+            lights.update(TorqueMode.TEST);
+        }
         subsystems.forEach(subsystem -> subsystem.clean(TorqueMode.TEST));
     }
 
