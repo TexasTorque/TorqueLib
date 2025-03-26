@@ -1,6 +1,7 @@
 package org.texastorque.torquelib.control;
 
 import org.littletonrobotics.junction.Logger;
+import org.texastorque.Subsystems;
 import org.texastorque.subsystems.Drivebase;
 import org.texastorque.torquelib.Debug;
 import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
@@ -9,9 +10,10 @@ import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
-public class TorqueDriveController {
+public class TorqueDriveController implements Subsystems {
 
 	private final ProfiledPIDController xController, yController, thetaController;
 
@@ -38,8 +40,10 @@ public class TorqueDriveController {
 	public void reset() {
 		Pose2d currentPose = Drivebase.getInstance().getPose();
 
-		xController.reset(currentPose.getX(), 0);
-		yController.reset(currentPose.getY(), 0);
-		thetaController.reset(currentPose.getRotation().getRadians(), 0);
+		ChassisSpeeds currentSpeeds = drivebase.kinematics.toChassisSpeeds(drivebase.getModuleStates());
+
+		xController.reset(currentPose.getX(), currentSpeeds.vxMetersPerSecond);
+		yController.reset(currentPose.getY(), currentSpeeds.vyMetersPerSecond);
+		thetaController.reset(currentPose.getRotation().getRadians(), currentSpeeds.omegaRadiansPerSecond);
 	}
 }
