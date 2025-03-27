@@ -12,7 +12,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Timer;
 
 public class TorqueDriveController implements Subsystems {
 
@@ -29,8 +28,6 @@ public class TorqueDriveController implements Subsystems {
 		Debug.log("Align Target Pose", targetPose.toString());
 		Logger.recordOutput("Align Target Pose", targetPose);
 
-		System.out.println("calc @ " + System.currentTimeMillis());
-
 		double xPower = xController.calculate(currentPose.getX(), targetPose.getX());
 		double yPower = yController.calculate(currentPose.getY(), targetPose.getY());
 		double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
@@ -44,14 +41,8 @@ public class TorqueDriveController implements Subsystems {
 		Pose2d currentPose = Drivebase.getInstance().getPose();
 		ChassisSpeeds currentSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(drivebase.inputSpeeds, currentPose.getRotation());
 
-		System.out.println("reset @ " + System.currentTimeMillis() + " with " + currentSpeeds);
-
 		xController.reset(currentPose.getX(), currentSpeeds.vxMetersPerSecond);
 		yController.reset(currentPose.getY(), currentSpeeds.vyMetersPerSecond);
 		thetaController.reset(currentPose.getRotation().getRadians(), currentSpeeds.omegaRadiansPerSecond);
-
-		xController.setGoal(currentPose.getX());
-		yController.setGoal(currentPose.getY());
-		thetaController.setGoal(currentPose.getRotation().getRadians());
 	}
 }
