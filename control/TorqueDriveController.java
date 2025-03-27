@@ -52,8 +52,7 @@ public class TorqueDriveController implements Subsystems {
 
 	public void reset() {
 		Pose2d currentPose = Drivebase.getInstance().getPose();
-
-		ChassisSpeeds currentSpeeds = drivebase.kinematics.toChassisSpeeds(drivebase.getModuleStates());
+		ChassisSpeeds currentSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(drivebase.inputSpeeds, currentPose.getRotation());
 
 		xController.reset(currentPose.getX(), currentSpeeds.vxMetersPerSecond);
 		yController.reset(currentPose.getY(), currentSpeeds.vyMetersPerSecond);
