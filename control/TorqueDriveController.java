@@ -29,20 +29,16 @@ public class TorqueDriveController implements Subsystems {
 	}
 	
 	public TorqueSwerveSpeeds calculate(final Pose2d currentPose, final Pose2d targetPose) {
-		Debug.log("Align Target Pose", targetPose.toString());
-		Logger.recordOutput("Align Target Pose", targetPose);
 
 		Pair<Double, Double> offsets = getOffsets(targetPose, currentPose);
 		double forward = offsets.getFirst();
 		double right = offsets.getSecond();
 		double desiredForward = forward;
 		double desiredRight = right;
-		double slope = .5;
+		double slope = .3;
 		Pose2d desiredPose;
 	
-		if (Math.abs(right) > .01) {
-			desiredForward *= slope;
-		}
+		desiredForward *= slope;
 
 		desiredPose = new Pose2d(
 			currentPose.getX() + (desiredForward * Math.cos(targetPose.getRotation().getRadians())) + (desiredRight * Math.cos(targetPose.getRotation().getRadians() + Math.PI / 2)),
@@ -55,6 +51,9 @@ public class TorqueDriveController implements Subsystems {
 		double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), desiredPose.getRotation().getRadians());
 
 		TorqueSwerveSpeeds speeds = new TorqueSwerveSpeeds(xPower, yPower, thetaPower);
+
+		Debug.log("Align Target Pose", desiredPose.toString());
+		Logger.recordOutput("Align Target Pose", desiredPose);
 
 		return speeds;
 	}
