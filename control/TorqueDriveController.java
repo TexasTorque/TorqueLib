@@ -19,7 +19,7 @@ public class TorqueDriveController implements Subsystems {
 
 	private final ProfiledPIDController xController, yController, thetaController;
 	private final Timer timer;
-
+	
 	public TorqueDriveController(final PIDConstants translationConstants, final TrapezoidProfile.Constraints translationConstraints, final PIDConstants rotationConstants, final TrapezoidProfile.Constraints rotationConstraints) {
 		this.xController = new ProfiledPIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD, translationConstraints);
 		this.yController = new ProfiledPIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD, translationConstraints);
@@ -27,7 +27,7 @@ public class TorqueDriveController implements Subsystems {
 		this.thetaController.enableContinuousInput(-Math.PI, Math.PI);
 		this.timer = new Timer();
 	}
-
+	
 	public TorqueSwerveSpeeds calculate(final Pose2d currentPose, final Pose2d targetPose) {
 		Debug.log("Align Target Pose", targetPose.toString());
 		Logger.recordOutput("Align Target Pose", targetPose);
@@ -35,17 +35,26 @@ public class TorqueDriveController implements Subsystems {
 		Pair<Double, Double> offsets = getOffsets(targetPose, currentPose);
 		double forward = offsets.getFirst();
 		double right = offsets.getSecond();
-
+		double desiredForward = forward;
+		double desiredRight = right;
+		double slope = .5;
+		Pose2d desiredPose;
+	
 		if (Math.abs(right) > .01) {
-			double xPower = xController.calculate(currentPose.getX(), targetPose.getX());
+			desiredForward *= slope;
 		}
+
+		desiredPose = new Pose2d(
+			currentPose.getX() + (desiredForward * Math.cos(targetPose.getRotation().getRadians())) + (desiredRight * Math.cos(targetPose.getRotation().getRadians() + Math.PI / 2)),
+			currentPose.getY() + (desiredForward * Math.sin(targetPose.getRotation().getRadians())) + (desiredRight * Math.sin(targetPose.getRotation().getRadians() + Math.PI / 2)),
+			targetPose.getRotation()
+		);
 		
-		double xPower = xController.calculate(currentPose.getX(), targetPose.getX());
-		double yPower = yController.calculate(currentPose.getY(), targetPose.getY());
-		double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
+		double xPower = xController.calculate(currentPose.getX(), desiredPose.getX());
+		double yPower = yController.calculate(currentPose.getY(), desiredPose.getY());
+		double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), desiredPose.getRotation().getRadians());
 
 		TorqueSwerveSpeeds speeds = new TorqueSwerveSpeeds(xPower, yPower, thetaPower);
-		speeds.toFieldRelativeSpeeds(perception.getHeading());
 
 		return speeds;
 	}
