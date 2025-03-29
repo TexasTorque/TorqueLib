@@ -10,11 +10,11 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 
-public class TorqueDriveController implements Subsystems {
+public class TorqueAlignController implements Subsystems {
 
 	private final PIDController xController, yController, thetaController;
 	
-	public TorqueDriveController(final PIDConstants translationConstants, final PIDConstants rotationConstants) {
+	public TorqueAlignController(final PIDConstants translationConstants, final PIDConstants rotationConstants) {
 		this.xController = new PIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD);
 		this.yController = new PIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD);
 		this.thetaController = new PIDController(rotationConstants.kP, rotationConstants.kI, rotationConstants.kD);
