@@ -9,6 +9,7 @@ import org.texastorque.torquelib.swerve.TorqueSwerveSpeeds;
 import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -17,13 +18,13 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class TorqueDriveController implements Subsystems {
 
-	private final ProfiledPIDController xController, yController, thetaController;
+	private final PIDController xController, yController, thetaController;
 	private final Timer timer;
 	
-	public TorqueDriveController(final PIDConstants translationConstants, final TrapezoidProfile.Constraints translationConstraints, final PIDConstants rotationConstants, final TrapezoidProfile.Constraints rotationConstraints) {
-		this.xController = new ProfiledPIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD, translationConstraints);
-		this.yController = new ProfiledPIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD, translationConstraints);
-		this.thetaController = new ProfiledPIDController(rotationConstants.kP, rotationConstants.kI, rotationConstants.kD, rotationConstraints);
+	public TorqueDriveController(final PIDConstants translationConstants, final PIDConstants rotationConstants) {
+		this.xController = new PIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD);
+		this.yController = new PIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD);
+		this.thetaController = new PIDController(rotationConstants.kP, rotationConstants.kI, rotationConstants.kD);
 		this.thetaController.enableContinuousInput(-Math.PI, Math.PI);
 		this.timer = new Timer();
 	}
@@ -59,12 +60,12 @@ public class TorqueDriveController implements Subsystems {
 	}
 
 	public void reset() {
-		Pose2d currentPose = Drivebase.getInstance().getPose();
-		ChassisSpeeds currentSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(drivebase.inputSpeeds, currentPose.getRotation());
+		// Pose2d currentPose = Drivebase.getInstance().getPose();
+		// ChassisSpeeds currentSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(drivebase.inputSpeeds, currentPose.getRotation());
 
-		xController.reset(currentPose.getX(), currentSpeeds.vxMetersPerSecond);
-		yController.reset(currentPose.getY(), currentSpeeds.vyMetersPerSecond);
-		thetaController.reset(currentPose.getRotation().getRadians(), currentSpeeds.omegaRadiansPerSecond);
+		// xController.reset(currentPose.getX(), currentSpeeds.vxMetersPerSecond);
+		// yController.reset(currentPose.getY(), currentSpeeds.vyMetersPerSecond);
+		// thetaController.reset(currentPose.getRotation().getRadians(), currentSpeeds.omegaRadiansPerSecond);
 	}
 
 	public Pair<Double, Double> getOffsets(final Pose2d targetPose, final Pose2d currentPose) {
