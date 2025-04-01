@@ -21,13 +21,13 @@ public class TorqueAlignController implements Subsystems {
 		this.thetaController.enableContinuousInput(-Math.PI, Math.PI);
 	}
 	
-	public TorqueSwerveSpeeds calculate(final Pose2d currentPose, final Pose2d targetPose) {
+	public TorqueSwerveSpeeds calculate(final Pose2d currentPose, final Pose2d targetPose, boolean sidewaysFirst) {
 		final Pair<Double, Double> offsets = perception.getOffsets(targetPose, currentPose);
 		double desiredForward = offsets.getFirst();
 		double desiredRight = offsets.getSecond();
 		final double SLOPE = .3;
 	
-		desiredForward *= SLOPE;
+		if (sidewaysFirst) desiredForward *= SLOPE;
 
 		Pose2d desiredPose = new Pose2d(
 			currentPose.getX() + (desiredForward * Math.cos(targetPose.getRotation().getRadians())) + (desiredRight * Math.cos(targetPose.getRotation().getRadians() + Math.PI / 2)),
