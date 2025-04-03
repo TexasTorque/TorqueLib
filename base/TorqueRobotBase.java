@@ -16,9 +16,11 @@ import org.texastorque.torquelib.control.TorqueDebug;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.net.WebServer;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 // import io.github.oblarg.oblog.Logger;
@@ -80,7 +82,10 @@ public class TorqueRobotBase extends LoggedRobot {
 
         Logger.recordMetadata("Team", "Texas Torque");
 
+        DataLogManager.start();
+
         Logger.addDataReceiver(new NT4Publisher());
+        Logger.addDataReceiver(new WPILOGWriter());
 
         CameraServer.startAutomaticCapture("Climb Camera", 0);
 
