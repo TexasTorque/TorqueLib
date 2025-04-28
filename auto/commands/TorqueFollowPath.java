@@ -58,11 +58,11 @@ public final class TorqueFollowPath extends TorqueCommand {
     private PathPlannerTrajectory trajectory;
 
     public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase) {
-        this(pathName, drivebase, AutoManager.getRobotConfig());
+        this(pathName, drivebase, getRobotConfig());
     }
 
     public TorqueFollowPath(final Supplier<PathPlannerPath> pathSupplier, final TorquePathingDrivebase drivebase) {
-        this(pathSupplier, drivebase, AutoManager.getRobotConfig());
+        this(pathSupplier, drivebase, getRobotConfig());
     }
 
     public TorqueFollowPath(final String pathName, final TorquePathingDrivebase drivebase, final RobotConfig config) {
@@ -151,5 +151,12 @@ public final class TorqueFollowPath extends TorqueCommand {
     public TorqueFollowPath withMarkers(final Marker... markers) {
         this.markers = markers;
         return this;
+    }
+
+    public static RobotConfig getRobotConfig() {
+        try {
+            return RobotConfig.fromGUISettings();
+        } catch (Exception e) {}
+        return null;
     }
 }
