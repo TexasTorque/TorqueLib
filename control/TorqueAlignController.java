@@ -20,9 +20,19 @@ public class TorqueAlignController implements Subsystems {
 		this.thetaController = new PIDController(rotationConstants.kP, rotationConstants.kI, rotationConstants.kD);
 		this.thetaController.enableContinuousInput(-Math.PI, Math.PI);
 	}
+
+	public Pair<Double, Double> getOffsets(final Pose2d targetPose, final Pose2d currentPose) {
+		final double dx = targetPose.getX() - currentPose.getX();
+		final double dy = targetPose.getY() - currentPose.getY();
+
+		final double forward = dx * Math.cos(targetPose.getRotation().getRadians()) + dy * Math.sin(targetPose.getRotation().getRadians());
+		final double right = -dx * Math.sin(targetPose.getRotation().getRadians()) + dy * Math.cos(targetPose.getRotation().getRadians());
+
+		return new Pair<Double, Double>(forward, right);
+	}
 	
 	public TorqueSwerveSpeeds calculate(final Pose2d currentPose, final Pose2d targetPose, boolean sidewaysFirst) {
-		final Pair<Double, Double> offsets = perception.getOffsets(targetPose, currentPose);
+		final Pair<Double, Double> offsets = getOffsets(targetPose, currentPose);
 		double desiredForward = offsets.getFirst();
 		double desiredRight = offsets.getSecond();
 		final double SLOPE = .3;
