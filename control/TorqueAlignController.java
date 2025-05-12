@@ -36,6 +36,10 @@ public class TorqueAlignController implements Subsystems {
 		double desiredForward = offsets.getFirst();
 		double desiredRight = offsets.getSecond();
 		final double SLOPE = .3;
+
+		if (targetPose == null) {
+			return new TorqueSwerveSpeeds();
+		}
 	
 		if (sidewaysFirst) desiredForward *= SLOPE;
 
