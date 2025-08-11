@@ -1,5 +1,8 @@
 package org.texastorque.torquelib.motors;
 
+import org.texastorque.torquelib.Debug;
+
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -11,11 +14,14 @@ public class TorqueKraken {
 	private final TalonFX motor;
 	private final TalonFXConfiguration config;
 
+	public Orchestra orchestra;
+
 	private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
 
 	public TorqueKraken(final int port) {
 		motor = new TalonFX(port);
 		config = new TalonFXConfiguration();
+		orchestra = new Orchestra();
 	}
 
 	public TorqueKraken inverted(final boolean invert) {
@@ -84,6 +90,18 @@ public class TorqueKraken {
 
 	public double getVelocity() {
 		return motor.getVelocity().getValueAsDouble();
+	}
+
+	public void initOrchestra() {
+		orchestra.addInstrument(motor);
+		var status = orchestra.loadMusic("sonata.chrp");
+		if (!status.isOK()) {
+			System.out.println("Orchestra failing");
+		}
+	}
+
+	public void runOrchestra() {
+		orchestra.play();
 	}
 
 	public void setPosition(final double position) {
