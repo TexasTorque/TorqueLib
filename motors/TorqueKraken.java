@@ -92,15 +92,17 @@ public class TorqueKraken {
 		return motor.getVelocity().getValueAsDouble();
 	}
 
-	public void initOrchestra() {
+	public void initOrchestra(String fileName) {
+		// File should be in deploy directory in ".chrp" format
 		orchestra.addInstrument(motor);
-		var status = orchestra.loadMusic("sonata.chrp");
+		var status = orchestra.loadMusic(fileName);
 		if (!status.isOK()) {
 			System.out.println("Orchestra failing");
 		}
 	}
 
 	public void runOrchestra() {
+		// Motor will not run, if playing
 		orchestra.play();
 	}
 
