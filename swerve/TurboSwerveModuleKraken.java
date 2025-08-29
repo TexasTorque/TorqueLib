@@ -1,6 +1,7 @@
 package org.texastorque.torquelib.swerve;
 
 import org.texastorque.torquelib.Debug;
+import org.texastorque.torquelib.motors.TorqueKraken;
 import org.texastorque.torquelib.motors.TorqueNEO;
 import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
 
@@ -64,13 +65,13 @@ public final class TurboSwerveModuleKraken extends TorqueSwerveModule {
 
     public static final double maxVelocity = 5.0;
 
-    public TurboSwerveModuleKraken(final String name, final SwervePorts ports) {
+    public TurboSwerveModuleKraken(final String name, final SwervePorts ports, final boolean inverted) {
         super(name);
 
         // Configure the drive motor.
         final TalonFXConfiguration driveConfig = new TalonFXConfiguration();
 
-        driveConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        driveConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         /* Gear Ratio Config */
