@@ -159,17 +159,18 @@ public final class TurboSwerveModuleKraken extends TorqueSwerveModule {
             driveDutyCycle.Output = state.speedMetersPerSecond / maxVelocity;
         }
 
-        Debug.log(name + " % Output", driveDutyCycle.Output);
+        // Debug.log(name + " % Output", driveDutyCycle.Output);
 
         drive.setControl(driveDutyCycle);
 
-        Debug.log(name + " Real Velocity", Math.abs(driveVelocity));
-        Debug.log(name + " Req Velocity", state.speedMetersPerSecond);
-        Debug.log("Max Velocity", maxVelocity);
+        // Debug.log(name + " Real Velocity", Math.abs(driveVelocity));
+        // Debug.log(name + " Req Velocity", state.speedMetersPerSecond);
+        // Debug.log("Max Velocity", maxVelocity);
 
         // Calculate turn output
         final double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), state.angle.getRadians());
         turn.set(turnPIDOutput);
+        Debug.log(name+" Turn Encoder", getTurnCancoder()*(180/Math.PI));
 
         // Debug:
         if (!RobotBase.isReal()) {
