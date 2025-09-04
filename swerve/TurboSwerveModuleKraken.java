@@ -217,13 +217,11 @@ public final class TurboSwerveModuleKraken extends TorqueSwerveModule {
         return getTurnCancoder();
     }
 
-
     private double getTurnCancoder() {
-        // Should not need to use Coterminal -- doing so anyways?
+        // constrains to -Math.PI to Math.PI
         double absAngle = Math.toRadians(cancoder.getAbsolutePosition().getValueAsDouble() * 360);
-        absAngle %= 2.0 * Math.PI;
-        if (absAngle < 0.0) {
-            absAngle += 2.0 * Math.PI;
+        if (absAngle > Math.PI) {
+            absAngle -= 2.0 * Math.PI;
         }
         return absAngle;
     }
