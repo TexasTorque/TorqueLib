@@ -40,6 +40,9 @@ public class TorqueAutopilotController implements Subsystems {
     }
 
     public static double normalizeTargetRotation(Pose2d currentTagPose) {
+        if (currentTagPose == null) {
+            return 0.0;
+        }
         double angularTarget = currentTagPose.getRotation().getDegrees();
         if (!perception.isRedAlliance()) {
             angularTarget -= 180;
@@ -51,6 +54,7 @@ public class TorqueAutopilotController implements Subsystems {
     }
 
     public TorqueSwerveSpeeds calculate(final Pose2d currPose, final Pose2d targetPose, final TorqueSwerveSpeeds currentSpeeds, final double desiredRotation) {
+        if (targetPose == null) { return new TorqueSwerveSpeeds(); }
 
         APTarget target = new APTarget(targetPose)
             .withEntryAngle(Rotation2d.fromDegrees(desiredRotation));
