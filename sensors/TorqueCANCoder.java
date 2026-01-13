@@ -1,14 +1,13 @@
 package org.texastorque.torquelib.sensors;
 
-import com.ctre.phoenix.sensors.CANCoder;
-
+import com.ctre.phoenix6.hardware.CANcoder;
 /**
  * A CANCoder that can be used to check if it is CAN responsive.
  * 
  * @author Omar Afzal
  */
 @Deprecated
-public final class TorqueCANCoder extends CANCoder {
+public final class TorqueCANCoder extends CANcoder {
     private double lastTimestamp = 0;
 
     public TorqueCANCoder(int port) {
@@ -16,7 +15,7 @@ public final class TorqueCANCoder extends CANCoder {
     }
 
     public final double getDeltaTimestamp() {
-        final double current = getLastTimestamp();
+        final double current = getDeltaTimestamp();
         final double delta = current - lastTimestamp;
         lastTimestamp = current;
         return delta;

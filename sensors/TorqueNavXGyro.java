@@ -6,10 +6,9 @@
  */
 package org.texastorque.torquelib.sensors;
 
-import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.SPI;
 
 /**
  * An extended class for the NavX gyro that adds better
@@ -34,7 +33,7 @@ public final class TorqueNavXGyro extends AHRS {
     private double angleOffset = 0;
 
     private TorqueNavXGyro() {
-        super(SPI.Port.kMXP);
+        super(NavXComType.kMXP_SPI);
     }
 
     public final void setOffsetCW(final Rotation2d offset) {
