@@ -9,7 +9,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 /**
- * Wrapper for the 2025 RevLib rewrite of the SparkMax
+ * Wrapper for the 2026 RevLib rewrite of the SparkMax
  * class and configuration library
  * 
  * @author Davey Adams
@@ -57,6 +57,11 @@ public class TorqueNEO {
 	public TorqueNEO conversionFactors(final double posFactor, final double veloFactor) {
 		config.encoder.positionConversionFactor(posFactor);
 		config.encoder.velocityConversionFactor(veloFactor);
+		return this;
+	}
+
+	public TorqueNEO follow (final int leadMotorCanID, final boolean invert) {
+		config.follow(leadMotorCanID, invert);
 		return this;
 	}
 
