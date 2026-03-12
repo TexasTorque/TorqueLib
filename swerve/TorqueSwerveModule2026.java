@@ -136,9 +136,11 @@ public final class TorqueSwerveModule2026 extends TorqueSwerveModule {
         SmartDashboard.putNumber("(Swerve) Turn I", 0.0);
         SmartDashboard.putNumber("(Swerve) Turn D", 0.0);
 
+        // driveKV = 0.7;
+
          // The following will most likely need to be overriden
         // depending on the weight of each robot
-        final double driveKS = 0.25994, driveKV = 0.70218, 
+        final double driveKS = 0.25994, driveKV = 0.7,  
         drivePGain = 0.0001, driveIGain = 0.0, driveDGain = 0.0;
 
 
@@ -172,10 +174,24 @@ public final class TorqueSwerveModule2026 extends TorqueSwerveModule {
         setDesiredState(state, DriverStation.isAutonomous());
     }
 
+    public double getDriveRotations () {
+        return drive.getRotorPosition().getValueAsDouble();
+    }
+
+    public double getDriveVoltage () {
+        return drive.getMotorVoltage().getValueAsDouble();
+    }
+
     public void setFF (final double ks, final double kv) {
         driveFeedForward.setKs(ks);
         driveFeedForward.setKv(kv);
     }
+
+    public void setPID (final double p, final double i, final double d) {
+        drivePID.setP(p);
+        drivePID.setI(i);
+        drivePID.setD(d);
+    } 
 
     private SwerveModulePosition aggregatePosition = new SwerveModulePosition(0, Rotation2d.fromRadians(0));
     private double lastSampledTime = -1;
@@ -187,7 +203,6 @@ public final class TorqueSwerveModule2026 extends TorqueSwerveModule {
 
         // Calculate drive output
         if (useSmartDrive) {
-
             final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
             final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
             final double driveOutput = drivePIDOutput + driveFFOutput;
@@ -196,6 +211,12 @@ public final class TorqueSwerveModule2026 extends TorqueSwerveModule {
             driveDutyCycle.Output = state.speedMetersPerSecond / maxVelocity;
         }
 
+        System.out.println(useSmartDrive);        
+        // driveDutyCycle.Output = state.speedMetersPerSecond / maxVelocity;
+        // final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
+        // final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
+        // final double driveOutput = driveFFOutput + drivePIDOutput;
+        // drive.setVoltage(driveOutput);
         Debug.log(name + " % Output", driveDutyCycle.Output);
 
         drive.setControl(driveDutyCycle);
@@ -207,6 +228,7 @@ public final class TorqueSwerveModule2026 extends TorqueSwerveModule {
         // Calculate turn output
         final double turnPIDOutput = -turnPID.calculate(getTurnEncoder(), state.angle.getRadians());
         turn.setPercent(turnPIDOutput);
+        // turn.setPosition(0);
 
         // Debug:
         if (!RobotBase.isReal()) {
@@ -264,23 +286,23 @@ public final class TorqueSwerveModule2026 extends TorqueSwerveModule {
     }
 
 
-    private double getTurnCancoder() {
-        // Should not need to use Coterminal -- doing so anyways?
-        double absAngle = Math.toRadians(cancoder.getAbsolutePosition().getValueAsDouble() * 360);
-        absAngle %= 2.0 * Math.PI;
-        if (absAngle < 0.0) {
-            absAngle += 2.0 * Math.PI;
-        }
-        return absAngle;
-    }
-
     // private double getTurnCancoder() {
-    //     double angle = Units.degreesToRadians(
-    //         cancoder.getAbsolutePosition().getValueAsDouble() * 360
-    //     );
-    //     // return Math.atan2(Math.sin(angle), Math.cos(angle));
-    //     return coterminal(angle);
+    //     // Should not need to use Coterminal -- doing so anyways?
+    //     double absAngle = Math.toRadians(cancoder.getAbsolutePosition().getValueAsDouble() * 360);
+    //     absAngle %= 2.0 * Math.PI;
+    //     if (absAngle < 0.0) {
+    //         absAngle += 2.0 * Math.PI;
+    //     }
+    //     return absAngle;
     // }
+
+    private double getTurnCancoder() {
+        double angle = Units.degreesToRadians(
+            cancoder.getAbsolutePosition().getValueAsDouble() * 360
+        );
+        return Math.atan2(Math.sin(angle), Math.cos(angle));
+        // return coterminal(angle);
+    }
 
     private static final double circumference = Units.inchesToMeters(4) * Math.PI;
     /**
