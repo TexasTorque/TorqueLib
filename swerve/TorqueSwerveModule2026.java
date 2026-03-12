@@ -6,6 +6,7 @@
  */
 package org.texastorque.torquelib.swerve;
 
+import org.littletonrobotics.junction.Logger;
 import org.texastorque.torquelib.Debug;
 import org.texastorque.torquelib.motors.TorqueNEO;
 import org.texastorque.torquelib.swerve.base.TorqueSwerveModule;
@@ -28,6 +29,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 /**
  * This is the version of the swerve module that uses a Kraken for driving. 
@@ -130,18 +132,18 @@ public final class TorqueSwerveModule2026 extends TorqueSwerveModule {
         drive.getConfigurator().setPosition(0.0);
 
 
-        SmartDashboard.putNumber("(Swerve) Turn P", 0.5);
+        SmartDashboard.putNumber("(Swerve) Turn P", 0.375);
         SmartDashboard.putNumber("(Swerve) Turn I", 0.0);
         SmartDashboard.putNumber("(Swerve) Turn D", 0.0);
 
          // The following will most likely need to be overriden
         // depending on the weight of each robot
-        final double driveKS = 0.015, driveKV = 0.2485, 
-        drivePGain = 0.1, driveIGain = 0.0, driveDGain = 0.0;
+        final double driveKS = 0.25994, driveKV = 0.70218, 
+        drivePGain = 0.0001, driveIGain = 0.0, driveDGain = 0.0;
 
 
         // Some turn parameters
-        final double turnPGain = 0.5, turnIGain = 0.0, turnDGain = 0.0, 
+        final double turnPGain = 0.375, turnIGain = 0.0, turnDGain = 0.0, 
                 turnGearRatio = 12.1; // Rotation motor to wheel; // Rotation motor to wheel
 
 
@@ -168,6 +170,11 @@ public final class TorqueSwerveModule2026 extends TorqueSwerveModule {
         turnPID.setI(SmartDashboard.getNumber("(Swerve) Turn I", 0));
         turnPID.setD(SmartDashboard.getNumber("(Swerve) Turn D", 0));
         setDesiredState(state, DriverStation.isAutonomous());
+    }
+
+    public void setFF (final double ks, final double kv) {
+        driveFeedForward.setKs(ks);
+        driveFeedForward.setKv(kv);
     }
 
     private SwerveModulePosition aggregatePosition = new SwerveModulePosition(0, Rotation2d.fromRadians(0));
@@ -213,6 +220,11 @@ public final class TorqueSwerveModule2026 extends TorqueSwerveModule {
         }
     }
 
+    public void runCharacterization (double volts) {
+        // Rotation2d angleSetpoint = new Rotation2d();
+        drive.setVoltage(volts);
+    }
+
     @Override
     public SwerveModuleState getState() {
         return new SwerveModuleState(RPSToMPS(drive.getVelocity().getValueAsDouble()), getRotation());
@@ -250,6 +262,7 @@ public final class TorqueSwerveModule2026 extends TorqueSwerveModule {
     private double getTurnNEOEncoder() {
         return coterminal(turn.getPosition());
     }
+
 
     private double getTurnCancoder() {
         // Should not need to use Coterminal -- doing so anyways?
