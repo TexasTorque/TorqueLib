@@ -170,21 +170,37 @@ public final class TorqueSwerveModuleKraken extends TorqueSwerveModule {
     private SwerveModulePosition aggregatePosition = new SwerveModulePosition(0, Rotation2d.fromRadians(0));
     private double lastSampledTime = -1;
 
+    public void setDrivePID (final double p, final double i, final double d) {
+        drivePID.setP(p);
+        drivePID.setI(i);
+        drivePID.setD(d);
+    }
+
+    public void setDriveFF (final double ks, final double kv) {
+        driveFeedForward.setKs(ks);
+        driveFeedForward.setKv(kv);
+    }
+
     public void setDesiredState(final SwerveModuleState state, final boolean useSmartDrive) {
         state.optimize(getRotation());
 
         final double driveVelocity = RPSToMPS(drive.getVelocity().getValueAsDouble());
 
         // Calculate drive output
-        if (useSmartDrive) {
+        // if (useSmartDrive) {
+        //     final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
+        //     final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
+        //     final double driveOutput = drivePIDOutput + driveFFOutput;
+        //     driveDutyCycle.Output = driveOutput;
+        // } else {
+        //     driveDutyCycle.Output = state.speedMetersPerSecond / maxVelocity;
+        // }
 
-            final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
-            final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
-            final double driveOutput = drivePIDOutput + driveFFOutput;
-            driveDutyCycle.Output = driveOutput;
-        } else {
-            driveDutyCycle.Output = state.speedMetersPerSecond / maxVelocity;
-        }
+        
+        final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
+        final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
+        final double driveOutput = drivePIDOutput + driveFFOutput;
+        driveDutyCycle.Output = driveOutput;
 
         Debug.log(name + " % Output", driveDutyCycle.Output);
 

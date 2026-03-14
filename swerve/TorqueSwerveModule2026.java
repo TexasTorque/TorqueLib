@@ -202,21 +202,21 @@ public final class TorqueSwerveModule2026 extends TorqueSwerveModule {
         final double driveVelocity = RPSToMPS(drive.getVelocity().getValueAsDouble());
 
         // Calculate drive output
-        if (useSmartDrive) {
-            final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
-            final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
-            final double driveOutput = drivePIDOutput + driveFFOutput;
-            driveDutyCycle.Output = driveOutput;
-        } else {
-            driveDutyCycle.Output = state.speedMetersPerSecond / maxVelocity;
-        }
+        // if (useSmartDrive) {
+        //     final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
+        //     final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
+        //     final double driveOutput = drivePIDOutput + driveFFOutput;
+        //     driveDutyCycle.Output = driveOutput;
+        // } else {
+        //     driveDutyCycle.Output = state.speedMetersPerSecond / maxVelocity;
+        // }
+
+        final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
+        final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
+        final double driveOutput = drivePIDOutput + driveFFOutput;
+        driveDutyCycle.Output = driveOutput;
 
         System.out.println(useSmartDrive);        
-        // driveDutyCycle.Output = state.speedMetersPerSecond / maxVelocity;
-        // final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
-        // final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
-        // final double driveOutput = driveFFOutput + drivePIDOutput;
-        // drive.setVoltage(driveOutput);
         Debug.log(name + " % Output", driveDutyCycle.Output);
 
         drive.setControl(driveDutyCycle);
