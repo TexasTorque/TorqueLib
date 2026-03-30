@@ -150,17 +150,21 @@ public final class TurboSwerveModuleKraken extends TorqueSwerveModule {
         final double driveVelocity = RPSToMPS(drive.getVelocity().getValueAsDouble());
 
         // Calculate drive output
-        if (useSmartDrive) {
-            final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
-            final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
-            final double driveOutput = drivePIDOutput + driveFFOutput;
-            driveDutyCycle.Output = driveOutput;
-        } else {
-            driveDutyCycle.Output = state.speedMetersPerSecond / maxVelocity;
-        }
+        // if (useSmartDrive) {
+        //     final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
+        //     final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
+        //     final double driveOutput = drivePIDOutput + driveFFOutput;
+        //     driveDutyCycle.Output = driveOutput;
+        // } else {
+        //     driveDutyCycle.Output = state.speedMetersPerSecond / maxVelocity;
+        // }
 
         // Debug.log(name + " % Output", driveDutyCycle.Output);
-
+        
+        final double drivePIDOutput = drivePID.calculate(driveVelocity, state.speedMetersPerSecond);
+        final double driveFFOutput = driveFeedForward.calculate(state.speedMetersPerSecond);
+        final double driveOutput = drivePIDOutput + driveFFOutput;
+        driveDutyCycle.Output = driveOutput;
         drive.setControl(driveDutyCycle);
 
         // Debug.log(name + " Real Velocity", Math.abs(driveVelocity));
