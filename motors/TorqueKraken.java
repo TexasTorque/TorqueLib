@@ -2,11 +2,14 @@ package org.texastorque.torquelib.motors;
 
 import org.texastorque.torquelib.Debug;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class TorqueKraken {
@@ -26,6 +29,11 @@ public class TorqueKraken {
 
 	public TorqueKraken inverted(final boolean invert) {
 		config.MotorOutput.Inverted = invert ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+		return this;
+	}
+
+	public TorqueKraken follow (final int port, final boolean inverted) {
+		motor.setControl(new Follower(port, inverted ? MotorAlignmentValue.Aligned : MotorAlignmentValue.Opposed));
 		return this;
 	}
 
@@ -89,7 +97,7 @@ public class TorqueKraken {
 	}
 
 	public double getVelocity() {
-		return motor.getVelocity().getValueAsDouble();
+		return motor.getVelocity().getValueAsDouble(); // RPS
 	}
 
 	public void initOrchestra(String fileName) {
