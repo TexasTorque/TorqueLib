@@ -58,6 +58,12 @@ public class TorqueKraken {
 	}
 
 	public TorqueKraken currentLimit(final double currentLimit) {
+		config.CurrentLimits.SupplyCurrentLimitEnable = true;
+		config.CurrentLimits.SupplyCurrentLimit = currentLimit;
+		return this;
+	}
+
+	public TorqueKraken statorCurrentLimit (final double currentLimit) {
 		config.CurrentLimits.StatorCurrentLimitEnable = true;
 		config.CurrentLimits.StatorCurrentLimit = currentLimit;
 		return this;
@@ -89,6 +95,10 @@ public class TorqueKraken {
 	}
 
 	public double getOutputCurrent() {
+		return motor.getSupplyCurrent().getValueAsDouble();
+	}
+
+	public double getStatorOutputCurrent () {
 		return motor.getStatorCurrent().getValueAsDouble();
 	}
 
