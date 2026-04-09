@@ -19,6 +19,7 @@ public class TorqueNEO {
 	private final SparkMax motor;
 	private final SparkMaxConfig config;
 
+
 	public TorqueNEO(final int port) {
 		motor = new SparkMax(port, MotorType.kBrushless);
 		config = new SparkMaxConfig();

@@ -7,6 +7,7 @@ import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -16,6 +17,7 @@ public class TorqueKraken {
 
 	private final TalonFX motor;
 	private final TalonFXConfiguration config;
+	private final VelocityVoltage voltageRequest;
 
 	public Orchestra orchestra;
 
@@ -25,6 +27,7 @@ public class TorqueKraken {
 		motor = new TalonFX(port);
 		config = new TalonFXConfiguration();
 		orchestra = new Orchestra();
+		voltageRequest = new VelocityVoltage(0);
 	}
 
 	public TorqueKraken inverted(final boolean invert) {
@@ -42,10 +45,17 @@ public class TorqueKraken {
 		return this;
 	}
 
-	public TorqueKraken pid(final double p, final double i, final double d) {
+	public TorqueKraken setPID(final double p, final double i, final double d) {
 		config.Slot0.kP = p;
 		config.Slot0.kI = i;
 		config.Slot0.kD = d;
+		return this;
+	}
+
+	public TorqueKraken setFF (final double ks, final double kv, final double ka) {
+		config.Slot0.kS = ks;
+		config.Slot0.kV = kv;
+		config.Slot0.kA = ka;
 		return this;
 	}
 
@@ -76,6 +86,10 @@ public class TorqueKraken {
 
 	public void setPercent(final double percent) {
 		motor.set(percent);
+	}
+
+	public void setRPM (final double rps) {
+		motor.setControl(voltageRequest.withVelocity(rps));
 	}
 
 	public double getPercent() {
